@@ -25,7 +25,7 @@ module.exports = {
    *  AUTH & REGISTRATION
    */
 
-   findUserByToken(req, res, next) {
+  findUserByToken(req, res, next) {
      const { token } = req.session;
      if (!token) return res.status(403).json({
        err: 'No session token was provided'
@@ -99,5 +99,18 @@ module.exports = {
     const { username } = req.user;
     req.logout();
     res.json({ username });
+  }
+
+  /**
+   * USER ENDPOINTS
+   */
+
+  getUser(req, res, next) {
+    if (!req.user) res.status(404);
+
+    const user = pick(req.user, USER_FIELDS);
+    const err = 'No user found';
+
+    res.json(req.user ? { user } : { err });
   }
 };

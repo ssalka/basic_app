@@ -13,7 +13,7 @@ router.get('/count', (req, res) => {
 });
 
 router.get('/me',
-  middleware.findUserByToken
+  middleware.getUser
 );
 
 router.get('/*',
