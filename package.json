@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Basic App",
   "scripts": {
+    "build": "webpack",
     "start": "gulp nodemon",
     "test": "mocha -R spec"
   },
