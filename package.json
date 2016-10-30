@@ -4,7 +4,7 @@
   "description": "Basic App",
   "scripts": {
     "build": "webpack",
-    "start": "gulp",
+    "start": "node src/server",
     "test": "mocha -R spec"
   },
   "author": "Steven Salka <steven@ssalka.io>",
@@ -44,13 +44,10 @@
     "babel-preset-react": "^6.11.1",
     "chai": "^3.5.0",
     "copy-webpack-plugin": "^4.0.0",
-    "gulp": "^3.9.1",
-    "gulp-nodemon": "^2.1.0",
     "mocha": "^3.1.0",
     "sinon": "^1.17.5",
     "superagent": "^2.2.0",
     "supertest": "^2.0.0",
-    "webpack": "^1.13.1",
-    "yargs": "^4.8.1"
+    "webpack": "^1.13.1"
   }
 }
