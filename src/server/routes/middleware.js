@@ -99,7 +99,7 @@ module.exports = {
     const { username } = req.user;
     req.logout();
     res.json({ username });
-  }
+  },
 
   /**
    * USER ENDPOINTS
