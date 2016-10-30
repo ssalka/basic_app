@@ -5,4 +5,4 @@ npm-debug.log*
 # Directories
 node_modules
 public
-etc
+.ignore
