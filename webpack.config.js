@@ -6,7 +6,7 @@ const config = {
   devtool: 'source-map',
   entry: './src/client/index.js',
   output: {
-    path: './src/public',
+    path: './public',
     filename: 'all.min.js'
   },
   module: {
