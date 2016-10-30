@@ -1,8 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
   devtool: 'source-map',
+  entry: './src/client/index.js',
   output: {
     path: './src/public',
     filename: 'all.min.js'
@@ -26,7 +28,10 @@ const config = {
     new webpack.DefinePlugin({
       // So react doesn't complain about being minified
       'process.env': { 'NODE_ENV': '"production"' }
-    })
+    }),
+    new CopyWebpackPlugin([
+      { from: 'src/client/index.html' }
+    ])
   ]
 };
 
