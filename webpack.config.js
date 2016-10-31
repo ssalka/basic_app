@@ -17,7 +17,7 @@ const config = {
     }]
   },
   resolve: {
-    root: [path.resolve('./node_modules')]
+    root: path.resolve(__dirname),
   },
   externals: {
     // Use cached libraries to avoid rebundling
