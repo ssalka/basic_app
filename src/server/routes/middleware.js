@@ -1,12 +1,10 @@
 const passport = require('passport');
 const async = require('async');
-const { index } = require('../config').paths;
-const {
-  models: { User, Session },
-  utils: { logger, generateToken }
-} = require('common');
-
 const { isEmpty, pick } = require('lodash');
+
+const { index } = require('../config').paths;
+const { User, Session } = require('lib/server/models');
+const { logger, generateToken } = require('lib/common');
 
 // Send these fields to client upon successful authentication
 const USER_FIELDS = [

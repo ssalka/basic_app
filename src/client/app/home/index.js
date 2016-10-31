@@ -8,7 +8,7 @@ import _ from 'lodash';
 _.mixin(require('lodash-inflection'));
 
 const { ViewComponent } = require('../../components');
-const { request } = require('../../utils');
+const { request } = require('lib/common');
 
 const { User } = api;
 const connect = createConnector(React);

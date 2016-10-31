@@ -5,7 +5,7 @@ import api from './api';
 import { UserStore } from './api/stores';
 import { has, identity } from 'lodash';
 
-const { request, logger } = require('./utils');
+const { request, logger } = require('lib/common');
 const { Site, Splash, Login } = require('./site');
 const { App, Home } = require('./app');
 const { BaseComponent, ViewComponent } = require('./components');
