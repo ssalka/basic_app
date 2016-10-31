@@ -8,7 +8,6 @@ const LocalStrategy = require('passport-local').Strategy;
 const { db, models: { User } } = require('lib/server');
 const routes = require('./routes');
 const config = require('./config');
-const { paths, location } = config;
 
 const app = express();
 app.use(bodyParser.json());
@@ -17,7 +16,7 @@ app.use(cookieParser());
 app.use(session(config.session));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(paths.public));
+app.use(express.static(config.publicPath));
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());

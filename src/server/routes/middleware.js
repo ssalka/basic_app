@@ -2,7 +2,7 @@ const passport = require('passport');
 const async = require('async');
 const { isEmpty, pick } = require('lodash');
 
-const { index } = require('../config').paths;
+const { index } = require('../config');
 const { User, Session } = require('lib/server/models');
 const { logger, generateToken } = require('lib/common');
 
