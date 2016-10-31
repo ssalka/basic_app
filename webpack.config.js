@@ -12,7 +12,10 @@ const config = {
   module: {
     loaders: [{
       test: /\.js$/,
-      include: path.resolve('./src/client'),
+      include: [
+        path.resolve('./src/client'),
+        path.resolve('./lib')
+      ],
       loader: 'babel'
     }]
   },
