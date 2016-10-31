@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-const { ViewComponent } = require('../../components');
+const { ViewComponent } = require('lib/client/components');
 
 // no lodash???
 

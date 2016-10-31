@@ -1,5 +1,5 @@
 import React from 'react';
-const { BaseComponent } = require('../../components');
+const { BaseComponent } = require('lib/client/components');
 const _ = require('lodash');
 
 module.exports = class Input extends BaseComponent {

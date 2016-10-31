@@ -1,5 +1,5 @@
 import React from 'react';
-const { ViewComponent } = require('../components');
+const { ViewComponent } = require('lib/client/components');
 const Home = require('./home');
 
 class App extends ViewComponent {

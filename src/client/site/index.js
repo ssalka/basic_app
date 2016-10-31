@@ -1,5 +1,5 @@
 import React from 'react';
-const { ViewComponent } = require('../components');
+const { ViewComponent } = require('lib/client/components');
 
 class Site extends ViewComponent {
   render() { return this.props.children; }
