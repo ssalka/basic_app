@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Basic App",
   "scripts": {
-    "build": "webpack",
+    "build": "npm install && webpack",
+    "dev": "webpack && npm start",
     "start": "node src/server",
     "test": "mocha -R spec"
   },
