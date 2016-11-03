@@ -23,18 +23,26 @@ module.exports = {
    *  AUTH & REGISTRATION
    */
 
-  findUserByToken(req, res, next) {
+  findUserByToken(req, res) {
      const { token } = req.session;
      if (!token) return res.status(403).json({
        err: 'No session token was provided'
      });
 
-     Session.findByToken(token)
-       .then(session => res.json(!isEmpty(session)
-          ? { user: pick(req.user || session, USER_FIELDS) }
-          : { err: 'No matching document' }
-       ))
-       .catch(console.error);
+    Session.findByToken(token)
+      .then(session => {
+        if (!session) res.status(404);
+
+        const response = isEmpty(session)
+          ? { err: 'No matching document' }
+          : { user: pick(session.user, USER_FIELDS) };
+
+        res.json(response);
+      })
+      .catch(err => {
+        console.error(err);
+        res.status(404).json({ err });
+      });
    },
 
   registerUser(req, res, next) {
@@ -90,7 +98,10 @@ module.exports = {
           cb => req.session.destroy(cb)
         ], err => err ? next(err) : next());
       })
-      .catch(console.error);
+      .catch(err => {
+        console.error(err);
+        res.status(404).json({ err });
+      });
   },
 
   logout(req, res) {
