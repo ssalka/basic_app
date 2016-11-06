@@ -253,8 +253,29 @@ describe("middleware", () => {
   });
 
   describe("#logout", () => {
-    it("logs the user out");
-    it("sends the username back to the client");
+
+    beforeEach(() => {
+      _.assign(req, {
+        user: { username: 'test_user' },
+        logout() { delete req.user; }
+      });
+
+      res.json = jest.fn();
+    });
+
+    it("logs the user out", () => {
+      middleware.logout(req, res);
+
+      expect(req.user).toBeUndefined();
+    });
+
+    it("sends the username back to the client", () => {
+      const { username } = req.user;
+      middleware.logout(req, res);
+
+      expect(res.json.mock.calls[0][0]).toEqual({ username });
+    });
+
   });
 
   describe("#getUser", () => {
