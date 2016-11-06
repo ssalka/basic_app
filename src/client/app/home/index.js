@@ -48,6 +48,7 @@ class Home extends ViewComponent {
   logoutCallback(req) {
     User.unset();
     delete localStorage.token;
+    delete localStorage.user;
     this.props.history.push('/');
   }
 
