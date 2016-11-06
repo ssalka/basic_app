@@ -83,7 +83,6 @@ describe("middleware", () => {
 
   describe("#registerUser", () => {
     it("registers a new user and calls next");
-    it("won't register a user if the username is already taken");
     it("sends errors to the client");
   });
 
