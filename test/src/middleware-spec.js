@@ -128,12 +128,10 @@ describe("middleware", () => {
       };
 
       ({ Session } = models);
-      Session.create = jest.fn((sess) => ({
-        save(cb) {
-          ({ token } = sess);
-          cb(null, sess);
-        }
-      }));
+      Session.create = jest.fn((sess, cb) => {
+        ({ token } = sess);
+        cb(null, sess);
+      });
 
       _.assign(req, { session: {}, user });
       next = jest.fn();
@@ -144,7 +142,6 @@ describe("middleware", () => {
 
       expect(next).toHaveBeenCalled();
       expect(next.mock.calls[0]).toEqual([]);
-
     });
 
     it("sets the user and session token on req.session", () => {
