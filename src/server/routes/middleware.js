@@ -112,7 +112,7 @@ module.exports = {
    * USER ENDPOINTS
    */
 
-  getUser(req, res, next) {
+  getUser(req, res) {
     if (!req.user) res.status(404);
 
     const user = pick(req.user, USER_FIELDS);
