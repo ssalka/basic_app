@@ -19,20 +19,21 @@ describe("middleware", () => {
     const session = { user, token };
 
     beforeEach(() => {
-      const json = stub('json');
-      const status = stub('status', json);
+      const json = jest.fn();
+      const status = jest.fn().mockReturnValue(res);
 
       ({ Session, User } = models);
       _.assign(req, _.cloneDeep({ session }));
-      _.assign(res, json, status);
+      _.assign(res, { json, status });
     });
 
     it("finds the session and returns the user", () => {
       Session.findByToken = jest.fn(() => ({
         then(cb) {
           cb(session);
-          return stub('catch');
-        }
+          return this;
+        },
+        catch: jest.fn()
       }));
 
       middleware.findUserByToken(req, res);
@@ -46,8 +47,9 @@ describe("middleware", () => {
       Session.findByToken = jest.fn(() => ({
         then(cb) {
           cb(null);
-          return stub('catch');
-        }
+          return this;
+        },
+        catch: jest.fn()
       }));
 
       middleware.findUserByToken(req, res);
@@ -69,9 +71,8 @@ describe("middleware", () => {
     it("logs caught errors", () => {
       const err = 'something is wrong';
       Session.findByToken = jest.fn(() => ({
-        then: () => ({
-          catch: cb => cb(err)
-        })
+        then() { return this; },
+        catch: cb => cb(err)
       }));
 
       middleware.findUserByToken(req, res);
@@ -85,7 +86,7 @@ describe("middleware", () => {
   describe("#registerUser", () => {
 
     beforeEach(() => {
-      const json = stub('json');
+      const json = jest.fn();
       const body = {
         username: 'test_user',
         password: 'test_pass'
@@ -93,7 +94,7 @@ describe("middleware", () => {
 
       ({ User } = models);
       _.assign(req, { body });
-      _.assign(res, json);
+      _.assign(res, { json });
       next = jest.fn();
     });
 
@@ -166,9 +167,9 @@ describe("middleware", () => {
     };
 
     beforeEach(() => {
-      const json = stub('json');
+      const json = jest.fn();
       _.assign(req, { session, user });
-      _.assign(res, json);
+      _.assign(res, { json });
     });
 
     it("sends the user and session token to the client", () => {
@@ -203,8 +204,9 @@ describe("middleware", () => {
       Session.findByToken = jest.fn(() => ({
         then(cb) {
           cb(session);
-          return stub('catch');
-        }
+          return this;
+        },
+        catch: jest.fn()
       }));
 
       middleware.closeSession(req, res, next);
@@ -219,8 +221,9 @@ describe("middleware", () => {
       Session.findByToken = jest.fn(() => ({
         then(cb) {
           cb(null);
-          return stub('catch');
-        }
+          return this;
+        },
+        catch: jest.fn()
       }));
 
       middleware.closeSession(req, res, next);
@@ -260,12 +263,3 @@ describe("middleware", () => {
   });
 
 });
-
-/**
- * Test Utils
- */
-
-function stub(name, value) {
-  const stub = jest.fn(() => value);
-  return name ? { [name]: stub } : stub;
-}
