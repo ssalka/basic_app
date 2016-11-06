@@ -113,6 +113,7 @@ describe("middleware", () => {
 
       expect(res.json).toHaveBeenCalledWith({ err });
     });
+
   });
 
   describe("#startSession", () => {
@@ -178,11 +179,74 @@ describe("middleware", () => {
         user, token: session.token
       });
     });
+
   });
 
   describe("#closeSession", () => {
-    it("finds the session and closes it");
-    it("logs caught errors");
+
+    let session = {};
+
+    beforeEach(() => {
+      ({ Session } = models);
+
+      _.assign(session, {
+        token: generateToken(),
+        remove: jest.fn(cb => cb())
+      });
+      _.assign(req, _.cloneDeep({ session }));
+
+      req.session.destroy = jest.fn(cb => cb());
+      next = jest.fn();
+    });
+
+    it("finds the session and closes it", () => {
+      Session.findByToken = jest.fn(() => ({
+        then(cb) {
+          cb(session);
+          return stub('catch');
+        }
+      }));
+
+      middleware.closeSession(req, res, next);
+
+      expect(session.remove).toHaveBeenCalled();
+      expect(req.session.destroy).toHaveBeenCalled();
+      expect(next).toHaveBeenCalled();
+      expect(next.mock.calls[0]).toEqual([]);
+    });
+
+    it("calls next if no session is found", () => {
+      Session.findByToken = jest.fn(() => ({
+        then(cb) {
+          cb(null);
+          return stub('catch');
+        }
+      }));
+
+      middleware.closeSession(req, res, next);
+
+      expect(next).toHaveBeenCalledWith('Session not found');
+    });
+
+    it("sends caught errors to the client", () => {
+      const err = 'could not close session';
+      Session.findByToken = jest.fn(() => ({
+        then: () => ({
+          catch: cb => cb(err)
+        })
+      }));
+
+      _.assign(res, {
+        status: jest.fn(() => res),
+        json: jest.fn()
+      });
+
+      middleware.closeSession(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({ err });
+    });
+
   });
 
   describe("#logout", () => {
