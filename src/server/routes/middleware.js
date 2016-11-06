@@ -46,11 +46,11 @@ module.exports = {
 
   registerUser(req, res, next) {
     const { username, password } = req.body;
-    const user = new User({ username });
 
-    User.register(user, password, (err, user) => {
-      err ? res.json({ err }) : next();
-    });
+    async.waterfall([
+      cb => cb(null, new User({ username })),
+      (user, cb) => User.register(user, password, cb),
+    ], err => err ? res.json({ err }) : next());
   },
 
   loginUser(req, res, next) {
@@ -58,12 +58,10 @@ module.exports = {
   },
 
   startSession(req, res, next) {
-    const session = new Session({
+    Session.create({
       user: pick(req.user, ['_id', 'username']),
       token: generateToken()
-    });
-
-    session.save((err, sess) => {
+    }, (err, sess) => {
       if (err) return next(err);
       Object.assign(req.session,
         pick(sess, ['user', 'token'])
@@ -72,7 +70,7 @@ module.exports = {
     });
   },
 
-  loginSuccess(req, res, next) {
+  loginSuccess(req, res) {
     const { session, user } = req;
 
     res.json({
@@ -112,7 +110,7 @@ module.exports = {
    * USER ENDPOINTS
    */
 
-  getUser(req, res, next) {
+  getUser(req, res) {
     if (!req.user) res.status(404);
 
     const user = pick(req.user, USER_FIELDS);
