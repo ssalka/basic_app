@@ -72,7 +72,7 @@ module.exports = {
     });
   },
 
-  loginSuccess(req, res, next) {
+  loginSuccess(req, res) {
     const { session, user } = req;
 
     res.json({

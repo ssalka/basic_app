@@ -5,8 +5,12 @@ const { generateToken } = require('lib/common');
 
 describe("middleware", () => {
 
-  let req = {}, res = {}, next;
+  let req, res, next;
   let Session, User;
+
+  beforeEach(() => {
+    req = {}; res = {};
+  });
 
   describe("#findUserByToken", () => {
 
@@ -151,7 +155,29 @@ describe("middleware", () => {
   });
 
   describe("#loginSuccess", () => {
-    it("sends the user and session token to the client");
+
+    const session = {
+      token: generateToken()
+    };
+    const user = {
+      _id: 'userId',
+      username: 'test_user'
+    };
+
+    beforeEach(() => {
+      const json = stub('json');
+      _.assign(req, { session, user });
+      _.assign(res, json);
+    });
+
+    it("sends the user and session token to the client", () => {
+      middleware.loginSuccess(req, res);
+
+      expect(res.json).toHaveBeenCalled();
+      expect(res.json.mock.calls[0][0]).toEqual({
+        user, token: session.token
+      });
+    });
   });
 
   describe("#closeSession", () => {
