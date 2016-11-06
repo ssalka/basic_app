@@ -46,7 +46,7 @@ module.exports = {
 
   registerUser(req, res, next) {
     const { username, password } = req.body;
-    const user = new User({ username });
+    const user = User.create({ username });
 
     User.register(user, password, (err, user) => {
       err ? res.json({ err }) : next();
@@ -58,7 +58,7 @@ module.exports = {
   },
 
   startSession(req, res, next) {
-    const session = new Session({
+    const session = Session.create({
       user: pick(req.user, ['_id', 'username']),
       token: generateToken()
     });
