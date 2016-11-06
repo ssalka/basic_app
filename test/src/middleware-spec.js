@@ -111,11 +111,6 @@ describe("middleware", () => {
     });
   });
 
-  describe("#loginUser", () => {
-    it("authenticates the user");
-    it("rejects invalid login credentials");
-  });
-
   describe("#startSession", () => {
     it("inserts a new session into the database");
     it("sets the user and session token on req.session");
