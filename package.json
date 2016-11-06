@@ -5,7 +5,7 @@
   "scripts": {
     "build": "npm install && webpack",
     "dev": "webpack && npm start",
-    "start": "node src/server",
+    "start": "NODE_PATH=. node src/server",
     "test": "NODE_PATH=. jest"
   },
   "author": "Steven Salka <steven@ssalka.io>",
