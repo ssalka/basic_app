@@ -5,7 +5,7 @@ const { generateToken } = require('lib/common');
 
 describe("middleware", () => {
 
-  let req = {}, res = {}, next = () => {};
+  let req = {}, res = {}, next;
   let Session, User;
 
   describe("#findUserByToken", () => {
@@ -17,8 +17,8 @@ describe("middleware", () => {
     beforeEach(() => {
       const json = stub('json');
       const status = stub('status', json);
-      ({ Session, User } = models);
 
+      ({ Session, User } = models);
       _.assign(req, _.cloneDeep({ session }));
       _.assign(res, json, status);
     });
@@ -38,6 +38,7 @@ describe("middleware", () => {
     });
 
     it("sends an error if no session is found", () => {
+      const err = 'No matching document';
       Session.findByToken = jest.fn(() => ({
         then(cb) {
           cb(null);
@@ -48,42 +49,66 @@ describe("middleware", () => {
       middleware.findUserByToken(req, res);
 
       expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({
-        err: 'No matching document'
-      });
+      expect(res.json).toHaveBeenCalledWith({ err });
     });
 
     it("sends back a 403 if there is no session token", () => {
+      const err = 'No session token was provided';
       delete req.session.token;
 
       middleware.findUserByToken(req, res);
 
       expect(res.status).toHaveBeenCalledWith(403);
-      expect(res.json).toHaveBeenCalledWith({
-        err: 'No session token was provided'
-      });
+      expect(res.json).toHaveBeenCalledWith({ err });
     });
 
     it("logs caught errors", () => {
+      const err = 'something is wrong';
       Session.findByToken = jest.fn(() => ({
         then: () => ({
-          catch: cb => cb('something is wrong')
+          catch: cb => cb(err)
         })
       }));
 
       middleware.findUserByToken(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({
-        err: 'something is wrong'
-      });
+      expect(res.json).toHaveBeenCalledWith({ err });
     });
 
   });
 
   describe("#registerUser", () => {
-    it("registers a new user and calls next");
-    it("sends errors to the client");
+
+    beforeEach(() => {
+      const json = stub('json');
+      const body = {
+        username: 'test_user',
+        password: 'test_pass'
+      };
+
+      ({ User } = models);
+      _.assign(req, { body });
+      _.assign(res, json);
+      next = jest.fn();
+    });
+
+    it("registers a new user and calls next", () => {
+      User.register = jest.fn((username, password, cb) => cb(null));
+
+      middleware.registerUser(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+    });
+
+    it("sends errors to the client", () => {
+      const err = 'you cant do that';
+      User.register = jest.fn(() => res.json({ err }));
+
+      middleware.registerUser(req, res, next);
+
+      expect(res.json).toHaveBeenCalledWith({ err });
+    });
   });
 
   describe("#loginUser", () => {
