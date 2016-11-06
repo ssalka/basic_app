@@ -14,9 +14,8 @@ describe("middleware", () => {
 
   describe("#findUserByToken", () => {
 
-    const token = generateToken();
     const user = { username: 'test_user' };
-    const session = { user, token };
+    const session = { user, token: generateToken() };
 
     beforeEach(() => {
       const json = jest.fn();
@@ -119,17 +118,16 @@ describe("middleware", () => {
 
   describe("#startSession", () => {
 
-    let token, user;
+    let session;
+    const user = {
+      _id: 'userId',
+      username: 'test_user'
+    };
 
     beforeEach(() => {
-      user = {
-        _id: 'userId',
-        username: 'test_user',
-      };
-
       ({ Session } = models);
       Session.create = jest.fn((sess, cb) => {
-        ({ token } = sess);
+        session = _.pick(sess, ['user', 'token']);
         cb(null, sess);
       });
 
@@ -147,8 +145,7 @@ describe("middleware", () => {
     it("sets the user and session token on req.session", () => {
       middleware.startSession(req, res, next);
 
-      expect(req.session.user).toEqual(user);
-      expect(req.session.token).toEqual(token);
+      expect(req.session).toEqual(session);
     });
 
   });
@@ -231,9 +228,8 @@ describe("middleware", () => {
     it("sends caught errors to the client", () => {
       const err = 'could not close session';
       Session.findByToken = jest.fn(() => ({
-        then: () => ({
-          catch: cb => cb(err)
-        })
+        then() { return this; },
+        catch: cb => cb(err)
       }));
 
       _.assign(res, {
@@ -268,6 +264,7 @@ describe("middleware", () => {
 
     it("sends the username back to the client", () => {
       const { username } = req.user;
+
       middleware.logout(req, res);
 
       expect(res.json.mock.calls[0][0]).toEqual({ username });
@@ -295,6 +292,7 @@ describe("middleware", () => {
 
     it("sends an error if req.user is undefined", () => {
       const err = 'No user found';
+
       middleware.getUser(req, res);
 
       expect(res.status).toHaveBeenCalledWith(404);
