@@ -24,10 +24,10 @@ module.exports = {
    */
 
   findUserByToken(req, res) {
-     const { token } = req.session;
-     if (!token) return res.status(403).json({
-       err: 'No session token was provided'
-     });
+    const { token } = req.session;
+    if (!token) return res.status(403).json({
+      err: 'No session token was provided'
+    });
 
     Session.findByToken(token)
       .then(session => {
@@ -40,8 +40,7 @@ module.exports = {
         res.json(response);
       })
       .catch(err => {
-        console.error(err);
-        res.status(404).json({ err });
+        res.status(500).json({ err });
       });
    },
 
@@ -99,8 +98,7 @@ module.exports = {
         ], err => err ? next(err) : next());
       })
       .catch(err => {
-        console.error(err);
-        res.status(404).json({ err });
+        res.status(500).json({ err });
       });
   },
 
