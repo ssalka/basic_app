@@ -112,9 +112,42 @@ describe("middleware", () => {
   });
 
   describe("#startSession", () => {
-    it("inserts a new session into the database");
-    it("sets the user and session token on req.session");
-    it("calls next");
+
+    let token, user;
+
+    beforeEach(() => {
+      user = {
+        _id: 'userId',
+        username: 'test_user',
+      };
+
+      ({ Session } = models);
+      Session.create = jest.fn((sess) => ({
+        save(cb) {
+          ({ token } = sess);
+          cb(null, sess);
+        }
+      }));
+
+      _.assign(req, { session: {}, user });
+      next = jest.fn();
+    });
+
+    it("inserts a new session into the database", () => {
+      middleware.startSession(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+      expect(next.mock.calls[0]).toEqual([]);
+
+    });
+
+    it("sets the user and session token on req.session", () => {
+      middleware.startSession(req, res, next);
+
+      expect(req.session.user).toEqual(user);
+      expect(req.session.token).toEqual(token);
+    });
+
   });
 
   describe("#loginSuccess", () => {
