@@ -1,12 +1,84 @@
+const _ = require('lodash');
 const middleware = require('src/server/routes/middleware');
+const models = require('lib/server/models');
+const { generateToken } = require('lib/common');
 
 describe("middleware", () => {
 
+  let req = {}, res = {}, next = () => {};
+  let Session, User;
+
   describe("#findUserByToken", () => {
-    it("gets the session token or sends back a 403");
-    it("finds the session and returns the user");
-    it("sends an error if no session is found");
-    it("logs caught errors");
+
+    const token = generateToken();
+    const user = { username: 'test_user' };
+    const session = { user, token };
+
+    beforeEach(() => {
+      const json = stub('json');
+      const status = stub('status', json);
+      ({ Session, User } = models);
+
+      _.assign(req, _.cloneDeep({ session }));
+      _.assign(res, json, status);
+    });
+
+    it("finds the session and returns the user", () => {
+      Session.findByToken = jest.fn(() => ({
+        then(cb) {
+          cb(session);
+          return stub('catch');
+        }
+      }));
+
+      middleware.findUserByToken(req, res);
+
+      expect(res.status).not.toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith({ user });
+    });
+
+    it("sends an error if no session is found", () => {
+      Session.findByToken = jest.fn(() => ({
+        then(cb) {
+          cb(null);
+          return stub('catch');
+        }
+      }));
+
+      middleware.findUserByToken(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(404);
+      expect(res.json).toHaveBeenCalledWith({
+        err: 'No matching document'
+      });
+    });
+
+    it("sends back a 403 if there is no session token", () => {
+      delete req.session.token;
+
+      middleware.findUserByToken(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.json).toHaveBeenCalledWith({
+        err: 'No session token was provided'
+      });
+    });
+
+    it("logs caught errors", () => {
+      Session.findByToken = jest.fn(() => ({
+        then: () => ({
+          catch: cb => cb('something is wrong')
+        })
+      }));
+
+      middleware.findUserByToken(req, res);
+
+      expect(res.status).toHaveBeenCalledWith(500);
+      expect(res.json).toHaveBeenCalledWith({
+        err: 'something is wrong'
+      });
+    });
+
   });
 
   describe("#registerUser", () => {
@@ -46,3 +118,12 @@ describe("middleware", () => {
   });
 
 });
+
+/**
+ * Test Utils
+ */
+
+function stub(name, value) {
+  const stub = jest.fn(() => value);
+  return name ? { [name]: stub } : stub;
+}
