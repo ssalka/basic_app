@@ -18,8 +18,8 @@ const config = {
       ],
       loader: 'babel'
     }, {
-      test: /\.css$/,
-      loader: "style-loader!css-loader"
+      test: /\.(less|css)$/,
+      loaders: ["style", "css", "less"]
     }]
   },
   resolve: {
