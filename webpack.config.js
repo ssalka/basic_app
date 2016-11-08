@@ -17,10 +17,13 @@ const config = {
         path.resolve('./lib')
       ],
       loader: 'babel'
+    }, {
+      test: /\.css$/,
+      loader: "style-loader!css-loader"
     }]
   },
   resolve: {
-    root: path.resolve(__dirname),
+    root: path.resolve(__dirname)
   },
   externals: {
     // Use cached libraries to avoid rebundling

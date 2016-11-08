@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 const { ViewComponent } = require('lib/client/components');
+const styles = require('./styles.css');
 
 // no lodash???
 
@@ -17,7 +18,7 @@ class Splash extends ViewComponent {
       : <Link to="/app">{ context.user.username }</Link>;
 
     return (
-      <section>
+      <section className="green">
         <h1>Welcome to { context.appName }</h1>
         <div>{ EnterLink }</div>
       </section>
