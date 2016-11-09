@@ -17,10 +17,13 @@ const config = {
         path.resolve('./lib')
       ],
       loader: 'babel'
+    }, {
+      test: /\.(less|css)$/,
+      loaders: ["style", "css", "less"]
     }]
   },
   resolve: {
-    root: path.resolve(__dirname),
+    root: path.resolve(__dirname)
   },
   externals: {
     // Use cached libraries to avoid rebundling

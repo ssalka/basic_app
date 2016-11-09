@@ -1,8 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
-const { ViewComponent } = require('lib/client/components');
-
-// no lodash???
+import { ViewComponent } from 'lib/client/components';
 
 class Splash extends ViewComponent {
   static contextTypes = {
