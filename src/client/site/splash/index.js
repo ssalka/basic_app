@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { ViewComponent } from 'lib/client/components';
-import './styles.less';
 
 class Splash extends ViewComponent {
   static contextTypes = {
@@ -16,7 +15,7 @@ class Splash extends ViewComponent {
       : <Link to="/app">{ context.user.username }</Link>;
 
     return (
-      <section className="green">
+      <section>
         <h1>Welcome to { context.appName }</h1>
         <div>{ EnterLink }</div>
       </section>
