@@ -6,8 +6,8 @@ const config = {
   devtool: 'source-map',
   entry: './src/client/index.js',
   output: {
-    path: './public',
-    filename: 'all.min.js'
+    path: './dist',
+    filename: 'client.js'
   },
   module: {
     loaders: [{

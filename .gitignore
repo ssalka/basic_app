@@ -6,5 +6,5 @@ npm-debug.log*
 
 # Directories
 node_modules
-public
+dist
 .ignore
