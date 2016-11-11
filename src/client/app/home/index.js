@@ -8,7 +8,6 @@ import _ from 'lodash';
 _.mixin(require('lodash-inflection'));
 
 const { ViewComponent } = require('lib/client/components');
-const { request } = require('lib/common');
 
 const { User } = api;
 const connect = createConnector(React);
@@ -38,20 +37,6 @@ class Home extends ViewComponent {
       : 'You do not have any collections :(';
   }
 
-  logout() {
-    const { token } = localStorage;
-    request.post('/logout', { token })
-      .then(this.logoutCallback)
-      .catch(console.error);
-  }
-
-  logoutCallback(req) {
-    User.unset();
-    delete localStorage.token;
-    delete localStorage.user;
-    this.props.history.push('/');
-  }
-
   greet() {
     const { user } = this;
     return user.username ? `Welcome, ${user.username}!` : null;
@@ -65,8 +50,6 @@ class Home extends ViewComponent {
           { this.greet() }
           <br />
           { this.currentView }
-          <br />
-          <button onClick={this.logout}>Log Out</button>
         </div>
       </section>
     );
