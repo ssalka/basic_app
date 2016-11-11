@@ -65,6 +65,18 @@ class AppRouter extends BaseComponent {
       });
   }
 
+  logout() {
+    const { token } = localStorage;
+    request.post('/logout', { token })
+      .then(this.logoutCallback)
+      .catch(console.error);
+  }
+
+  logoutCallback() {
+    User.unset();
+    browserHistory.push('/');
+  }
+
   render() {
     const NotFound = () => (
       <h2>Not found</h2>
@@ -83,6 +95,7 @@ class AppRouter extends BaseComponent {
         <Route path="/" component={Site}>
           <IndexRoute component={Splash} />
           <Route path="login" component={Login} />
+          <Route path="logout" onEnter={this.logout} />
           <Route path="*" component={NotFound} />
         </Route>
       </Router>
