@@ -1,0 +1,42 @@
+@import 'colors';
+@import 'measurements';
+
+@width-collapsed: @app-frame;
+@width-expanded: 250px;
+@color-background: @primary;
+@color-background-dark: @primary-dark;
+@color-text: @default-light;
+
+
+.sidebar {
+  width: @width-collapsed;
+  background-color: @color-background;
+  color: @color-text;
+
+  &.expanded {
+    width: @width-expanded;
+  }
+
+  .list-group-item {
+    border: 0;
+    border-radius: 0;
+    color: @color-text !important;
+    cursor: pointer;
+    height: @app-frame;
+    transition: background-color .2s ease-in-out;
+
+    &:link, &:visited { background-color: @color-background; }
+    &.active, &:hover { background-color: @color-background-dark; }
+
+    .icon-container {
+      text-align: center;
+
+      h6 {
+        margin-top: 3px;
+        text-transform: uppercase;
+        font-size: 9px;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+}
