@@ -1,11 +1,11 @@
 import React from 'react';
-const { ViewComponent } = require('lib/client/components');
+
+import { ViewComponent } from 'lib/client/components';
+import Login from './login';
+import Splash from './splash';
 
 class Site extends ViewComponent {
   render() { return this.props.children; }
 }
-
-const Login = require('./login');
-const Splash = require('./splash');
 
 module.exports = { Site, Login, Splash };

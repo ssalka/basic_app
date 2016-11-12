@@ -1,5 +1,5 @@
-const ReactDOM = require('react-dom');
-const AppRouter = require('./router');
+import ReactDOM from 'react-dom';
+import AppRouter from './router';
 
 ReactDOM.render(
   <AppRouter />,

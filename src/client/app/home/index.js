@@ -1,13 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { createConnector } from 'cartiv';
-import api from 'lib/client/api';
-import { UserStore } from 'lib/client/api/stores';
 import _ from 'lodash';
-
 _.mixin(require('lodash-inflection'));
 
-const { ViewComponent } = require('lib/client/components');
+import api from 'lib/client/api';
+import { UserStore } from 'lib/client/api/stores';
+import { ViewComponent } from 'lib/client/components';
 
 const { User } = api;
 const connect = createConnector(React);

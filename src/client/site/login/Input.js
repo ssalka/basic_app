@@ -1,6 +1,7 @@
 import React from 'react';
-const { BaseComponent } = require('lib/client/components');
-const _ = require('lodash');
+import _ from 'lodash';
+
+import { BaseComponent } from 'lib/client/components';
 
 module.exports = class Input extends BaseComponent {
   state = { value: "" }

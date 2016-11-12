@@ -2,12 +2,12 @@ import _ from 'lodash';
 import React from 'react';
 import { Link } from 'react-router';
 import { createConnector } from 'cartiv';
+
 import api from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
-
-const { ViewComponent } = require('lib/client/components');
-const Input = require('./Input');
-const SubmitButton = require('./SubmitButton');
+import { ViewComponent } from 'lib/client/components';
+import Input from './Input';
+import SubmitButton from './SubmitButton';
 
 const { User } = api;
 const connect = createConnector(React);

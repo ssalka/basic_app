@@ -1,15 +1,15 @@
 import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { createConnector } from 'cartiv';
-import api from 'lib/client/api';
-import { UserStore } from 'lib/client/api/stores';
 import { has, identity } from 'lodash';
 
-const { Site, Splash, Login } = require('./site');
-const { App, Home } = require('./app');
+import { Site, Splash, Login } from './site';
+import { App, Home } from './app';
+import { BaseComponent } from 'lib/client/components';
+import api from 'lib/client/api';
+import { UserStore } from 'lib/client/api/stores';
+import { request, logger } from 'lib/common';
 
-const { BaseComponent } = require('lib/client/components');
-const { request, logger } = require('lib/common');
 const { User } = api;
 
 // TODO: implement token validation - post to /auth ?
