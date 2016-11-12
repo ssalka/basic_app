@@ -4,11 +4,10 @@ import { createConnector } from 'cartiv';
 import _ from 'lodash';
 _.mixin(require('lodash-inflection'));
 
-import api from 'lib/client/api';
+import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { ViewComponent } from 'lib/client/components';
 
-const { User } = api;
 const connect = createConnector(React);
 
 @connect(UserStore)

@@ -6,11 +6,9 @@ import { has, identity } from 'lodash';
 import { Site, Splash, Login } from './site';
 import { App, Home } from './app';
 import { BaseComponent } from 'lib/client/components';
-import api from 'lib/client/api';
+import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { request, logger } from 'lib/common';
-
-const { User } = api;
 
 // TODO: implement token validation - post to /auth ?
 const validateToken = token => !!token;

@@ -3,13 +3,12 @@ import React from 'react';
 import { Link } from 'react-router';
 import { createConnector } from 'cartiv';
 
-import api from 'lib/client/api';
+import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { ViewComponent } from 'lib/client/components';
 import Input from './Input';
 import SubmitButton from './SubmitButton';
 
-const { User } = api;
 const connect = createConnector(React);
 
 @connect(UserStore)
