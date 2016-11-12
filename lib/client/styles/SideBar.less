@@ -9,12 +9,22 @@
 
 
 .sidebar {
+  position: relative;
   width: @width-collapsed;
   background-color: @color-background;
   color: @color-text;
+  transition: width .3s ease-in-out;
 
   &.expanded {
     width: @width-expanded;
+
+    .list-group-item {
+      height: auto;
+    }
+
+    #sidebar-expand span {
+      transform: rotate(180deg);
+    }
   }
 
   .list-group-item {
@@ -37,6 +47,17 @@
         font-size: 9px;
         letter-spacing: 0.5px;
       }
+    }
+  }
+
+  #sidebar-expand {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    padding: 0 6px 3px 0;
+
+    span {
+      cursor: pointer;
     }
   }
 }
