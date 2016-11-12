@@ -1,9 +1,30 @@
 import React from 'react';
-const { ViewComponent } = require('lib/client/components');
-const Home = require('./home');
+import { ViewComponent, NavBar, SideBar } from 'lib/client/components';
+import Home from './home';
+import './styles.less';
 
 class App extends ViewComponent {
-  render() { return this.props.children; }
+  state = {
+    views: [
+      { name: 'Home', path: '/app', icon: 'th-large' },
+      { name: 'Music', path: '/music', icon: 'music' },
+      { name: 'Todo', path: '/todo', icon: 'ok' }
+    ]
+  }
+
+  render() {
+    return (
+      <div id="app" className="flex-column">
+        <NavBar />
+        <div className="content flex-row">
+          <SideBar links={this.state.views} />
+          <main className="container-fluid">
+            { this.props.children }
+          </main>
+        </div>
+      </div>
+    );
+  }
 }
 
 module.exports = { App, Home };

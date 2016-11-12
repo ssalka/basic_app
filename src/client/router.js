@@ -67,9 +67,11 @@ class AppRouter extends BaseComponent {
 
   logout() {
     const { token } = localStorage;
-    request.post('/logout', { token })
-      .then(this.logoutCallback)
-      .catch(console.error);
+    if (token) {
+      request.post('/logout', { token })
+        .then(this.logoutCallback)
+        .catch(console.error);
+    }
   }
 
   logoutCallback() {

@@ -1,0 +1,26 @@
+@import 'colors';
+
+.navbar {
+  border-radius: 0;
+  margin-bottom: 0;
+
+  .navbar-form {
+    margin: 12px 0 12.5px;
+
+    .input-sm {
+      border-radius: 5px 0 0 5px  !important;
+      border-right: 0;
+    }
+
+    .btn-sm {
+      border-radius: 0 5px 5px 0 !important;
+      transition: background-color .3s ease-in-out,
+        border-color .3s ease-in-out;
+
+      &:hover {
+        background-color: @info;
+        border-color: @info;
+      }
+    }
+  }
+}
