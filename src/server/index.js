@@ -17,6 +17,7 @@ app.use(session(config.session));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(config.publicPath));
+app.use(express.static(config.blueprintPath));
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
