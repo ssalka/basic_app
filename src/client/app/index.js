@@ -6,9 +6,9 @@ import './styles.less';
 class App extends ViewComponent {
   state = {
     views: [
-      { name: 'Home', path: '/app', icon: 'th-large' },
+      { name: 'Home', path: '/app', icon: 'home' },
       { name: 'Music', path: '/music', icon: 'music' },
-      { name: 'Todo', path: '/todo', icon: 'ok' }
+      { name: 'Todo', path: '/todo', icon: 'confirm' }
     ]
   }
 
