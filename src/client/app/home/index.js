@@ -21,16 +21,21 @@ class Home extends ViewComponent {
     return _.get(this.context, 'user', {});
   }
 
+  displayList(count, name) {
+    const verboseCount = `You have ${count} ${_(name).singularize().pluralize(count)}`;
+    const listItems = this.user.library[name].join(', ');
+    return count > 0
+      ? `${verboseCount}: ${listItems}`
+      : `You do not have any ${name}`;
+  }
+
   get currentView() {
     const { user } = this;
     if (_.isEmpty(user)) return;
 
     return _(user.library)
       .mapValues('length')
-      .map((count, name) => count > 0 ? [
-        `You have ${count} ${_(name).singularize().pluralize(count)}:`,
-        user.library[name].join(', ')
-      ].join('\n') : `You do not have any ${name}`)
+      .map(this.displayList)
       .map((text, key) => <p key={key}>{text}</p>)
       .value();
   }
