@@ -42,7 +42,7 @@ class Home extends ViewComponent {
 
   render() {
     return (
-      <section>
+      <section className="container">
         <h1>Home</h1>
         <div>
           { this.greet() }

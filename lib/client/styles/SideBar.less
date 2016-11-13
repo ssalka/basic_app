@@ -1,52 +1,52 @@
 @import 'colors';
 @import 'measurements';
 
-@width-collapsed: @app-frame;
-@width-expanded: 250px;
-@color-background: @primary;
-@color-background-dark: @primary-dark;
-@color-text: @default-light;
+@sidebar-width-collapsed: @app-frame;
+@sidebar-width-expanded: 180px;
+@menu-item-expanded-height: 41px;
+
+@color-background: @dark-grey-5;
+@color-background-hover: @grey-1;
+@color-text: @grey-3;
+@color-text-hover: @light-grey-1;
 
 
 .sidebar {
   position: relative;
-  width: @width-collapsed;
+  width: @sidebar-width-collapsed;
   background-color: @color-background;
   color: @color-text;
   transition: width .3s ease-in-out;
+  overflow-x: hidden;
 
-  &.expanded {
-    width: @width-expanded;
-
-    .list-group-item {
-      height: auto;
-    }
-
-    #sidebar-expand span {
-      transform: rotate(180deg);
-    }
+  .pt-menu {
+    padding: 0;
+    border-radius: 0;
+    background-color: @color-background;
   }
 
-  .list-group-item {
-    border: 0;
+  .pt-menu-item {
     border-radius: 0;
-    color: @color-text !important;
+    color: @color-text;
     cursor: pointer;
-    height: @app-frame;
-    transition: background-color .2s ease-in-out;
+    vertical-align: middle;
+    transition: background-color .2s ease-in-out,
+      height .4s ease-in-out;
 
-    &:link, &:visited { background-color: @color-background; }
-    &.active, &:hover { background-color: @color-background-dark; }
+    .text {
+      position: relative;
+      left: 10px;
+      transition: left .4s ease-in;
+    }
 
-    .icon-container {
-      text-align: center;
+    .icon {
+      margin-left: 8px;
+      margin-right: 10px;
+    }
 
-      h6 {
-        margin-top: 3px;
-        text-transform: uppercase;
-        font-size: 9px;
-        letter-spacing: 0.5px;
-      }
+    &.active, &:hover {
+      color: @color-text-hover;
+      background-color: @color-background-hover;
     }
   }
 
@@ -56,8 +56,26 @@
     right: 0;
     padding: 0 6px 3px 0;
 
-    span {
+    .icon {
       cursor: pointer;
+      transition: color .2s ease-in-out;
+
+      &:hover {
+        color: @color-text-hover;
+      }
+    }
+  }
+
+  &.expanded {
+    width: @sidebar-width-expanded;
+
+    .pt-menu-item {
+      height: @menu-item-expanded-height;
+
+      .text {
+        left: 0;
+        transition: left .4s ease-out;
+      }
     }
   }
 }
