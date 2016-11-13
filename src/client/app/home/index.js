@@ -21,18 +21,23 @@ class Home extends ViewComponent {
     return _.get(this.context, 'user', {});
   }
 
+  displayList(count, name) {
+    const verboseCount = `You have ${count} ${_(name).singularize().pluralize(count)}`;
+    const listItems = this.user.library[name].join(', ');
+    return count > 0
+      ? `${verboseCount}: ${listItems}`
+      : `You do not have any ${name}`;
+  }
+
   get currentView() {
-    // Stubbing out for now, but this should dynamically render a view
     const { user } = this;
     if (_.isEmpty(user)) return;
 
-    const count = user.library.length;
-    return user.library.length !== 0
-      ? [
-        `You have ${count} ${_.pluralize('collection', count)}:`,
-        _.map(user.library, 'name').join(', ')
-      ].join('\n')
-      : 'You do not have any collections :(';
+    return _(user.library)
+      .mapValues('length')
+      .map(this.displayList)
+      .map((text, key) => <p key={key}>{text}</p>)
+      .value();
   }
 
   greet() {
@@ -45,9 +50,8 @@ class Home extends ViewComponent {
       <section className="container">
         <h1>Home</h1>
         <div>
-          { this.greet() }
-          <br />
-          { this.currentView }
+          <p>{this.greet()}</p>
+          {this.currentView}
         </div>
       </section>
     );
