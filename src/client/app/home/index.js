@@ -18,7 +18,7 @@ class Home extends ViewComponent {
   }
 
   componentDidMount() {
-    User.get();
+    User.getLibrary("581f60e5a3193e23932cd6eb");
   }
 
   componentDidUpdate(props, state) {
@@ -28,12 +28,13 @@ class Home extends ViewComponent {
   }
 
   get user() {
+    if (this.state.user) return this.state.user;
     return _.get(this.context, 'user', {});
   }
 
   displayList(count, name) {
     const verboseCount = `You have ${count} ${_(name).singularize().pluralize(count)}`;
-    const listItems = this.user.library[name].join(', ');
+    const listItems = _.map(this.user.library[name], 'name').join(', ');
     return count > 0
       ? `${verboseCount}: ${listItems}`
       : `You do not have any ${name}`;
