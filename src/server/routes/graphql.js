@@ -1,4 +1,3 @@
-const graphqlHTTP = require('express-graphql');
 const { buildSchema } = require('graphql');
 const _ = require('lodash');
 const { User, Collection } = require('lib/server/models');
@@ -39,15 +38,13 @@ const queries = {
   users: ({ids, limit = 0}) => {
     const query = {};
     if (_.isArray(ids)) query._id = { $in: ids };
-    return User.find(query).populate('library.collections').limit(limit).exec()
+    return User.find(query).populate('library.collections').limit(limit).exec();
   },
-  collections: ({id}) => Collection.find({ _id: id }).exec()
+  collections: ({ids}) => {
+    const query = {};
+    if (_.isArray(ids)) query._id = { $in: ids };
+    return Collection.find(query).populate('creator').exec();
+  }
 };
 
-module.exports = {
-  listen: () => graphqlHTTP({
-    schema,
-    rootValue: queries,
-    graphiql: true
-  })
-};
+module.exports = { schema, queries };

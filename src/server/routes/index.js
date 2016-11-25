@@ -1,4 +1,6 @@
 const express = require('express');
+const graphqlHTTP = require('express-graphql');
+const { schema, queries } = require('./graphql');
 const middleware = require('./middleware');
 
 const router = express.Router();
@@ -38,4 +40,11 @@ router.post('/logout',
   middleware.logout
 );
 
-module.exports = router;
+module.exports = {
+  rest: router,
+  graphql: graphqlHTTP({
+    schema,
+    rootValue: queries,
+    graphiql: true
+  })
+};

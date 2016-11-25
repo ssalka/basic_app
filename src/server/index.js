@@ -6,10 +6,7 @@ const _ = require('lodash');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 
-const {
-  db: { graphql },
-  models: { User }
-} = require('lib/server');
+const { User } = require('lib/server/models');
 
 const routes = require('./routes');
 const config = require('./config');
@@ -28,9 +25,8 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use('/graphql', graphql.listen());
-app.use('/', routes);
-
+app.use('/graphql', routes.graphql);
+app.use('/', routes.rest);
 
 app.listen(3000, () => {
   console.log('Listening on port 3000');
