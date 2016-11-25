@@ -1,19 +1,20 @@
 const _ = require('lodash');
+const mongoose = require('mongoose');
 
-fdescribe("ModelGen", () => {
+describe("ModelGen", () => {
 
-  let { ModelGen } = require('lib/server/db');
+  const { ModelGen } = require('lib/server/utils');
 
-  let name = 'TestModel';
+  const name = 'TestModel';
 
-  let schema = {
+  const schema = {
     field: String
   };
 
-  let extensions = {
+  const extensions = {
     props: {
       methods: {
-        findByField() {
+        findSimilar() {
           const { field } = this;
           return this.model(name).findOne({ field });
         }
@@ -26,7 +27,7 @@ fdescribe("ModelGen", () => {
     }
   };
 
-  let settings = {
+  const settings = {
     dbName: 'test'
   };
 
@@ -34,29 +35,19 @@ fdescribe("ModelGen", () => {
     name, schema, extensions, settings
   );
 
-  beforeEach(() => {
-    ({ ModelGen } = require('lib/server/db'));
-    ModelGen.conn.models = {};
-    ModelGen.dbs = {};
-  });
+  beforeEach(() => ModelGen.reset());
 
   describe("#generateModel", () => {
 
     it("sets the properties on the schema", () => {
-      ModelGen.conn.model = jest.fn(ModelGen.conn.model);
-
       const Model = ModelGen.generateModel(name, schema, extensions, settings);
 
       const ModelSchema = Model.schema;
-      expect(ModelSchema.statics.findByField).toBeDefined();
       expect(ModelSchema.statics.findByField).toBeInstanceOf(Function);
-    });
+      expect(ModelSchema.methods.findSimilar).toBeInstanceOf(Function);
 
-    it("registers the model with the database", () => {
-      const Model = ModelGen.generateModel(name, schema, extensions, settings);
-
-      expect(ModelGen.conn.models.TestModel).toEqual(Model);
-      expect(Model.toString()).toEqual(ExpectedModel.toString());
+      const TestInstance = new Model({ field: 'test value' });
+      expect(TestInstance.field).toBe('test value');
     });
 
   });
