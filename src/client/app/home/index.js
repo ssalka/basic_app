@@ -17,6 +17,16 @@ class Home extends ViewComponent {
     user: React.PropTypes.object
   }
 
+  componentDidMount() {
+    User.get();
+  }
+
+  componentDidUpdate(props, state) {
+    if (state.users)  {
+      console.log('got users', state.users);
+    }
+  }
+
   get user() {
     return _.get(this.context, 'user', {});
   }
