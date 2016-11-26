@@ -12,24 +12,12 @@ const connect = createConnector(React);
 
 @connect(UserStore)
 class Home extends ViewComponent {
-  static contextTypes = {
-    appName: React.PropTypes.string,
-    user: React.PropTypes.object
-  }
-
   componentDidMount() {
     User.getLibrary("581f60e5a3193e23932cd6eb");
   }
 
-  componentDidUpdate(props, state) {
-    if (state.users)  {
-      console.log('got users', state.users);
-    }
-  }
-
   get user() {
-    if (this.state.user) return this.state.user;
-    return _.get(this.context, 'user', {});
+    return this.state.user || {};
   }
 
   displayList(count, name) {

@@ -101,7 +101,7 @@ class Login extends ViewComponent {
     return {
       text: {
         header: `Log in to ${this.context.appName}`,
-        logInAsUser: `Log In as ${_.get(this.context, 'user.username')}?`,
+        logInAsUser: `Log In as ${_.get(this.state, 'user.username')}?`,
         register: 'Need to register?',
         submit: this.state.register ? 'Register' : 'Log In'
       },
@@ -128,7 +128,7 @@ class Login extends ViewComponent {
   }
 
   render() {
-    const { context, state } = this;
+    const { state } = this;
     const { text, styles } = this.helpers;
 
     const LogInAsUser = (
@@ -147,7 +147,7 @@ class Login extends ViewComponent {
     return (
       <div style={styles.login}>
         <h2>{text.header}</h2>
-        {context.user ? LogInAsUser : null}
+        {state.user ? LogInAsUser : null}
 
         <form onChange={this.handleChange}
           onSubmit={this.handleSubmit}>
