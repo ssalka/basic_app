@@ -12,18 +12,17 @@ const connect = createConnector(React);
 
 @connect(UserStore)
 class Home extends ViewComponent {
-  static contextTypes = {
-    appName: React.PropTypes.string,
-    user: React.PropTypes.object
+  componentDidMount() {
+    User.getLibrary("581f60e5a3193e23932cd6eb");
   }
 
   get user() {
-    return _.get(this.context, 'user', {});
+    return this.state.user || {};
   }
 
   displayList(count, name) {
     const verboseCount = `You have ${count} ${_(name).singularize().pluralize(count)}`;
-    const listItems = this.user.library[name].join(', ');
+    const listItems = _.map(this.user.library[name], 'name').join(', ');
     return count > 0
       ? `${verboseCount}: ${listItems}`
       : `You do not have any ${name}`;
