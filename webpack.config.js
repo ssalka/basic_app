@@ -4,9 +4,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const config = {
   devtool: 'source-map',
-  entry: './src/client/index.js',
+  entry: ['./src/client/index.js'],
   output: {
-    path: './dist',
+    path: path.resolve('./dist'),
     filename: 'client.js'
   },
   module: {
@@ -35,6 +35,7 @@ const config = {
       // So react doesn't complain about being minified
       'process.env': { 'NODE_ENV': '"production"' }
     }),
+    new webpack.HotModuleReplacementPlugin(),
     new CopyWebpackPlugin([
       { from: 'src/client/index.html' }
     ])
