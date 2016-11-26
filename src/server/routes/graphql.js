@@ -4,30 +4,41 @@ const { User, Collection } = require('lib/server/models');
 
 const schema = buildSchema(`
   type Query {
-    me: User
-    hello: String
-    user(id: String): User
-    users(limit: Int): [User]
-    collections(id: String, creator: String): [Collection]
+    user(
+      id: ID,
+      username: String,
+      email: String
+    ): User
+
+    users(
+      ids: [ID!],
+      limit: Int
+    ): [User]
+
+    collections(
+      ids: [ID!],
+      creator: String,
+      limit: Int
+    ): [Collection]
   }
 
+  # A user on the site
   type User {
-    # A user on the site
-    _id: String
-    username: String
+    _id: ID!
+    username: String!
     email: String
     createdAt: String
     library: Library
   }
 
+  # A user's content
   type Library {
-    # A user's content
     collections: [Collection]
   }
 
+  # A collection of documents owned by a user
   type Collection {
-    # A collection of documents owned by a user
-    _id: String
+    _id: ID!
     name: String
     creator: User
     icon: String
@@ -36,17 +47,45 @@ const schema = buildSchema(`
 `);
 
 const queries = {
-  me: () => User.findOne({ _id: "581f60e5a3193e23932cd6eb" }),
-  user: ({id}) => User.findById(id).populate('library.collections').exec(),
-  users: ({ids, limit = 0}) => {
+  user: ({id, email, username}) => {
+    let query;
+
+    if (id) {
+      query = User.findById(id);
+    }
+    else if (username) {
+      query = User.findOne({ username });
+    }
+    else if (email) {
+      query = User.findOne({ email });
+    }
+    else {
+      query = User.find();
+    }
+
+    return query.populate('library.collections').exec();
+  },
+  users: ({ids = [], limit = 0}) => {
     const query = {};
-    if (_.isArray(ids)) query._id = { $in: ids };
+
+    if (ids.length) {
+      query._id = { $in: ids };
+    }
+
     return User.find(query).populate('library.collections').limit(limit).exec();
   },
-  collections: ({ids}) => {
+  collections: ({ids = [], creator, limit = 0}) => {
     const query = {};
-    if (_.isArray(ids)) query._id = { $in: ids };
-    return Collection.find(query).populate('creator').exec();
+
+    if (creator) {
+      query.creator = creator;
+    }
+
+    if (ids.length) {
+      query._id = { $in: ids };
+    }
+
+    return Collection.find(query).populate('creator').limit(limit).exec();
   }
 };
 
