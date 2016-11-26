@@ -10,8 +10,7 @@ const { logger, generateToken } = require('lib/common');
 const USER_FIELDS = [
   '_id',
   'username',
-  'createdAt',
-  'library'
+  'createdAt'
 ];
 
 module.exports = {

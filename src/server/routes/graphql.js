@@ -16,6 +16,7 @@ const schema = buildSchema(`
     _id: String
     username: String
     email: String
+    createdAt: String
     library: Library
   }
 
