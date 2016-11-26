@@ -25,8 +25,7 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use('/graphql', routes.graphql);
-app.use('/', routes.rest);
+app.use('/', routes);
 
 app.listen(3000, () => {
   console.log('express server listening on port 3000');

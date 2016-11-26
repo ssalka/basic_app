@@ -1,8 +1,11 @@
 const passport = require('passport');
 const async = require('async');
 const { isEmpty, pick } = require('lodash');
+const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
+const { printSchema } = require('graphql/utilities/schemaPrinter');
 
 const { index } = require('../config');
+const schema = require('lib/server/graphql');
 const { User, Session } = require('lib/server/models');
 const { logger, generateToken } = require('lib/common');
 
@@ -116,5 +119,18 @@ module.exports = {
     const err = 'No user found';
 
     res.json(req.user ? { user } : { err });
+  },
+
+  /**
+   * GRAPHQL ENDPOINTS
+   */
+
+  graphql: graphqlExpress({ schema, context: {} }),
+
+  graphiql: graphiqlExpress({ endpointURL: '/graphql' }),
+
+  schema(req, res) {
+    res.set('Content-Type', 'text/plain');
+    res.send(printSchema(schema));
   }
 };
