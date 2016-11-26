@@ -13,12 +13,12 @@ if (process.env.NODE_ENV !== 'production') {
   );
 
   router.get('/schema',
-  middleware.schema
+    middleware.schema
   );
 }
 
 router.post('/graphql',
-middleware.graphql
+  middleware.graphql
 );
 
 
