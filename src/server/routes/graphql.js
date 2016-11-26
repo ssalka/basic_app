@@ -30,6 +30,7 @@ const schema = buildSchema(`
     _id: String
     name: String
     creator: User
+    icon: String
   }
 `);
 
