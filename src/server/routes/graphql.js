@@ -31,6 +31,7 @@ const schema = buildSchema(`
     name: String
     creator: User
     icon: String
+    path: String
   }
 `);
 
