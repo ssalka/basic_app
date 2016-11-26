@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "Basic App",
   "scripts": {
+    "build": "npm install && webpack",
     "dev": "NODE_PATH=. node src/server.dev",
     "start": "NODE_PATH=. node src/server",
     "test": "NODE_PATH=. jest"
