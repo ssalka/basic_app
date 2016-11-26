@@ -7,13 +7,15 @@ const router = express.Router();
  * GRAPHQL ROUTES
  */
 
-router.get('/graphiql',
-  middleware.graphiql
-);
+if (process.env.NODE_ENV !== 'production') {
+  router.get('/graphiql',
+    middleware.graphiql
+  );
 
-router.get('/schema',
+  router.get('/schema',
   middleware.schema
-);
+  );
+}
 
 router.post('/graphql',
 middleware.graphql
