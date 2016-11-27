@@ -3,12 +3,13 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { createConnector } from 'cartiv';
 import { has, identity } from 'lodash';
 
-import { Site, Splash, Login } from './site';
-import { App, Home } from './app';
-import { BaseComponent, ViewComponent } from 'lib/client/components';
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
+import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
+import Splash from './splash';
+import Login from './login';
+import { App, Home } from './app';
 
 // TODO: implement token validation - post to /auth ?
 const validateToken = token => !!token;
@@ -78,6 +79,13 @@ class AppRouter extends BaseComponent {
   }
 
   render() {
+    const Site = ({children}) => (
+      <div className="viewport flex-column">
+        <NavBar />
+        {children}
+      </div>
+    );
+
     const NotFound = () => (
       <ViewComponent children={<h2>Not found</h2>} />
     );
