@@ -1,12 +1,29 @@
 const express = require('express');
-const graphqlHTTP = require('express-graphql');
-const { schema, queries } = require('./graphql');
 const middleware = require('./middleware');
 
 const router = express.Router();
 
 /**
- * GET ROUTES
+ * GRAPHQL ROUTES
+ */
+
+if (process.env.NODE_ENV !== 'production') {
+  router.get('/graphiql',
+    middleware.graphiql
+  );
+
+  router.get('/schema',
+    middleware.schema
+  );
+}
+
+router.post('/graphql',
+  middleware.graphql
+);
+
+
+/**
+ * REST ROUTES
  */
 
 router.get('/me',
@@ -17,10 +34,6 @@ router.get('/*',
   middleware.sendIndex
 );
 
-
-/**
- * POST ROUTES
- */
 
 router.post('/register',
   middleware.registerUser,
@@ -40,11 +53,4 @@ router.post('/logout',
   middleware.logout
 );
 
-module.exports = {
-  rest: router,
-  graphql: graphqlHTTP({
-    schema,
-    rootValue: queries,
-    graphiql: true
-  })
-};
+module.exports = router;
