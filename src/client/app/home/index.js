@@ -14,10 +14,6 @@ const connect = createConnector(React);
 
 @connect(UserStore)
 class Home extends ViewComponent {
-  componentDidMount() {
-    User.getLibrary("581f60e5a3193e23932cd6eb");
-  }
-
   addCollection() {
     // TODO
     console.log("show 'New Collection' form");
