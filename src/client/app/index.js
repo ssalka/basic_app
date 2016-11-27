@@ -19,7 +19,7 @@ class App extends ViewComponent {
   }
 
   render() {
-    const userCollections = _.get(this.state, 'user.library.collections', []);
+    const userCollections = _.get(this.state, 'user.library.collections', []).slice(0, 5);
     const sidebarLinks = this.state.views.concat(userCollections);
     return (
       <div id="app" className="flex-column">
