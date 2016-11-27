@@ -8,7 +8,7 @@ describe("GraphQL Request API", () => {
     { username: "user2", email: null }
   ];
 
-  const mockRequest = data => graphql.request.get = jest.fn(uri => ({
+  const mockRequest = data => graphql.request.post = jest.fn(uri => ({
     then(cb) {
       cb({ body: { data } });
 
@@ -20,15 +20,18 @@ describe("GraphQL Request API", () => {
     }
   }));
 
-  it("encodes the query", () => {
-    const qs = graphql.toQueryString(`
-      users {
+  it("minifies the query", () => {
+    const method = 'query';
+    const selection = `
+      user {
         username
         email
       }
-    `);
+    `;
 
-    expect(qs).toEqual('query%20%7B%20users%20%7B%20username%20email%20%7D%20%7D');
+    expect(graphql.minify(method, selection)).toBe(
+      `query { user { username email } }`
+    );
   });
 
   it("executes the query", done => {
