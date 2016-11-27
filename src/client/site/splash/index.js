@@ -13,7 +13,7 @@ class Splash extends ViewComponent {
     const { context } = this;
     const EnterLink = _.isEmpty(context.user)
       ? <Link to="/login">Log In</Link>
-      : <Link to="/app">{ context.user.username }</Link>;
+    : <Link to="/home">{ context.user.username }</Link>;
 
     return (
       <section>

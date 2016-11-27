@@ -32,7 +32,7 @@ class AppRouter extends BaseComponent {
     if (localStorage.user) {
       User.set(JSON.parse(localStorage.user));
     }
-    else if (localStorage.token && !location.pathname.includes('/app')) {
+    else if (localStorage.token && !location.pathname.includes('/home')) {
       this.checkAuth(this.state);
     }
   }
@@ -84,18 +84,14 @@ class AppRouter extends BaseComponent {
 
     return (
       <Router history={browserHistory}>
-        {/* App */}
-        <Route path="/app" component={App}
-          onEnter={this.checkAuth}>
-          <IndexRoute component={Home} />
-          {/* other app views in here */}
-        </Route>
-
-        {/* Site */}
         <Route path="/" component={Site}>
           <IndexRoute component={Splash} />
           <Route path="login" component={Login} />
           <Route path="logout" onEnter={this.logout} />
+          <Route component={App} onEnter={this.checkAuth}>
+            <Route path="home" component={Home} />
+            {/* other app views in here */}
+          </Route>
           <Route path="*" component={NotFound} />
         </Route>
       </Router>

@@ -65,7 +65,7 @@ class Login extends ViewComponent {
     localStorage.token = token;
     localStorage.user = JSON.stringify(user);
     User.set(user);
-    this.props.history.push('/app');
+    this.props.history.push('/home');
   }
 
   renderInputs() {
@@ -132,7 +132,7 @@ class Login extends ViewComponent {
     const { text, styles } = this.helpers;
 
     const LogInAsUser = (
-      <Link to="/app">
+      <Link to="/home">
         {text.logInAsUser}
       </Link>
     );

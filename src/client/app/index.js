@@ -14,7 +14,7 @@ const connect = createConnector(React);
 class App extends ViewComponent {
   state = {
     views: [
-      { name: 'Home', path: '/app', icon: 'home' }
+      { name: 'Home', path: '/home', icon: 'home' }
     ]
   }
 
