@@ -125,7 +125,13 @@ module.exports = {
    * GRAPHQL ENDPOINTS
    */
 
-  graphql: graphqlExpress({ schema, context: {} }),
+  graphql(req, res) {
+    graphqlExpress({
+      schema, context: {
+        user: req.user
+      }
+    })(req, res);
+  },
 
   graphiql: graphiqlExpress({ endpointURL: '/graphql' }),
 
