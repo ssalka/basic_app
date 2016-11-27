@@ -1,33 +1,6 @@
-body {
-  margin: 0;
-}
-
 #app {
-  height: 100vh;
-
-  & > div, .content main {
+  flex-grow: 1;
+  .content {
     flex-grow: 1;
   }
-}
-
-a {
-  text-decoration: none !important;
-}
-
-.container {
-  padding: 20px;
-}
-
-.flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-}
-
-.flex-row:extend(.flex) {
-  flex-direction: row;
-}
-
-.flex-column:extend(.flex) {
-  flex-direction: column;
 }

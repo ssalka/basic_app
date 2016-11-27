@@ -5,7 +5,7 @@ import { has, identity } from 'lodash';
 
 import { Site, Splash, Login } from './site';
 import { App, Home } from './app';
-import { BaseComponent } from 'lib/client/components';
+import { BaseComponent, ViewComponent } from 'lib/client/components';
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { request, logger } from 'lib/common';
@@ -79,7 +79,7 @@ class AppRouter extends BaseComponent {
 
   render() {
     const NotFound = () => (
-      <h2>Not found</h2>
+      <ViewComponent children={<h2>Not found</h2>} />
     );
 
     return (

@@ -1,6 +1,6 @@
 import ReactDOM from 'react-dom';
 import AppRouter from './router';
-import '@blueprintjs/core';
+import 'lib/client/styles/globals.less';
 
 ReactDOM.render(
   <AppRouter />,
