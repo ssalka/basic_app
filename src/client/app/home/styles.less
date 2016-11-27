@@ -1,0 +1,49 @@
+@import "./../../../../lib/client/styles/colors.less";
+
+#home {
+  background-color: @light-grey-5;
+  height: 100%;
+
+  .view-title {
+    margin-bottom: 20px;
+  }
+
+  .pt-callout {
+    padding: 25px;
+    height: 50%;
+    max-height: 400px;
+
+    &:not(:last-of-type) {
+      margin-bottom: 20px;
+    }
+
+    .row.header h4 {
+      display: inline-block;
+    }
+
+    p:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  .pt-non-ideal-state {
+    max-width: 300px;
+    height: 100%;
+  }
+
+  .scroll {
+    overflow-y: scroll;
+  }
+
+  .full-height {
+    height: calc(~'100% - 61px');
+  }
+
+  .float-right {
+    float: right;
+  }
+
+  .muted {
+    color: @grey-1;
+  }
+}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Button, NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router';
 import { createConnector } from 'cartiv';
 import _ from 'lodash';
@@ -7,6 +8,7 @@ _.mixin(require('lodash-inflection'));
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { ViewComponent } from 'lib/client/components';
+import './styles.less';
 
 const connect = createConnector(React);
 
@@ -16,41 +18,102 @@ class Home extends ViewComponent {
     User.getLibrary("581f60e5a3193e23932cd6eb");
   }
 
-  get user() {
-    return this.state.user || {};
+  addCollection() {
+    // TODO
+    console.log("show 'New Collection' form");
   }
 
-  displayList(count, name) {
-    const verboseCount = `You have ${count} ${_(name).singularize().pluralize(count)}`;
-    const listItems = _.map(this.user.library[name], 'name').join(', ');
-    return count > 0
-      ? `${verboseCount}: ${listItems}`
-      : `You do not have any ${name}`;
+  addView() {
+    // TODO
+    console.log("open a new view");
   }
 
-  get currentView() {
-    const { user } = this;
-    if (_.isEmpty(user)) return;
+  renderCollections(collections = []) {
+    const description = 'Use Collections to organize your data.';
+    const addButton = (
+      <Button className="pt-minimal pt-intent-primary"
+        onClick={this.addCollection}
+        iconName="add"
+        text="Add Collection"
+      />
+    );
 
-    return _(user.library)
-      .mapValues('length')
-      .map(this.displayList)
-      .map((text, key) => <p key={key}>{text}</p>)
-      .value();
+    return (
+      <div className="pt-callout scroll">
+        {collections.length ? (
+          <div>
+            <div className="row header">
+              <h4>Collections <span className="muted">({collections.length})</span></h4>
+              <a className="pt-button pt-minimal pt-icon-add float-right"
+                onClick={this.addCollection}
+                tabIndex="0" role="button"
+              ></a>
+            </div>
+            {collections.map((collection, key) => (
+              <p key={key}>{collection.name}</p>
+            ))}
+          </div>
+        ) : (
+          <NonIdealState
+            visual="graph"
+            title="You don't have any Collections"
+            description={<span>{description}</span>}
+            action={addButton}
+          />
+        )}
+      </div>
+    );
   }
 
-  greet() {
-    const { user } = this;
-    return user.username ? `Welcome, ${user.username}!` : null;
+  renderViews(views = []) {
+    const description = 'Views allows you to define new visual representations of your data.';
+    const addButton = (
+      <Button className="pt-minimal pt-intent-primary"
+        onClick={this.addView}
+        iconName="add"
+        text="Add View"
+      />
+    );
+
+    return (
+      <div className="pt-callout">
+        {views.length ? (
+          <div>
+            <div className="row header">
+              <h4>Views <span className="muted">({views.length})</span></h4>
+              <a className="pt-button pt-minimal pt-icon-add float-right"
+                onClick={this.addView}
+                tabIndex="0" role="button"
+              ></a>
+            </div>
+
+            {views.map((view, key) => (
+              <p key={key}>{view.name}</p>
+            ))}
+          </div>
+        ) : (
+          <NonIdealState
+            visual="page-layout"
+            title="You don't have any Views"
+            description={<span>{description}</span>}
+            action={addButton}
+          />
+        )}
+      </div>
+    );
   }
 
   render() {
+    const { collections, views } = _.get(this.state, 'user.library', {});
+
     return (
-      <section className="container">
-        <h1>Home</h1>
-        <div>
-          <p>{this.greet()}</p>
-          {this.currentView}
+      <section id="home" className="container">
+        <div className="flex-row">
+          <h2 className="view-title">Library</h2>
+        </div>
+        <div className="full-height">
+          {this.renderCollections(collections)}
+          {this.renderViews(views)}
         </div>
       </section>
     );
