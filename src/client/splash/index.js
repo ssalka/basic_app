@@ -16,7 +16,7 @@ class Splash extends ViewComponent {
     : <Link to="/home">{ context.user.username }</Link>;
 
     return (
-      <section>
+      <section className="view bg-light">
         <h1>Welcome to { context.appName }</h1>
         <div>{ EnterLink }</div>
       </section>

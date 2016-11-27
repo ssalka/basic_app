@@ -145,7 +145,7 @@ class Login extends ViewComponent {
     );
 
     return (
-      <div style={styles.login}>
+      <section className="view bg-light">
         <h2>{text.header}</h2>
         {state.user ? LogInAsUser : null}
 
@@ -156,7 +156,7 @@ class Login extends ViewComponent {
         </form>
 
         {!state.register ? RegisterLink : null}
-      </div>
+      </section>
     );
   }
 };
