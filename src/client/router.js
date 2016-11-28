@@ -6,6 +6,7 @@ import { has, identity } from 'lodash';
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
+import { AddCollectionView } from 'lib/client/views';
 import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
@@ -95,18 +96,25 @@ class AppRouter extends BaseComponent {
       </ViewComponent>
     );
 
+    const Collections = () => <span>Collections View</span>;
+
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
+
+          <Route component={App} onEnter={this.checkAuth}>
+            <Route path="home" component={Home} />
+            <Route path="collections">
+              <IndexRoute component={Collections} />
+              <Route path="add" component={AddCollectionView} />
+            </Route>
+          </Route>
+
           <IndexRoute component={Splash} />
           <Route path="login" component={Login} />
           <Route path="logout" onEnter={this.logout} />
-          <Route component={App} onEnter={this.checkAuth}>
-            <Route path="home" component={Home} />
-            {/* other app views in here */}
-            <Route path="*" component={NotFound} />
-          </Route>
           <Route path="*" component={NotFound} />
+
         </Route>
       </Router>
     );

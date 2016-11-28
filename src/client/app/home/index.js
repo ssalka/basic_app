@@ -8,6 +8,7 @@ _.mixin(require('lodash-inflection'));
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { ViewComponent } from 'lib/client/components';
+import { AddCollectionView } from 'lib/client/views';
 import './styles.less';
 
 const connect = createConnector(React);
@@ -17,6 +18,7 @@ class Home extends ViewComponent {
   addCollection() {
     // TODO
     console.log("show 'New Collection' form");
+    this.props.history.push('/collections/add');
   }
 
   addView() {
