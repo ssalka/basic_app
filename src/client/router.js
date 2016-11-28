@@ -10,6 +10,7 @@ import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
 import { App, Home } from './app';
+import './styles.less';
 
 // TODO: implement token validation - post to /auth ?
 const validateToken = token => !!token;
@@ -82,12 +83,16 @@ class AppRouter extends BaseComponent {
     const Site = ({children}) => (
       <div className="viewport flex-column">
         <NavBar />
-        {children}
+        <main className="bg-light">
+          {children}
+        </main>
       </div>
     );
 
     const NotFound = () => (
-      <ViewComponent children={<h2>Not found</h2>} />
+      <ViewComponent>
+        <h2>Not found</h2>
+      </ViewComponent>
     );
 
     return (
@@ -99,6 +104,7 @@ class AppRouter extends BaseComponent {
           <Route component={App} onEnter={this.checkAuth}>
             <Route path="home" component={Home} />
             {/* other app views in here */}
+            <Route path="*" component={NotFound} />
           </Route>
           <Route path="*" component={NotFound} />
         </Route>

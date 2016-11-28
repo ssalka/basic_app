@@ -1,4 +1,4 @@
-@import "~lib/client/styles/colors.less";
+@import "~lib/client/styles/colors";
 
 #home {
   height: 100%;
@@ -8,16 +8,30 @@
   }
 
   .pt-callout {
-    padding: 25px;
-    height: 50%;
-    max-height: 400px;
+    padding: 0;
+    overflow: hidden;
 
     &:not(:last-of-type) {
       margin-bottom: 20px;
     }
 
-    .row.header h4 {
-      display: inline-block;
+    .flex-row {
+      padding: 10px 10px 10px 20px;
+
+      h4 {
+        display: inline-block;
+        margin: 0;
+        line-height: 30px;
+      }
+    }
+
+    .scroll {
+      max-height: 30vh;
+      width: 100%;
+
+      &.container {
+        padding: 0 20px 20px;
+      }
     }
 
     p:last-of-type {
@@ -28,9 +42,7 @@
   .pt-non-ideal-state {
     max-width: 300px;
     height: 100%;
-  }
-
-  .full-height {
-    height: calc(~'100% - 61px');
+    margin-top: 20px;
+    margin-bottom: 20px;
   }
 }

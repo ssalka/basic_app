@@ -25,7 +25,7 @@ class Home extends ViewComponent {
   }
 
   renderCollections(collections = []) {
-    const description = 'Use Collections to organize your data.';
+    const description = 'Use Collections to describe and organize your data. Import or sync with any source.';
     const addButton = (
       <Button className="pt-minimal pt-intent-primary"
         onClick={this.addCollection}
@@ -35,19 +35,21 @@ class Home extends ViewComponent {
     );
 
     return (
-      <div className="pt-callout scroll">
+      <div className="pt-callout pt-elevation-1">
         {collections.length ? (
           <div>
-            <div className="row header">
+            <div className="flex-row">
               <h4>Collections <span className="muted">({collections.length})</span></h4>
-              <a className="pt-button pt-minimal pt-icon-add float-right"
+              <a className="pt-button pt-minimal pt-icon-add"
                 onClick={this.addCollection}
                 tabIndex="0" role="button"
               ></a>
             </div>
-            {collections.map((collection, key) => (
-              <p key={key}>{collection.name}</p>
-            ))}
+            <div className="scroll container">
+              {collections.map((collection, key) => (
+                <p key={key}>{collection.name}</p>
+              ))}
+            </div>
           </div>
         ) : (
           <NonIdealState
@@ -72,20 +74,21 @@ class Home extends ViewComponent {
     );
 
     return (
-      <div className="pt-callout">
+      <div className="pt-callout pt-elevation-1">
         {views.length ? (
           <div>
-            <div className="row header">
+            <div className="flex-row">
               <h4>Views <span className="muted">({views.length})</span></h4>
-              <a className="pt-button pt-minimal pt-icon-add float-right"
+              <a className="pt-button pt-minimal pt-icon-add"
                 onClick={this.addView}
                 tabIndex="0" role="button"
               ></a>
             </div>
-
-            {views.map((view, key) => (
-              <p key={key}>{view.name}</p>
-            ))}
+            <div className="scroll container">
+              {views.map((view, key) => (
+                <p key={key}>{view.name}</p>
+              ))}
+            </div>
           </div>
         ) : (
           <NonIdealState
@@ -107,7 +110,7 @@ class Home extends ViewComponent {
         <div className="flex-row">
           <h2 className="view-title">Library</h2>
         </div>
-        <div className="full-height">
+        <div className="flex-column">
           {this.renderCollections(collections)}
           {this.renderViews(views)}
         </div>

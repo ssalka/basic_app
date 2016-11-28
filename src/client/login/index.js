@@ -1,13 +1,13 @@
 import _ from 'lodash';
 import React from 'react';
+import { InputGroup, Button } from '@blueprintjs/core';
 import { Link } from 'react-router';
 import { createConnector } from 'cartiv';
 
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { ViewComponent } from 'lib/client/components';
-import Input from './Input';
-import SubmitButton from './SubmitButton';
+import './styles.less';
 
 const connect = createConnector(React);
 
@@ -68,94 +68,67 @@ class Login extends ViewComponent {
     this.props.history.push('/home');
   }
 
-  renderInputs() {
-    const style = {
-      width: "210px",
-      height: '30px',
-      display: 'block',
-      margin: '10px 0',
-      paddingLeft: '10px',
-      border: '0',
-      backgroundColor: '#DDD',
-      borderRadius: '3px'
+  getInput({name, icon}) {
+    const value = this.state.formData[name];
+    const props = {
+      name, value, key: name,
+      placeholder: _.capitalize(name),
+      leftIconName: icon,
+      onChange: this.handleChange
     };
 
-    const { formData, register } = this.state;
-    const inputs = ['username', 'password'];
-    if (register) inputs.push('email');
-
-    return inputs
-      .map(getProps)
-      .map(props =>
-        <Input {...props} />
-      );
-
-    function getProps(name) {
-      const type = name === 'password' ? 'password' : 'text';
-      const [key, value] = [name, formData[name]];
-      return { name, type, style, key, value };
+    if (name === 'password') {
+      props.type = name;
     }
+
+    return <InputGroup {...props} />;
   }
 
-  get helpers() {
+  get text() {
     return {
-      text: {
-        header: `Log in to ${this.context.appName}`,
-        logInAsUser: `Log In as ${_.get(this.state, 'user.username')}?`,
-        register: 'Need to register?',
-        submit: this.state.register ? 'Register' : 'Log In'
-      },
-      styles: {
-        login: {
-          width: '220px'
-        },
-        submit: {
-          width: '100%',
-          height: '30px',
-          lineHeight: '30px',
-          backgroundColor: '#443366',
-          color: 'white',
-          textTransform: 'uppercase',
-          border: 'none',
-          borderRadius: '3px'
-        },
-        registerLink: {
-          textAlign: 'center',
-          marginTop: '10px'
-        }
-      }
+      header: `Log in to ${this.context.appName}`,
+      register: 'Need to register?',
+      submit: this.state.register ? 'Register' : 'Log In'
     };
+  }
+
+  get inputFields() {
+    const inputFields = [
+      { name: 'username', icon: 'person' },
+      { name: 'password', icon: 'lock' }
+    ];
+
+    if (this.state.register) inputFields.push(
+      { name: 'email', icon: 'envelope' }
+    );
+
+    return inputFields;
   }
 
   render() {
-    const { state } = this;
-    const { text, styles } = this.helpers;
+    const { state, text } = this;
 
-    const LogInAsUser = (
-      <Link to="/home">
-        {text.logInAsUser}
-      </Link>
-    );
-
-    const RegisterLink = (
-      <div onClick={this.registerOnSubmit}
-        style={styles.registerLink}>
+    const RegisterLink = () => (
+      <Button className="pt-minimal" onClick={this.registerOnSubmit}>
         {text.register}
-      </div>
+      </Button>
     );
 
     return (
-      <section className="view bg-light">
-        <h2>{text.header}</h2>
-        {state.user ? LogInAsUser : null}
+      <section id="login" className="view">
+        <div className="pt-callout">
+          <div className="center">
+            <h2>{text.header}</h2>
 
-        <form onChange={this.handleChange}
-          onSubmit={this.handleSubmit}>
-          {this.renderInputs()}
-          <SubmitButton text={text.submit} style={styles.submit} />
-        </form>
-
-        {!state.register ? RegisterLink : null}
+            <form className="pt-control-group pt-vertical" onSubmit={this.handleSubmit}>
+              {this.inputFields.map(this.getInput)}
+              <Button type="submit" className="pt-intent-primary">
+                {text.submit}
+              </Button>
+            </form>
+            <p>{!state.register ? <RegisterLink /> : null}</p>
+          </div>
+        </div>
       </section>
     );
   }
