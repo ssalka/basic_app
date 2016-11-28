@@ -1,0 +1,45 @@
+@import 'colors';
+
+.viewport {
+  height: 100vh;
+  width: 100vw;
+}
+
+.view {
+  height: 100%;
+  width: 100%;
+}
+
+.bg-light {
+  background-color: @light-grey-5;
+}
+
+.container {
+  padding: 20px;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.flex-row:extend(.flex) {
+  flex-direction: row;
+}
+
+.flex-column:extend(.flex) {
+  flex-direction: column;
+}
+
+.scroll {
+  overflow-y: scroll;
+}
+
+.float-right {
+  float: right;
+}
+
+.muted {
+  color: @grey-1;
+}

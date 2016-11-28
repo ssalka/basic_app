@@ -1,33 +1,8 @@
-body {
-  margin: 0;
-}
+@import "~lib/client/styles/measurements";
 
 #app {
-  height: 100vh;
-
-  & > div {
+  .content {
     flex-grow: 1;
+    height: @content-height;
   }
-}
-
-a {
-  text-decoration: none !important;
-}
-
-.container {
-  padding: 20px;
-}
-
-.flex {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-}
-
-.flex-row:extend(.flex) {
-  flex-direction: row;
-}
-
-.flex-column:extend(.flex) {
-  flex-direction: column;
 }

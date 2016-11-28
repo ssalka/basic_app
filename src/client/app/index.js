@@ -14,7 +14,7 @@ const connect = createConnector(React);
 class App extends ViewComponent {
   state = {
     views: [
-      { name: 'Home', path: '/app', icon: 'home' }
+      { name: 'Home', path: '/home', icon: 'home' }
     ]
   }
 
@@ -22,13 +22,10 @@ class App extends ViewComponent {
     const userCollections = _.get(this.state, 'user.library.collections', []).slice(0, 5);
     const sidebarLinks = this.state.views.concat(userCollections);
     return (
-      <div id="app" className="flex-column">
-        <NavBar />
-        <div className="content flex-row">
-          <SideBar links={sidebarLinks} />
-          <main className="container-fluid">
-            { this.props.children }
-          </main>
+      <div id="app" className="flex-row">
+        <SideBar links={sidebarLinks} />
+        <div className="content bg-light">
+          { this.props.children }
         </div>
       </div>
     );

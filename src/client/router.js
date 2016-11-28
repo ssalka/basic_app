@@ -3,12 +3,14 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { createConnector } from 'cartiv';
 import { has, identity } from 'lodash';
 
-import { Site, Splash, Login } from './site';
-import { App, Home } from './app';
-import { BaseComponent } from 'lib/client/components';
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
+import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
+import Splash from './splash';
+import Login from './login';
+import { App, Home } from './app';
+import './styles.less';
 
 // TODO: implement token validation - post to /auth ?
 const validateToken = token => !!token;
@@ -32,7 +34,7 @@ class AppRouter extends BaseComponent {
     if (localStorage.user) {
       User.set(JSON.parse(localStorage.user));
     }
-    else if (localStorage.token && !location.pathname.includes('/app')) {
+    else if (localStorage.token && !location.pathname.includes('/home')) {
       this.checkAuth(this.state);
     }
   }
@@ -78,24 +80,32 @@ class AppRouter extends BaseComponent {
   }
 
   render() {
+    const Site = ({children}) => (
+      <div className="viewport flex-column">
+        <NavBar />
+        <main className="bg-light">
+          {children}
+        </main>
+      </div>
+    );
+
     const NotFound = () => (
-      <h2>Not found</h2>
+      <ViewComponent>
+        <h2>Not found</h2>
+      </ViewComponent>
     );
 
     return (
       <Router history={browserHistory}>
-        {/* App */}
-        <Route path="/app" component={App}
-          onEnter={this.checkAuth}>
-          <IndexRoute component={Home} />
-          {/* other app views in here */}
-        </Route>
-
-        {/* Site */}
         <Route path="/" component={Site}>
           <IndexRoute component={Splash} />
           <Route path="login" component={Login} />
           <Route path="logout" onEnter={this.logout} />
+          <Route component={App} onEnter={this.checkAuth}>
+            <Route path="home" component={Home} />
+            {/* other app views in here */}
+            <Route path="*" component={NotFound} />
+          </Route>
           <Route path="*" component={NotFound} />
         </Route>
       </Router>
