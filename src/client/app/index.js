@@ -6,6 +6,7 @@ import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 
 import Home from './home';
+import Collections from './collections';
 import './styles.less';
 
 const connect = createConnector(React);
@@ -32,4 +33,4 @@ class App extends ViewComponent {
   }
 }
 
-module.exports = { App, Home };
+module.exports = { App, Home, Collections };
