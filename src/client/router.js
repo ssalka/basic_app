@@ -6,11 +6,10 @@ import { has, identity } from 'lodash';
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
-import { AddCollectionView } from 'lib/client/views';
 import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
-import { App, Home } from './app';
+import { App, Home, Collections } from './app';
 import './styles.less';
 
 // TODO: implement token validation - post to /auth ?
@@ -92,29 +91,23 @@ class AppRouter extends BaseComponent {
 
     const NotFound = () => (
       <ViewComponent>
-        <h2>Not found</h2>
+        <h2>Not Found</h2>
       </ViewComponent>
     );
-
-    const Collections = () => <span>Collections View</span>;
 
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
+          <IndexRoute component={Splash} />
+          <Route path="login" component={Login} />
 
           <Route component={App} onEnter={this.checkAuth}>
             <Route path="home" component={Home} />
-            <Route path="collections">
-              <IndexRoute component={Collections} />
-              <Route path="add" component={AddCollectionView} />
-            </Route>
+            <Route path="collections" component={Collections} />
           </Route>
 
-          <IndexRoute component={Splash} />
-          <Route path="login" component={Login} />
           <Route path="logout" onEnter={this.logout} />
           <Route path="*" component={NotFound} />
-
         </Route>
       </Router>
     );
