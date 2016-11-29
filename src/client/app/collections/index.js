@@ -14,18 +14,31 @@ const connect = createConnector(React);
 
 @connect(UserStore)
 class Collections extends ViewComponent {
-  get collections() {
+  state = {
+    currentView: 'default'
+  }
+
+  views = {
+    addCollection: () => <AddCollectionView />
+  }
+
+  getCollections() {
     return _.get(this.state, 'user.library.collections', []);
   }
 
+  getCurrentView() {
+    const name = this.state.currentView;
+    return _.get(this.views, name, this.renderCollections);
+  }
+
   addCollection() {
-    // TODO Render AddCollectionView here
-    console.log("Add Collection");
+    this.setState({
+      currentView: 'addCollection'
+    });
   }
 
   renderCollections() {
-    const { collections } = this;
-    const description = 'Use Collections to describe and organize your data. Import or sync with any source.';
+    const collections = this.getCollections();
     const addButton = (
       <Button className="pt-minimal pt-intent-primary"
         onClick={this.addCollection}
@@ -54,7 +67,12 @@ class Collections extends ViewComponent {
           <NonIdealState
             visual="graph"
             title="You don't have any Collections"
-            description={<span>{description}</span>}
+            description={(
+              <span>
+                Use Collections to describe and organize your data.
+                Import or sync with any source.
+              </span>
+            )}
             action={addButton}
           />
         )}
@@ -63,6 +81,8 @@ class Collections extends ViewComponent {
   }
 
   render() {
+    const CurrentView = this.getCurrentView();
+
     return (
       <section id="home" className="container">
         <div className="flex-row">
@@ -71,7 +91,7 @@ class Collections extends ViewComponent {
           </h2>
         </div>
         <div className="flex-column">
-          {this.renderCollections()}
+          <CurrentView />
         </div>
       </section>
     );
