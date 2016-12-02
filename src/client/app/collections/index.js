@@ -84,7 +84,7 @@ class Collections extends ViewComponent {
     const CurrentView = this.getCurrentView();
 
     return (
-      <section id="home" className="container">
+      <section id="collections" className="container list-view">
         <div className="flex-row">
           <h2 className="view-title">
             Collections

@@ -1,0 +1,46 @@
+.list-view {
+  height: 100%;
+
+  .view-title {
+    margin-bottom: 20px;
+  }
+
+  .pt-callout {
+    padding: 0;
+    overflow: hidden;
+
+    &:not(:last-of-type) {
+      margin-bottom: 20px;
+    }
+
+    .flex-row {
+      padding: 10px 10px 10px 20px;
+
+      h4 {
+        display: inline-block;
+        margin: 0;
+        line-height: 30px;
+      }
+    }
+
+    .scroll {
+      max-height: 30vh;
+      width: 100%;
+
+      &.container {
+        padding: 0 20px 20px;
+      }
+    }
+
+    p:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  .pt-non-ideal-state {
+    max-width: 300px;
+    height: 100%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+}
