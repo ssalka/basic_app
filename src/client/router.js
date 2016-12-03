@@ -10,6 +10,7 @@ import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
 import { App, Home, Collections } from './app';
+import { AddCollectionView } from 'lib/client/views';
 import './styles.less';
 
 // TODO: implement token validation - post to /auth ?
@@ -103,7 +104,10 @@ class AppRouter extends BaseComponent {
 
           <Route component={App} onEnter={this.checkAuth}>
             <Route path="home" component={Home} />
-            <Route path="collections" component={Collections} />
+            <Route path="collections">
+              <IndexRoute component={Collections} />
+              <Route path="add" component={AddCollectionView} />
+            </Route>
           </Route>
 
           <Route path="logout" onEnter={this.logout} />

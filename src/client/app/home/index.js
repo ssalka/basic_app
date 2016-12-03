@@ -17,7 +17,7 @@ class Home extends ViewComponent {
   addCollection() {
     // TODO
     console.log("show 'New Collection' form");
-    this.props.history.push('/collections#add');
+    this.props.history.push('/collections/add');
   }
 
   addView() {
