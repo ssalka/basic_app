@@ -5,57 +5,40 @@ import { createConnector } from 'cartiv';
 import _ from 'lodash';
 _.mixin(require('lodash-inflection'));
 
-import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { ViewComponent } from 'lib/client/components';
-import { AddCollectionView } from 'lib/client/views';
 
 const connect = createConnector(React);
 
 @connect(UserStore)
 class Collections extends ViewComponent {
-  state = {
-    currentView: 'default'
-  }
-
-  views = {
-    addCollection: () => <AddCollectionView />
-  }
-
-  getCollections() {
+  get collections() {
     return _.get(this.state, 'user.library.collections', []);
   }
 
-  getCurrentView() {
-    const name = this.state.currentView;
-    return _.get(this.views, name, this.renderCollections);
-  }
-
-  addCollection() {
-    this.setState({
-      currentView: 'addCollection'
-    });
-  }
-
-  renderCollections() {
-    const collections = this.getCollections();
-    const addButton = (
-      <Button className="pt-minimal pt-intent-primary"
-        onClick={this.addCollection}
-        iconName="add"
-        text="Add Collection"
-      />
+  AddCollectionButton({minimal}) {
+    return minimal ? (
+      <Link to="collections/add" role="button"
+        className="pt-button pt-minimal pt-icon-add"
+      ></Link>
+    ) : (
+      <Link to="collections/add">
+        <Button className="pt-minimal pt-intent-primary"
+          iconName="add" text="Add Collection"
+        />
+      </Link>
     );
+  }
+
+  CollectionList() {
+    const { collections, AddCollectionButton } = this;
 
     return (
       <div className="pt-callout pt-elevation-1">
         {collections.length ? (
           <div>
             <div className="flex-row">
-              <a className="pt-button pt-minimal pt-icon-add"
-                onClick={this.addCollection}
-                tabIndex="0" role="button"
-              ></a>
+              <AddCollectionButton minimal={true} />
             </div>
             <div className="scroll container">
               {collections.map((collection, key) => (
@@ -64,8 +47,7 @@ class Collections extends ViewComponent {
             </div>
           </div>
         ) : (
-          <NonIdealState
-            visual="graph"
+          <NonIdealState visual="graph"
             title="You don't have any Collections"
             description={(
               <span>
@@ -73,7 +55,7 @@ class Collections extends ViewComponent {
                 Import or sync with any source.
               </span>
             )}
-            action={addButton}
+            action={<AddCollectionButton />}
           />
         )}
       </div>
@@ -81,17 +63,16 @@ class Collections extends ViewComponent {
   }
 
   render() {
-    const CurrentView = this.getCurrentView();
-
+    const { CollectionList } = this;
     return (
-      <section id="home" className="container">
+      <section id="collections" className="container list-view">
         <div className="flex-row">
           <h2 className="view-title">
             Collections
           </h2>
         </div>
         <div className="flex-column">
-          <CurrentView />
+          <CollectionList />
         </div>
       </section>
     );
