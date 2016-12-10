@@ -63,7 +63,6 @@ class Login extends ViewComponent {
   loginCallback(response) {
     const { user, token } = response.body;
     localStorage.token = token;
-    localStorage.user = JSON.stringify(user);
     User.set(user);
     this.props.history.push('/home');
   }
