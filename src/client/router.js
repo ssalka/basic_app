@@ -1,7 +1,9 @@
 import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { createConnector } from 'cartiv';
-import { has, identity } from 'lodash';
+import _ from 'lodash';
 
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
@@ -12,12 +14,29 @@ import Login from './login';
 import { App, Home } from './app';
 import './styles.less';
 
-// TODO: implement token validation - post to /auth ?
-const validateToken = token => !!token;
-
 const connect = createConnector(React);
 
+const getCurrentUser = gql`query {
+  me {
+    _id
+    username
+    library {
+      collections {
+        _id
+        name
+      }
+    }
+  }
+}`;
+
 @connect(UserStore)
+@graphql(getCurrentUser, {
+  props: ({ data }) => ({
+    user: data.me,
+    loading: data.loading,
+    error: data.error
+  })
+})
 class AppRouter extends BaseComponent {
   static childContextTypes = {
     appName: React.PropTypes.string,
@@ -26,43 +45,17 @@ class AppRouter extends BaseComponent {
 
   getChildContext() {
     const context = { appName: document.title };
-    if (this.state.user) context.user = this.state.user;
+    if (this.props.user) {
+      context.user = this.props.user;
+      User.set(this.props.user);
+    }
     return context;
   }
 
-  componentWillMount() {
-    if (localStorage.user) {
-      User.set(JSON.parse(localStorage.user));
-    }
-    else if (localStorage.token && !location.pathname.includes('/home')) {
-      this.checkAuth(this.state);
-    }
-  }
-
-  // Check whether a user is logged in
-  checkAuth(nextState, replace, next=identity) {
-    if (this.state.user || this.context.user) return next();
-
-    request.get('/me')
-      .then(({ status, body }) => {
-        if (status !== 200) logger.error(body.err);
-        const { user } = body;
-
-        if (replace && !user) {
-          replace('/login');
-        }
-        else if (!this.state.user) {
-          User.set(user);
-          localStorage.user = JSON.stringify(user);
-        }
-
-        next();
-      })
-      .catch(err => {
-        logger.error('Unable to retrieve user:', err);
-        if (replace) replace('/login');
-        next();
-      });
+  // Only load protected routes if a user is logged in
+  checkAuth(nextState, replace, next=_.identity) {
+    if (!this.props.user) replace('/login');
+    next();
   }
 
   logout() {
@@ -79,21 +72,26 @@ class AppRouter extends BaseComponent {
     browserHistory.push('/');
   }
 
-  render() {
-    const Site = ({children}) => (
-      <div className="viewport flex-column">
-        <NavBar />
-        <main className="bg-light">
-          {children}
-        </main>
-      </div>
-    );
+  get components() {
+    return {
+      Site: ({children}) => (
+        <div className="viewport flex-column">
+          <NavBar />
+          <main className="bg-light">
+            {children}
+          </main>
+        </div>
+      ),
+      NotFound: () => (
+        <ViewComponent>
+          <h2>Not found</h2>
+        </ViewComponent>
+      )
+    };
+  }
 
-    const NotFound = () => (
-      <ViewComponent>
-        <h2>Not found</h2>
-      </ViewComponent>
-    );
+  render() {
+    const { Site, NotFound } = this.components;
 
     return (
       <Router history={browserHistory}>
