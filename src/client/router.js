@@ -1,7 +1,9 @@
 import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 import { createConnector } from 'cartiv';
-import { has, identity } from 'lodash';
+import _ from 'lodash';
 
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
@@ -12,57 +14,54 @@ import Login from './login';
 import { App, Home } from './app';
 import './styles.less';
 
-// TODO: implement token validation - post to /auth ?
-const validateToken = token => !!token;
-
 const connect = createConnector(React);
 
+const getCurrentUser = gql`query {
+  user: me {
+    _id
+    username
+    library {
+      collections {
+        _db _collection _id
+        name icon path
+      }
+    }
+  }
+}`;
+
 @connect(UserStore)
+@graphql(getCurrentUser, {
+  props: ({ data }) => ({
+    data,
+    user: data.user,
+    loading: data.loading
+  })
+})
 class AppRouter extends BaseComponent {
   static childContextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
+  };
+
+  componentWillReceiveProps({ data: { user, loading, error } }) {
+    if (user || _.get(this.props, 'user')) return;
+    if (error) console.error(error);
+    if (!loading && location.pathname.includes('home')) {
+      // done loading; no user; in protected route
+      browserHistory.push('/login');
+    }
   }
 
   getChildContext() {
     const context = { appName: document.title };
-    if (this.state.user) context.user = this.state.user;
+    if (this.props.user) {
+      context.user = this.props.user;
+      User.set(this.props.user);
+    }
+    else if (_.has(this.state, 'user')) {
+      context.user = this.state.user;
+    }
     return context;
-  }
-
-  componentWillMount() {
-    if (localStorage.user) {
-      User.set(JSON.parse(localStorage.user));
-    }
-    else if (localStorage.token && !location.pathname.includes('/home')) {
-      this.checkAuth(this.state);
-    }
-  }
-
-  // Check whether a user is logged in
-  checkAuth(nextState, replace, next=identity) {
-    if (this.state.user || this.context.user) return next();
-
-    request.get('/me')
-      .then(({ status, body }) => {
-        if (status !== 200) logger.error(body.err);
-        const { user } = body;
-
-        if (replace && !user) {
-          replace('/login');
-        }
-        else if (!this.state.user) {
-          User.set(user);
-          localStorage.user = JSON.stringify(user);
-        }
-
-        next();
-      })
-      .catch(err => {
-        logger.error('Unable to retrieve user:', err);
-        if (replace) replace('/login');
-        next();
-      });
   }
 
   logout() {
@@ -79,33 +78,50 @@ class AppRouter extends BaseComponent {
     browserHistory.push('/');
   }
 
-  render() {
-    const Site = ({children}) => (
-      <div className="viewport flex-column">
-        <NavBar />
-        <main className="bg-light">
-          {children}
-        </main>
-      </div>
-    );
+  get components() {
+    return {
+      Site: ({children}) => (
+        <div className="viewport flex-column">
+          <NavBar />
+          <main className="bg-light">
+            {children}
+          </main>
+        </div>
+      ),
+      NotFound: () => (
+        <ViewComponent>
+          <h2>Not found</h2>
+        </ViewComponent>
+      )
+    };
+  }
 
-    const NotFound = () => (
-      <ViewComponent>
-        <h2>Not found</h2>
-      </ViewComponent>
-    );
+  get refetch() {
+    return this.props.data.refetch;
+  }
+
+  render() {
+    const { Site, NotFound } = this.components;
 
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
           <IndexRoute component={Splash} />
-          <Route path="login" component={Login} />
+          <Route path="login" component={props => (
+            <Login {...props} refetch={this.props.data.refetch} />
+          )} />
           <Route path="logout" onEnter={this.logout} />
-          <Route component={App} onEnter={this.checkAuth}>
+
+          <Route component={props => (
+            this.props.user
+              ? <App {...props} />
+              : <div></div>
+          )}>
             <Route path="home" component={Home} />
             {/* other app views in here */}
             <Route path="*" component={NotFound} />
           </Route>
+
           <Route path="*" component={NotFound} />
         </Route>
       </Router>
