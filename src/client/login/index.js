@@ -16,7 +16,7 @@ class Login extends ViewComponent {
   constructor(props) {
     super(props);
     this.state = {
-      register: !!props.register,
+      register: false,
       formData: {
         username: '',
         password: '',
@@ -61,10 +61,15 @@ class Login extends ViewComponent {
   }
 
   loginCallback(response) {
-    const { user, token } = response.body;
+    const { token } = response.body;
     localStorage.token = token;
-    User.set(user);
-    this.props.history.push('/home');
+
+    // User library is not sent along with login response...
+    // TODO: migrate rest of auth endpoints to graphql
+    this.props.refetch().then(({ data: {user} }) => {
+      if (user) User.set(user);
+      this.props.history.push('/home');
+    });
   }
 
   getInput({name, icon}) {

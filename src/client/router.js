@@ -17,13 +17,13 @@ import './styles.less';
 const connect = createConnector(React);
 
 const getCurrentUser = gql`query {
-  me {
+  user: me {
     _id
     username
     library {
       collections {
-        _id
-        name
+        _db _collection _id
+        name icon path
       }
     }
   }
@@ -32,15 +32,24 @@ const getCurrentUser = gql`query {
 @connect(UserStore)
 @graphql(getCurrentUser, {
   props: ({ data }) => ({
-    user: data.me,
-    loading: data.loading,
-    error: data.error
+    data,
+    user: data.user,
+    loading: data.loading
   })
 })
 class AppRouter extends BaseComponent {
   static childContextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
+  };
+
+  componentWillReceiveProps({ data: { user, loading, error } }) {
+    if (user || _.get(this.props, 'user')) return;
+    if (error) console.error(error);
+    if (!loading && location.pathname.includes('home')) {
+      // done loading; no user; in protected route
+      browserHistory.push('/login');
+    }
   }
 
   getChildContext() {
@@ -49,13 +58,10 @@ class AppRouter extends BaseComponent {
       context.user = this.props.user;
       User.set(this.props.user);
     }
+    else if (_.has(this.state, 'user')) {
+      context.user = this.state.user;
+    }
     return context;
-  }
-
-  // Only load protected routes if a user is logged in
-  checkAuth(nextState, replace, next=_.identity) {
-    if (!this.props.user) replace('/login');
-    next();
   }
 
   logout() {
@@ -90,6 +96,10 @@ class AppRouter extends BaseComponent {
     };
   }
 
+  get refetch() {
+    return this.props.data.refetch;
+  }
+
   render() {
     const { Site, NotFound } = this.components;
 
@@ -97,13 +107,21 @@ class AppRouter extends BaseComponent {
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
           <IndexRoute component={Splash} />
-          <Route path="login" component={Login} />
+          <Route path="login" component={props => (
+            <Login {...props} refetch={this.props.data.refetch} />
+          )} />
           <Route path="logout" onEnter={this.logout} />
-          <Route component={App} onEnter={this.checkAuth}>
+
+          <Route component={props => (
+            this.props.user
+              ? <App {...props} />
+              : <div></div>
+          )}>
             <Route path="home" component={Home} />
             {/* other app views in here */}
             <Route path="*" component={NotFound} />
           </Route>
+
           <Route path="*" component={NotFound} />
         </Route>
       </Router>
