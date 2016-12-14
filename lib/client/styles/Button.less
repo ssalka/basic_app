@@ -1,9 +1,23 @@
-.btn-small {
-  font-size: 10px;
-  line-height: 20px;
-  min-height: 20px;
-
+.btn {
   &.rounded {
-    border-radius: 10px;
+    border-radius: 15px;
+
+    &.pt-large {
+      border-radius: 20px;
+    }
+  }
+
+  &.pt-small {
+    font-size: 10px;
+    line-height: 20px;
+    min-height: 20px;
+
+    &.rounded {
+      border-radius: 10px;
+    }
+
+    &::before {
+      font-size: 12px;
+    }
   }
 }
