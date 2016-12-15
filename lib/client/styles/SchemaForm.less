@@ -1,7 +1,7 @@
 @import 'colors';
 
 #schema-form {
-  max-width: 550px;
+  max-width: 450px;
   padding: 0;
 
   form[name="schema-form"] {
@@ -16,7 +16,11 @@
     }
 
     #schema {
-      padding: 10px 20px;
+      padding-top: 10px;
+
+      & > * {
+        padding: 0 20px;
+      }
 
       .subheader {
         margin-bottom: 10px;
@@ -28,46 +32,66 @@
         }
       }
 
-      .field {
-        padding-bottom: 10px;
-        .pt-editable-text {
-          flex-grow: 3;
-          width: 200px;
-          position: relative;
-          top: 3px;
-          padding: 3px 5px 0;
+      .scroll {
+        min-height: 60px;
+        max-height: 230px;
+        padding: 0 5px;
 
-          &::before {
-            height: 30px;
-            width: 200px;
+        .field {
+          margin: 15px;
+
+          &:first-of-type {
+            margin-top: 5px;
           }
-        }
 
-        select {
-          flex-grow: 2;
-        }
+          .pt-editable-text {
+            flex-grow: 3;
+            width: 200px;
+            position: relative;
+            top: 3px;
+            padding: 3px 5px 0;
 
-        .btn-remove {
-          flex-grow: 1;
-          text-align: center;
-          max-width: 30px;
-          margin-left: 10px;
+            &::before {
+              height: 30px;
+              width: 200px;
+            }
+          }
 
-          .btn.pt-icon-minus {
-            height: 20px;
-            width: 20px;
-            min-width: initial;
-            margin: 5px;
+          select {
+            flex-grow: 2;
+          }
+
+          .option-button {
+            flex-grow: 1;
+            text-align: center;
+            max-width: 30px;
+            margin-left: 10px;
+
+            .btn {
+              height: 20px;
+              width: 20px;
+              min-width: initial;
+              margin: 5px;
+
+              &::before {
+                position: relative;
+                top: -1px;
+              }
+            }
           }
         }
       }
+
     }
 
+    .minimal-row {
+      padding: 0 20px;
+    }
 
     .fill-width {
       padding: 20px;
 
-       button {
+      button {
         width: 48%;
       }
     }
