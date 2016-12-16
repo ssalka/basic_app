@@ -6,7 +6,7 @@ import _ from 'lodash';
 _.mixin(require('lodash-inflection'));
 
 import { UserStore } from 'lib/client/api/stores';
-import { ViewComponent } from 'lib/client/components';
+import { ViewComponent, FlexRow, FlexColumn } from 'lib/client/components';
 
 const connect = createConnector(React);
 
@@ -37,9 +37,9 @@ class Collections extends ViewComponent {
       <div className="pt-callout pt-elevation-1">
         {collections.length ? (
           <div>
-            <div className="flex-row">
+            <FlexRow>
               <AddCollectionButton minimal={true} />
-            </div>
+            </FlexRow>
             <div className="scroll container">
               {collections.map((collection, key) => (
                 <p key={key}>{collection.name}</p>
@@ -66,14 +66,14 @@ class Collections extends ViewComponent {
     const { CollectionList } = this;
     return (
       <section id="collections" className="container list-view">
-        <div className="flex-row">
+        <FlexRow>
           <h2 className="view-title">
             Collections
           </h2>
-        </div>
-        <div className="flex-column">
+        </FlexRow>
+        <FlexColumn>
           <CollectionList />
-        </div>
+        </FlexColumn>
       </section>
     );
   }

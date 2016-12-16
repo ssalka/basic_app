@@ -7,7 +7,7 @@ _.mixin(require('lodash-inflection'));
 
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
-import { ViewComponent } from 'lib/client/components';
+import { ViewComponent, FlexRow, FlexColumn } from 'lib/client/components';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
 
@@ -38,13 +38,13 @@ class Home extends ViewComponent {
       <div className="pt-callout pt-elevation-1">
         {collections.length ? (
           <div>
-            <div className="flex-row">
+            <FlexRow>
               <h4>Collections <span className="muted">({collections.length})</span></h4>
               <a className="pt-button pt-minimal pt-icon-add"
                 onClick={this.addCollection}
                 tabIndex="0" role="button"
               ></a>
-            </div>
+            </FlexRow>
             <div className="scroll container">
               {collections.map((collection, key) => (
                 <p key={key}>{collection.name}</p>
@@ -77,13 +77,13 @@ class Home extends ViewComponent {
       <div className="pt-callout pt-elevation-1">
         {views.length ? (
           <div>
-            <div className="flex-row">
+            <FlexRow>
               <h4>Views <span className="muted">({views.length})</span></h4>
               <a className="pt-button pt-minimal pt-icon-add"
                 onClick={this.addView}
                 tabIndex="0" role="button"
               ></a>
-            </div>
+            </FlexRow>
             <div className="scroll container">
               {views.map((view, key) => (
                 <p key={key}>{view.name}</p>
@@ -107,13 +107,13 @@ class Home extends ViewComponent {
 
     return (
       <section id="home" className="container list-view">
-        <div className="flex-row">
+        <FlexRow>
           <h2 className="view-title">Library</h2>
-        </div>
-        <div className="flex-column">
+        </FlexRow>
+        <FlexColumn>
           {this.renderCollections(collections)}
           {this.renderViews(views)}
-        </div>
+        </FlexColumn>
       </section>
     );
   }
