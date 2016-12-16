@@ -9,14 +9,14 @@ import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 import { ViewComponent } from 'lib/client/components';
 import './styles.less';
+import 'lib/client/styles/list-view-1.less';
 
 const connect = createConnector(React);
 
 @connect(UserStore)
 class Home extends ViewComponent {
   addCollection() {
-    // TODO
-    console.log("show 'New Collection' form");
+    this.props.history.push('/collections/add');
   }
 
   addView() {
@@ -106,7 +106,7 @@ class Home extends ViewComponent {
     const { collections, views } = _.get(this.state, 'user.library', {});
 
     return (
-      <section id="home" className="container">
+      <section id="home" className="container list-view">
         <div className="flex-row">
           <h2 className="view-title">Library</h2>
         </div>

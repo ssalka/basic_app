@@ -11,7 +11,8 @@ import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
-import { App, Home } from './app';
+import { App, Home, Collections } from './app';
+import { AddCollectionView } from 'lib/client/views';
 import './styles.less';
 
 const connect = createConnector(React);
@@ -110,7 +111,6 @@ class AppRouter extends BaseComponent {
           <Route path="login" component={props => (
             <Login {...props} refetch={this.props.data.refetch} />
           )} />
-          <Route path="logout" onEnter={this.logout} />
 
           <Route component={props => (
             this.props.user
@@ -118,10 +118,13 @@ class AppRouter extends BaseComponent {
               : <div></div>
           )}>
             <Route path="home" component={Home} />
-            {/* other app views in here */}
-            <Route path="*" component={NotFound} />
+            <Route path="collections">
+              <IndexRoute component={Collections} />
+              <Route path="add" component={AddCollectionView} />
+            </Route>
           </Route>
 
+          <Route path="logout" onEnter={this.logout} />
           <Route path="*" component={NotFound} />
         </Route>
       </Router>
