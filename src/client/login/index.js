@@ -1,12 +1,12 @@
 import _ from 'lodash';
 import React from 'react';
-import { InputGroup, Button } from '@blueprintjs/core';
+import { InputGroup } from '@blueprintjs/core';
 import { Link } from 'react-router';
 import { createConnector } from 'cartiv';
 
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
-import { ViewComponent } from 'lib/client/components';
+import { ViewComponent, Button } from 'lib/client/components';
 import './styles.less';
 
 const connect = createConnector(React);
@@ -113,9 +113,11 @@ class Login extends ViewComponent {
     const { state, text } = this;
 
     const RegisterLink = () => (
-      <Button className="pt-minimal" onClick={this.registerOnSubmit}>
-        {text.register}
-      </Button>
+      <Button text={text.register}
+        onClick={this.registerOnSubmit}
+        minimal={true}
+        rounded={true}
+      />
     );
 
     return (
@@ -126,9 +128,7 @@ class Login extends ViewComponent {
 
             <form className="pt-control-group pt-vertical" onSubmit={this.handleSubmit}>
               {this.inputFields.map(this.getInput)}
-              <Button type="submit" className="pt-intent-primary">
-                {text.submit}
-              </Button>
+              <Button type="submit" color="primary" text={text.submit} />
             </form>
             <p>{!state.register ? <RegisterLink /> : null}</p>
           </div>
