@@ -1,12 +1,10 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import { Button } from 'lib/client/components';
 
 describe("Button", () => {
   function getButton(props) {
-    return shallow(
-      <Button {...props} />
-    );
+    return mount(<Button {...props} />).find('Button');
   }
 
   it("maps `props` to the `className` attribute", () => {
@@ -41,7 +39,7 @@ describe("Button", () => {
       text: 'Test Button'
     });
 
-    expect(button.children().text()).toBe('Test Button');
+    expect(button.text()).toBe('Test Button');
   });
 
   it("handles an onClick when triggered", done => {
