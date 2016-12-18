@@ -17,16 +17,23 @@ class App extends ViewComponent {
     views: [
       { name: 'Home', path: '/home', icon: 'home' }
     ]
-  }
+  };
 
   render() {
-    const userCollections = _.get(this.state, 'user.library.collections', []).slice(0, 5);
-    const sidebarLinks = this.state.views.concat(userCollections);
+    const {
+      props: { children },
+      state: { user, views }
+    } = this;
+
+    const { path } = children.props.route;
+    const collections = _.get(user, 'library.collections', []).slice(0, 5);
+    const links = views.concat(collections);
+
     return (
       <FlexRow id="app">
-        <SideBar links={sidebarLinks} />
+        <SideBar links={links} currentPath={path} />
         <div className="content bg-light">
-          { this.props.children }
+          {children}
         </div>
       </FlexRow>
     );
