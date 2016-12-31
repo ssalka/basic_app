@@ -25,11 +25,6 @@ const config = {
   resolve: {
     root: path.resolve(__dirname)
   },
-  externals: {
-    // Use cached libraries to avoid rebundling
-    'react': 'React',
-    'react-dom': 'ReactDOM'
-  },
   plugins: [
     new webpack.DefinePlugin({
       // So react doesn't complain about being minified
