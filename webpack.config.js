@@ -20,6 +20,9 @@ const config = {
     }, {
       test: /\.(less|css)$/,
       loaders: ["style", "css", "less"]
+    }, {
+      test: /\.(json)$/,
+      loader: 'json'
     }]
   },
   resolve: {

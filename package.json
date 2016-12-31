@@ -59,6 +59,7 @@
     "enzyme": "^2.6.0",
     "jest-cli": "^18.0.0",
     "jest-css-modules": "^1.1.0",
+    "json-loader": "^0.5.4",
     "less": "^2.7.1",
     "less-loader": "^2.2.3",
     "react-addons-test-utils": "^15.4.1",
