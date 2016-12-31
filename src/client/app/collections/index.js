@@ -1,12 +1,12 @@
 import React from 'react';
-import { Button, NonIdealState } from '@blueprintjs/core';
+import { NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router';
 import { createConnector } from 'cartiv';
 import _ from 'lodash';
 _.mixin(require('lodash-inflection'));
 
 import { UserStore } from 'lib/client/api/stores';
-import { ViewComponent } from 'lib/client/components';
+import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
 
 const connect = createConnector(React);
 
@@ -16,16 +16,10 @@ class Collections extends ViewComponent {
     return _.get(this.state, 'user.library.collections', []);
   }
 
-  AddCollectionButton({minimal}) {
-    return minimal ? (
-      <Link to="collections/add" role="button"
-        className="pt-button pt-minimal pt-icon-add"
-      ></Link>
-    ) : (
+  AddCollectionButton(props) {
+    return (
       <Link to="collections/add">
-        <Button className="pt-minimal pt-intent-primary"
-          iconName="add" text="Add Collection"
-        />
+        <Button icon="add" minimal={true} rounded={true} {...props} />
       </Link>
     );
   }
@@ -37,9 +31,7 @@ class Collections extends ViewComponent {
       <div className="pt-callout pt-elevation-1">
         {collections.length ? (
           <div>
-            <div className="flex-row">
-              <AddCollectionButton minimal={true} />
-            </div>
+            <FlexRow><AddCollectionButton /></FlexRow>
             <div className="scroll container">
               {collections.map((collection, key) => (
                 <p key={key}>{collection.name}</p>
@@ -55,7 +47,12 @@ class Collections extends ViewComponent {
                 Import or sync with any source.
               </span>
             )}
-            action={<AddCollectionButton />}
+            action={(
+              <AddCollectionButton
+                text="Add Collection"
+                color="primary"
+              />
+            )}
           />
         )}
       </div>
@@ -66,14 +63,14 @@ class Collections extends ViewComponent {
     const { CollectionList } = this;
     return (
       <section id="collections" className="container list-view">
-        <div className="flex-row">
+        <FlexRow>
           <h2 className="view-title">
             Collections
           </h2>
-        </div>
-        <div className="flex-column">
+        </FlexRow>
+        <FlexColumn>
           <CollectionList />
-        </div>
+        </FlexColumn>
       </section>
     );
   }

@@ -7,7 +7,7 @@ import _ from 'lodash';
 
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
-import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
+import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
@@ -82,12 +82,12 @@ class AppRouter extends BaseComponent {
   get components() {
     return {
       Site: ({children}) => (
-        <div className="viewport flex-column">
+        <FlexColumn className="viewport">
           <NavBar />
           <main className="bg-light">
             {children}
           </main>
-        </div>
+        </FlexColumn>
       ),
       NotFound: () => (
         <ViewComponent>

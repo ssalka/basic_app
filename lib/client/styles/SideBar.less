@@ -6,9 +6,11 @@
 @menu-item-expanded-height: 41px;
 
 @color-background: @dark-grey-5;
+@color-background-active: @grey-2;
 @color-background-hover: @grey-1;
 @color-text: @grey-3;
-@color-text-hover: @light-grey-1;
+@color-text-active: @light-grey-1;
+@color-text-hover: @grey-5;
 
 
 .sidebar {
@@ -28,12 +30,20 @@
     background-color: @color-background;
   }
 
+  li.active {
+    a, a:hover {
+      color: @color-text-active;
+      background-color: @color-background-active;
+    }
+  }
+
   .pt-menu-item {
     border-radius: 0;
     color: @color-text;
     cursor: pointer;
     vertical-align: middle;
-    transition: background-color .2s ease-in-out,
+    transition: color .15s ease-in-out,
+      background-color .15s ease-in-out,
       height .4s ease-in-out;
 
     .text {
@@ -47,7 +57,7 @@
       margin-right: 10px;
     }
 
-    &.active, &:hover {
+    &:hover {
       color: @color-text-hover;
       background-color: @color-background-hover;
     }

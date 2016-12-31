@@ -20,15 +20,13 @@ const config = {
     }, {
       test: /\.(less|css)$/,
       loaders: ["style", "css", "less"]
+    }, {
+      test: /\.(json)$/,
+      loader: 'json'
     }]
   },
   resolve: {
     root: path.resolve(__dirname)
-  },
-  externals: {
-    // Use cached libraries to avoid rebundling
-    'react': 'React',
-    'react-dom': 'ReactDOM'
   },
   plugins: [
     new webpack.DefinePlugin({

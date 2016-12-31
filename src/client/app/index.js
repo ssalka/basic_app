@@ -1,7 +1,7 @@
 import React from 'react';
 import { createConnector } from 'cartiv';
 
-import { ViewComponent, NavBar, SideBar } from 'lib/client/components';
+import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
 
@@ -17,18 +17,25 @@ class App extends ViewComponent {
     views: [
       { name: 'Home', path: '/home', icon: 'home' }
     ]
-  }
+  };
 
   render() {
-    const userCollections = _.get(this.state, 'user.library.collections', []).slice(0, 5);
-    const sidebarLinks = this.state.views.concat(userCollections);
+    const {
+      props: { children },
+      state: { user, views }
+    } = this;
+
+    const { path } = children.props.route;
+    const collections = _.get(user, 'library.collections', []).slice(0, 5);
+    const links = views.concat(collections);
+
     return (
-      <div id="app" className="flex-row">
-        <SideBar links={sidebarLinks} />
+      <FlexRow id="app">
+        <SideBar links={links} currentPath={path} />
         <div className="content bg-light">
-          { this.props.children }
+          {children}
         </div>
-      </div>
+      </FlexRow>
     );
   }
 }
