@@ -12,7 +12,7 @@ import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
 import { App, Home, Collections } from './app';
-import { AddCollectionView } from 'lib/client/views';
+import { AddCollectionView, CollectionView } from 'lib/client/views';
 import './styles.less';
 
 const connect = createConnector(React);
@@ -65,17 +65,11 @@ class AppRouter extends BaseComponent {
     return context;
   }
 
-  getView({ params, ...props }) {
-    const collection = props.collection = _.find(
+  getCollectionView({ params, ...props }) {
+    props.collection = _.find(
       _.get(this.props.user, 'library.collections', []),
       coll => params.collection === coll.path.slice(1)
     );
-
-    const CollectionView = _.get({
-      // uncomment once TableView is implemented
-      // TABLE: TableView
-    }, collection.defaultView, ViewComponent);
-
 
     return <CollectionView {...props} />;
   }
@@ -137,7 +131,7 @@ class AppRouter extends BaseComponent {
             <Route path="collections">
               <IndexRoute component={Collections} />
               <Route path="add" component={AddCollectionView} />
-              <Route path=":collection" component={this.getView} />
+              <Route path=":collection" component={this.getCollectionView} />
             </Route>
           </Route>
 
