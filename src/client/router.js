@@ -65,6 +65,21 @@ class AppRouter extends BaseComponent {
     return context;
   }
 
+  getView({ params, ...props }) {
+    const collection = props.collection = _.find(
+      _.get(this.props.user, 'library.collections', []),
+      coll => params.collection === coll.path.slice(1)
+    );
+
+    const CollectionView = _.get({
+      // uncomment once TableView is implemented
+      // TABLE: TableView
+    }, collection.defaultView, ViewComponent);
+
+
+    return <CollectionView {...props} />;
+  }
+
   logout() {
     const { token } = localStorage;
     if (token) {
@@ -103,6 +118,7 @@ class AppRouter extends BaseComponent {
 
   render() {
     const { Site, NotFound } = this.components;
+    const collections = _.get(this.props, 'user.library.collections', []);
 
     return (
       <Router history={browserHistory}>
@@ -121,6 +137,7 @@ class AppRouter extends BaseComponent {
             <Route path="collections">
               <IndexRoute component={Collections} />
               <Route path="add" component={AddCollectionView} />
+              <Route path=":collection" component={this.getView} />
             </Route>
           </Route>
 
