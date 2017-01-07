@@ -1,9 +1,8 @@
 const _ = require('lodash');
-const mongoose = require('mongoose');
+const { ModelGen, types: { Mixed } } = require('lib/server/utils');
 
 describe("ModelGen", () => {
 
-  const { ModelGen } = require('lib/server/utils');
 
   const name = 'TestModel';
 
@@ -36,6 +35,26 @@ describe("ModelGen", () => {
   );
 
   beforeEach(() => ModelGen.reset());
+
+  describe("#getSchema", () => {
+
+    const fields = [
+      { name: 'String Field', type: 'STRING' },
+      { name: 'Number Field', type: 'NUMBER' },
+      { name: 'Mixed Field', type: 'MIXED' },
+      { name: 'Unknown Field', type: null }
+    ];
+
+    it("maps the a list of Fields to a mongoose schema", () => {
+      expect(ModelGen.getSchema(fields)).toEqual({
+        stringField: { type: String },
+        numberField: { type: Number },
+        mixedField: { type: Mixed },
+        unknownField: { type: Mixed }
+      });
+    });
+
+  });
 
   describe("#generateModel", () => {
 
