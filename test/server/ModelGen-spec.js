@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const { ModelGen, types: { Mixed } } = require('lib/server/utils');
+const MockCollection = require('lib/server/models/mocks/collection');
 
 describe("ModelGen", () => {
 
@@ -38,12 +39,7 @@ describe("ModelGen", () => {
 
   describe("#getSchema", () => {
 
-    const fields = [
-      { name: 'String Field', type: 'STRING' },
-      { name: 'Number Field', type: 'NUMBER' },
-      { name: 'Mixed Field', type: 'MIXED' },
-      { name: 'Unknown Field', type: null }
-    ];
+    const { fields } = new MockCollection();
 
     it("maps the a list of Fields to a mongoose schema", () => {
       expect(ModelGen.getSchema(fields)).toEqual({
