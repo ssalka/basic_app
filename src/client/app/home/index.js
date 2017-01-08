@@ -42,7 +42,7 @@ class Home extends ViewComponent {
             </FlexRow>
             <div className="scroll container">
               {collections.map((collection, key) => (
-                <p key={key}>{collection.name}</p>
+                <p><Link to={`collections${collection.path}`} key={key}>{collection.name}</Link></p>
               ))}
             </div>
           </div>

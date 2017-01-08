@@ -12,7 +12,7 @@ import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
 import { App, Home, Collections } from './app';
-import { AddCollectionView } from 'lib/client/views';
+import { AddCollectionView, CollectionView } from 'lib/client/views';
 import './styles.less';
 
 const connect = createConnector(React);
@@ -65,6 +65,15 @@ class AppRouter extends BaseComponent {
     return context;
   }
 
+  getCollectionView({ params, ...props }) {
+    props.collection = _.find(
+      _.get(this.props.user, 'library.collections', []),
+      coll => params.collection === coll.path.slice(1)
+    );
+
+    return <CollectionView {...props} />;
+  }
+
   logout() {
     const { token } = localStorage;
     if (token) {
@@ -103,6 +112,7 @@ class AppRouter extends BaseComponent {
 
   render() {
     const { Site, NotFound } = this.components;
+    const collections = _.get(this.props, 'user.library.collections', []);
 
     return (
       <Router history={browserHistory}>
@@ -121,6 +131,7 @@ class AppRouter extends BaseComponent {
             <Route path="collections">
               <IndexRoute component={Collections} />
               <Route path="add" component={AddCollectionView} />
+              <Route path=":collection" component={this.getCollectionView} />
             </Route>
           </Route>
 
