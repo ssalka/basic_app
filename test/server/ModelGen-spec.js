@@ -67,31 +67,30 @@ describe("ModelGen", () => {
 
   });
 
-  describe("isAvailable", () => {
+  describe("#modelExists", () => {
 
-    it("returns false if a collection with the given name already exists in the db", () => {
-      let result = ModelGen.isAvailable(settings.dbName, name);
+    it("returns true if a collection with the given name already exists in the db", () => {
+      let result = ModelGen.modelExists(settings.dbName, name);
 
-      expect(result).toBe(true);
-
-      console.error = jest.fn();
-      ModelGen.dbs = { test: 'TestModel' };
-      result = ModelGen.isAvailable(settings.dbName, name);
-
-      expect(console.error).toHaveBeenCalled();
       expect(result).toBe(false);
+
+      console.info = jest.fn();
+      ModelGen.dbs = { test: { TestModel: 'Model' } };
+      result = ModelGen.modelExists(settings.dbName, name);
+
+      expect(console.info).toHaveBeenCalled();
+      expect(result).toBe(true);
     });
 
   });
 
-  describe("trackCollection", () => {
+  describe("#trackCollection", () => {
 
     it("adds the collection being generated to a database map", () => {
       const { dbName } = settings;
-      ModelGen.trackCollection(dbName, name);
+      ModelGen.trackCollection(dbName, name, 'Model');
 
-      expect(ModelGen.dbs[dbName]).toBeDefined();
-      expect(_.includes(ModelGen.dbs[dbName], name)).toBe(true);
+      expect(ModelGen.dbs[dbName]).toEqual({ [name]: 'Model' });
     });
 
   });
