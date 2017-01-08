@@ -29,7 +29,7 @@
     "graphql-tools": "^0.8.3",
     "lodash": "^4.14.1",
     "lodash-inflection": "^1.4.1",
-    "mongoose": "^4.6.5",
+    "mongoose": "^4.7.6",
     "mongoose-schema-extend": "^0.2.2",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
