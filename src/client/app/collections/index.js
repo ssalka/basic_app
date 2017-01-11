@@ -32,7 +32,7 @@ class Collections extends ViewComponent {
         {collections.length ? (
           <div>
             <FlexRow><AddCollectionButton /></FlexRow>
-            <div className="scroll container">
+            <div className="scroll-y container">
               {collections.map((collection, key) => (
                 <p key={key}>{collection.name}</p>
               ))}

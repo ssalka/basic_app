@@ -40,7 +40,7 @@ class Home extends ViewComponent {
               <h4>Collections <span className="muted">({collections.length})</span></h4>
               <AddButton href="collections/add" />
             </FlexRow>
-            <div className="scroll container">
+            <div className="scroll-y container">
               {collections.map((collection, key) => (
                 <p><Link to={`collections${collection.path}`} key={key}>{collection.name}</Link></p>
               ))}
@@ -76,7 +76,7 @@ class Home extends ViewComponent {
               <h4>Views <span className="muted">({views.length})</span></h4>
               <AddButton onClick={this.addView} />
             </FlexRow>
-            <div className="scroll container">
+            <div className="scroll-y container">
               {views.map((view, key) => (
                 <p key={key}>{view.name}</p>
               ))}
