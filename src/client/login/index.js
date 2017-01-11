@@ -13,22 +13,19 @@ const connect = createConnector(React);
 
 @connect(UserStore)
 class Login extends ViewComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      register: false,
-      formData: {
-        username: '',
-        password: '',
-        email: ''
-      }
-    };
-  }
-
   static contextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   }
+
+  state = {
+    register: false,
+    formData: {
+      username: '',
+      password: '',
+      email: ''
+    }
+  };
 
   registerOnSubmit() {
     this.setState({
@@ -123,7 +120,7 @@ class Login extends ViewComponent {
     return (
       <section id="login" className="view">
         <div className="pt-callout">
-          <div className="center">
+          <div className="login-form">
             <h2>{text.header}</h2>
 
             <form className="pt-control-group pt-vertical" onSubmit={this.handleSubmit}>
