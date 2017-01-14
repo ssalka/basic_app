@@ -5,8 +5,8 @@ const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { printSchema } = require('graphql/utilities/schemaPrinter');
 
 const { index } = require('../config');
-const schema = require('lib/server/graphql');
-const { User, Session } = require('lib/server/models');
+const getGraphQLSchema = require('lib/server/graphql');
+const { User, Session, Collection } = require('lib/server/models');
 const { logger, generateToken } = require('lib/common');
 
 // Send these fields to client upon successful authentication
@@ -15,6 +15,12 @@ const USER_FIELDS = [
   'username',
   'createdAt'
 ];
+
+// Load collections on app start to inject into GraphQL
+let collections;
+Collection.find().populate({ path: 'creator', model: User }).exec()
+  .then(docs => collections = docs)
+  .catch(console.error);
 
 module.exports = {
   sendIndex(req, res) {
@@ -127,9 +133,8 @@ module.exports = {
 
   graphql(req, res) {
     graphqlExpress({
-      schema, context: {
-        user: req.user
-      }
+      schema: getGraphQLSchema(collections),
+      context: { user: req.user }
     })(req, res);
   },
 

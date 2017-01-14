@@ -7,6 +7,7 @@ import _ from 'lodash';
 
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';
+import { getGraphQLComponent } from 'lib/client/api/graphql';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
 import Splash from './splash';
@@ -26,6 +27,7 @@ const getCurrentUser = gql`query {
         _db _collection _id
         name icon path
         fields { name }
+        creator { username }
       }
     }
   }
@@ -72,7 +74,11 @@ class AppRouter extends BaseComponent {
       coll => params.collection === coll.path.slice(1)
     );
 
-    return <CollectionView {...props} />;
+    const CollectionViewWithQuery = getGraphQLComponent(
+      CollectionView, props.collection
+    );
+
+    return <CollectionViewWithQuery {...props} />;
   }
 
   logout() {
