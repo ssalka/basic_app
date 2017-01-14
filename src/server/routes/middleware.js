@@ -18,7 +18,7 @@ const USER_FIELDS = [
 
 // Load collections on app start to inject into GraphQL
 let collections;
-Collection.find().exec()
+Collection.find().populate({ path: 'creator', model: User }).exec()
   .then(docs => collections = docs)
   .catch(console.error);
 
