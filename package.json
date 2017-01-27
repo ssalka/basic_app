@@ -3,10 +3,9 @@
   "version": "0.10.1",
   "description": "Basic App",
   "scripts": {
-    "build": "npm install && webpack",
-    "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server src/server.dev.js",
-    "start": "NODE_PATH=. node src/server",
-    "test": "NODE_PATH=. jest"
+    "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",
+    "start": "NODE_PATH=. node index.js",
+    "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json"
   },
   "author": "Steven Salka <steven@ssalka.io>",
   "repository": {
@@ -67,15 +66,5 @@
     "style-loader": "^0.13.1",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.16.2"
-  },
-  "jest": {
-    "testRegex": "(/test/.*|\\.spec)\\.js$",
-    "transform": {
-      ".js$": "<rootDir>/node_modules/babel-jest"
-    },
-    "moduleNameMapper": {
-      "\\.less$": "<rootDir>/node_modules/jest-css-modules"
-    },
-    "verbose": true
   }
 }

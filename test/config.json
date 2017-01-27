@@ -1,0 +1,13 @@
+{
+  "moduleFileExtensions": ["js", "json", "es6"],
+  "moduleNameMapper": {
+    "\\.less$": "<rootDir>/node_modules/jest-css-modules"
+  },
+  "testPathIgnorePatterns": ["/node_modules/", "/test\/index/"],
+  "testRegex": "(/test/.*\\-spec)\\.js$",
+  "transform": {
+    ".js$": "<rootDir>/node_modules/webpack-babel-jest"
+  },
+  "setupTestFrameworkScriptFile": "<rootDir>/index.js",
+  "verbose": true
+}
