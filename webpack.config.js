@@ -29,6 +29,10 @@ const config = {
     root: path.resolve(__dirname)
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      _: 'lodash',
+      React: 'react'
+    }),
     new webpack.DefinePlugin({
       // So react doesn't complain about being minified
       'process.env': { 'NODE_ENV': '"production"' }

@@ -2,6 +2,7 @@ import ReactDOM from 'react-dom';
 import AppRouter from './router';
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
+_.mixin(require('lodash-inflection'));
 
 const client = new ApolloClient({
   networkInterface: createNetworkInterface({

@@ -1,5 +1,3 @@
-import _ from 'lodash';
-import React from 'react';
 import { InputGroup } from '@blueprintjs/core';
 import { Link } from 'react-router';
 import { createConnector } from 'cartiv';

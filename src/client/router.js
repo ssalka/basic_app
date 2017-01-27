@@ -1,9 +1,7 @@
-import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 import { createConnector } from 'cartiv';
-import _ from 'lodash';
 
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';

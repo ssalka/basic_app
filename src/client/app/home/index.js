@@ -2,8 +2,6 @@ import React from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router';
 import { createConnector } from 'cartiv';
-import _ from 'lodash';
-_.mixin(require('lodash-inflection'));
 
 import { User } from 'lib/client/api';
 import { UserStore } from 'lib/client/api/stores';

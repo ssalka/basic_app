@@ -1,4 +1,3 @@
-import React from 'react';
 import { createConnector } from 'cartiv';
 
 import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
