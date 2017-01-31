@@ -1,15 +1,18 @@
+@import 'classes';
+
 .collection-view {
   flex: 0 0 auto;
+  height: 100%;
   max-height: calc(~'100vh - 50px');
 
   .flex-row {
-    background-color: white;
     width: 100%;
     padding: 10px 11px;
     min-height: 48px;
 
     .icon {
       margin-right: 10px;
+      color: @light-grey-4;
     }
 
     h3 {
@@ -18,8 +21,7 @@
   }
 
   .flex-view {
-    flex: 0 1 auto;
-    overflow-y: auto;
+    flex-grow: 1;
   }
 
   & > .pt-non-ideal-state {
