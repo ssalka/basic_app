@@ -31,7 +31,7 @@ class App extends ViewComponent {
     return (
       <FlexRow id="app">
         <SideBar links={links} currentPath={path} />
-        <div id="content" className="bg-light">
+        <div id="content">
           {children}
         </div>
       </FlexRow>

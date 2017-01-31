@@ -96,9 +96,9 @@ class AppRouter extends BaseComponent {
   get components() {
     return {
       Site: ({children}) => (
-        <FlexColumn className="viewport">
+        <FlexColumn>
           <NavBar />
-          <main className="bg-light">
+          <main>
             {children}
           </main>
         </FlexColumn>

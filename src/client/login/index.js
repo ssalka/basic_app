@@ -116,7 +116,7 @@ class Login extends ViewComponent {
     );
 
     return (
-      <section id="login" className="view">
+      <div id="login" className="view">
         <div className="pt-callout">
           <div className="login-form">
             <h2>{text.header}</h2>
@@ -128,7 +128,7 @@ class Login extends ViewComponent {
             <p>{!state.register ? <RegisterLink /> : null}</p>
           </div>
         </div>
-      </section>
+      </div>
     );
   }
 };
