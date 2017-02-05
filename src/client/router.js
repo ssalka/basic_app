@@ -25,7 +25,7 @@ const getCurrentUser = gql`query {
         _db _collection _id
         name icon path
         description
-        fields { name }
+        fields { name type required isArray }
         creator { username }
       }
     }
