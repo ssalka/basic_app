@@ -11,7 +11,7 @@ import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
 import { App, Home, Collections } from './app';
-import { AddCollectionView, CollectionView } from 'lib/client/views';
+import { CollectionView, SchemaFormView } from 'lib/client/views';
 import './styles.less';
 
 const connect = createConnector(React);
@@ -25,7 +25,7 @@ const getCurrentUser = gql`query {
         _db _collection _id
         name icon path
         description
-        fields { name }
+        fields { name type required isArray }
         creator { username }
       }
     }
@@ -55,6 +55,10 @@ class AppRouter extends BaseComponent {
     }
   }
 
+  renderIfAuthenticated = props => this.props.user
+    ? <App {...props} />
+    : <div></div>;
+
   getChildContext() {
     const context = { appName: document.title };
     if (this.props.user) {
@@ -78,6 +82,12 @@ class AppRouter extends BaseComponent {
     );
 
     return <CollectionViewWithQuery {...props} />;
+  }
+
+  getSchemaFormView({ location: { state }, ...props }) {
+    return (
+      <SchemaFormView collection={state.collection} {...props} />
+    );
   }
 
   logout() {
@@ -128,16 +138,15 @@ class AppRouter extends BaseComponent {
             <Login {...props} refetch={this.props.data.refetch} />
           )} />
 
-          <Route component={props => (
-            this.props.user
-              ? <App {...props} />
-              : <div></div>
-          )}>
+        <Route component={this.renderIfAuthenticated}>
             <Route path="home" component={Home} />
             <Route path="collections">
               <IndexRoute component={Collections} />
-              <Route path="add" component={AddCollectionView} />
-              <Route path=":collection" component={this.getCollectionView} />
+              <Route path="add" component={SchemaFormView} />
+              <Route path=":collection">
+                <IndexRoute component={this.getCollectionView} />
+                <Route path="edit" component={this.getSchemaFormView} />
+              </Route>
             </Route>
           </Route>
 
