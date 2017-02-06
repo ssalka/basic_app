@@ -1,10 +1,9 @@
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
-import { createConnector } from 'cartiv';
 
 import { User } from 'lib/client/api';
-import { UserStore } from 'lib/client/api/stores';
+import { connect, UserStore } from 'lib/client/api/stores';
 import { getGraphQLComponent } from 'lib/client/api/graphql';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
@@ -13,8 +12,6 @@ import Login from './login';
 import { App, Home, Collections } from './app';
 import { CollectionView, SchemaFormView } from 'lib/client/views';
 import './styles.less';
-
-const connect = createConnector(React);
 
 const getCurrentUser = gql`query {
   user: me {
@@ -34,11 +31,7 @@ const getCurrentUser = gql`query {
 
 @connect(UserStore)
 @graphql(getCurrentUser, {
-  props: ({ data }) => ({
-    data,
-    user: data.user,
-    loading: data.loading
-  })
+  props: ({ data }) => data
 })
 class AppRouter extends BaseComponent {
   static childContextTypes = {
@@ -46,7 +39,7 @@ class AppRouter extends BaseComponent {
     user: React.PropTypes.object
   };
 
-  componentWillReceiveProps({ data: { user, loading, error } }) {
+  componentWillReceiveProps({ user, loading, error }) {
     if (user || _.get(this.props, 'user')) return;
     if (error) console.error(error);
     if (!loading && location.pathname.includes('home')) {
@@ -122,10 +115,6 @@ class AppRouter extends BaseComponent {
     };
   }
 
-  get refetch() {
-    return this.props.data.refetch;
-  }
-
   render() {
     const { Site, NotFound } = this.components;
     const collections = _.get(this.props, 'user.library.collections', []);
@@ -135,10 +124,10 @@ class AppRouter extends BaseComponent {
         <Route path="/" component={Site}>
           <IndexRoute component={Splash} />
           <Route path="login" component={props => (
-            <Login {...props} refetch={this.props.data.refetch} />
+            <Login {...props} refetch={this.props.refetch} />
           )} />
 
-        <Route component={this.renderIfAuthenticated}>
+          <Route component={this.renderIfAuthenticated}>
             <Route path="home" component={Home} />
             <Route path="collections">
               <IndexRoute component={Collections} />

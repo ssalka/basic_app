@@ -1,13 +1,10 @@
 import { InputGroup } from '@blueprintjs/core';
 import { Link } from 'react-router';
-import { createConnector } from 'cartiv';
 
 import { User } from 'lib/client/api';
-import { UserStore } from 'lib/client/api/stores';
+import { connect, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, Button } from 'lib/client/components';
 import './styles.less';
-
-const connect = createConnector(React);
 
 @connect(UserStore)
 class Login extends ViewComponent {

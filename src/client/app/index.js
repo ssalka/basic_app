@@ -1,14 +1,10 @@
-import { createConnector } from 'cartiv';
-
 import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
 import { User } from 'lib/client/api';
-import { UserStore } from 'lib/client/api/stores';
+import { connect, UserStore } from 'lib/client/api/stores';
 
 import Home from './home';
 import Collections from './collections';
 import './styles.less';
-
-const connect = createConnector(React);
 
 @connect(UserStore)
 class App extends ViewComponent {

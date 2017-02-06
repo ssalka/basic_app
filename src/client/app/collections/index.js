@@ -1,11 +1,8 @@
 import { NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router';
-import { createConnector } from 'cartiv';
 
-import { UserStore } from 'lib/client/api/stores';
+import { connect, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
-
-const connect = createConnector(React);
 
 @connect(UserStore)
 class Collections extends ViewComponent {
