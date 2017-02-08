@@ -1,6 +1,6 @@
 {
   "name": "basic_app",
-  "version": "0.11.1",
+  "version": "0.11.2",
   "description": "Basic App",
   "scripts": {
     "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",
@@ -26,7 +26,6 @@
     "graphql-server-express": "^0.4.3",
     "graphql-tag": "^1.1.2",
     "graphql-tools": "^0.8.3",
-    "griddle-react": "^0.7.1",
     "lodash": "^4.14.1",
     "lodash-inflection": "^1.4.1",
     "mongoose": "^4.7.6",
@@ -40,6 +39,7 @@
     "react-apollo": "^0.6.0",
     "react-autobind": "^1.0.6",
     "react-dom": "^15.3.0",
+    "react-filterable-table": "^0.1.7",
     "react-router": "^2.8.1"
   },
   "devDependencies": {

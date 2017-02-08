@@ -23,6 +23,7 @@ const getCurrentUser = gql`query {
         name icon path
         description
         fields { name type required isArray }
+        defaultView { type }
         creator { username }
       }
     }
