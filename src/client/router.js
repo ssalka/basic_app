@@ -1,10 +1,8 @@
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import { graphql } from 'react-apollo';
-import gql from 'graphql-tag';
 
 import { User } from 'lib/client/api';
 import { connect, UserStore } from 'lib/client/api/stores';
-import { getGraphQLComponent } from 'lib/client/api/graphql';
+import { getGraphQLComponent, query } from 'lib/client/api/graphql';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
 import Splash from './splash';
@@ -13,7 +11,8 @@ import { App, Home, Collections } from './app';
 import { CollectionView, SchemaFormView } from 'lib/client/views';
 import './styles.less';
 
-const getCurrentUser = gql`query {
+@connect(UserStore)
+@query(`{
   user: me {
     _id
     username
@@ -28,12 +27,7 @@ const getCurrentUser = gql`query {
       }
     }
   }
-}`;
-
-@connect(UserStore)
-@graphql(getCurrentUser, {
-  props: ({ data }) => data
-})
+}`)
 class AppRouter extends BaseComponent {
   static childContextTypes = {
     appName: React.PropTypes.string,
