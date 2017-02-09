@@ -1,0 +1,21 @@
+mutation SchemaFormMutation(
+  $_id: ID,
+  $name: String!,
+  $fields: [FieldInput!]!,
+  $description: String,
+  $icon: String
+) {
+  collection: upsertCollection(
+    _id: $_id,
+    name: $name,
+    fields: $fields,
+    description: $description,
+    icon: $icon
+    ) {
+    _db _collection _id
+    name description icon path
+    fields { name type required isArray }
+    creator { _id username }
+    defaultView { type }
+  }
+}

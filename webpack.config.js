@@ -21,8 +21,11 @@ const config = {
       test: /\.(less|css)$/,
       loaders: ["style", "css", "less"]
     }, {
-      test: /\.(json)$/,
+      test: /\.json$/,
       loader: 'json'
+    }, {
+      test: /\.gql$/,
+      loader: 'graphql-tag/loader'
     }]
   },
   resolve: {

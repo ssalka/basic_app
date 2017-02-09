@@ -3,6 +3,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import { User } from 'lib/client/api';
 import { connect, UserStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query } from 'lib/client/api/graphql';
+import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
 import Splash from './splash';
@@ -11,23 +12,8 @@ import { App, Home, Collections } from './app';
 import { CollectionView, SchemaFormView } from 'lib/client/views';
 import './styles.less';
 
+@query(GetUser)
 @connect(UserStore)
-@query(`{
-  user: me {
-    _id
-    username
-    library {
-      collections {
-        _db _collection _id
-        name icon path
-        description
-        fields { name type required isArray }
-        defaultView { type }
-        creator { username }
-      }
-    }
-  }
-}`)
 class AppRouter extends BaseComponent {
   static childContextTypes = {
     appName: React.PropTypes.string,
