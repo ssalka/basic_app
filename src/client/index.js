@@ -8,7 +8,12 @@ const client = new ApolloClient({
   networkInterface: createNetworkInterface({
     uri: 'http://localhost:8080/graphql',
     opts: { credentials: 'same-origin' }
-  })
+  }),
+  dataIdFromObject(result) {
+    return result._id && result.__typename
+      ? result.__typename + result._id
+      : null;
+  }
 });
 
 ReactDOM.render(
