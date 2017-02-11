@@ -21,9 +21,8 @@ class AppRouter extends BaseComponent {
   };
 
   componentWillReceiveProps({ user, loading, error }) {
-    if (user || _.get(this.props, 'user')) return;
     if (error) console.error(error);
-    if (!loading && location.pathname.includes('home')) {
+    if (!(loading || user) && location.pathname.includes('home')) {
       // done loading; no user; in protected route
       browserHistory.push('/login');
     }
