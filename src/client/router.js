@@ -9,7 +9,7 @@ import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
 import { App, Home, Collections } from './app';
-import { CollectionView, SchemaForm } from 'lib/client/views';
+import { CollectionView, DocumentForm, DocumentView, SchemaForm } from 'lib/client/views';
 import './styles.less';
 
 @query(GetUser)
@@ -58,19 +58,13 @@ class AppRouter extends BaseComponent {
   }
 
   getDocumentView({ params, ...props }) {
-    return (
-      <div {...props}>
-        Document view for {params._id}
-      </div>
-    )
+    const document = _.pick(params, '_id');
+    return <DocumentView document={document} />
   }
 
   getDocumentForm({ params, ...props }) {
-    return (
-      <div {...props}>
-        Document Form - editing document {params._id}
-      </div>
-    )
+    const document = _.pick(params, '_id');
+    return <DocumentForm document={document} {...props} />;
   }
 
   getSchemaForm({ location: { state }, ...props }) {
@@ -130,6 +124,7 @@ class AppRouter extends BaseComponent {
               <Route path="add" component={SchemaForm} />
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />
+                <Route path="add" component={DocumentForm} />
                 <Route path="edit" component={this.getSchemaForm} />
                 <Route path=":_id">
                   <IndexRoute component={this.getDocumentView} />
