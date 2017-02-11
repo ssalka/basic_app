@@ -9,7 +9,7 @@ import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
 import { App, Home, Collections } from './app';
-import { CollectionView, SchemaFormView } from 'lib/client/views';
+import { CollectionView, SchemaForm } from 'lib/client/views';
 import './styles.less';
 
 @query(GetUser)
@@ -73,9 +73,9 @@ class AppRouter extends BaseComponent {
     )
   }
 
-  getSchemaFormView({ location: { state }, ...props }) {
+  getSchemaForm({ location: { state }, ...props }) {
     return (
-      <SchemaFormView collection={state.collection} {...props} />
+      <SchemaForm collection={state.collection} {...props} />
     );
   }
 
@@ -127,7 +127,7 @@ class AppRouter extends BaseComponent {
             <Route path="home" component={Home} />
             <Route path="collections">
               <IndexRoute component={Collections} />
-              <Route path="add" component={SchemaFormView} />
+              <Route path="add" component={SchemaForm} />
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />
                 <Route path="edit" component={this.getSchemaForm} />
