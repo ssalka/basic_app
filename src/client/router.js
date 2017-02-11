@@ -57,6 +57,22 @@ class AppRouter extends BaseComponent {
     return <CollectionViewWithQuery {...props} />;
   }
 
+  getDocumentView({ params, ...props }) {
+    return (
+      <div {...props}>
+        Document view for {params._id}
+      </div>
+    )
+  }
+
+  getDocumentForm({ params, ...props }) {
+    return (
+      <div {...props}>
+        Document Form - editing document {params._id}
+      </div>
+    )
+  }
+
   getSchemaFormView({ location: { state }, ...props }) {
     return (
       <SchemaFormView collection={state.collection} {...props} />
@@ -114,7 +130,11 @@ class AppRouter extends BaseComponent {
               <Route path="add" component={SchemaFormView} />
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />
-                <Route path="edit" component={this.getSchemaFormView} />
+                <Route path="edit" component={this.getSchemaForm} />
+                <Route path=":_id">
+                  <IndexRoute component={this.getDocumentView} />
+                  <Route path="edit" component={this.getDocumentForm} />
+                </Route>
               </Route>
             </Route>
           </Route>
