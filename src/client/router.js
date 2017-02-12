@@ -57,14 +57,14 @@ class AppRouter extends BaseComponent {
     return <CollectionViewWithQuery {...props} />;
   }
 
-  getDocumentView({ params, location, ...props }) {
-    const document = location.state.document || _.pick(params, '_id');
-    return <DocumentView document={document} pathname={location.pathname} />
+  getDocumentView({ params, location: { state, pathname }, ...props }) {
+    const _document = state.document || _.pick(params, '_id');
+    return <DocumentView document={_document} pathname={pathname} />
   }
 
   getDocumentForm({ params, ...props }) {
-    const document = _.pick(params, '_id');
-    return <DocumentForm document={document} {...props} />;
+    const _document = _.pick(params, '_id');
+    return <DocumentForm document={_document} {...props} />;
   }
 
   getSchemaForm({ location: { state }, ...props }) {
