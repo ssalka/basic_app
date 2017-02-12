@@ -9,7 +9,6 @@ query getUser {
         path slug
         fields { name type required isArray }
         defaultView { type }
-        creator { username }
       }
     }
   }
