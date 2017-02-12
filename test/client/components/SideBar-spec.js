@@ -62,9 +62,7 @@ describe("SideBar", () => {
       const link = links[i];
       expect(li.find('.icon').prop('className')).toContain(link.icon);
       expect(li.find('.text').text()).toBe(link.name);
-      expect(li.find('Link').prop('to')).toBe(
-        !i ? link.path : `/collections${link.path}`
-      );
+      expect(li.find('Link').prop('to')).toBe(link.path);
     });
   });
 

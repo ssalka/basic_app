@@ -5,8 +5,8 @@ query getUser {
     library {
       collections {
         _db _collection _id
-        name icon path
-        description
+        name icon description
+        path slug
         fields { name type required isArray }
         defaultView { type }
         creator { username }

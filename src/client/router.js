@@ -47,7 +47,7 @@ class AppRouter extends BaseComponent {
   getCollectionView({ params, ...props }) {
     props.collection = _.find(
       _.get(this.props.user, 'library.collections', []),
-      coll => params.collection === coll.path.slice(1)
+      coll => params.collection === coll.slug
     );
 
     const CollectionViewWithQuery = getGraphQLComponent(
