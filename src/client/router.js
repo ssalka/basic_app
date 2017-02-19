@@ -64,6 +64,14 @@ class AppRouter extends BaseComponent {
 
   getDocumentForm({ params, ...props }) {
     const _document = _.pick(params, '_id');
+
+    // TODO: find a way to do this automatically when in /collections/*
+    //  - check if supported in react-router v4
+    props.collection = _.find(
+      _.get(this.props.user, 'library.collections', []),
+      coll => params.collection === coll.slug
+    );
+
     return <DocumentForm document={_document} {...props} />;
   }
 
