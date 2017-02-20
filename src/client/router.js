@@ -2,7 +2,7 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import { User } from 'lib/client/api';
 import { connect, UserStore } from 'lib/client/api/stores';
-import { getGraphQLComponent, query } from 'lib/client/api/graphql';
+import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
@@ -44,15 +44,14 @@ class AppRouter extends BaseComponent {
     return context;
   }
 
-  getCollectionView({ params, ...props }) {
-    props.collection = _.find(
-      _.get(this.props.user, 'library.collections', []),
-      coll => params.collection === coll.slug
-    );
+  getCollectionBySlug(slug) {
+    const collections = _.get(this.props.user, 'library.collections', []);
+    return _.find(collections, { slug });
+  }
 
-    const CollectionViewWithQuery = getGraphQLComponent(
-      CollectionView, props.collection
-    );
+  getCollectionView({ params, ...props }) {
+    const collection = props.collection = this.getCollectionBySlug(params.collection);
+    const CollectionViewWithQuery = getGraphQLComponent(CollectionView, { collection });
 
     return <CollectionViewWithQuery {...props} />;
   }
@@ -67,12 +66,13 @@ class AppRouter extends BaseComponent {
 
     // TODO: find a way to do this automatically when in /collections/*
     //  - check if supported in react-router v4
-    props.collection = _.find(
-      _.get(this.props.user, 'library.collections', []),
-      coll => params.collection === coll.slug
-    );
+    const collection = props.collection = this.getCollectionBySlug(params.collection);
 
-    return <DocumentForm document={_document} {...props} />;
+    const DocumentFormWithMutation = getGraphQLComponent(DocumentForm, {
+      collection, document: _document
+    });
+
+    return <DocumentFormWithMutation document={_document} {...props} />;
   }
 
   getSchemaForm({ location: { state }, ...props }) {
