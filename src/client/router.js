@@ -52,7 +52,6 @@ class AppRouter extends BaseComponent {
   getCollectionView({ params, ...props }) {
     const collection = props.collection = this.getCollectionBySlug(params.collection);
     const CollectionViewWithQuery = getGraphQLComponent(CollectionView, { collection });
-
     return <CollectionViewWithQuery {...props} />;
   }
 
@@ -67,12 +66,11 @@ class AppRouter extends BaseComponent {
     // TODO: find a way to do this automatically when in /collections/*
     //  - check if supported in react-router v4
     const collection = props.collection = this.getCollectionBySlug(params.collection);
-
     const DocumentFormWithMutation = getGraphQLComponent(DocumentForm, {
       collection, document: _document
     });
 
-    return <DocumentFormWithMutation document={_document} {...props} />;
+    return <DocumentFormWithMutation {...props} />;
   }
 
   getSchemaForm({ location: { state }, ...props }) {
@@ -132,7 +130,7 @@ class AppRouter extends BaseComponent {
               <Route path="add" component={SchemaForm} />
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />
-                <Route path="add" component={DocumentForm} />
+                <Route path="add" component={this.getDocumentForm} />
                 <Route path="edit" component={this.getSchemaForm} />
                 <Route path=":_id">
                   <IndexRoute component={this.getDocumentView} />
