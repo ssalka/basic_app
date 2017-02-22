@@ -62,9 +62,6 @@ class AppRouter extends BaseComponent {
 
   getDocumentForm({ params, ...props }) {
     const _document = _.pick(params, '_id');
-
-    // TODO: find a way to do this automatically when in /collections/*
-    //  - check if supported in react-router v4
     const collection = props.collection = this.getCollectionBySlug(params.collection);
     const DocumentFormWithMutation = getGraphQLComponent(DocumentForm, {
       collection, document: _document
