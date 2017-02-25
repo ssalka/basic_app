@@ -3,16 +3,15 @@ import { dbName, waitForConnection } from 'lib/server/db';
 import { Collection } from 'lib/server/models';
 import { MockCollection } from 'lib/server/models/mocks';
 
+let connected;
+
 export function setup(done) {
   if (dbName !== 'test') return process.exit();
-
-  insertTestCollection({}, done);
-}
-
-function insertTestCollection(collection, done) {
   series([
-    waitForConnection,
-    cb => Collection.create(new MockCollection(collection), cb)
+    cb => connected ? cb() : waitForConnection()
+      .then(() => connected = true)
+      .then(cb),
+    cb => Collection.create(new MockCollection, cb),
   ], done);
 }
 
@@ -20,8 +19,8 @@ const cleanupConfig = {
   clearDatabase: true
 };
 
-export const cleanup = _.curry(
-  (config, done) => {
+export const cleanup = _.curry((config, done) => {
+  setImmediate(() => {
     if (config instanceof Function) {
       done = config; config = {};
     }
@@ -30,5 +29,5 @@ export const cleanup = _.curry(
     if (config.clearDatabase) {
       Collection.remove({}, done);
     }
-  }
-);
+  });
+});
