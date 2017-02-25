@@ -4,9 +4,7 @@ import { MockCollection } from 'lib/server/models/mocks';
 
 describe.only("Collection", () => {
   beforeAll(setup);
-  afterAll(done => setImmediate(
-    () => cleanup(done)
-  ));
+  afterAll(cleanup);
 
   it("finds a test collection", done => {
     Collection.findOne()
