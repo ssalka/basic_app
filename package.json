@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",
     "start": "NODE_PATH=. node index.js",
-    "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --forceExit"
+    "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --forceExit --noStackTrace"
   },
   "author": "Steven Salka <steven@ssalka.io>",
   "repository": {

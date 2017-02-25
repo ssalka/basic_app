@@ -4,23 +4,32 @@ import { MockCollection } from 'lib/server/models/mocks';
 import getResolvers from 'lib/server/graphql/resolvers';
 
 describe("GraphQL Resolvers", () => {
-  let resolvers, collection = {};
+  let resolvers, collections;
+  let Query, Mutation, User, _Collection;
 
-  beforeAll(setup);
+  beforeAll(done => setup({
+    mocks: {
+      Collection: [{ name: 'Test Collection' }]
+    }
+  }, (err, mocks) => {
+    if (err) return done(err);
+    collections = mocks.Collection;
+    resolvers = {
+      Query,
+      Mutation,
+      User,
+      Collection: _Collection
+    } = getResolvers(collections);
+    done();
+  }));
+
   afterAll(cleanup);
-
-  beforeEach(done => {
-    Collection.findOne()
-      .then(coll => collection = coll)
-      .then(() => resolvers = getResolvers([collection]))
-      .then(done);
-  });
 
   describe("getResolvers", () => {
     it("returns the resolvers", () => {
-      const { Query, Mutation, User, Collection } = resolvers;
-      _.forEach({ Query, Mutation, User, Collection }, resolver => {
+      _.forEach({ Query, Mutation, User, _Collection }, resolver => {
         expect(resolver).toBeInstanceOf(Object);
+
         _(resolver)
           .map(expect)
           .invokeMap('toBeInstanceOf', Function);
@@ -29,21 +38,27 @@ describe("GraphQL Resolvers", () => {
   });
 
   describe("Mutation", () => {
+    let authenticate, upsertCollection, upsert_testUser_testcollection;
 
-    let Mutation;
-
-    beforeEach(() => ({ Mutation } = resolvers));
+    beforeEach(() => ({
+      authenticate,
+      upsertCollection,
+      upsert_testUser_testcollection
+    } = Mutation));
 
     describe("authenticate", () => {
-
+      it("finds a user by session token");
     });
 
     describe("upsertCollection", () => {
-
+      it("updates an existing collection");
+      it("creates a new collection if it doesn't already exist");
+      it("adds a new view document if creating collection");
     });
 
-    describe(`upsert_${collection._collection}`, () => {
-
+    describe("upsert_testUser_testcollection", () => {
+      it("updates a document in a user collection");
+      it("doesn't set null as a value unless given as a GraphQL argument");
     });
   });
 });
