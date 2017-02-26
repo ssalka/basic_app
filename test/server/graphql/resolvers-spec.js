@@ -66,29 +66,29 @@ describe("GraphQL Resolvers", () => {
     });
 
     describe("upsert_testUser_testcollection", () => {
-
       let Model, existingDocument;
       let fieldName, newValue, partialDocument;
+
+      const getNewValue = _.partial(_.get, {
+        BOOLEAN: true,
+        STRING: 'new string value',
+        NUMBER: _.random(0, 50000),
+        MIXED: _.sample([new Date, 200, {}])
+      });
+
       beforeEach(done => {
+        const { name, type } = _.sample(collection.fields);
+        fieldName = _.camelCase(name);
+        newValue = getNewValue(type);
+        partialDocument = {
+          [fieldName]: newValue
+        };
+
         Model = ModelGen.getOrGenerateModel(collection);
-        Model.create({}, (err, instance) => {
+        Model.create({ [fieldName]: getNewValue(type) }, (err, instance) => {
           existingDocument = instance;
           done(err);
         });
-
-        const { name, type } = _.sample(collection.fields);
-
-        fieldName = _.camelCase(name);
-
-        // TODO: random value generator function
-        newValue = {
-          BOOLEAN: true,
-          STRING: 'new string value',
-          NUMBER: _.random(0, 5000000),
-          MIXED: _.sample([new Date, 200, {}])
-        }[type];
-
-        partialDocument = { [fieldName]: newValue };
       });
 
       it("updates a document in a user collection", done => {
@@ -120,6 +120,26 @@ describe("GraphQL Resolvers", () => {
             expect(doc).toEqual(document);
           }
         ], done);
+      });
+
+      it("doesn't set null values", done => {
+        const { name: otherField } = _(collection.fields).map('name').sample();
+        partialDocument[otherField] = null;
+
+        upsert_testUser_testcollection(_, partialDocument).then(document => {
+          expect(document[otherField]).not.toBeNull();
+          done();
+        });
+      });
+
+      it("unsets non-null values if the new value is null", done => {
+        partialDocument._id = existingDocument._id;
+        partialDocument[fieldName] = null;
+
+        upsert_testUser_testcollection(_, partialDocument).then(document => {
+          expect(document[fieldName]).toBeUndefined();
+          done();
+        });
       });
     });
   });
