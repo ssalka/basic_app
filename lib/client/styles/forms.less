@@ -1,0 +1,48 @@
+@import 'classes';
+@import 'colors';
+
+.form-popover {
+  max-width: 450px;
+  padding: 0;
+
+  form {
+    .header {
+      width: 100%;
+      background-color: mix(@default-light, @light-grey-5, 15%);
+      padding: 20px;
+    }
+
+    .form-main {
+      .subheader {
+        margin: 10px 20px;
+
+        h5 {
+          margin: 0;
+        }
+      }
+
+      .fields {
+        .scroll-y;
+
+        .drawer {
+          box-shadow: // top and bottom only
+          inset 0 3px 3px -3px rgba(0, 0, 0, 0.25),
+          inset 0 -3px 3px -3px rgba(0, 0, 0, 0.25);
+        }
+      }
+    }
+
+
+    .minimal-row {
+      padding: 5px 20px 0;
+    }
+
+    .fill-width {
+      padding: 20px;
+
+      button {
+        width: 48%;
+      }
+    }
+  }
+}

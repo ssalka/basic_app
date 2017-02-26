@@ -1,5 +1,5 @@
 {
-  "moduleFileExtensions": ["js", "json", "es6"],
+  "moduleFileExtensions": ["js"],
   "moduleNameMapper": {
     "\\.less$": "<rootDir>/node_modules/jest-css-modules"
   },

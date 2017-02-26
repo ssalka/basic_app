@@ -134,6 +134,6 @@ module.exports = {
 
   schema(req, res) {
     res.set('Content-Type', 'text/plain');
-    res.send(printSchema(getGraphQLSchema()));
+    res.send(printSchema(getGraphQLSchema(req.body)));
   }
 };

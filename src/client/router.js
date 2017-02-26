@@ -1,15 +1,16 @@
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import { User } from 'lib/client/api';
-import { connect, UserStore } from 'lib/client/api/stores';
-import { getGraphQLComponent, query } from 'lib/client/api/graphql';
+import { connect, UserStore, getCollectionStore } from 'lib/client/api/stores';
+import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
+import { getGraphQLCollectionType } from 'lib/common/graphql';
 import Splash from './splash';
 import Login from './login';
 import { App, Home, Collections } from './app';
-import { CollectionView, SchemaFormView } from 'lib/client/views';
+import { CollectionView, DocumentForm, DocumentView, SchemaForm } from 'lib/client/views';
 import './styles.less';
 
 @query(GetUser)
@@ -44,22 +45,64 @@ class AppRouter extends BaseComponent {
     return context;
   }
 
-  getCollectionView({ params, ...props }) {
-    props.collection = _.find(
-      _.get(this.props.user, 'library.collections', []),
-      coll => params.collection === coll.path.slice(1)
-    );
+  getCollectionBySlug(slug) {
+    const collections = _.get(this.props.user, 'library.collections', []);
+    return _.find(collections, { slug });
+  }
 
-    const CollectionViewWithQuery = getGraphQLComponent(
-      CollectionView, props.collection
-    );
+  getCollectionStore = _.memoize((collection, documents = []) => (
+    getCollectionStore({
+      name: getGraphQLCollectionType(collection),
+      logUpdates: true,
+      initialState: {
+        collection,
+        documents
+      }
+    }, {
+      loadDocuments(documents) {
+        this.setState({ documents });
+      },
+      updateDocument(_document) {
+        const documents = this.state.documents.slice();
+
+        const indexToUpdate = _.findIndex(documents, { _id: _document._id });
+
+        indexToUpdate >= 0
+          ? documents.splice(indexToUpdate, 1, _document)
+          : documents.push(_document);
+
+        this.setState({ documents });
+      }
+    })
+  ));
+
+  getCollectionView({ params, ...props }) {
+    const collection = props.collection = this.getCollectionBySlug(params.collection);
+    const CollectionStore = this.getCollectionStore(collection);
+    const CollectionViewWithQuery = getGraphQLComponent(CollectionView, CollectionStore, { collection });
 
     return <CollectionViewWithQuery {...props} />;
   }
 
-  getSchemaFormView({ location: { state }, ...props }) {
+  getDocumentView({ params, location: { state, pathname }, ...props }) {
+    const _document = state.document || _.pick(params, '_id');
+    return <DocumentView document={_document} pathname={pathname} />
+  }
+
+  getDocumentForm({ params, ...props }) {
+    const _document = _.pick(params, '_id');
+    const collection = props.collection = this.getCollectionBySlug(params.collection);
+    const CollectionStore = this.getCollectionStore(collection, [_document]);
+    const DocumentFormWithMutation = getGraphQLComponent(DocumentForm, CollectionStore, {
+      collection, document: _document
+    });
+
+    return <DocumentFormWithMutation {...props} />;
+  }
+
+  getSchemaForm({ location: { state }, ...props }) {
     return (
-      <SchemaFormView collection={state.collection} {...props} />
+      <SchemaForm collection={state.collection} {...props} />
     );
   }
 
@@ -111,10 +154,15 @@ class AppRouter extends BaseComponent {
             <Route path="home" component={Home} />
             <Route path="collections">
               <IndexRoute component={Collections} />
-              <Route path="add" component={SchemaFormView} />
+              <Route path="add" component={SchemaForm} />
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />
-                <Route path="edit" component={this.getSchemaFormView} />
+                <Route path="add" component={this.getDocumentForm} />
+                <Route path="edit" component={this.getSchemaForm} />
+                <Route path=":_id">
+                  <IndexRoute component={this.getDocumentView} />
+                  <Route path="edit" component={this.getDocumentForm} />
+                </Route>
               </Route>
             </Route>
           </Route>
