@@ -13,7 +13,8 @@ const client = new ApolloClient({
     return result._id && result.__typename
       ? result.__typename + result._id
       : null;
-  }
+  },
+  connectToDevTools: location.hostname === 'localhost'
 });
 
 ReactDOM.render(
