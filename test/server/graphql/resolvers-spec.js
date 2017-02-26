@@ -1,9 +1,12 @@
+import async from 'async';
 import { setup, cleanup } from 'test/utils';
 import { Collection } from 'lib/server/models';
 import { MockCollection } from 'lib/server/models/mocks';
 import getResolvers from 'lib/server/graphql/resolvers';
+import { ModelGen } from 'lib/server/utils';
 
 describe("GraphQL Resolvers", () => {
+  let collection;
   let resolvers, collections;
   let Query, Mutation, User, _Collection;
 
@@ -13,13 +16,19 @@ describe("GraphQL Resolvers", () => {
     }
   }, (err, mocks) => {
     if (err) return done(err);
+
     collections = mocks.Collection;
+
     resolvers = {
       Query,
       Mutation,
       User,
       Collection: _Collection
     } = getResolvers(collections);
+
+    collection = collections[0];
+    expect(collection).toBeDefined();
+
     done();
   }));
 
@@ -57,8 +66,61 @@ describe("GraphQL Resolvers", () => {
     });
 
     describe("upsert_testUser_testcollection", () => {
-      it("updates a document in a user collection");
-      it("doesn't set null as a value unless given as a GraphQL argument");
+
+      let Model, existingDocument;
+      let fieldName, newValue, partialDocument;
+      beforeEach(done => {
+        Model = ModelGen.getOrGenerateModel(collection);
+        Model.create({}, (err, instance) => {
+          existingDocument = instance;
+          done(err);
+        });
+
+        const { name, type } = _.sample(collection.fields);
+
+        fieldName = _.camelCase(name);
+
+        // TODO: random value generator function
+        newValue = {
+          BOOLEAN: true,
+          STRING: 'new string value',
+          NUMBER: _.random(0, 5000000),
+          MIXED: _.sample([new Date, 200, {}])
+        }[type];
+
+        partialDocument = { [fieldName]: newValue };
+      });
+
+      it("updates a document in a user collection", done => {
+        partialDocument._id = existingDocument._id;
+
+        upsert_testUser_testcollection(_, partialDocument).then(updatedDocument => {
+          expect(updatedDocument).not.toBeNull();
+          expect(updatedDocument[fieldName]).toEqual(newValue);
+
+          Model.findById(existingDocument._id).then(document => {
+            expect(document).not.toBeNull();
+            expect(document[fieldName]).toEqual(updatedDocument[fieldName]);
+            done();
+          });
+        });
+      });
+
+      it("creates a new document in the collection if no _id is given", done => {
+        expect(partialDocument._id).toBeUndefined();
+        async.waterfall([
+          cb => upsert_testUser_testcollection(_, partialDocument)
+            .then(document => cb(null, document))
+            .catch(cb),
+          (document, cb) => Model.findById(document._id)
+            .then(doc => cb(null, doc, document))
+            .catch(cb),
+          (doc, document, cb) => {
+            cb();
+            expect(doc).toEqual(document);
+          }
+        ], done);
+      });
     });
   });
 });

@@ -3,8 +3,6 @@ const { ModelGen, types: { Mixed } } = require('lib/server/utils');
 const MockCollection = require('lib/server/models/mocks/collection');
 
 describe("ModelGen", () => {
-
-
   const name = 'TestModel';
 
   const schema = {
@@ -38,22 +36,23 @@ describe("ModelGen", () => {
   beforeEach(() => ModelGen.reset());
 
   describe("#getSchema", () => {
+    const { fields } = new MockCollection;
 
-    const { fields } = new MockCollection();
-
-    it("maps the a list of Fields to a mongoose schema", () => {
+    it("maps a list of Fields to a mongoose schema", () => {
       expect(ModelGen.getSchema(fields)).toEqual({
-        stringField: { type: String },
-        numberField: { type: Number },
-        mixedField: { type: Mixed },
-        unknownField: { type: Mixed }
+        stringField: { type: String, required: false },
+        numberField: { type: Number, required: false },
+        mixedField: { type: Mixed, required: false },
+        booleanField: { type: Boolean, required: false }
       });
     });
+  });
 
+  describe("#getOrGenerateModel", () => {
+    // TODO
   });
 
   describe("#generateModel", () => {
-
     it("sets the properties on the schema", () => {
       const Model = ModelGen.generateModel(name, schema, extensions, settings);
 
@@ -64,11 +63,9 @@ describe("ModelGen", () => {
       const TestInstance = new Model({ field: 'test value' });
       expect(TestInstance.field).toBe('test value');
     });
-
   });
 
   describe("#modelExists", () => {
-
     it("returns true if a collection with the given name already exists in the db", () => {
       let result = ModelGen.modelExists(settings.dbName, name);
 
@@ -81,18 +78,14 @@ describe("ModelGen", () => {
       expect(console.info).toHaveBeenCalled();
       expect(result).toBe(true);
     });
-
   });
 
   describe("#trackCollection", () => {
-
     it("adds the collection being generated to a database map", () => {
       const { dbName } = settings;
       ModelGen.trackCollection(dbName, name, 'Model');
 
       expect(ModelGen.dbs[dbName]).toEqual({ [name]: 'Model' });
     });
-
   });
-
 });
