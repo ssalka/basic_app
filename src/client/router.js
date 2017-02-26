@@ -1,11 +1,12 @@
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
 import { User } from 'lib/client/api';
-import { connect, UserStore } from 'lib/client/api/stores';
+import { connect, UserStore, getCollectionStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import { request, logger } from 'lib/common';
+import { getGraphQLCollectionType } from 'lib/common/graphql';
 import Splash from './splash';
 import Login from './login';
 import { App, Home, Collections } from './app';
@@ -49,9 +50,37 @@ class AppRouter extends BaseComponent {
     return _.find(collections, { slug });
   }
 
+  getCollectionStore = _.memoize((collection, documents = []) => (
+    getCollectionStore({
+      name: getGraphQLCollectionType(collection),
+      logUpdates: true,
+      initialState: {
+        collection,
+        documents
+      }
+    }, {
+      loadDocuments(documents) {
+        this.setState({ documents });
+      },
+      updateDocument(_document) {
+        const documents = this.state.documents.slice();
+
+        const indexToUpdate = _.findIndex(documents, { _id: _document._id });
+
+        indexToUpdate >= 0
+          ? documents.splice(indexToUpdate, 1, _document)
+          : documents.push(_document);
+
+        this.setState({ documents });
+      }
+    })
+  ));
+
   getCollectionView({ params, ...props }) {
     const collection = props.collection = this.getCollectionBySlug(params.collection);
-    const CollectionViewWithQuery = getGraphQLComponent(CollectionView, { collection });
+    const CollectionStore = this.getCollectionStore(collection);
+    const CollectionViewWithQuery = getGraphQLComponent(CollectionView, CollectionStore, { collection });
+
     return <CollectionViewWithQuery {...props} />;
   }
 
@@ -63,7 +92,8 @@ class AppRouter extends BaseComponent {
   getDocumentForm({ params, ...props }) {
     const _document = _.pick(params, '_id');
     const collection = props.collection = this.getCollectionBySlug(params.collection);
-    const DocumentFormWithMutation = getGraphQLComponent(DocumentForm, {
+    const CollectionStore = this.getCollectionStore(collection, [_document]);
+    const DocumentFormWithMutation = getGraphQLComponent(DocumentForm, CollectionStore, {
       collection, document: _document
     });
 
