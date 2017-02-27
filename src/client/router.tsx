@@ -1,17 +1,20 @@
+declare const _;
+declare const React;
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-
 import { User } from 'lib/client/api';
 import { connect, UserStore, getCollectionStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
-import { request, logger } from 'lib/common';
+import common = require('lib/common');
 import { getGraphQLCollectionType } from 'lib/common/graphql';
-import Splash from './splash';
-import Login from './login';
-import { App, Home, Collections } from './app';
+import Splash = require('./splash');
+import Login = require('./login');
+import App, { Home, Collections } from './app';
 import { CollectionView, DocumentForm, DocumentView, SchemaForm } from 'lib/client/views';
 import './styles.less';
+
+const { request, logger } = common as any;
 
 @query(GetUser)
 @connect(UserStore)
@@ -23,7 +26,7 @@ class AppRouter extends BaseComponent {
 
   componentWillReceiveProps({ user, loading, error }) {
     if (error) console.error(error);
-    if (!(loading || user) && location.pathname.includes('home')) {
+    if (!(loading || user) && _.includes(location.pathname, 'home')) {
       // done loading; no user; in protected route
       browserHistory.push('/login');
     }
@@ -34,7 +37,7 @@ class AppRouter extends BaseComponent {
     : <div></div>;
 
   getChildContext() {
-    const context = { appName: document.title };
+    const context: any = { appName: document.title };
     if (this.props.user) {
       context.user = this.props.user;
       User.set(this.props.user);
@@ -76,7 +79,7 @@ class AppRouter extends BaseComponent {
     })
   ));
 
-  getCollectionView({ params, ...props }) {
+  getCollectionView({ params, ...props }: any) {
     const collection = props.collection = this.getCollectionBySlug(params.collection);
     const CollectionStore = this.getCollectionStore(collection);
     const CollectionViewWithQuery = getGraphQLComponent(CollectionView, CollectionStore, { collection });
@@ -89,7 +92,7 @@ class AppRouter extends BaseComponent {
     return <DocumentView document={_document} pathname={pathname} />
   }
 
-  getDocumentForm({ params, ...props }) {
+  getDocumentForm({ params, ...props }: any) {
     const _document = _.pick(params, '_id');
     const collection = props.collection = this.getCollectionBySlug(params.collection);
     const CollectionStore = this.getCollectionStore(collection, [_document]);

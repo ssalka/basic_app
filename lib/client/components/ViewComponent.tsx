@@ -1,13 +1,13 @@
+declare const React;
 import BaseComponent from './BaseComponent';
-import { request } from 'lib/common';
+import request = require('lib/common/request');
 
-class ViewComponent extends BaseComponent {
+export default class ViewComponent extends BaseComponent {
   post(path, body) {
     return request.post(path, body);
   }
 
-  toggle(...args) { super.toggle(...args); }
-  setStateByPath(...args) { super.setStateByPath(...args); }
+  setStateByPath(path, value) { super.setStateByPath(path, value); }
 
   render() {
     return (
@@ -16,6 +16,4 @@ class ViewComponent extends BaseComponent {
       </section>
     );
   }
-};
-
-module.exports = ViewComponent;
+}

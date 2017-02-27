@@ -1,5 +1,5 @@
-declare var _;
-declare var React;
+declare const _;
+declare const React;
 import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import * as inflection from 'lodash-inflection';

@@ -1,14 +1,21 @@
+declare const _;
+declare const React;
 import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
 import { User } from 'lib/client/api';
 import { connect, UserStore } from 'lib/client/api/stores';
-
-import Home from './home';
-import Collections from './collections';
+import Home = require('./home');
+import Collections = require('./collections');
 import './styles.less';
+
+interface AppState {
+  user: any;
+  views: any[];
+}
 
 @connect(UserStore)
 class App extends ViewComponent {
-  state = {
+  state: AppState = {
+    user: {},
     views: [
       { name: 'Home', path: '/home', icon: 'home' }
     ]
@@ -35,4 +42,6 @@ class App extends ViewComponent {
   }
 }
 
-module.exports = { App, Home, Collections };
+export default App;
+export { Home };
+export { Collections };
