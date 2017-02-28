@@ -1,7 +1,7 @@
 import CollectionView = require('./CollectionView');
 import DocumentForm = require('./DocumentForm');
 import DocumentView = require('./DocumentView');
-import SchemaForm = require('./SchemaForm');
+import SchemaForm from './SchemaForm';
 
 export { CollectionView };
 export { DocumentForm };

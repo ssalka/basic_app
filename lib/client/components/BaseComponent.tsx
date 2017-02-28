@@ -2,7 +2,7 @@ declare const _;
 import { Component } from 'react';
 import * as autoBind from 'react-autobind';
 
-export default class BaseComponent extends Component<any, any> {
+export default class BaseComponent<P, S> extends Component<P, S> {
   constructor(props) {
     super(props);
     autoBind(this);

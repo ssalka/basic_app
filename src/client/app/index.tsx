@@ -27,7 +27,7 @@ class App extends ViewComponent {
       state: { user, views }
     } = this;
 
-    const { path } = children.props.route;
+    const { path } = (children as any).props.route;
     const collections = _.get(user, 'library.collections', []).slice(0, 5);
     const links = views.concat(collections);
 

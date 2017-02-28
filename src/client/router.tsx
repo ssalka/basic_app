@@ -1,7 +1,7 @@
 declare const _;
 declare const React;
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
-import { User } from 'lib/client/api';
+import api from 'lib/client/api';
 import { connect, UserStore, getCollectionStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
@@ -15,10 +15,11 @@ import { CollectionView, DocumentForm, DocumentView, SchemaForm } from 'lib/clie
 import './styles.less';
 
 const { request, logger } = common as any;
+const { User } = api;
 
 @query(GetUser)
 @connect(UserStore)
-class AppRouter extends BaseComponent {
+class AppRouter extends BaseComponent<any, any> {
   static childContextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
