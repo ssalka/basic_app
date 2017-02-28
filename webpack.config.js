@@ -2,20 +2,26 @@ const path = require('path');
 const webpack = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+const clientDirectories = [
+  path.resolve('./src/client'),
+  path.resolve('./lib')
+];
+
 const config = {
   devtool: 'source-map',
-  entry: ['./src/client/index.js'],
+  entry: ['./src/client/index.tsx'],
   output: {
     path: path.resolve('./dist'),
     filename: 'client.js'
   },
   module: {
     loaders: [{
+      test: /\.tsx?$/,
+      include: clientDirectories,
+      loader: 'ts-loader'
+    }, {
       test: /\.js$/,
-      include: [
-        path.resolve('./src/client'),
-        path.resolve('./lib')
-      ],
+      include: clientDirectories,
       loader: 'babel'
     }, {
       test: /\.(less|css)$/,
@@ -29,7 +35,8 @@ const config = {
     }]
   },
   resolve: {
-    root: path.resolve(__dirname)
+    root: path.resolve(__dirname),
+    extensions: ['', '.ts', '.tsx', '.js']
   },
   plugins: [
     new webpack.ProvidePlugin({

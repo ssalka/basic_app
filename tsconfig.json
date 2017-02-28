@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "alwaysStrict": true,
+    "baseUrl": ".",
+    "experimentalDecorators": true,
+    "jsx": "react",
+    "module": "commonjs",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "target": "es5"
+  },
+  "include": [
+    "lib/client",
+    "lib/common",
+    "src/client"
+  ]
+}

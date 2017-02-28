@@ -1,53 +1,66 @@
+declare const _;
+declare const React;
+
 import { ViewComponent, Button, FlexRow, FlexColumn, IconSelector } from '../components';
 import { browserHistory } from 'react-router';
 import { EditableText, Checkbox } from '@blueprintjs/core';
 import { User } from 'lib/client/api';
 import { mutation } from 'lib/client/api/graphql';
-import { FIELD_TYPES } from 'lib/common/constants';
+import { SchemaFormMutation } from 'lib/client/api/graphql/mutations';
+import { MutationSettings, ReactElement, Field, Collection } from 'lib/client/interfaces';
+import { FIELD_TYPES, READONLY_FIELDS } from 'lib/common/constants';
 import 'lib/client/styles/SchemaForm.less';
-import SchemaFormMutation from './schemaForm.gql';
 
-class Field {
-  name = '';
-  type = 'STRING';
-  required = false;
-  isArray = false;
-}
-
-@mutation(SchemaFormMutation, {
+const mutationSettings: MutationSettings = {
   getVariables: collection => _(collection)
     .defaults({ _db: 'test' })
     .assign({
       fields: collection.fields.map(
-        field => _.omit(field, '__typename')
+        field => _.omit(field, READONLY_FIELDS)
       )
     })
-    .value()
-})
+    .value(),
+  variables: {}
+};
+
+type Props = React.Props<any> & {
+  collection: Partial<Collection>;
+};
+
+interface State {
+  collection: Partial<Collection>;
+  selectingIcon: boolean;
+  editingFields: boolean;
+  showFieldOptions: boolean[];
+}
+
+@mutation(SchemaFormMutation, mutationSettings)
 class SchemaForm extends ViewComponent {
-  static defaultProps = {
-    collection: {
+  static defaultProps: Props = {
+    collection: new Collection({
       _id: null,
       name: '',
-      fields: [new Field()],
+      fields: [new Field],
       description: '',
       icon: 'graph'
-    }
+    })
   };
 
-  constructor(props) {
-    super(props);
-    console.log(props);
-    const { collection } = props;
+  state: State = {
+    collection: {},
+    selectingIcon: false,
+    editingFields: false,
+    showFieldOptions: [true]
+  };
 
-    this.state = {
-      collection,
-      selectingIcon: false,
-      editingFields: false,
+  constructor({ collection }) {
+    super({ collection });
+    _.assign(this.state, {
+      collection: new Collection(collection),
       showFieldOptions: collection._id
         ? collection.fields.map(() => false)
         : [true]
-    };
+    });
   }
 
   handlers = _.mapValues(
@@ -62,8 +75,18 @@ class SchemaForm extends ViewComponent {
 
   render() {
     const {
-      handlers: { submitForm, toggleIconPopover, toggleFieldOptions, selectIcon },
-      state: { collection, editingFields, selectingIcon, showFieldOptions },
+      handlers: {
+        submitForm,
+        toggleIconPopover,
+        toggleFieldOptions,
+        selectIcon
+      },
+      state: {
+        collection,
+        editingFields,
+        selectingIcon,
+        showFieldOptions
+      },
       components: {
         CollectionNameInput,
         DescriptionTextarea,
@@ -77,12 +100,13 @@ class SchemaForm extends ViewComponent {
       }
     } = this;
 
-    const onlyOneField = collection.fields.length === 1;
-    const OptionButton = props => React.createElement(
-      'div', { className: 'option-button' },
-      editingFields
-        ? <RemoveFieldButton disabled={onlyOneField} {...props} />
-        : <DetailsButton {...props} />
+    const onlyOneField: boolean = collection.fields.length === 1;
+    const OptionButton = (props: any): ReactElement => (
+      <div className="option-button">
+        {editingFields
+          ? <RemoveFieldButton disabled={onlyOneField} {...props} />
+          : <DetailsButton {...props} />}
+      </div>
     );
 
     return (
@@ -107,7 +131,7 @@ class SchemaForm extends ViewComponent {
               </FlexRow>
 
               <div className="fields">
-                {collection.fields.map(({name, type}, index) => (
+                {collection.fields.map(({name, type}: Field, index: number): ReactElement => (
                   <FlexColumn key={index}>
                     <FlexRow className="field-main">
                       <FieldNameInput index={index} name={name} />
@@ -133,7 +157,9 @@ class SchemaForm extends ViewComponent {
   }
 }
 
-function getComponents() {
+function getComponents(): {
+  [key: string]: (input?: any) => ReactElement
+} {
   return {
     CollectionNameInput({ value }) {
       const {
@@ -155,7 +181,7 @@ function getComponents() {
         <EditableText multiline minLines={2} maxLines={4}
           value={description}
           placeholder="Description"
-          onChange={value => this.setStateByPath(
+          onChange={(value: string) => this.setStateByPath(
             'collection.description', value
           )}
         />
@@ -165,7 +191,7 @@ function getComponents() {
     FieldNameInput({ index, name }) {
       return (
         <EditableText placeholder="New Field" value={name}
-          onChange={value => this.setStateByPath(
+          onChange={(value: string) => this.setStateByPath(
             `collection.fields[${index}].name`, value
           )}
         />
@@ -263,7 +289,9 @@ function getComponents() {
   };
 }
 
-function getFormHandlers() {
+function getFormHandlers(): {
+  [key: string]: (...args: any[]) => void
+} {
   return {
     editFormFields() {
       this._toggle('editingFields');
@@ -271,7 +299,7 @@ function getFormHandlers() {
 
     addField() {
       const { collection } = this.state;
-      collection.fields.push(new Field());
+      collection.fields.push(new Field);
       this.setState({
         collection,
         // only show field options of the newly-created field
@@ -282,7 +310,7 @@ function getFormHandlers() {
       });
     },
 
-    removeField(index) {
+    removeField(index: number) {
       const { fields } = this.state.collection;
       if (fields.length === 1) return;
 
@@ -292,13 +320,13 @@ function getFormHandlers() {
       );
     },
 
-    changeCollectionName(name) {
+    changeCollectionName(name: string) {
       const { collection } = this.state;
       collection.name = name;
       this.setState({ collection });
     },
 
-    selectType(event, index) {
+    selectType(event, index: number) {
       const { value: type } = event.currentTarget;
       this.setStateByPath(
         `collection.fields[${index}].type`, type
@@ -309,7 +337,7 @@ function getFormHandlers() {
       this._toggle('selectingIcon');
     },
 
-    selectIcon(icon) {
+    selectIcon(icon: string) {
       const { collection } = this.state;
       this.setState({
         collection: _.assign(collection, { icon }),
@@ -317,18 +345,18 @@ function getFormHandlers() {
       });
     },
 
-    toggleFieldOptions(index) {
+    toggleFieldOptions(index: number) {
       const visibleFieldOptions = this.state.showFieldOptions.map(
         (isVisible, i) => (i === index) && !isVisible
       );
       this.setStateByPath('showFieldOptions', visibleFieldOptions);
     },
 
-    toggleRequired(index) {
+    toggleRequired(index: number) {
       this._toggle(`collection.fields[${index}].required`);
     },
 
-    toggleIsArray(index) {
+    toggleIsArray(index: number) {
       this._toggle(`collection.fields[${index}].isArray`);
     },
 
@@ -344,4 +372,4 @@ function getFormHandlers() {
   };
 }
 
-module.exports = SchemaForm;
+export default SchemaForm;

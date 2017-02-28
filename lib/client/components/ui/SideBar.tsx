@@ -1,10 +1,13 @@
+declare const React;
+
 import { Link } from 'react-router';
 import { BaseComponent, Icon } from '../';
 import '../../styles/SideBar.less';
 
-class SideBar extends BaseComponent {
+export default class SideBar extends BaseComponent<any, any> {
   state = {
-    expanded: false
+    expanded: false,
+    isDoubleClick: false,
   };
 
   static defaultProps = {
@@ -18,9 +21,9 @@ class SideBar extends BaseComponent {
 
   handleClick(event) {
     // only run function on double clicks
-    if (!this.isDoubleClick) {
-      this.isDoubleClick = true;
-      setTimeout(() => this.isDoubleClick = false, 500);
+    if (!this.state.isDoubleClick) {
+      this.state.isDoubleClick = true;
+      setTimeout(() => this.state.isDoubleClick = false, 500);
       return;
     }
 
@@ -32,7 +35,9 @@ class SideBar extends BaseComponent {
     return (
       <li key={key} className={linkIsActive}>
         <Link to={link.path} className="pt-menu-item">
-          <Icon name={link.icon} />
+          <Icon name={link.icon} className={''/*
+            className is a required attribute? ._.
+          */} />
           <span className="text">
             {link.name}
           </span>
@@ -42,25 +47,23 @@ class SideBar extends BaseComponent {
   }
 
   render() {
-    let sidebarClasses = ['sidebar', 'pt-elevation-1'];
+    let sidebarClasses: string[] = ['sidebar', 'pt-elevation-1'];
     if (this.state.expanded) sidebarClasses.push('expanded');
-    sidebarClasses = sidebarClasses.join(' ');
+    const className: string = sidebarClasses.join(' ');
 
-    const toggleIcon = 'caret-' + (this.state.expanded ? 'left' : 'right');
+    const toggleIcon: string = 'caret-' + (this.state.expanded ? 'left' : 'right');
 
     return (
-      <aside className={sidebarClasses} onClick={this.handleClick}>
+      <aside className={className} onClick={this.handleClick}>
         <ul className="pt-menu pt-large" onClick={e => e.stopPropagation()}>
           {this.props.links.map(this.renderLink)}
         </ul>
         <div id="sidebar-expand">
           <Icon name={toggleIcon} size={14}
-            onClick={this.toggle}
+            onClick={this.toggle} className
           />
         </div>
       </aside>
     );
   }
 }
-
-module.exports = SideBar;

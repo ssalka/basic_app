@@ -1,10 +1,10 @@
+declare const React;
 import { Link } from 'react-router';
 import { InputGroup } from '@blueprintjs/core';
-
 import { BaseComponent, Button, Icon } from '../';
 import '../../styles/Navbar.less';
 
-class NavBar extends BaseComponent {
+export default class NavBar extends BaseComponent<any, any> {
   static contextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
@@ -41,5 +41,3 @@ class NavBar extends BaseComponent {
     );
   }
 }
-
-module.exports = NavBar;

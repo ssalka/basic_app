@@ -1,7 +1,8 @@
+declare const _;
 import { Component } from 'react';
-import autoBind from 'react-autobind';
+import * as autoBind from 'react-autobind';
 
-module.exports = class BaseComponent extends Component {
+export default class BaseComponent<P, S> extends Component<P, S> {
   constructor(props) {
     super(props);
     autoBind(this);
@@ -20,5 +21,4 @@ module.exports = class BaseComponent extends Component {
       key, !_.get(this.state, key)
     ));
   }
-
 };
