@@ -20,6 +20,7 @@ export interface Collection {
   creator: User;
   description?: string;
   icon?: string;
+  path: string;
   defaultView?: any;
   views: any[];
 }
