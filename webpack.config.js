@@ -49,7 +49,10 @@ const config = {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new CopyWebpackPlugin([
-      { from: 'src/client/index.html' }
+      { from: 'src/client/index.html' },
+      { from: 'node_modules/@blueprintjs/core/dist/blueprint.css' },
+      { from: 'node_modules/@blueprintjs/core/dist/blueprint.css.map' },
+      { from: 'node_modules/@blueprintjs/core/resources', to: 'resources' }
     ])
   ]
 };
