@@ -8,6 +8,7 @@ form[name="document-form"] {
     padding-top: 20px;
 
     label {
+      @input-width: 170px;
       margin-bottom: 10px;
 
       .field-name {
@@ -15,6 +16,18 @@ form[name="document-form"] {
         width: 100px;
         text-align: right;
         margin-right: 10px;
+      }
+
+      .pt-numeric-input.pt-control-group, .pt-input-group {
+        display: inline-block;
+
+        input {
+          width: @input-width - 32px;
+        }
+      }
+
+      .pt-icon-cross {
+        margin-left: 5px;
       }
     }
   }
