@@ -12,7 +12,8 @@ import Splash = require('./splash');
 import Login = require('./login');
 import App, { Home, Collections } from './app';
 import SchemaForm from './app/collections/form';
-import { CollectionView, DocumentForm, DocumentView } from 'lib/client/views';
+import CollectionView = require('./app/collections/detail');
+import { DocumentForm, DocumentView } from 'lib/client/views';
 import './styles.less';
 
 const { request, logger } = common as any;
