@@ -11,9 +11,10 @@ import { getGraphQLCollectionType } from 'lib/common/graphql';
 import Splash = require('./splash');
 import Login = require('./login');
 import App, { Home, Collections } from './app';
-import SchemaForm from './app/collections/form';
-import CollectionView = require('./app/collections/detail');
-import { DocumentForm, DocumentView } from 'lib/client/views';
+import CollectionView = require('./app/collection');
+import SchemaForm from './app/collection/form';
+import DocumentView from './app/document';
+import DocumentForm = require('./app/document/form');
 import './styles.less';
 
 const { request, logger } = common as any;
