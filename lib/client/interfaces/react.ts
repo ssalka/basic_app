@@ -36,3 +36,7 @@ export interface QueryProps {
   stopPolling: Function;
   variables: any;
 }
+
+export interface ComponentModule {
+  [key: string]: () => ReactElement
+}

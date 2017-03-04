@@ -35,7 +35,7 @@ interface State {
 }
 
 @mutation(SchemaFormMutation, mutationSettings)
-class SchemaForm extends ViewComponent {
+class SchemaForm extends ViewComponent<Props, State> {
   static defaultProps: Props = {
     collection: new Collection({
       _id: null,
@@ -109,6 +109,8 @@ class SchemaForm extends ViewComponent {
       </div>
     );
 
+    const JSIconSelector = IconSelector as any;
+
     return (
       <ViewComponent>
         <div className="form-popover pt-card pt-elevation-3">
@@ -116,7 +118,7 @@ class SchemaForm extends ViewComponent {
             <div className="header">
               <FlexRow>
                 <CollectionNameInput value={name} />
-                <IconSelector selected={collection.icon}
+                <JSIconSelector selected={collection.icon}
                   onSelectIcon={selectIcon}
                   onClick={toggleIconPopover}
                   isOpen={selectingIcon}

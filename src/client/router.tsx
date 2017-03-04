@@ -149,18 +149,24 @@ class AppRouter extends BaseComponent<any, any> {
     const { Site, NotFound } = this.components;
     const collections = _.get(this.props, 'user.library.collections', []);
 
+    // TODO: convert these to TS
+    const JSSplash = Splash as any;
+    const JSHome = Home as any;
+    const JSLogin = Login as any;
+    const JSCollections = Collections as any;
+
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
-          <IndexRoute component={Splash} />
+          <IndexRoute component={JSSplash} />
           <Route path="login" component={props => (
-            <Login {...props} refetch={this.props.refetch} />
+            <JSLogin {...props} refetch={this.props.refetch} />
           )} />
 
           <Route component={this.renderIfAuthenticated}>
-            <Route path="home" component={Home} />
+            <Route path="home" component={JSHome} />
             <Route path="collections">
-              <IndexRoute component={Collections} />
+              <IndexRoute component={JSCollections} />
               <Route path="add" component={SchemaForm} />
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />

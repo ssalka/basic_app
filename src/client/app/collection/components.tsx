@@ -3,10 +3,13 @@ declare const React;
 import { Link } from 'react-router';
 import { NonIdealState } from '@blueprintjs/core';
 import { Icon, FlexRow, Button } from 'lib/client/components';
+import { ComponentModule } from 'lib/client/interfaces';
+import { Props, State } from './';
 
-export default function getComponents(props, state) {
-  const { collection, location: _location } = props;
-  const { documents } = state;
+export default function getComponents(
+  { collection, location: _location }: Props,
+  { documents }: State
+): ComponentModule {
   const { name, description, icon, path } = collection;
   const linkWithState = pathname => ({
     pathname, state: { collection }
