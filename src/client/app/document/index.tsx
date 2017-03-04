@@ -1,7 +1,10 @@
+declare const _;
+declare const React;
+
 import { ViewComponent } from 'lib/client/components';
 import { Link } from 'react-router';
 
-class DocumentView extends ViewComponent {
+export default class DocumentView extends ViewComponent<any, any> {
   static defaultProps = {
     collection: {},
     document: {},
@@ -28,5 +31,3 @@ class DocumentView extends ViewComponent {
     );
   }
 }
-
-module.exports = DocumentView;

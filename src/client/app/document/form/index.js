@@ -1,7 +1,7 @@
 import { EditableText } from '@blueprintjs/core';
 import { browserHistory } from 'react-router';
-import api from '../api';
-import { ViewComponent, FlexRow, FlexColumn, Button, TextInput, NumericInput } from '../components';
+import api from 'lib/client/api';
+import { ViewComponent, FlexRow, FlexColumn, Button, TextInput, NumericInput } from 'lib/client/components';
 import { getGraphQLCollectionType } from 'lib/common/graphql';
 import 'lib/client/styles/DocumentForm.less';
 

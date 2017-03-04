@@ -13,7 +13,7 @@ interface AppState {
 }
 
 @connect(UserStore)
-class App extends ViewComponent {
+class App extends ViewComponent<any, AppState> {
   state: AppState = {
     user: {},
     views: [

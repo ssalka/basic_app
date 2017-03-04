@@ -2,11 +2,7 @@ declare const React;
 import BaseComponent from './BaseComponent';
 import request = require('lib/common/request');
 
-export default class ViewComponent extends BaseComponent<any, any> {
-  props: React.Props<any> & {
-    [prop: string]: any;
-  };
-
+export default class ViewComponent<P, S> extends BaseComponent<P, S> {
   post(path, body) {
     return request.post(path, body);
   }
