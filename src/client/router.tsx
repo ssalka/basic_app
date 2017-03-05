@@ -11,7 +11,7 @@ import { getGraphQLCollectionType } from 'lib/common/graphql';
 import Splash = require('./splash');
 import Login = require('./login');
 import App, { Home, Collections } from './app';
-import CollectionView = require('./app/collection');
+import CollectionView from './app/collection';
 import SchemaForm from './app/collection/form';
 import DocumentView from './app/document';
 import DocumentForm = require('./app/document/form');
