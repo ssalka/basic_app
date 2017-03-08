@@ -45,7 +45,7 @@ export function FieldNameInput({ index, name }) {
 
 export function TypeSelect({ index, value }) {
   const { selectType } = this.handlers;
-  const { key: _value } = _.find(FIELD_TYPES, {
+  const { key: _value } = _.find(FIELD_TYPES.STANDARD, {
     key: _.words(value).join('').toUpperCase()
   });
 
@@ -54,7 +54,7 @@ export function TypeSelect({ index, value }) {
       <select value={_value} onChange={
         event => selectType(event, index)
       }>
-        {FIELD_TYPES.map(({key, name}) => (
+        {FIELD_TYPES.STANDARD.map(({key, name}) => (
           <option key={key} value={key}>{name}</option>
         ))}
       </select>
