@@ -1,8 +1,9 @@
+declare const React;
 import { ViewComponent } from './';
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
-class _Popover extends ViewComponent {
-  getPosition(key) {
+export default class extends ViewComponent<any, any> {
+  getPosition(key: string) {
     return {
       top: Position.TOP,
       bottom: Position.BOTTOM,
@@ -11,13 +12,9 @@ class _Popover extends ViewComponent {
     }[key];
   }
 
-  toggle() {
-    this._toggle('isOpen');
-  }
-
   render() {
     const {
-      getPosition, toggle,
+      getPosition,
       props: { target, position, children, isOpen }
     } = this;
 
@@ -32,5 +29,3 @@ class _Popover extends ViewComponent {
     );
   }
 }
-
-module.exports = _Popover;

@@ -1,5 +1,5 @@
 declare const _;
-import { User } from 'lib/client/api';
+import api from 'lib/client/api';
 import { Field } from 'lib/client/interfaces';
 
 /**
@@ -41,8 +41,7 @@ export function changeCollectionName(name: string) {
   this.setState({ collection });
 }
 
-export function selectType(event, index: number) {
-  const { value: type } = event.currentTarget;
+export function selectType(type: string, index: number) {
   this.setStateByPath(
     `collection.fields[${index}].type`, type
   );
@@ -80,7 +79,7 @@ export function submitForm(event) {
   event.preventDefault();
 
   this.props.upsertCollection(collection)
-    .then(({ data }) => data.collection)
-    .then(coll => User.updateLibrary(coll) || coll)
-    .then(coll => this.props.history.push(`/${coll.path}`));
+    .then(_.property('data.collection'))
+    .then(coll => api.User.updateLibrary(coll) || coll)
+    .then(coll => this.props.history.push(coll.path));
 }
