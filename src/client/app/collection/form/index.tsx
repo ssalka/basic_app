@@ -29,8 +29,9 @@ type Props = React.Props<any> & {
 
 interface State {
   collection: Partial<Collection>;
-  selectingIcon: boolean;
   editingFields: boolean;
+  selectingIcon: boolean;
+  selectingType: boolean[];
   showFieldOptions: boolean[];
 }
 
@@ -48,8 +49,9 @@ class SchemaForm extends ViewComponent<Props, State> {
 
   state: State = {
     collection: {},
-    selectingIcon: false,
     editingFields: false,
+    selectingIcon: false,
+    selectingType: [false],
     showFieldOptions: [true]
   };
 
@@ -57,6 +59,9 @@ class SchemaForm extends ViewComponent<Props, State> {
     super({ collection });
     _.assign(this.state, {
       collection: new Collection(collection),
+      selectingType: collection._id
+        ? collection.fields.map(() => false)
+        : [false],
       showFieldOptions: collection._id
         ? collection.fields.map(() => false)
         : [true]
@@ -85,13 +90,14 @@ class SchemaForm extends ViewComponent<Props, State> {
         collection,
         editingFields,
         selectingIcon,
+        selectingType,
         showFieldOptions
       },
       components: {
         CollectionNameInput,
         DescriptionTextarea,
         FieldNameInput,
-        TypeSelect,
+        TypeSelectPopover,
         ToggleEditButton,
         DetailsButton,
         AddFieldButton,
@@ -137,7 +143,9 @@ class SchemaForm extends ViewComponent<Props, State> {
                   <FlexColumn key={index}>
                     <FlexRow className="field-main">
                       <FieldNameInput index={index} name={name} />
-                      <TypeSelect index={index} value={type} />
+                      <TypeSelectPopover index={index} value={type}
+                        isOpen={selectingType[index]}
+                      />
                       <OptionButton index={index} />
                     </FlexRow>
                     {showFieldOptions[index] && !editingFields && <FieldOptions index={index} />}

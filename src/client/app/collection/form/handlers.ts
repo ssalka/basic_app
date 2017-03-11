@@ -1,5 +1,5 @@
 declare const _;
-import { User } from 'lib/client/api';
+import api from 'lib/client/api';
 import { Field } from 'lib/client/interfaces';
 
 /**
@@ -17,6 +17,7 @@ export function addField() {
   collection.fields.push(new Field);
   this.setState({
     collection,
+    selectingType: collection.fields.map(_.stubFalse),
     // only show field options of the newly-created field
     showFieldOptions: _(collection.fields)
       .map((field, i) => !i)
@@ -26,12 +27,12 @@ export function addField() {
 }
 
 export function removeField(index: number) {
-  const { fields } = this.state.colslection;
+  const { fields } = this.state.collection;
   if (fields.length === 1) return;
 
   fields.splice(index, 1);
   this.setStateByPath(
-    'collections.fields', fields
+    'collection.fields', fields
   );
 }
 
@@ -41,15 +42,24 @@ export function changeCollectionName(name: string) {
   this.setState({ collection });
 }
 
-export function selectType(event, index: number) {
-  const { value: type } = event.currentTarget;
-  this.setStateByPath(
-    `collection.fields[${index}].type`, type
-  );
+export function selectType(type: string, index: number) {
+  const { collection, selectingType } = this.state;
+  collection.fields[index].type = type;
+  selectingType.splice(index, 1, !selectingType[index]);
+  this.setState({ collection, selectingType });
 }
 
 export function toggleIconPopover() {
   this._toggle('selectingIcon');
+}
+
+export function toggleTypePopover(index: number) {
+  const { collection,  selectingType } = this.state;
+  this.setState({
+    selectingType: collection.fields.map(
+      (_, i) => i === index && !selectingType[index]
+    )
+  });
 }
 
 export function selectIcon(icon: string) {
@@ -80,7 +90,7 @@ export function submitForm(event) {
   event.preventDefault();
 
   this.props.upsertCollection(collection)
-    .then(({ data }) => data.collection)
-    .then(coll => User.updateLibrary(coll) || coll)
-    .then(coll => this.props.history.push(`/${coll.path}`));
+    .then(_.property('data.collection'))
+    .then(coll => api.User.updateLibrary(coll) || coll)
+    .then(coll => this.props.history.push(coll.path));
 }
