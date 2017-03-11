@@ -2,8 +2,8 @@ declare const _;
 declare const React;
 
 import { ReactElement } from 'lib/client/interfaces';
-import { EditableText, Checkbox, Menu, MenuItem } from '@blueprintjs/core';
-import { Button, FlexRow, FlexColumn, Popover } from 'lib/client/components';
+import { EditableText, Checkbox, Menu } from '@blueprintjs/core';
+import { Button, FlexRow, FlexColumn, Popover, TypeSelect } from 'lib/client/components';
 import { FIELD_TYPES } from 'lib/common/constants';
 
 export function CollectionNameInput({ value }) {
@@ -43,24 +43,21 @@ export function FieldNameInput({ index, name }) {
   );
 }
 
-export function TypeSelect({ index, value }) {
-  const { selectType } = this.handlers;
+export function TypeSelectPopover({ index, value, isOpen }) {
+  const { selectType, toggleTypePopover } = this.handlers;
   const { name: currentType } = _.find(
     FIELD_TYPES.STANDARD,
     { key: value }
   );
 
+  // TODO: pass in currentType to TypeSelect (to set as selected type)
   return (
-    <Popover target={<Button text={currentType || 'Select Type'} />}>
-      <Menu>
-        {FIELD_TYPES.STANDARD.map(({key, name, icon}) => (
-          <MenuItem
-          text={name}
-          onClick={() => selectType(key, index)}
-          iconName={icon}
-          />
-        ))}
-      </Menu>
+    <Popover className="popover-type-select" isOpen={isOpen} target={
+      <Button text={currentType || 'Select Type'}
+        onClick={() => toggleTypePopover(index)}
+      />
+    }>
+      <TypeSelect onSelectType={type => selectType(type, index)} />
     </Popover>
   );
 }

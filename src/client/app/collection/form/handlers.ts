@@ -17,6 +17,7 @@ export function addField() {
   collection.fields.push(new Field);
   this.setState({
     collection,
+    selectingType: collection.fields.map(_.stubFalse),
     // only show field options of the newly-created field
     showFieldOptions: _(collection.fields)
       .map((field, i) => !i)
@@ -26,12 +27,12 @@ export function addField() {
 }
 
 export function removeField(index: number) {
-  const { fields } = this.state.colslection;
+  const { fields } = this.state.collection;
   if (fields.length === 1) return;
 
   fields.splice(index, 1);
   this.setStateByPath(
-    'collections.fields', fields
+    'collection.fields', fields
   );
 }
 
@@ -42,13 +43,23 @@ export function changeCollectionName(name: string) {
 }
 
 export function selectType(type: string, index: number) {
-  this.setStateByPath(
-    `collection.fields[${index}].type`, type
-  );
+  const { collection, selectingType } = this.state;
+  collection.fields[index].type = type;
+  selectingType.splice(index, 1, !selectingType[index]);
+  this.setState({ collection, selectingType });
 }
 
 export function toggleIconPopover() {
   this._toggle('selectingIcon');
+}
+
+export function toggleTypePopover(index: number) {
+  const { collection,  selectingType } = this.state;
+  this.setState({
+    selectingType: collection.fields.map(
+      (_, i) => i === index && !selectingType[index]
+    )
+  });
 }
 
 export function selectIcon(icon: string) {

@@ -1,7 +1,6 @@
 import IconSelector = require('./IconSelector');
 import NavBar from './NavBar';
 import SideBar from './SideBar';
+import TypeSelect from './TypeSelect';
 
-export { IconSelector };
-export { NavBar };
-export { SideBar };
+export { IconSelector, NavBar, SideBar, TypeSelect };
