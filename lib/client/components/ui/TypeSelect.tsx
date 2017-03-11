@@ -26,7 +26,7 @@ export default class TypeSelect extends ViewComponent<any, any> {
         id: key,
         iconName: icon,
         label: name,
-        isSelected: name === props.selectedType
+        isSelected: key === props.selectedType
       })
     );
   }
