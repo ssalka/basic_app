@@ -1,0 +1,16 @@
+{
+  "extends": ["tslint:recommended", "tslint-react"],
+  "rules": {
+    "jsx-no-multiline-js": false,
+    "member-ordering": [true, {
+      "order": [
+        "static-field",
+        "constructor"
+      ]
+    }],
+    "object-literal-sort-keys": false,
+    "ordered-imports": false,
+    "quotemark": "jsx-double",
+    "trailing-comma": "never"
+  }
+}

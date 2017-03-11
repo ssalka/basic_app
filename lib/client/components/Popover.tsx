@@ -3,11 +3,11 @@ import { ViewComponent } from './';
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 
 export default class extends ViewComponent<any, any> {
-  static defaultProps = {
+  public static defaultProps = {
     className: ''
   };
 
-  getPosition(key: string) {
+  private getPosition(key: string) {
     return {
       top: Position.TOP,
       bottom: Position.BOTTOM,
@@ -16,14 +16,16 @@ export default class extends ViewComponent<any, any> {
     }[key];
   }
 
-  render() {
+  public render() {
     const {
       getPosition,
       props: { target, position, children, isOpen, className }
     } = this;
 
     return (
-      <Popover content={children} isOpen={isOpen}
+      <Popover
+        content={children}
+        isOpen={isOpen}
         interactionKind={PopoverInteractionKind.CLICK}
         popoverClassName={`pt-popover-content-sizing ${className}`.trim()}
         position={getPosition(position)}

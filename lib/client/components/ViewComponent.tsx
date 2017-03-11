@@ -3,13 +3,13 @@ import BaseComponent from './BaseComponent';
 import request = require('lib/common/request');
 
 export default class ViewComponent<P, S> extends BaseComponent<P, S> {
-  post(path, body) {
+  public post(path, body) {
     return request.post(path, body);
   }
 
-  setStateByPath(path, value) { super.setStateByPath(path, value); }
+  public setStateByPath(path, value) { super.setStateByPath(path, value); }
 
-  render() {
+  public render() {
     return (
       <section className="container">
         {this.props.children}

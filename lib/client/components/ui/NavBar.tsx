@@ -5,12 +5,12 @@ import { BaseComponent, Button, Icon } from '../';
 import '../../styles/Navbar.less';
 
 export default class NavBar extends BaseComponent<any, any> {
-  static contextTypes = {
+  public static contextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   };
 
-  render() {
+  public render() {
     const { appName, user } = this.context;
     const crossIcon = <Button minimal={true} icon="cross" />;
 
@@ -23,14 +23,16 @@ export default class NavBar extends BaseComponent<any, any> {
         </div>
         <div className="pt-navbar-group pt-align-right">
           {user ? (
-            <InputGroup placeholder="Search"
+            <InputGroup
+              placeholder="Search"
               className="pt-inputs pt-round"
               leftIconName="search"
               rightElement={crossIcon}
             />
           ) : null}
           <Link to={user ? '/logout' : '/login'}>
-            <Button text={user ? null : 'Sign In'}
+            <Button
+              text={user ? null : 'Sign In'}
               icon="user"
               minimal={true}
               rounded={true}

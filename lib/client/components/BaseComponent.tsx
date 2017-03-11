@@ -8,16 +8,18 @@ export default class BaseComponent<P, S> extends Component<P, S> {
     autoBind(this);
   }
 
-  setStateByPath(path, value) {
+  public setStateByPath(path, value) {
     const state = _.cloneDeep(this.state);
     _.set(state, path, value);
     this.setState(state);
   }
 
-  _toggle(...keys) {
-    if (_.isEmpty(keys)) return;
+  public _toggle(...keys) {
+    if (_.isEmpty(keys)) {
+      return;
+    }
 
-    keys.forEach(key => this.setStateByPath(
+    keys.forEach((key: string) => this.setStateByPath(
       key, !_.get(this.state, key)
     ));
   }
