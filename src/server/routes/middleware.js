@@ -1,12 +1,12 @@
 const passport = require('passport');
 const async = require('async');
-const { isEmpty, pick } = require('lodash');
+const { flow, isEmpty, pick } = require('lodash');
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { printSchema } = require('graphql/utilities/schemaPrinter');
 
 const { index } = require('../config');
 const getGraphQLSchema = require('lib/server/graphql');
-const { User, Session } = require('lib/server/models');
+const { User, Session, Collection } = require('lib/server/models');
 const { logger, generateToken } = require('lib/common');
 
 // Send these fields to client upon successful authentication
@@ -17,9 +17,7 @@ const USER_FIELDS = [
 ];
 
 module.exports = {
-  sendIndex(req, res) {
-    res.sendFile(index);
-  },
+  sendIndex: (_, res) => res.sendFile(index),
 
   /**
    *  AUTH & REGISTRATION
@@ -31,28 +29,23 @@ module.exports = {
       err: 'No session token was provided'
     });
 
-    Session.findByToken(token)
-      .then(session => {
-        if (!session) res.status(404);
-
-        const response = isEmpty(session)
-          ? { err: 'No matching document' }
-          : { user: pick(session.user, USER_FIELDS) };
-
-        res.json(response);
-      })
-      .catch(err => {
-        res.status(500).json({ err });
-      });
+    async.waterfall([
+      cb => Session.findByToken(token, cb),
+      (session, cb) => isEmpty(session)
+        ? cb({ err: 'No matching document', statusCode: 404 })
+        : User.findById(session.user._id, cb),
+    ], (err, user) => err
+      ? res.status(err.statusCode || 500).json({ err })
+      : res.json({ user: pick(user, USER_FIELDS) })
+    );
    },
 
   registerUser(req, res, next) {
     const { username, password } = req.body;
-
-    async.waterfall([
-      cb => cb(null, new User({ username })),
-      (user, cb) => User.register(user, password, cb),
-    ], err => err ? res.json({ err }) : next());
+    const user = new User({ username });
+    User.register(user, password,
+      err => err ? res.status(500).json({ err }) : next()
+    );
   },
 
   loginUser(req, res, next) {
@@ -92,7 +85,7 @@ module.exports = {
           err || 'Session not found'
         );
 
-        async.series([
+        async.parallel([
           cb => session.remove(cb),
           cb => req.session.destroy(cb)
         ], err => err ? next(err) : next());
@@ -109,19 +102,6 @@ module.exports = {
   },
 
   /**
-   * USER ENDPOINTS
-   */
-
-  getUser(req, res) {
-    if (!req.user) res.status(404);
-
-    const user = pick(req.user, USER_FIELDS);
-    const err = 'No user found';
-
-    res.json(req.user ? { user } : { err });
-  },
-
-  /**
    * GRAPHQL ENDPOINTS
    */
 
@@ -132,8 +112,15 @@ module.exports = {
 
   graphiql: graphiqlExpress({ endpointURL: '/graphql' }),
 
-  schema(req, res) {
-    res.set('Content-Type', 'text/plain');
-    res.send(printSchema(getGraphQLSchema(req.body)));
+  schema(_, res) {
+    res.set(
+      'Content-Type',
+      'text/plain'
+    );
+    flow(
+      res.send,
+      printSchema,
+      getGraphQLSchema
+    )(req.body);
   }
 };

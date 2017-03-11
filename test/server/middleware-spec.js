@@ -272,33 +272,4 @@ describe("middleware", () => {
 
   });
 
-  describe("#getUser", () => {
-
-    beforeEach(() => {
-      _.assign(res, {
-        status: jest.fn(),
-        json: jest.fn()
-      });
-    });
-
-    it("sends the user to the client", () => {
-      const user = req.user = { username: 'test_user' };
-
-      middleware.getUser(req, res);
-
-      expect(res.status).not.toHaveBeenCalled();
-      expect(res.json.mock.calls[0][0]).toEqual({ user });
-    });
-
-    it("sends an error if req.user is undefined", () => {
-      const err = 'No user found';
-
-      middleware.getUser(req, res);
-
-      expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json.mock.calls[0][0]).toEqual({ err });
-    });
-
-  });
-
 });

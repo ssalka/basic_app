@@ -26,10 +26,6 @@ router.post('/graphql',
  * REST ROUTES
  */
 
-router.get('/me',
-  middleware.getUser
-);
-
 router.get('/*',
   middleware.sendIndex
 );
