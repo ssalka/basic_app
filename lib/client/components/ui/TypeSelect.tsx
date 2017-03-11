@@ -5,20 +5,31 @@ import { ViewComponent } from 'lib/client/components';
 import { FIELD_TYPES } from 'lib/common/constants';
 import 'lib/client/styles/TypeSelect.less';
 
+interface State {
+  nodes: ITreeNode[];
+}
+
 export default class TypeSelect extends ViewComponent<any, any> {
-  state = {
+  state: State = {
     nodes: [{
       id: 'category-standard',
       hasCaret: true,
       label: 'Standard Types',
-      isExpanded: true,
-      childNodes: FIELD_TYPES.STANDARD.map(({ key, name, icon }): ITreeNode => ({
-        id: key,
-        iconName: icon,
-        label: name
-      }))
+      isExpanded: true
     }]
   };
+
+  constructor(props) {
+    super(props);
+    this.state.nodes[0].childNodes = FIELD_TYPES.STANDARD.map(
+      ({ key, name, icon }): ITreeNode => ({
+        id: key,
+        iconName: icon,
+        label: name,
+        isSelected: name === props.selectedType
+      })
+    );
+  }
 
   private handleNodeClick(nodeData: ITreeNode) {
     if (_.includes(nodeData.id, 'category')) {
@@ -27,7 +38,9 @@ export default class TypeSelect extends ViewComponent<any, any> {
     }
     else {
       this.props.onSelectType(nodeData.id);
-      nodeData.isSelected = !nodeData.isSelected;
+      _.forEach(this.state.nodes[0].childNodes, node => _.assign(node, {
+        isSelected: node.id === nodeData.id && !nodeData.isSelected
+      }));
     }
 
     this.setState(this.state);

@@ -45,19 +45,20 @@ export function FieldNameInput({ index, name }) {
 
 export function TypeSelectPopover({ index, value, isOpen }) {
   const { selectType, toggleTypePopover } = this.handlers;
-  const { name: currentType } = _.find(
+  const selectedType = _.find(
     FIELD_TYPES.STANDARD,
     { key: value }
   );
 
-  // TODO: pass in currentType to TypeSelect (to set as selected type)
   return (
     <Popover className="popover-type-select" isOpen={isOpen} target={
-      <Button text={currentType || 'Select Type'}
+      <Button text={selectedType.name || 'Select Type'}
         onClick={() => toggleTypePopover(index)}
       />
     }>
-      <TypeSelect onSelectType={type => selectType(type, index)} />
+      <TypeSelect selectedType={selectedType.key}
+        onSelectType={type => selectType(type, index)}
+      />
     </Popover>
   );
 }
