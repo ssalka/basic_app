@@ -1,6 +1,6 @@
 declare const _;
 import api from 'lib/client/api';
-import { Field } from 'lib/client/interfaces';
+import { Collection, Field } from 'lib/client/interfaces';
 
 /**
  * NOTE
@@ -14,7 +14,7 @@ export function editFormFields() {
 
 export function addField() {
   const { collection } = this.state;
-  collection.fields.push(new Field);
+  collection.fields.push(new Field());
   this.setState({
     collection,
     selectingType: collection.fields.map(_.stubFalse),
@@ -28,7 +28,9 @@ export function addField() {
 
 export function removeField(index: number) {
   const { fields } = this.state.collection;
-  if (fields.length === 1) return;
+  if (fields.length === 1) {
+    return;
+  }
 
   fields.splice(index, 1);
   this.setStateByPath(
@@ -57,7 +59,7 @@ export function toggleTypePopover(index: number) {
   const { collection,  selectingType } = this.state;
   this.setState({
     selectingType: collection.fields.map(
-      (_, i) => i === index && !selectingType[index]
+      (_, i: number) => i === index && !selectingType[index]
     )
   });
 }
@@ -91,6 +93,6 @@ export function submitForm(event) {
 
   this.props.upsertCollection(collection)
     .then(_.property('data.collection'))
-    .then(coll => api.User.updateLibrary(coll) || coll)
-    .then(coll => this.props.history.push(coll.path));
+    .then((coll: Collection) => api.User.updateLibrary(coll) || coll)
+    .then((coll: Collection) => this.props.history.push(coll.path));
 }

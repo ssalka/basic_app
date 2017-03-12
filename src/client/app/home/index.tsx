@@ -1,21 +1,22 @@
-import React from 'react';
+declare const _;
+declare const React;
 import { NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router';
-
 import { User } from 'lib/client/api';
 import { connect, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
+import { Collection, ReactElement } from 'lib/client/interfaces';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
 
 @connect(UserStore)
-class Home extends ViewComponent {
-  addView() {
+class Home extends ViewComponent<any, any> {
+  private addView() {
     // TODO
     console.log("open a new view");
   }
 
-  AddButton(props) {
+  private AddButton(props): ReactElement {
     return (
       <Link to={props.href}>
         <Button icon="add" minimal={true} rounded={true} {..._.omit(props, 'href')} />
@@ -23,8 +24,8 @@ class Home extends ViewComponent {
     );
   }
 
-  renderCollections(collections = []) {
-    const description = 'Use Collections to describe and organize your data. Import or sync with any source.';
+  private renderCollections(collections: Collection[] = []) {
+    const description: string = 'Use Collections to describe and organize your data. Import or sync with any source.';
     const { AddButton } = this;
 
     return (
@@ -36,7 +37,7 @@ class Home extends ViewComponent {
               <AddButton href="collections/add" />
             </FlexRow>
             <div className="scroll-y container">
-              {collections.map((collection, key) => (
+              {collections.map((collection: Collection, key: number) => (
                 <p><Link to={collection.path} key={key}>{collection.name}</Link></p>
               ))}
             </div>
@@ -59,7 +60,7 @@ class Home extends ViewComponent {
     );
   }
 
-  renderViews(views = []) {
+  private renderViews(views = []) {
     const description = 'Views allows you to define new visual representations of your data.';
     const { AddButton } = this;
 
@@ -72,7 +73,7 @@ class Home extends ViewComponent {
               <AddButton onClick={this.addView} />
             </FlexRow>
             <div className="scroll-y container">
-              {views.map((view, key) => (
+              {views.map((view, key: number) => (
                 <p key={key}>{view.name}</p>
               ))}
             </div>
@@ -95,7 +96,7 @@ class Home extends ViewComponent {
     );
   }
 
-  render() {
+  public render() {
     const { collections, views } = _.get(this.state, 'user.library', {});
 
     return (
@@ -112,4 +113,4 @@ class Home extends ViewComponent {
   }
 };
 
-module.exports = Home;
+export default Home;

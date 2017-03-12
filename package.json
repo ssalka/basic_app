@@ -1,9 +1,10 @@
 {
   "name": "basic_app",
-  "version": "0.12.2",
+  "version": "0.13.1",
   "description": "Basic App",
   "scripts": {
     "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",
+    "lint": "tslint lib/**/*.ts{,x} src/**/*.ts{,x}",
     "start": "NODE_PATH=. node index.js",
     "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --forceExit --noStackTrace"
   },
@@ -73,6 +74,8 @@
     "style-loader": "^0.13.1",
     "ts-jest": "^19.0.0",
     "ts-loader": "^1.3.3",
+    "tslint": "^4.5.1",
+    "tslint-react": "^2.5.0",
     "typescript": "^2.2.0",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.16.2"

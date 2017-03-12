@@ -5,12 +5,12 @@ import { ViewComponent } from 'lib/client/components';
 import { FIELD_TYPES } from 'lib/common/constants';
 import 'lib/client/styles/TypeSelect.less';
 
-interface State {
+interface IState {
   nodes: ITreeNode[];
 }
 
 export default class TypeSelect extends ViewComponent<any, any> {
-  state: State = {
+  public state: IState = {
     nodes: [{
       id: 'category-standard',
       hasCaret: true,
@@ -35,10 +35,9 @@ export default class TypeSelect extends ViewComponent<any, any> {
     if (_.includes(nodeData.id, 'category')) {
       const toggleMethod = nodeData.isExpanded ? 'handleNodeCollapse' : 'handleNodeExpand';
       this[toggleMethod](nodeData);
-    }
-    else {
+    } else {
       this.props.onSelectType(nodeData.id);
-      _.forEach(this.state.nodes[0].childNodes, node => _.assign(node, {
+      _.forEach(this.state.nodes[0].childNodes, (node: ITreeNode) => _.assign(node, {
         isSelected: node.id === nodeData.id && !nodeData.isSelected
       }));
     }
@@ -56,7 +55,7 @@ export default class TypeSelect extends ViewComponent<any, any> {
     this.setState(this.state);
   }
 
-  render() {
+  public render() {
     return (
       <div className="type-select">
         <Tree

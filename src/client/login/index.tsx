@@ -1,4 +1,6 @@
-import { InputGroup } from '@blueprintjs/core';
+declare const _;
+declare const React;
+import { InputGroup, IInputGroupProps } from '@blueprintjs/core';
 import { Link } from 'react-router';
 
 import api from 'lib/client/api';
@@ -9,13 +11,13 @@ import './styles.less';
 const { User } = api;
 
 @connect(UserStore)
-class Login extends ViewComponent {
-  static contextTypes = {
+class Login extends ViewComponent<any, any> {
+  public static contextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
-  }
+  };
 
-  state = {
+  public state = {
     register: false,
     formData: {
       username: '',
@@ -24,25 +26,24 @@ class Login extends ViewComponent {
     }
   };
 
-  registerOnSubmit() {
+  private registerOnSubmit() {
     this.setState({
       register: true
     });
   }
 
-  handleChange(event) {
+  private handleChange(name: string, value: string) {
     // update input values in state
-    const { name, value } = event.target;
     const { formData } = this.state;
     formData[name] = value;
     this.setState({ formData });
   }
 
-  get submitRoute() {
+  get submitRoute(): string {
     return '/'.concat(this.state.register ? 'register' : 'login');
   }
 
-  handleSubmit(event) {
+  private handleSubmit(event) {
     event.preventDefault();
     const { formData, register } = this.state;
     const body = _.pick(formData, ['username', 'password']);
@@ -54,25 +55,27 @@ class Login extends ViewComponent {
     this.post(path, body).then(this.loginCallback);
   }
 
-  loginCallback(response) {
+  private loginCallback(response) {
     const { token } = response.body;
     localStorage.token = token;
 
     // User library is not sent along with login response...
     // TODO: migrate rest of auth endpoints to graphql
     this.props.refetch().then(({ data: {user} }) => {
-      if (user) User.set(user);
+      if (user) {
+        User.set(user);
+      }
       this.props.history.push('/home');
     });
   }
 
-  getInput({name, icon}) {
+  private getInput({name, icon}) {
     const value = this.state.formData[name];
-    const props = {
-      name, value, key: name,
+    const props: IInputGroupProps = {
+      value,
       placeholder: _.capitalize(name),
       leftIconName: icon,
-      onChange: this.handleChange
+      onChange: (event: React.FormEvent<any>) => this.handleChange(name, event.currentTarget.value)
     };
 
     if (name === 'password') {
@@ -96,18 +99,21 @@ class Login extends ViewComponent {
       { name: 'password', icon: 'lock' }
     ];
 
-    if (this.state.register) inputFields.push(
-      { name: 'email', icon: 'envelope' }
-    );
+    if (this.state.register) {
+      inputFields.push({
+        name: 'email', icon: 'envelope'
+      });
+    }
 
     return inputFields;
   }
 
-  render() {
+  public render() {
     const { state, text } = this;
 
     const RegisterLink = () => (
-      <Button text={text.register}
+      <Button
+        text={text.register}
         onClick={this.registerOnSubmit}
         minimal={true}
         rounded={true}
@@ -132,4 +138,4 @@ class Login extends ViewComponent {
   }
 };
 
-module.exports = Login;
+export default Login;

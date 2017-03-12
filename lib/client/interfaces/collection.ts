@@ -2,7 +2,7 @@ declare const _;
 
 import { User } from './user';
 
-export class Field implements Field {
+export class Field {
   constructor(
     public name: string = '',
     public type: string = 'STRING',
@@ -11,21 +11,19 @@ export class Field implements Field {
   ) {}
 }
 
-export interface Collection {
-  _id: string;
-  name: string;
-  _db: string;
-  _collection: string;
-  fields: Field[];
-  creator: User;
-  description?: string;
-  icon?: string;
-  path: string;
-  defaultView?: any;
-  views: any[];
-}
+export class Collection {
+  public _id: string;
+  public name: string;
+  public _db: string;
+  public _collection: string;
+  public fields: Field[];
+  public creator: User;
+  public description?: string;
+  public icon?: string;
+  public path: string;
+  public defaultView?: any;
+  public views: any[];
 
-export class Collection implements Collection {
   constructor(collection: Partial<Collection> = {}) {
     _.extend(this, collection);
   }

@@ -1,16 +1,18 @@
+declare const _;
+declare const React;
 import { NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router';
-
 import { connect, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
+import { Collection, ReactElement } from 'lib/client/interfaces';
 
 @connect(UserStore)
-class Collections extends ViewComponent {
-  get collections() {
+class Collections extends ViewComponent<any, any> {
+  get collections(): Collection[] {
     return _.get(this.state, 'user.library.collections', []);
   }
 
-  AddCollectionButton(props) {
+  private AddCollectionButton(props): ReactElement {
     return (
       <Link to="collections/add">
         <Button icon="add" minimal={true} rounded={true} {...props} />
@@ -18,7 +20,7 @@ class Collections extends ViewComponent {
     );
   }
 
-  CollectionList() {
+  private CollectionList(): ReactElement {
     const { collections, AddCollectionButton } = this;
 
     return (
@@ -27,13 +29,14 @@ class Collections extends ViewComponent {
           <div>
             <FlexRow><AddCollectionButton /></FlexRow>
             <div className="scroll-y container">
-              {collections.map((collection, key) => (
+              {collections.map((collection: Collection, key: number) => (
                 <p key={key}>{collection.name}</p>
               ))}
             </div>
           </div>
         ) : (
-          <NonIdealState visual="graph"
+          <NonIdealState
+            visual="graph"
             title="You don't have any Collections"
             description={(
               <span>
@@ -53,7 +56,7 @@ class Collections extends ViewComponent {
     );
   }
 
-  render() {
+  public render() {
     const { CollectionList } = this;
     return (
       <section id="collections" className="container list-view">
@@ -70,4 +73,4 @@ class Collections extends ViewComponent {
   }
 };
 
-module.exports = Collections;
+export default Collections;

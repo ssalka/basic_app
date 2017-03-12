@@ -1,6 +1,6 @@
 import { Collection } from './collection';
 
-export interface User {
+export interface IUser {
   username: string;
   email: string;
   name: {
@@ -13,7 +13,7 @@ export interface User {
   };
 }
 
-export class User implements User {
+export class User implements IUser {
   constructor(
     public username: string,
     public email: string,

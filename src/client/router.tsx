@@ -6,58 +6,66 @@ import { connect, UserStore, getCollectionStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
+import { IComponentModule, IContext, ReactElement } from 'lib/client/interfaces';
 import common = require('lib/common');
 import { getGraphQLCollectionType } from 'lib/common/graphql';
-import Splash = require('./splash');
-import Login = require('./login');
+import Splash from './splash';
+import Login from './login';
 import App, { Home, Collections } from './app';
 import CollectionView from './app/collection';
 import SchemaForm from './app/collection/form';
 import DocumentView from './app/document';
-import DocumentForm = require('./app/document/form');
+import DocumentForm from './app/document/form';
 import './styles.less';
 
 const { request, logger } = common as any;
 const { User } = api;
 
+interface IProps {
+  user: any; // TODO: IUser interface
+}
+
 @query(GetUser)
 @connect(UserStore)
 class AppRouter extends BaseComponent<any, any> {
-  static childContextTypes = {
+  public static childContextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   };
 
-  componentWillReceiveProps({ user, loading, error }) {
-    if (error) console.error(error);
+  private componentWillReceiveProps({ user, loading, error }) {
+    if (error) {
+      console.error(error);
+    }
     if (!(loading || user) && _.includes(location.pathname, 'home')) {
       // done loading; no user; in protected route
       browserHistory.push('/login');
     }
   }
 
-  renderIfAuthenticated = props => this.props.user
-    ? <App {...props} />
-    : <div></div>;
+  private renderIfAuthenticated = (props: IProps): ReactElement => (
+    this.props.user
+      ? <App {...props} />
+      : <div />
+  )
 
-  getChildContext() {
-    const context: any = { appName: document.title };
+  public getChildContext(): IContext {
+    const context: IContext = { appName: document.title };
     if (this.props.user) {
       context.user = this.props.user;
       User.set(this.props.user);
-    }
-    else if (_.has(this.state, 'user')) {
+    } else if (_.has(this.state, 'user')) {
       context.user = this.state.user;
     }
     return context;
   }
 
-  getCollectionBySlug(slug) {
+  private getCollectionBySlug(slug) {
     const collections = _.get(this.props.user, 'library.collections', []);
     return _.find(collections, { slug });
   }
 
-  getCollectionStore = _.memoize((collection, documents = []) => (
+  private getCollectionStore = _.memoize((collection, documents = []) => (
     getCollectionStore({
       name: getGraphQLCollectionType(collection),
       logUpdates: true,
@@ -83,7 +91,7 @@ class AppRouter extends BaseComponent<any, any> {
     })
   ));
 
-  getCollectionView({ params, ...props }: any) {
+  private getCollectionView({ params, ...props }: any) {
     const collection = props.collection = this.getCollectionBySlug(params.collection);
     const CollectionStore = this.getCollectionStore(collection);
     const CollectionViewWithQuery = getGraphQLComponent(CollectionView, CollectionStore, { collection });
@@ -91,12 +99,12 @@ class AppRouter extends BaseComponent<any, any> {
     return <CollectionViewWithQuery {...props} />;
   }
 
-  getDocumentView({ params, location: { state, pathname }, ...props }) {
+  private getDocumentView({ params, location: { state, pathname }, ...props }) {
     const _document = state.document || _.pick(params, '_id');
-    return <DocumentView document={_document} pathname={pathname} />
+    return <DocumentView document={_document} pathname={pathname} />;
   }
 
-  getDocumentForm({ params, ...props }: any) {
+  private getDocumentForm({ params, ...props }: any) {
     const _document = _.pick(params, '_id');
     const collection = props.collection = this.getCollectionBySlug(params.collection);
     const CollectionStore = this.getCollectionStore(collection, [_document]);
@@ -107,13 +115,13 @@ class AppRouter extends BaseComponent<any, any> {
     return <DocumentFormWithMutation {...props} />;
   }
 
-  getSchemaForm({ location: { state }, ...props }) {
+  private getSchemaForm({ location: { state }, ...props }) {
     return (
       <SchemaForm collection={state.collection} {...props} />
     );
   }
 
-  logout() {
+  private logout() {
     const { token } = localStorage;
     if (token) {
       request.post('/logout', { token })
@@ -122,12 +130,12 @@ class AppRouter extends BaseComponent<any, any> {
     }
   }
 
-  logoutCallback() {
+  private logoutCallback() {
     User.unset();
     browserHistory.push('/');
   }
 
-  get components() {
+  get components(): IComponentModule {
     return {
       Site: ({children}) => (
         <FlexColumn>
@@ -145,7 +153,7 @@ class AppRouter extends BaseComponent<any, any> {
     };
   }
 
-  render() {
+  public render() {
     const { Site, NotFound } = this.components;
     const collections = _.get(this.props, 'user.library.collections', []);
 
@@ -154,14 +162,15 @@ class AppRouter extends BaseComponent<any, any> {
     const JSHome = Home as any;
     const JSLogin = Login as any;
     const JSCollections = Collections as any;
+    const getLoginPage = (props: any) => (
+      <JSLogin {...props} refetch={this.props.refetch} />
+    );
 
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
           <IndexRoute component={JSSplash} />
-          <Route path="login" component={props => (
-            <JSLogin {...props} refetch={this.props.refetch} />
-          )} />
+          <Route path="login" component={getLoginPage} />
 
           <Route component={this.renderIfAuthenticated}>
             <Route path="home" component={JSHome} />
@@ -188,4 +197,4 @@ class AppRouter extends BaseComponent<any, any> {
   }
 };
 
-module.exports = AppRouter;
+export default AppRouter;

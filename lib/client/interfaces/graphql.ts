@@ -1,4 +1,4 @@
-export interface MutationSettings {
+export interface IMutationSettings {
   getVariables: (...args: any[]) => {
     [key: string]: any
   };

@@ -13,7 +13,8 @@ export function CollectionNameInput({ value }) {
   } = this;
   return (
     <h3>
-      <EditableText value={collection.name}
+      <EditableText
+        value={collection.name}
         placeholder="New Collection"
         onChange={changeCollectionName}
       />
@@ -22,42 +23,59 @@ export function CollectionNameInput({ value }) {
 }
 
 export function DescriptionTextarea({ description }) {
+  const handleChange = (value: string) => this.setStateByPath(
+    'collection.description', value
+  );
+
   return (
-    <EditableText multiline minLines={2} maxLines={4}
+    <EditableText
+      multiline={true}
+      minLines={2}
+      maxLines={4}
       value={description}
       placeholder="Description"
-      onChange={(value: string) => this.setStateByPath(
-        'collection.description', value
-      )}
+      onChange={handleChange}
     />
   );
 }
 
 export function FieldNameInput({ index, name }) {
+  const handleChange = (value: string) => this.setStateByPath(
+    `collection.fields[${index}].name`, value
+  );
+
   return (
-    <EditableText placeholder="New Field" value={name}
-      onChange={(value: string) => this.setStateByPath(
-        `collection.fields[${index}].name`, value
-      )}
+    <EditableText
+      placeholder="New Field"
+      value={name}
+      onChange={handleChange}
     />
   );
 }
 
 export function TypeSelectPopover({ index, value, isOpen }) {
   const { selectType, toggleTypePopover } = this.handlers;
+  const handleClick = () => toggleTypePopover(index);
+  const handleSelectType = (type: string) => selectType(type, index);
   const selectedType = _.find(
     FIELD_TYPES.STANDARD,
     { key: value }
   );
 
   return (
-    <Popover className="popover-type-select" isOpen={isOpen} target={
-      <Button text={selectedType.name || 'Select Type'}
-        onClick={() => toggleTypePopover(index)}
-      />
-    }>
-      <TypeSelect selectedType={selectedType.key}
-        onSelectType={type => selectType(type, index)}
+    <Popover
+      isOpen={isOpen}
+      className="popover-type-select"
+      target={(
+        <Button
+          text={selectedType.name || 'Select Type'}
+          onClick={handleClick}
+        />
+      )}
+    >
+      <TypeSelect
+        selectedType={selectedType.key}
+        onSelectType={handleSelectType}
       />
     </Popover>
   );
@@ -70,8 +88,10 @@ export function ToggleEditButton() {
     : { icon: 'edit', color: 'warning' };
 
   return (
-    <Button minimal={true}
-      onClick={editFormFields} {...props}
+    <Button
+      minimal={true}
+      onClick={editFormFields}
+      {...props}
     />
   );
 }
@@ -80,7 +100,8 @@ export function AddFieldButton() {
   const { addField } = this.handlers;
   return (
     <FlexRow className="minimal-row">
-      <Button onClick={addField}
+      <Button
+        onClick={addField}
         text="Add Field"
         icon="add"
         minimal={true}
@@ -91,20 +112,24 @@ export function AddFieldButton() {
 }
 
 export function DetailsButton({ index }) {
-  const { toggleFieldOptions } = this.handlers;
+  const handleClick = () => this.handlers.toggleFieldOptions(index);
+
   return (
-    <Button icon="more"
+    <Button
+      icon="more"
       size="small"
       color="primary"
-      onClick={() => toggleFieldOptions(index)}
+      onClick={handleClick}
     />
   );
 }
 
 export function RemoveFieldButton({ disabled }) {
   const { removeField } = this.handlers;
+
   return (
-    <Button icon="minus"
+    <Button
+      icon="minus"
       size="small"
       color="danger"
       onClick={removeField}
@@ -118,14 +143,17 @@ export function FieldOptions({ index }) {
     handlers: { toggleRequired, toggleIsArray },
     state: { collection: { fields } }
   } = this;
+  const handleCheckRequired = () => toggleRequired(index);
+  const handleCheckIsArray = () => toggleIsArray(index);
+
   return (
     <FlexColumn className="field-options drawer bg-light">
       <h6 className="muted">Options for {fields[index].name || 'New Field'}</h6>
       <FlexRow justifyContent="space-around">
-        <Checkbox checked={fields[index].required} onChange={() => toggleRequired(index)}>
+        <Checkbox checked={fields[index].required} onChange={handleCheckRequired}>
           Required
         </Checkbox>
-        <Checkbox checked={fields[index].isArray} onChange={() => toggleIsArray(index)}>
+        <Checkbox checked={fields[index].isArray} onChange={handleCheckIsArray}>
           Is Array
         </Checkbox>
       </FlexRow>

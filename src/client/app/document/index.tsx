@@ -5,13 +5,13 @@ import { ViewComponent } from 'lib/client/components';
 import { Link } from 'react-router';
 
 export default class DocumentView extends ViewComponent<any, any> {
-  static defaultProps = {
+  public static defaultProps = {
     collection: {},
     document: {},
     pathname: ''
   };
 
-  componentDidMount() {
+  private componentDidMount() {
     const { document: _document } = this.props;
     console.info(
       _.singularize(_document.__typename), _document._id,
@@ -19,7 +19,7 @@ export default class DocumentView extends ViewComponent<any, any> {
     );
   }
 
-  render() {
+  public render() {
     const { document: _document } = this.props;
     const state = this.props;
 

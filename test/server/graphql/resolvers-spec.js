@@ -37,6 +37,7 @@ describe("GraphQL Resolvers", () => {
   describe("getResolvers", () => {
     it("returns the resolvers", () => {
       _.forEach({ Query, Mutation, User, _Collection }, resolver => {
+        expect(resolver).toBeDefined();
         expect(resolver).toBeInstanceOf(Object);
 
         _(resolver)
@@ -73,7 +74,7 @@ describe("GraphQL Resolvers", () => {
         BOOLEAN: true,
         STRING: 'new string value',
         NUMBER: _.random(0, 50000),
-        MIXED: _.sample([new Date, 200, {}])
+        DATETIME: new Date
       });
 
       beforeEach(done => {
