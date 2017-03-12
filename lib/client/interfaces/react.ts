@@ -2,12 +2,12 @@ declare const React;
 
 export type ReactElement = React.ReactElement<any>;
 
-export interface RouteProps {
+export interface IRouteProps {
   history: {
     go: () => void;
     goBack: () => void;
     goForward: () => void;
-    push: (any) => void;
+    push: (path: string | object) => void;
     pushState: () => void;
     replace: () => void;
     replaceState: () => void;
@@ -26,7 +26,7 @@ type Route = {
   component: (props) => void
 };
 
-export interface QueryProps {
+export interface IQueryProps {
   error?: any;
   loadNextPage?: Function;
   loading: boolean;
@@ -37,6 +37,6 @@ export interface QueryProps {
   variables: any;
 }
 
-export interface ComponentModule {
-  [key: string]: () => ReactElement
+export interface IComponentModule {
+  [key: string]: () => ReactElement;
 }
