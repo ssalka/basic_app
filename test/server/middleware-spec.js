@@ -28,11 +28,11 @@ describe("middleware", () => {
 
     it("finds the session and returns the user", () => {
       Session.findByToken = jest.fn(() => ({
-        then(cb) {
-          cb(session);
-          return this;
-        },
-        catch: jest.fn()
+        exec: cb => cb(null, session)
+      }));
+
+      User.findById = jest.fn(() => ({
+        exec: cb => cb(null, user)
       }));
 
       middleware.findUserByToken(req, res);
@@ -44,11 +44,7 @@ describe("middleware", () => {
     it("sends an error if no session is found", () => {
       const err = 'No matching document';
       Session.findByToken = jest.fn(() => ({
-        then(cb) {
-          cb(null);
-          return this;
-        },
-        catch: jest.fn()
+        exec: cb => cb(null, null)
       }));
 
       middleware.findUserByToken(req, res);
@@ -70,8 +66,7 @@ describe("middleware", () => {
     it("logs caught errors", () => {
       const err = 'something is wrong';
       Session.findByToken = jest.fn(() => ({
-        then() { return this; },
-        catch: cb => cb(err)
+        exec: cb => cb(err)
       }));
 
       middleware.findUserByToken(req, res);

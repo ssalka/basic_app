@@ -30,12 +30,12 @@ module.exports = {
     });
 
     async.waterfall([
-      cb => Session.findByToken(token, cb),
+      cb => Session.findByToken(token).exec(cb),
       (session, cb) => isEmpty(session)
-        ? cb({ err: 'No matching document', statusCode: 404 })
-        : User.findById(session.user._id, cb),
+        ? cb({ message: 'No matching document', statusCode: 404 })
+        : User.findById(session.user._id).exec(cb),
     ], (err, user) => err
-      ? res.status(err.statusCode || 500).json({ err })
+      ? res.status(err.statusCode || 500).json({ err: err.message || err })
       : res.json({ user: pick(user, USER_FIELDS) })
     );
    },
