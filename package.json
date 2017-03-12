@@ -1,6 +1,6 @@
 {
   "name": "basic_app",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "description": "Basic App",
   "scripts": {
     "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",

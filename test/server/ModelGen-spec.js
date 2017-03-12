@@ -42,7 +42,7 @@ describe("ModelGen", () => {
       expect(ModelGen.getSchema(fields)).toEqual({
         stringField: { type: String, required: false },
         numberField: { type: Number, required: false },
-        mixedField: { type: Mixed, required: false },
+        dateField: { type: Date, required: false },
         booleanField: { type: Boolean, required: false }
       });
     });

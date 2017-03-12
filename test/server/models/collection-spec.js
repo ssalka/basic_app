@@ -18,7 +18,8 @@ describe("Collection", () => {
   afterAll(cleanup);
 
   it("finds a test collection", done => {
-    Collection.findOne().then(collection => {
+    Collection.findOne((err, collection) => {
+      expect(err).toBeNull();
       expect(collection).not.toBeNull();
       done();
     });
