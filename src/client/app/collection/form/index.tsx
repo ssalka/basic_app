@@ -115,8 +115,6 @@ class SchemaForm extends ViewComponent<IProps, IState> {
       </div>
     );
 
-    const JSIconSelector = IconSelector as any;
-
     return (
       <ViewComponent>
         <div className="form-popover pt-card pt-elevation-3">
@@ -124,7 +122,7 @@ class SchemaForm extends ViewComponent<IProps, IState> {
             <div className="header">
               <FlexRow>
                 <CollectionNameInput value={name} />
-                <JSIconSelector
+                <IconSelector
                   selected={collection.icon}
                   onSelectIcon={selectIcon}
                   onClick={toggleIconPopover}

@@ -6,7 +6,7 @@ import { connect, UserStore, getCollectionStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
-import { IComponentModule, IContext, ReactElement } from 'lib/client/interfaces';
+import { IComponentModule, IContext, IUser, ReactElement } from 'lib/client/interfaces';
 import common = require('lib/common');
 import { getGraphQLCollectionType } from 'lib/common/graphql';
 import Splash from './splash';
@@ -22,7 +22,7 @@ const { request, logger } = common as any;
 const { User } = api;
 
 interface IProps {
-  user: any; // TODO: IUser interface
+  user: IUser;
 }
 
 @query(GetUser)
@@ -156,26 +156,20 @@ class AppRouter extends BaseComponent<any, any> {
   public render() {
     const { Site, NotFound } = this.components;
     const collections = _.get(this.props, 'user.library.collections', []);
-
-    // TODO: convert these to TS
-    const JSSplash = Splash as any;
-    const JSHome = Home as any;
-    const JSLogin = Login as any;
-    const JSCollections = Collections as any;
-    const getLoginPage = (props: any) => (
-      <JSLogin {...props} refetch={this.props.refetch} />
+    const getLoginPage = (props: React.Props<any>) => (
+      <Login {...props} refetch={this.props.refetch} />
     );
 
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
-          <IndexRoute component={JSSplash} />
+          <IndexRoute component={Splash} />
           <Route path="login" component={getLoginPage} />
 
           <Route component={this.renderIfAuthenticated}>
-            <Route path="home" component={JSHome} />
+            <Route path="home" component={Home} />
             <Route path="collections">
-              <IndexRoute component={JSCollections} />
+              <IndexRoute component={Collections} />
               <Route path="add" component={SchemaForm} />
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />

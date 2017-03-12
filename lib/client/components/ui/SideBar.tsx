@@ -35,12 +35,7 @@ export default class SideBar extends BaseComponent<any, any> {
     return (
       <li key={key} className={linkIsActive}>
         <Link to={link.path} className="pt-menu-item">
-          <Icon
-            name={link.icon}
-            className={''/*
-              className is a required attribute? ._.
-            */}
-          />
+          <Icon name={link.icon} />
           <span className="text">
             {link.name}
           </span>
@@ -69,7 +64,6 @@ export default class SideBar extends BaseComponent<any, any> {
             name={toggleIcon}
             size={14}
             onClick={this.toggle}
-            className=""
           />
         </div>
       </aside>
