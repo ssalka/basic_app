@@ -9,10 +9,12 @@
         "constructor"
       ]
     }],
+    "no-console": false,
+    "no-shadowed-variable": false,
     "object-literal-sort-keys": false,
     "ordered-imports": false,
     "quotemark": "jsx-double",
     "trailing-comma": "never",
-    "variable-name": [true, "allow-leading-underscore"]
+    "variable-name": false
   }
 }

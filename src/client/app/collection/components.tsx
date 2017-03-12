@@ -3,15 +3,15 @@ declare const React;
 import { Link } from 'react-router';
 import { NonIdealState } from '@blueprintjs/core';
 import { Icon, FlexRow, Button } from 'lib/client/components';
-import { ComponentModule } from 'lib/client/interfaces';
-import { Props, State } from './';
+import { IComponentModule } from 'lib/client/interfaces';
+import { IProps, IState } from './';
 
 export default function getComponents(
-  { collection, location: _location }: Props,
-  { documents }: State
-): ComponentModule {
+  { collection, location: _location }: IProps,
+  { documents }: IState
+): IComponentModule {
   const { name, description, icon, path } = collection;
-  const linkWithState = pathname => ({
+  const linkWithState = (pathname: string) => ({
     pathname, state: { collection }
   });
 
@@ -21,9 +21,11 @@ export default function getComponents(
     </Link>
   );
 
-  const AddDocumentButton = overrides => (
+  const AddDocumentButton = (overrides: any) => (
     <Link to={linkWithState(`${_location.pathname}/add`)}>
-      <Button icon="add" text={`Add ${_.singularize(name)}`}
+      <Button
+        icon="add"
+        text={`Add ${_.singularize(name)}`}
         color="primary"
         minimal={true}
         rounded={true}
@@ -54,7 +56,7 @@ export default function getComponents(
     ),
     Loading: () => (
       <FlexRow className="flex-view" justifyContent="center">
-        <div className="loader"></div>
+        <div className="loader" />
       </FlexRow>
     )
   };

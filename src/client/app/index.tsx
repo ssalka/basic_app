@@ -7,21 +7,21 @@ import Home = require('./home');
 import Collections = require('./collections');
 import './styles.less';
 
-interface AppState {
+interface IAppState {
   user: any;
   views: any[];
 }
 
 @connect(UserStore)
-class App extends ViewComponent<any, AppState> {
-  state: AppState = {
+class App extends ViewComponent<any, IAppState> {
+  public state: IAppState = {
     user: {},
     views: [
       { name: 'Home', path: '/home', icon: 'home' }
     ]
   };
 
-  render() {
+  public render() {
     const {
       props: { children },
       state: { user, views }

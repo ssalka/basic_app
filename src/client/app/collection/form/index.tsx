@@ -5,29 +5,29 @@ import { browserHistory } from 'react-router';
 import { mutation } from 'lib/client/api/graphql';
 import { SchemaFormMutation } from 'lib/client/api/graphql/mutations';
 import { ViewComponent, Button, FlexRow, FlexColumn, IconSelector } from 'lib/client/components';
-import { MutationSettings, ReactElement, Field, Collection } from 'lib/client/interfaces';
+import { IMutationSettings, ReactElement, Field, Collection } from 'lib/client/interfaces';
 import { READONLY_FIELDS } from 'lib/common/constants';
 import 'lib/client/styles/SchemaForm.less';
 import * as handlers from './handlers';
 import * as components from './components';
 
-const mutationSettings: MutationSettings = {
-  getVariables: collection => _(collection)
+const mutationSettings: IMutationSettings = {
+  getVariables: (collection: Collection) => _(collection)
     .defaults({ _db: 'test' })
     .assign({
       fields: collection.fields.map(
-        field => _.omit(field, READONLY_FIELDS)
+        (field: Field) => _.omit(field, READONLY_FIELDS)
       )
     })
     .value(),
   variables: {}
 };
 
-type Props = React.Props<any> & {
+type IProps = React.Props<any> & {
   collection: Partial<Collection>;
 };
 
-interface State {
+interface IState {
   collection: Partial<Collection>;
   editingFields: boolean;
   selectingIcon: boolean;
@@ -36,18 +36,18 @@ interface State {
 }
 
 @mutation(SchemaFormMutation, mutationSettings)
-class SchemaForm extends ViewComponent<Props, State> {
-  static defaultProps: Props = {
+class SchemaForm extends ViewComponent<IProps, IState> {
+  public static defaultProps: IProps = {
     collection: new Collection({
       _id: null,
       name: '',
-      fields: [new Field],
+      fields: [new Field()],
       description: '',
       icon: 'graph'
     })
   };
 
-  state: State = {
+  public state: IState = {
     collection: {},
     editingFields: false,
     selectingIcon: false,
@@ -68,17 +68,17 @@ class SchemaForm extends ViewComponent<Props, State> {
     });
   }
 
-  handlers = _.mapValues(
+  private handlers = _.mapValues(
     handlers,
-    handler => handler.bind(this)
+    (handler: () => void) => handler.bind(this)
   );
 
-  components = _.mapValues(
+  private components = _.mapValues(
     components,
-    handler => handler.bind(this)
+    (handler: () => void) => handler.bind(this)
   );
 
-  render() {
+  public render() {
     const {
       handlers: {
         submitForm,
@@ -124,7 +124,8 @@ class SchemaForm extends ViewComponent<Props, State> {
             <div className="header">
               <FlexRow>
                 <CollectionNameInput value={name} />
-                <JSIconSelector selected={collection.icon}
+                <JSIconSelector
+                  selected={collection.icon}
                   onSelectIcon={selectIcon}
                   onClick={toggleIconPopover}
                   isOpen={selectingIcon}
@@ -143,7 +144,9 @@ class SchemaForm extends ViewComponent<Props, State> {
                   <FlexColumn key={index}>
                     <FlexRow className="field-main">
                       <FieldNameInput index={index} name={name} />
-                      <TypeSelectPopover index={index} value={type}
+                      <TypeSelectPopover
+                        index={index}
+                        value={type}
                         isOpen={selectingType[index]}
                       />
                       <OptionButton index={index} />

@@ -20,44 +20,49 @@ import './styles.less';
 const { request, logger } = common as any;
 const { User } = api;
 
+interface IProps {
+  user: any; // TODO: IUser interface
+}
+
 @query(GetUser)
 @connect(UserStore)
 class AppRouter extends BaseComponent<any, any> {
-  static childContextTypes = {
+  public static childContextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   };
 
-  componentWillReceiveProps({ user, loading, error }) {
-    if (error) console.error(error);
+  private componentWillReceiveProps({ user, loading, error }) {
+    if (error) {
+      console.error(error);
+    }
     if (!(loading || user) && _.includes(location.pathname, 'home')) {
       // done loading; no user; in protected route
       browserHistory.push('/login');
     }
   }
 
-  renderIfAuthenticated = props => this.props.user
+  private renderIfAuthenticated = (props: IProps) => this.props.user
     ? <App {...props} />
-    : <div></div>;
+    : <div />
 
-  getChildContext() {
+  public getChildContext() {
     const context: any = { appName: document.title };
     if (this.props.user) {
       context.user = this.props.user;
       User.set(this.props.user);
-    }
-    else if (_.has(this.state, 'user')) {
+    } else if (_.has(this.state, 'user')) {
       context.user = this.state.user;
     }
     return context;
   }
 
-  getCollectionBySlug(slug) {
+  private getCollectionBySlug(slug) {
     const collections = _.get(this.props.user, 'library.collections', []);
     return _.find(collections, { slug });
   }
 
-  getCollectionStore = _.memoize((collection, documents = []) => (
+  private getCollectionStore = _.memoize((collection, documents = []) => (
     getCollectionStore({
       name: getGraphQLCollectionType(collection),
       logUpdates: true,
@@ -83,7 +88,7 @@ class AppRouter extends BaseComponent<any, any> {
     })
   ));
 
-  getCollectionView({ params, ...props }: any) {
+  private getCollectionView({ params, ...props }: any) {
     const collection = props.collection = this.getCollectionBySlug(params.collection);
     const CollectionStore = this.getCollectionStore(collection);
     const CollectionViewWithQuery = getGraphQLComponent(CollectionView, CollectionStore, { collection });
@@ -91,12 +96,12 @@ class AppRouter extends BaseComponent<any, any> {
     return <CollectionViewWithQuery {...props} />;
   }
 
-  getDocumentView({ params, location: { state, pathname }, ...props }) {
+  private getDocumentView({ params, location: { state, pathname }, ...props }) {
     const _document = state.document || _.pick(params, '_id');
-    return <DocumentView document={_document} pathname={pathname} />
+    return <DocumentView document={_document} pathname={pathname} />;
   }
 
-  getDocumentForm({ params, ...props }: any) {
+  private getDocumentForm({ params, ...props }: any) {
     const _document = _.pick(params, '_id');
     const collection = props.collection = this.getCollectionBySlug(params.collection);
     const CollectionStore = this.getCollectionStore(collection, [_document]);
@@ -107,13 +112,13 @@ class AppRouter extends BaseComponent<any, any> {
     return <DocumentFormWithMutation {...props} />;
   }
 
-  getSchemaForm({ location: { state }, ...props }) {
+  private getSchemaForm({ location: { state }, ...props }) {
     return (
       <SchemaForm collection={state.collection} {...props} />
     );
   }
 
-  logout() {
+  private logout() {
     const { token } = localStorage;
     if (token) {
       request.post('/logout', { token })
@@ -122,7 +127,7 @@ class AppRouter extends BaseComponent<any, any> {
     }
   }
 
-  logoutCallback() {
+  private logoutCallback() {
     User.unset();
     browserHistory.push('/');
   }
@@ -145,7 +150,7 @@ class AppRouter extends BaseComponent<any, any> {
     };
   }
 
-  render() {
+  public render() {
     const { Site, NotFound } = this.components;
     const collections = _.get(this.props, 'user.library.collections', []);
 
@@ -154,14 +159,15 @@ class AppRouter extends BaseComponent<any, any> {
     const JSHome = Home as any;
     const JSLogin = Login as any;
     const JSCollections = Collections as any;
+    const getLoginPage = (props: any) => (
+      <JSLogin {...props} refetch={this.props.refetch} />
+    );
 
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
           <IndexRoute component={JSSplash} />
-          <Route path="login" component={props => (
-            <JSLogin {...props} refetch={this.props.refetch} />
-          )} />
+          <Route path="login" component={getLoginPage} />
 
           <Route component={this.renderIfAuthenticated}>
             <Route path="home" component={JSHome} />

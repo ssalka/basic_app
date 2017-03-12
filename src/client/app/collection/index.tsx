@@ -4,35 +4,35 @@ declare const React;
 import { Link } from 'react-router';
 import { NonIdealState } from '@blueprintjs/core';
 import { ViewComponent, Table, FlexColumn } from 'lib/client/components';
-import { Collection, RouteProps, QueryProps } from 'lib/client/interfaces';
+import { Collection, IRouteProps, IQueryProps } from 'lib/client/interfaces';
 import getComponents from './components';
 import 'lib/client/styles/CollectionView.less';
 
-export interface Props extends RouteProps, QueryProps {
+export interface IProps extends IRouteProps, IQueryProps {
   collection: Collection;
   documents: any[];
   loading: boolean;
   store: any;
 }
 
-export interface State {
+export interface IState {
   documents: any[];
 }
 
-export default class CollectionView extends ViewComponent<Props, State> {
-  static defaultProps = {
-    collection: {},
+export default class CollectionView extends ViewComponent<IProps, IState> {
+  public static defaultProps: Partial<IProps> = {
+    collection: {} as Collection,
     loading: true
   };
 
-  constructor(props: Props) {
+  constructor(props: IProps) {
     super(props);
     this.state = {
       documents: props.documents || []
     };
   }
 
-  componentDidMount() {
+  private componentDidMount() {
     const { collection } = this.props;
 
     console.info(
@@ -41,7 +41,7 @@ export default class CollectionView extends ViewComponent<Props, State> {
     );
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  private componentWillReceiveProps(nextProps: IProps) {
     const { collection, store } = nextProps;
     if (!_.isEqual(nextProps.documents, this.state.documents)) {
       // TODO: warn if overwriting unsaved changes
@@ -49,7 +49,7 @@ export default class CollectionView extends ViewComponent<Props, State> {
     }
   }
 
-  getView(view) {
+  private getView(view) {
     const views = {
       TABLE: {
         component: Table,
@@ -59,21 +59,23 @@ export default class CollectionView extends ViewComponent<Props, State> {
       }
     };
 
-    return views[view] || views['TABLE'];
+    return views[view] || views.TABLE;
   }
 
-  openDocument(doc) {
-    const { collection, history }: Partial<Props> = this.props;
+  private openDocument(doc) {
+    const { collection, history }: Partial<IProps> = this.props;
     return history.push({
       pathname: `${collection.path}/${doc._id}`,
       state: { document: doc }
     });
   }
 
-  render() {
-    const { collection, loading, loadNextPage, location }: Partial<Props> = this.props;
+  public render() {
+    const { collection, loading, loadNextPage, location }: Partial<IProps> = this.props;
     const { CollectionHeader, Loading, Placeholder } = getComponents(this.props, this.state);
     const noDocuments: boolean = _.isEmpty(this.state.documents);
+    const handleLoadNextPage = () => loadNextPage();
+    const handleSelectDocument = (doc: object) => this.openDocument(doc);
 
     const {
       component: View,
@@ -86,11 +88,11 @@ export default class CollectionView extends ViewComponent<Props, State> {
         {loading ? <Loading /> : (
           noDocuments ? <Placeholder /> : (
             <div {...viewProps}>
-              <div onClick={() => loadNextPage()}>Load Next Page</div>
+              <div onClick={handleLoadNextPage}>Load Next Page</div>
               <View
                 headers={_.map(collection.fields, 'name')}
                 content={this.state.documents}
-                onSelectDocument={doc => this.openDocument(doc)}
+                onSelectDocument={handleSelectDocument}
                 pathname={location.pathname}
               />
             </div>
