@@ -29,12 +29,13 @@ export default class Table extends ViewComponent<IProps, any> {
     }
   };
 
-  private getField(header: string, index: number) {
+  private getField(header: string, index: number): {} {
     const { onSelectDocument } = this.props;
     const handleClick: (doc: any) => React.MouseEventHandler<HTMLSpanElement> = (
       (doc: any) => () => onSelectDocument(doc)
     );
-    return ({
+
+    return {
       name: _.kebabCase(header),
       displayName: header,
       sortable: true,
@@ -44,7 +45,7 @@ export default class Table extends ViewComponent<IProps, any> {
           {props.value}
         </span>
       )
-    });
+    };
   }
 
   private get components(): IComponentModule {

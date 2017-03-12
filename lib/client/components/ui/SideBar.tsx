@@ -2,17 +2,23 @@ declare const React;
 
 import { Link } from 'react-router';
 import { BaseComponent, Icon } from '../';
+import { IView } from 'lib/client/interfaces';
 import '../../styles/SideBar.less';
 
-export default class SideBar extends BaseComponent<any, any> {
-  public state = {
-    expanded: false,
-    isDoubleClick: false,
-  };
+interface IProps {
+  currentPath: string;
+  links: IView[];
+}
 
-  public static defaultProps = {
+export default class SideBar extends BaseComponent<IProps, any> {
+  public static defaultProps: IProps = {
     currentPath: '',
     links: []
+  };
+
+  public state = {
+    expanded: false,
+    isDoubleClick: false
   };
 
   private toggle() {
@@ -24,6 +30,7 @@ export default class SideBar extends BaseComponent<any, any> {
     if (!this.state.isDoubleClick) {
       this.state.isDoubleClick = true;
       setTimeout(() => this.state.isDoubleClick = false, 500);
+
       return;
     }
 
@@ -32,6 +39,7 @@ export default class SideBar extends BaseComponent<any, any> {
 
   private renderLink(link, key) {
     const linkIsActive = link.path.includes(this.props.currentPath) ? 'active' : null;
+
     return (
       <li key={key} className={linkIsActive}>
         <Link to={link.path} className="pt-menu-item">

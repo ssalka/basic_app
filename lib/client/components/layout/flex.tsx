@@ -27,6 +27,7 @@ export default function getFlexComponent(type: 'row' | 'column') {
       }),
       ...props
     });
+
     return <div {...flexProps as React.Props<HTMLDivElement>} />;
   };
 }

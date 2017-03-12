@@ -14,7 +14,7 @@ interface IProps extends React.Props<any> {
   disabled?: boolean;
   text?: string;
   type?: string;
-  onClick?: () => void;
+  onClick?(): void;
 }
 
 export default (props: IProps): ReactElement => {
@@ -23,6 +23,7 @@ export default (props: IProps): ReactElement => {
   const buttonProps: IButtonProps = _.pickBy(
     { type, className, onClick }
   );
+
   return (
     <Button {...buttonProps}>{text || children}</Button>
   );

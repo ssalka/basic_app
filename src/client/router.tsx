@@ -6,7 +6,7 @@ import { connect, UserStore, getCollectionStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
-import { IComponentModule, IContext, IUser, ReactElement } from 'lib/client/interfaces';
+import { Collection, IComponentModule, IContext, IUser, ReactElement, IQueryProps } from 'lib/client/interfaces';
 import common = require('lib/common');
 import { getGraphQLCollectionType } from 'lib/common/graphql';
 import Splash from './splash';
@@ -21,7 +21,7 @@ import './styles.less';
 const { request, logger } = common as any;
 const { User } = api;
 
-interface IProps {
+interface IProps extends IQueryProps {
   user: IUser;
 }
 
@@ -33,7 +33,33 @@ class AppRouter extends BaseComponent<any, any> {
     user: React.PropTypes.object
   };
 
-  private componentWillReceiveProps({ user, loading, error }) {
+  private getCollectionStore = _.memoize((collection: Collection[], documents: any[] = []) => (
+    getCollectionStore({
+      name: getGraphQLCollectionType(collection as any),
+      logUpdates: true,
+      initialState: {
+        collection,
+        documents
+      }
+    }, {
+      loadDocuments(documents: any[]) {
+        this.setState({ documents });
+      },
+      updateDocument(_document: any) {
+        const documents: any[] = this.state.documents.slice();
+
+        const indexToUpdate: number = _.findIndex(documents, { _id: _document._id });
+
+        indexToUpdate >= 0
+          ? documents.splice(indexToUpdate, 1, _document)
+          : documents.push(_document);
+
+        this.setState({ documents });
+      }
+    })
+  ));
+
+  private componentWillReceiveProps({ user, loading, error }: IProps) {
     if (error) {
       console.error(error);
     }
@@ -57,39 +83,15 @@ class AppRouter extends BaseComponent<any, any> {
     } else if (_.has(this.state, 'user')) {
       context.user = this.state.user;
     }
+
     return context;
   }
 
-  private getCollectionBySlug(slug) {
+  private getCollectionBySlug(slug: string) {
     const collections = _.get(this.props.user, 'library.collections', []);
+
     return _.find(collections, { slug });
   }
-
-  private getCollectionStore = _.memoize((collection, documents = []) => (
-    getCollectionStore({
-      name: getGraphQLCollectionType(collection),
-      logUpdates: true,
-      initialState: {
-        collection,
-        documents
-      }
-    }, {
-      loadDocuments(documents) {
-        this.setState({ documents });
-      },
-      updateDocument(_document) {
-        const documents = this.state.documents.slice();
-
-        const indexToUpdate = _.findIndex(documents, { _id: _document._id });
-
-        indexToUpdate >= 0
-          ? documents.splice(indexToUpdate, 1, _document)
-          : documents.push(_document);
-
-        this.setState({ documents });
-      }
-    })
-  ));
 
   private getCollectionView({ params, ...props }: any) {
     const collection = props.collection = this.getCollectionBySlug(params.collection);
@@ -101,6 +103,7 @@ class AppRouter extends BaseComponent<any, any> {
 
   private getDocumentView({ params, location: { state, pathname }, ...props }) {
     const _document = state.document || _.pick(params, '_id');
+
     return <DocumentView document={_document} pathname={pathname} />;
   }
 

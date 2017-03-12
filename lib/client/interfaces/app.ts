@@ -11,3 +11,9 @@ export interface IIcon {
   group: string;
   tags: string[];
 }
+
+export interface IView {
+  name: string;
+  path: string;
+  icon: string;
+}
