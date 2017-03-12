@@ -6,7 +6,7 @@ import { connect, UserStore, getCollectionStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
-import { IComponentModule, IContext, ReactElement } from 'lib/client/interfaces';
+import { Collection, IComponentModule, IContext, IUser, ReactElement, IQueryProps } from 'lib/client/interfaces';
 import common = require('lib/common');
 import { getGraphQLCollectionType } from 'lib/common/graphql';
 import Splash from './splash';
@@ -21,8 +21,8 @@ import './styles.less';
 const { request, logger } = common as any;
 const { User } = api;
 
-interface IProps {
-  user: any; // TODO: IUser interface
+interface IProps extends IQueryProps {
+  user: IUser;
 }
 
 @query(GetUser)
@@ -33,7 +33,33 @@ class AppRouter extends BaseComponent<any, any> {
     user: React.PropTypes.object
   };
 
-  private componentWillReceiveProps({ user, loading, error }) {
+  private getCollectionStore = _.memoize((collection: Collection[], documents: any[] = []) => (
+    getCollectionStore({
+      name: getGraphQLCollectionType(collection as any),
+      logUpdates: true,
+      initialState: {
+        collection,
+        documents
+      }
+    }, {
+      loadDocuments(documents: any[]) {
+        this.setState({ documents });
+      },
+      updateDocument(_document: any) {
+        const documents: any[] = this.state.documents.slice();
+
+        const indexToUpdate: number = _.findIndex(documents, { _id: _document._id });
+
+        indexToUpdate >= 0
+          ? documents.splice(indexToUpdate, 1, _document)
+          : documents.push(_document);
+
+        this.setState({ documents });
+      }
+    })
+  ));
+
+  private componentWillReceiveProps({ user, loading, error }: IProps) {
     if (error) {
       console.error(error);
     }
@@ -57,39 +83,15 @@ class AppRouter extends BaseComponent<any, any> {
     } else if (_.has(this.state, 'user')) {
       context.user = this.state.user;
     }
+
     return context;
   }
 
-  private getCollectionBySlug(slug) {
+  private getCollectionBySlug(slug: string) {
     const collections = _.get(this.props.user, 'library.collections', []);
+
     return _.find(collections, { slug });
   }
-
-  private getCollectionStore = _.memoize((collection, documents = []) => (
-    getCollectionStore({
-      name: getGraphQLCollectionType(collection),
-      logUpdates: true,
-      initialState: {
-        collection,
-        documents
-      }
-    }, {
-      loadDocuments(documents) {
-        this.setState({ documents });
-      },
-      updateDocument(_document) {
-        const documents = this.state.documents.slice();
-
-        const indexToUpdate = _.findIndex(documents, { _id: _document._id });
-
-        indexToUpdate >= 0
-          ? documents.splice(indexToUpdate, 1, _document)
-          : documents.push(_document);
-
-        this.setState({ documents });
-      }
-    })
-  ));
 
   private getCollectionView({ params, ...props }: any) {
     const collection = props.collection = this.getCollectionBySlug(params.collection);
@@ -101,6 +103,7 @@ class AppRouter extends BaseComponent<any, any> {
 
   private getDocumentView({ params, location: { state, pathname }, ...props }) {
     const _document = state.document || _.pick(params, '_id');
+
     return <DocumentView document={_document} pathname={pathname} />;
   }
 
@@ -156,26 +159,20 @@ class AppRouter extends BaseComponent<any, any> {
   public render() {
     const { Site, NotFound } = this.components;
     const collections = _.get(this.props, 'user.library.collections', []);
-
-    // TODO: convert these to TS
-    const JSSplash = Splash as any;
-    const JSHome = Home as any;
-    const JSLogin = Login as any;
-    const JSCollections = Collections as any;
-    const getLoginPage = (props: any) => (
-      <JSLogin {...props} refetch={this.props.refetch} />
+    const getLoginPage = (props: React.Props<any>) => (
+      <Login {...props} refetch={this.props.refetch} />
     );
 
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
-          <IndexRoute component={JSSplash} />
+          <IndexRoute component={Splash} />
           <Route path="login" component={getLoginPage} />
 
           <Route component={this.renderIfAuthenticated}>
-            <Route path="home" component={JSHome} />
+            <Route path="home" component={Home} />
             <Route path="collections">
-              <IndexRoute component={JSCollections} />
+              <IndexRoute component={Collections} />
               <Route path="add" component={SchemaForm} />
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />

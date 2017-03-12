@@ -8,14 +8,14 @@ export type ReactProps = React.Props<any>;
 
 export interface IRouteProps extends ReactProps {
   history: {
-    go: () => void;
-    goBack: () => void;
-    goForward: () => void;
-    push: (path: string | object) => void;
-    pushState: () => void;
-    replace: () => void;
-    replaceState: () => void;
-    transitionTo: () => void;
+    go(): void;
+    goBack(): void;
+    goForward(): void;
+    push(path: string | object): void;
+    pushState(): void;
+    replace(): void;
+    replaceState(): void;
+    transitionTo(): void;
   };
   location: {
     pathname: string;
@@ -27,7 +27,7 @@ export interface IRouteProps extends ReactProps {
 
 type Route = {
   childRoutes: Route[],
-  component: (props) => void
+  component(props): void
 };
 
 export interface IQueryProps extends ReactProps {

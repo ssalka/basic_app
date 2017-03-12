@@ -1,17 +1,11 @@
 declare const _;
 declare const React;
 import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
-import { IUser, IRouteProps, ReactElement, Collection } from 'lib/client/interfaces';
+import { IUser, IView, IRouteProps, ReactElement, Collection } from 'lib/client/interfaces';
 import { connect, UserStore } from 'lib/client/api/stores';
 import Home from './home';
 import Collections from './collections';
 import './styles.less';
-
-interface IView {
-  name: string;
-  path: string;
-  icon: string;
-}
 
 interface IAppState {
   user: IUser;

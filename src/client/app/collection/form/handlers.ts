@@ -64,10 +64,10 @@ export function toggleTypePopover(index: number) {
   });
 }
 
-export function selectIcon(icon: string) {
+export function selectIcon(iconId: string) {
   const { collection } = this.state;
   this.setState({
-    collection: _.assign(collection, { icon }),
+    collection: _.assign(collection, { icon: iconId }),
     selectingIcon: false
   });
 }

@@ -12,7 +12,7 @@ interface IProps extends IRouteProps {
   collection: Collection;
 }
 
-class DocumentForm extends ViewComponent<IProps, any> {
+export default class DocumentForm extends ViewComponent<IProps, any> {
   public static defaultProps = {
     collection: {},
     location: {}
@@ -72,7 +72,7 @@ class DocumentForm extends ViewComponent<IProps, any> {
     const documentValue: any = this.state.document[_.camelCase(field.name)];
 
     // TODO: support more input types, eg textarea, date/time picker, ...
-    const Input = field.type === 'STRING' ? TextInput : NumericInput;
+    const Input: any = field.type === 'STRING' ? TextInput : NumericInput;
 
     // TODO: separate form inputs per value
     const inputValue: any = field.isArray ? (documentValue || []).join('; ') : documentValue;
@@ -132,5 +132,3 @@ class DocumentForm extends ViewComponent<IProps, any> {
     );
   }
 }
-
-export default DocumentForm;
