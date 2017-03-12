@@ -4,7 +4,7 @@ declare const React;
 import { Link } from 'react-router';
 import { NonIdealState } from '@blueprintjs/core';
 import { ViewComponent, Table, FlexColumn } from 'lib/client/components';
-import { Collection, IRouteProps, IQueryProps } from 'lib/client/interfaces';
+import { Collection, IRouteProps, IQueryProps, IComponentModule } from 'lib/client/interfaces';
 import getComponents from './components';
 import 'lib/client/styles/CollectionView.less';
 
@@ -72,11 +72,10 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
 
   public render() {
     const { collection, loading, loadNextPage, location }: Partial<IProps> = this.props;
-    const { CollectionHeader, Loading, Placeholder } = getComponents(this.props, this.state);
+    const { CollectionHeader, Loading, Placeholder }: any = getComponents(this.props, this.state);
     const noDocuments: boolean = _.isEmpty(this.state.documents);
-    const handleLoadNextPage = () => loadNextPage();
-    const handleSelectDocument = (doc: object) => this.openDocument(doc);
-
+    const handleLoadNextPage: React.MouseEventHandler<any> = () => loadNextPage();
+    const handleSelectDocument: React.MouseEventHandler<any> = (doc: object) => this.openDocument(doc);
     const {
       component: View,
       props: viewProps

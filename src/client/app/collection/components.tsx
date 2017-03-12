@@ -38,7 +38,7 @@ export default function getComponents(
     CollectionHeader: () => (
       <FlexRow alignItems="top">
         <div className="collection-info">
-          <p><h3>{name}</h3> <h3 className="muted">({documents.length})</h3></p>
+          <p><h3>{name}</h3> <h3 className="muted">({_.get(documents, 'length', 0)})</h3></p>
           {description && <p>{description}</p>}
           <AddDocumentButton size="small" />
           <SettingsButton />
