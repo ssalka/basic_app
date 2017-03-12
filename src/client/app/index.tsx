@@ -1,21 +1,27 @@
 declare const _;
 declare const React;
 import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
-import { User } from 'lib/client/api';
+import { IUser, IRouteProps, ReactElement, Collection } from 'lib/client/interfaces';
 import { connect, UserStore } from 'lib/client/api/stores';
-import Home = require('./home');
-import Collections = require('./collections');
+import Home from './home';
+import Collections from './collections';
 import './styles.less';
 
+interface IView {
+  name: string;
+  path: string;
+  icon: string;
+}
+
 interface IAppState {
-  user: any;
-  views: any[];
+  user: IUser;
+  views: IView[];
 }
 
 @connect(UserStore)
-class App extends ViewComponent<any, IAppState> {
+class App extends ViewComponent<{}, IAppState> {
   public state: IAppState = {
-    user: {},
+    user: {} as IUser,
     views: [
       { name: 'Home', path: '/home', icon: 'home' }
     ]
@@ -27,9 +33,9 @@ class App extends ViewComponent<any, IAppState> {
       state: { user, views }
     } = this;
 
-    const { path } = (children as any).props.route;
-    const collections = _.get(user, 'library.collections', []).slice(0, 5);
-    const links = views.concat(collections);
+    const { path } = (children as ReactElement).props.route;
+    const collections: Collection[] = _.get(user, 'library.collections', []).slice(0, 5);
+    const links: any[] = views.concat(collections as any);
 
     return (
       <FlexRow id="app">
@@ -43,5 +49,4 @@ class App extends ViewComponent<any, IAppState> {
 }
 
 export default App;
-export { Home };
-export { Collections };
+export { Home, Collections };

@@ -2,7 +2,11 @@ declare const React;
 
 export type ReactElement = React.ReactElement<any>;
 
-export interface IRouteProps {
+export type EventHandler = React.EventHandler<any>;
+
+export type ReactProps = React.Props<any>;
+
+export interface IRouteProps extends ReactProps {
   history: {
     go: () => void;
     goBack: () => void;
@@ -26,7 +30,7 @@ type Route = {
   component: (props) => void
 };
 
-export interface IQueryProps {
+export interface IQueryProps extends ReactProps {
   error?: any;
   loadNextPage?: Function;
   loading: boolean;
@@ -38,5 +42,5 @@ export interface IQueryProps {
 }
 
 export interface IComponentModule {
-  [key: string]: () => ReactElement;
+  [key: string]: (...args: any[]) => ReactElement;
 }

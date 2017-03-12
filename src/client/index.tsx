@@ -4,7 +4,7 @@ import ApolloClient, { createNetworkInterface } from 'apollo-client';
 import { ApolloProvider } from 'react-apollo';
 import * as inflection from 'lodash-inflection';
 import * as ReactDOM from 'react-dom';
-import * as AppRouter from './router';
+import AppRouter from './router';
 _.mixin(inflection);
 
 const client: ApolloClient = new ApolloClient({
@@ -20,11 +20,9 @@ const client: ApolloClient = new ApolloClient({
   connectToDevTools: location.hostname === 'localhost'
 });
 
-const Router = AppRouter as any;
-
 ReactDOM.render(
   <ApolloProvider client={client}>
-    <Router />
+    <AppRouter />
   </ApolloProvider>,
   document.getElementById('root')
 );

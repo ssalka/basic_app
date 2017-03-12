@@ -6,15 +6,16 @@ import { connect, UserStore, getCollectionStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
+import { IComponentModule, IContext, ReactElement } from 'lib/client/interfaces';
 import common = require('lib/common');
 import { getGraphQLCollectionType } from 'lib/common/graphql';
-import Splash = require('./splash');
-import Login = require('./login');
+import Splash from './splash';
+import Login from './login';
 import App, { Home, Collections } from './app';
 import CollectionView from './app/collection';
 import SchemaForm from './app/collection/form';
 import DocumentView from './app/document';
-import DocumentForm = require('./app/document/form');
+import DocumentForm from './app/document/form';
 import './styles.less';
 
 const { request, logger } = common as any;
@@ -42,12 +43,14 @@ class AppRouter extends BaseComponent<any, any> {
     }
   }
 
-  private renderIfAuthenticated = (props: IProps) => this.props.user
-    ? <App {...props} />
-    : <div />
+  private renderIfAuthenticated = (props: IProps): ReactElement => (
+    this.props.user
+      ? <App {...props} />
+      : <div />
+  )
 
-  public getChildContext() {
-    const context: any = { appName: document.title };
+  public getChildContext(): IContext {
+    const context: IContext = { appName: document.title };
     if (this.props.user) {
       context.user = this.props.user;
       User.set(this.props.user);
@@ -132,7 +135,7 @@ class AppRouter extends BaseComponent<any, any> {
     browserHistory.push('/');
   }
 
-  get components() {
+  get components(): IComponentModule {
     return {
       Site: ({children}) => (
         <FlexColumn>
@@ -194,4 +197,4 @@ class AppRouter extends BaseComponent<any, any> {
   }
 };
 
-module.exports = AppRouter;
+export default AppRouter;
