@@ -18,14 +18,6 @@ export default class DocumentForm extends ViewComponent<IProps, any> {
     location: {}
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      document: _.get(props, 'location.state.document', {}),
-      store: api[getGraphQLCollectionType(props.collection)]
-    };
-  }
-
   private handlers = _.mapValues({
     updateField: _.curry((field: Field, value: string & React.FormEvent<any>) => {
       if (value.currentTarget) {
@@ -67,6 +59,14 @@ export default class DocumentForm extends ViewComponent<IProps, any> {
         .then(() => history.push(collection.path));
     }
   }, (handler: Function) => handler.bind(this));
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      document: _.get(props, 'location.state.document', {}),
+      store: api[getGraphQLCollectionType(props.collection)]
+    };
+  }
 
   private getField(field: Field) {
     const documentValue: any = this.state.document[_.camelCase(field.name)];

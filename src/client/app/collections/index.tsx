@@ -58,6 +58,7 @@ class Collections extends ViewComponent<any, any> {
 
   public render() {
     const { CollectionList } = this;
+
     return (
       <section id="collections" className="container list-view">
         <FlexRow>

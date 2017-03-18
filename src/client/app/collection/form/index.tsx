@@ -55,6 +55,16 @@ class SchemaForm extends ViewComponent<IProps, IState> {
     showFieldOptions: [true]
   };
 
+  private handlers = _.mapValues(
+    handlers,
+    (handler: () => void) => handler.bind(this)
+  );
+
+  private components = _.mapValues(
+    components,
+    (handler: () => void) => handler.bind(this)
+  );
+
   constructor({ collection }) {
     super({ collection });
     _.assign(this.state, {
@@ -67,16 +77,6 @@ class SchemaForm extends ViewComponent<IProps, IState> {
         : [true]
     });
   }
-
-  private handlers = _.mapValues(
-    handlers,
-    (handler: () => void) => handler.bind(this)
-  );
-
-  private components = _.mapValues(
-    components,
-    (handler: () => void) => handler.bind(this)
-  );
 
   public render() {
     const {

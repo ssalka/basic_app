@@ -11,6 +11,7 @@ export function CollectionNameInput({ value }) {
     state: { collection },
     handlers: { changeCollectionName }
   } = this;
+
   return (
     <h3>
       <EditableText
@@ -98,6 +99,7 @@ export function ToggleEditButton() {
 
 export function AddFieldButton() {
   const { addField } = this.handlers;
+
   return (
     <FlexRow className="minimal-row">
       <Button

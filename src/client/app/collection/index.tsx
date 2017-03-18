@@ -64,6 +64,7 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
 
   private openDocument(doc) {
     const { collection, history }: Partial<IProps> = this.props;
+
     return history.push({
       pathname: `${collection.path}/${doc._id}`,
       state: { document: doc }
