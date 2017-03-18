@@ -2,12 +2,27 @@ declare const _;
 
 import { User } from './user';
 
+export interface IRenderMethod {
+  key: string;
+  name: string;
+  component: string;
+  targetProp: string;
+  inputType: string;
+}
+
 export class Field {
   constructor(
     public name: string = '',
     public type: string = 'STRING',
     public required: boolean = false,
-    public isArray: boolean = false
+    public isArray: boolean = false,
+    public renderMethod: IRenderMethod = {
+      key: 'PLAIN_TEXT',
+      name: 'Plain Text',
+      component: 'div',
+      targetProp: 'children',
+      inputType: 'MIXED'
+    }
   ) {}
 }
 
