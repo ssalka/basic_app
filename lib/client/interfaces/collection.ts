@@ -5,7 +5,6 @@ import { User } from './user';
 export interface IRenderMethod {
   key: string;
   name: string;
-  component: string;
   targetProp: string;
   inputType: string;
 }

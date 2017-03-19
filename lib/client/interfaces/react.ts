@@ -6,7 +6,7 @@ export type SFC = React.SFC<any>;
 
 export type EventHandler = React.EventHandler<any>;
 
-export type ReactProps = React.Props<any>;
+export type ReactProps = React.Props<any> & React.HTMLAttributes<any>;
 
 export interface IRouteProps extends ReactProps {
   history: {

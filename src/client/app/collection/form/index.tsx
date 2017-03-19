@@ -128,7 +128,7 @@ class SchemaForm extends ViewComponent<IProps, IState> {
               <FlexRow>
                 <CollectionNameInput value={name} />
                 <IconSelector
-                  selected={collection.icon}
+                  selectedIcon={collection.icon}
                   onSelectIcon={selectIcon}
                   onClick={toggleIconPopover}
                   isOpen={selectingIcon}
