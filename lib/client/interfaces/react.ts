@@ -2,7 +2,7 @@ declare const React;
 
 export type ReactElement = React.ReactElement<any>;
 
-export type SFC = React.SFC<any>;
+export type SFC = React.SFC<any> | ((...args: any[]) => ReactElement);
 
 export type EventHandler = React.EventHandler<any>;
 

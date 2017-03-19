@@ -23,6 +23,7 @@
     "object-literal-sort-keys": false,
     "object-literal-key-quotes": [true, "as-needed"],
     "ordered-imports": false,
+    "one-line": false,
     "prefer-method-signature": true,
     "quotemark": "jsx-double",
     "space-before-function-paren": [true, {

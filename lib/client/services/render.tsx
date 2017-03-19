@@ -12,8 +12,27 @@ import {
 
 class RenderingService {
   private componentMap: IComponentModule = {
-    PLAIN_TEXT: (props: ReactProps) => <div {...props} />
+    PLAIN_TEXT: (props: ReactProps) => <span {...props} />
   };
+
+  public isNonemptyField = (val: any): boolean => {
+    let evaluator: (val: any) => boolean;
+
+    if (_.isArray(val)) {
+      evaluator = _.overEvery([
+        _.negate(_.isEmpty),
+        () => _.some(val, this.isNonemptyField)
+      ]);
+    }
+    else {
+      evaluator = _.overSome([
+        _.identity,
+        _.isNumber
+      ]);
+    }
+
+    return evaluator(val);
+  }
 
   private getProps(document: any, field: Field): ReactProps {
     const { targetProp }: IRenderMethod = _.find(RENDER_METHODS, {
