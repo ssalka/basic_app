@@ -7,7 +7,7 @@ import { SchemaFormMutation } from 'lib/client/api/graphql/mutations';
 import { ViewComponent, Button, FlexRow, FlexColumn, IconSelector } from 'lib/client/components';
 import { IMutationSettings, ReactElement, Field, Collection } from 'lib/client/interfaces';
 import { READONLY_FIELDS } from 'lib/common/constants';
-import 'lib/client/styles/SchemaForm.less';
+import './styles.less';
 import * as handlers from './handlers';
 import * as components from './components';
 

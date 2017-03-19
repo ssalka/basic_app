@@ -6,7 +6,7 @@ import { NonIdealState } from '@blueprintjs/core';
 import { ViewComponent, Table, FlexColumn } from 'lib/client/components';
 import { Collection, IRouteProps, IQueryProps, IComponentModule } from 'lib/client/interfaces';
 import getComponents from './components';
-import 'lib/client/styles/CollectionView.less';
+import './styles.less';
 
 export interface IProps extends IRouteProps, IQueryProps {
   collection: Collection;
