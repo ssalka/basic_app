@@ -9,7 +9,7 @@ import './styles.less';
 
 interface IAppState {
   user: IUser;
-  views: IView[];
+  views: Partial<IView>[];
 }
 
 @connect(UserStore)

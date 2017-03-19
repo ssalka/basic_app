@@ -32,6 +32,7 @@ interface IState {
   editingFields: boolean;
   selectingIcon: boolean;
   selectingType: boolean[];
+  selectingView: boolean[];
   showFieldOptions: boolean[];
 }
 
@@ -52,6 +53,7 @@ class SchemaForm extends ViewComponent<IProps, IState> {
     editingFields: false,
     selectingIcon: false,
     selectingType: [false],
+    selectingView: [false],
     showFieldOptions: [true]
   };
 
@@ -70,6 +72,9 @@ class SchemaForm extends ViewComponent<IProps, IState> {
     _.assign(this.state, {
       collection: new Collection(collection),
       selectingType: collection._id
+        ? collection.fields.map(() => false)
+        : [false],
+      selectingView: collection._id
         ? collection.fields.map(() => false)
         : [false],
       showFieldOptions: collection._id

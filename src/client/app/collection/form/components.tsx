@@ -1,10 +1,10 @@
 declare const _;
 declare const React;
 
-import { ReactElement } from 'lib/client/interfaces';
-import { EditableText, Checkbox, Menu } from '@blueprintjs/core';
-import { Button, FlexRow, FlexColumn, Popover, TypeSelect } from 'lib/client/components';
-import { FIELD_TYPES } from 'lib/common/constants';
+import { Field, IRenderMethod, ReactElement } from 'lib/client/interfaces';
+import { EditableText, Checkbox } from '@blueprintjs/core';
+import { Button, FlexRow, FlexColumn, Popover, TypeSelect, ViewSelect } from 'lib/client/components';
+import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
 
 export function CollectionNameInput({ value }) {
   const {
@@ -62,17 +62,18 @@ export function TypeSelectPopover({ index, value, isOpen }) {
     FIELD_TYPES.STANDARD,
     { key: value }
   );
+  const SelectTypeButton: ReactElement = (
+    <Button
+      text={selectedType.name || 'Select Type'}
+      onClick={handleClick}
+    />
+  );
 
   return (
     <Popover
       isOpen={isOpen}
       className="popover-type-select"
-      target={(
-        <Button
-          text={selectedType.name || 'Select Type'}
-          onClick={handleClick}
-        />
-      )}
+      target={SelectTypeButton}
     >
       <TypeSelect
         selectedType={selectedType.key}
@@ -140,25 +141,67 @@ export function RemoveFieldButton({ disabled }) {
   );
 }
 
-export function FieldOptions({ index }) {
+export function FieldOptions({ index, selectingView }) {
   const {
-    handlers: { toggleRequired, toggleIsArray },
-    state: { collection: { fields } }
-  } = this;
+    selectView,
+    toggleRequired,
+    toggleIsArray,
+    toggleViewPopover
+  } = this.handlers;
+  const field: Field = this.state.collection.fields[index];
   const handleCheckRequired = () => toggleRequired(index);
   const handleCheckIsArray = () => toggleIsArray(index);
+  const handleTogglePopover = () => toggleViewPopover(index);
+  const handleSelectView = (renderMethod: IRenderMethod) => selectView(renderMethod, index);
+  const renderMethod: IRenderMethod = _.find(RENDER_METHODS, { key: field.renderMethod }) || RENDER_METHODS[0];
 
   return (
     <FlexColumn className="field-options drawer bg-light">
-      <h6 className="muted">Options for {fields[index].name || 'New Field'}</h6>
+      <h6 className="muted">Options for {field.name || 'New Field'}</h6>
       <FlexRow justifyContent="space-around">
-        <Checkbox checked={fields[index].required} onChange={handleCheckRequired}>
-          Required
-        </Checkbox>
-        <Checkbox checked={fields[index].isArray} onChange={handleCheckIsArray}>
-          Is Array
-        </Checkbox>
+        <FlexColumn justifyContent="space-around">
+          <ViewSelectPopover
+            isOpen={selectingView}
+            selectedView={renderMethod}
+            handleSelectView={handleSelectView}
+            handleTogglePopover={handleTogglePopover}
+          />
+        </FlexColumn>
+        <div>
+          <Checkbox checked={field.required} onChange={handleCheckRequired}>
+            Required
+          </Checkbox>
+          <Checkbox checked={field.isArray} onChange={handleCheckIsArray}>
+            Is Array
+          </Checkbox>
+        </div>
       </FlexRow>
     </FlexColumn>
+  );
+}
+
+function ViewSelectPopover({ selectedView, isOpen, handleSelectView, handleTogglePopover }) {
+  const isValidRenderMethod = (renderMethod: IRenderMethod): boolean => (
+    _.includes([selectedView.inputType, 'MIXED'], renderMethod.inputType)
+  );
+  const SelectViewButton: ReactElement = (
+    <Button
+      text={selectedView.name || 'Select Type'}
+      onClick={handleTogglePopover}
+    />
+  );
+
+  return (
+    <Popover
+      isOpen={isOpen}
+      className="popover-view-select"
+      target={SelectViewButton}
+    >
+      <ViewSelect
+        renderMethods={RENDER_METHODS.filter(isValidRenderMethod)}
+        selectedView={selectedView}
+        onSelectView={handleSelectView}
+      />
+    </Popover>
   );
 }

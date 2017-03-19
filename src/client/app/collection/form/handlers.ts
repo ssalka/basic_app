@@ -1,6 +1,6 @@
 declare const _;
 import api from 'lib/client/api';
-import { Collection, Field } from 'lib/client/interfaces';
+import { Collection, Field, IRenderMethod } from 'lib/client/interfaces';
 
 /**
  * NOTE
@@ -56,10 +56,19 @@ export function toggleIconPopover() {
 }
 
 export function toggleTypePopover(index: number) {
-  const { collection,  selectingType } = this.state;
+  const { collection, selectingType } = this.state;
   this.setState({
     selectingType: collection.fields.map(
       (_, i: number) => i === index && !selectingType[index]
+    )
+  });
+}
+
+export function toggleViewPopover(index: number) {
+  const { collection, selectingView } = this.state;
+  this.setState({
+    selectingView: collection.fields.map(
+      (_, i: number) => i === index && !selectingView[index]
     )
   });
 }
@@ -77,6 +86,13 @@ export function toggleFieldOptions(index: number) {
     (isVisible, i) => (i === index) && !isVisible
   );
   this.setStateByPath('showFieldOptions', visibleFieldOptions);
+}
+
+export function selectView(renderMethod: IRenderMethod, index: number) {
+  const { collection, selectingView } = this.state;
+  collection.fields[index].renderMethod = renderMethod.key;
+  selectingView.splice(index, 1, !selectingView[index]);
+  this.setState({ collection, selectingView });
 }
 
 export function toggleRequired(index: number) {
