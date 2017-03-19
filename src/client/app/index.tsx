@@ -1,22 +1,22 @@
 declare const _;
 declare const React;
 import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
-import { IUser, IView, IRouteProps, ReactElement, Collection } from 'lib/client/interfaces';
+import { ILink, IUser, IRouteProps, ReactElement, Collection } from 'lib/client/interfaces';
 import { connect, UserStore } from 'lib/client/api/stores';
 import Home from './home';
 import Collections from './collections';
 import './styles.less';
 
-interface IAppState {
+interface IState {
   user: IUser;
-  views: Partial<IView>[];
+  navLinks: ILink[];
 }
 
 @connect(UserStore)
-class App extends ViewComponent<{}, IAppState> {
-  public state: IAppState = {
+class App extends ViewComponent<{}, IState> {
+  public state: IState = {
     user: {} as IUser,
-    views: [
+    navLinks: [
       { name: 'Home', path: '/home', icon: 'home' }
     ]
   };
@@ -24,12 +24,17 @@ class App extends ViewComponent<{}, IAppState> {
   public render() {
     const {
       props: { children },
-      state: { user, views }
+      state: { user, navLinks }
     } = this;
 
     const { path } = (children as ReactElement).props.route;
-    const collections: Collection[] = _.get(user, 'library.collections', []).slice(0, 5);
-    const links: any[] = views.concat(collections as any);
+    const viewLinks: ILink[] = _(user)
+      .get('library.collections', [])
+      .slice(0, 5)
+      .map((collection: Collection) => _.pick(
+        collection, ['name', 'path', 'icon']
+      ));
+    const links: ILink[] = navLinks.concat(viewLinks);
 
     return (
       <FlexRow id="app">

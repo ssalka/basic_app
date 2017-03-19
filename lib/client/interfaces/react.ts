@@ -44,3 +44,9 @@ export interface IQueryProps extends ReactProps {
 export interface IComponentModule {
   [key: string]: (...args: any[]) => ReactElement;
 }
+
+export interface ILink {
+  name: string;
+  path: string;
+  icon: string;
+}
