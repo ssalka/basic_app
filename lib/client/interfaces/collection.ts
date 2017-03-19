@@ -16,13 +16,7 @@ export class Field {
     public type: string = 'STRING',
     public required: boolean = false,
     public isArray: boolean = false,
-    public renderMethod: IRenderMethod = {
-      key: 'PLAIN_TEXT',
-      name: 'Plain Text',
-      component: 'div',
-      targetProp: 'children',
-      inputType: 'MIXED'
-    }
+    public renderMethod: string = 'PLAIN_TEXT'
   ) {}
 }
 
