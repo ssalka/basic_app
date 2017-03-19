@@ -90,7 +90,7 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
             <div {...viewProps}>
               <div onClick={handleLoadNextPage}>Load Next Page</div>
               <View
-                fieldNames={_.map(collection.fields, 'name')}
+                fields={collection.fields}
                 records={this.state.documents}
                 onSelectDocument={handleSelectDocument}
                 pathname={location.pathname}

@@ -43,12 +43,16 @@ class RenderingService {
     return { [targetProp]: fieldValue };
   }
 
-  public renderField(document: any, field: Field): ReactElement {
+  public renderField(document: any, field: Field, props: ReactProps = {}): ReactElement {
     const renderMethod: string = field.renderMethod || 'PLAIN_TEXT';
     const Component: SFC = this.componentMap[renderMethod];
-    const props: ReactProps = this.getProps(document, field);
 
-    return <Component {...props} />;
+    return (
+      <Component
+        {...props}
+        {...this.getProps(document, field)}
+      />
+    );
   }
 }
 
