@@ -161,8 +161,8 @@ export function FieldOptions({ index, selectingView }) {
       <FlexRow justifyContent="space-around">
         <FlexColumn justifyContent="space-around">
           <ViewSelectPopover
+            field={field}
             isOpen={selectingView}
-            selectedView={renderMethod}
             handleSelectView={handleSelectView}
             handleTogglePopover={handleTogglePopover}
           />
@@ -180,13 +180,14 @@ export function FieldOptions({ index, selectingView }) {
   );
 }
 
-function ViewSelectPopover({ selectedView, isOpen, handleSelectView, handleTogglePopover }) {
+function ViewSelectPopover({ field, isOpen, handleSelectView, handleTogglePopover }) {
+  const selectedView: IRenderMethod | undefined = _.find(RENDER_METHODS, { key: field.renderMethod });
   const isValidRenderMethod = (renderMethod: IRenderMethod): boolean => (
-    _.includes([selectedView.inputType, 'MIXED'], renderMethod.inputType)
+    _.includes([field.type, 'MIXED'], renderMethod.inputType)
   );
   const SelectViewButton: ReactElement = (
     <Button
-      text={selectedView.name || 'Select Type'}
+      text={_.get(selectedView, 'name', 'Select Type')}
       onClick={handleTogglePopover}
     />
   );

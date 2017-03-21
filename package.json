@@ -41,6 +41,7 @@
     "react-autobind": "^1.0.6",
     "react-dom": "^15.4.2",
     "react-filterable-table": "^0.1.7",
+    "react-rating": "^0.6.5",
     "react-router": "^2.8.1"
   },
   "devDependencies": {

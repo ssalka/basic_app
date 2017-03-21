@@ -1,5 +1,6 @@
 declare const _;
 declare const React;
+import Rating = require('react-rating');
 import { RENDER_METHODS } from 'lib/common/constants';
 import {
   Field,
@@ -12,7 +13,18 @@ import {
 
 class RenderingService {
   private componentMap: IComponentModule = {
-    PLAIN_TEXT: (props: ReactProps) => <span {...props} />
+    PLAIN_TEXT: (props: ReactProps) => <span {...props} />,
+    RATING: (props: ReactProps) => (
+      // TODO: make half-star ratings on 0-5 scale work
+      <Rating
+        step={0.5}
+        fractions={2}
+        empty="pt-icon-star-empty"
+        full="pt-icon-star"
+        readonly={true}
+        {...props}
+      />
+    )
   };
 
   public isNonemptyField = (val: any): boolean => {
@@ -38,9 +50,12 @@ class RenderingService {
     const { targetProp }: IRenderMethod = _.find(RENDER_METHODS, {
       key: field.renderMethod || 'PLAIN_TEXT'
     });
-    const fieldValue: any = _.get(document, _.camelCase(field.name));
+    const rawValue: any = _.get(document, _.camelCase(field.name));
+    const displayValue = field.isArray && field.renderMethod === 'PLAIN_TEXT'
+      ? rawValue.join(', ')
+      : rawValue;
 
-    return { [targetProp]: fieldValue };
+    return { [targetProp]: displayValue };
   }
 
   public renderField(document: any, field: Field, props: ReactProps = {}): ReactElement {
