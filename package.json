@@ -79,6 +79,7 @@
     "tslint-react": "^2.5.0",
     "typescript": "^2.2.0",
     "webpack": "^1.13.1",
+    "webpack-babel-jest": "^1.0.4",
     "webpack-dev-server": "^1.16.2"
   }
 }

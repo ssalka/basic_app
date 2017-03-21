@@ -36,14 +36,15 @@ describe("ModelGen", () => {
   beforeEach(() => ModelGen.reset());
 
   describe("#getSchema", () => {
-    const { fields } = new MockCollection;
+    const { fields } = new MockCollection();
 
     it("maps a list of Fields to a mongoose schema", () => {
       expect(ModelGen.getSchema(fields)).toEqual({
         stringField: { type: String, required: false },
         numberField: { type: Number, required: false },
         dateField: { type: Date, required: false },
-        booleanField: { type: Boolean, required: false }
+        booleanField: { type: Boolean, required: false },
+        ratingField: { type: Number, required: false }
       });
     });
   });
