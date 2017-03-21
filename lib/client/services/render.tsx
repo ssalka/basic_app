@@ -51,7 +51,10 @@ class RenderingService {
       key: field.renderMethod || 'PLAIN_TEXT'
     });
     const rawValue: any = _.get(document, _.camelCase(field.name));
-    const displayValue = field.isArray && field.renderMethod === 'PLAIN_TEXT'
+    const isPlainTextArrayField: boolean = field.isArray && (
+      !field.renderMethod || field.renderMethod === 'PLAIN_TEXT'
+    );
+    const displayValue = isPlainTextArrayField
       ? rawValue.join(', ')
       : rawValue;
 
