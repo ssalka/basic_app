@@ -102,9 +102,16 @@ class AppRouter extends BaseComponent<any, any> {
   }
 
   private getDocumentView({ params, location: { state, pathname }, ...props }) {
+    const collection = this.getCollectionBySlug(params.collection);
     const _document = state.document || _.pick(params, '_id');
 
-    return <DocumentView document={_document} pathname={pathname} />;
+    return (
+      <DocumentView
+        collection={collection}
+        document={_document}
+        pathname={pathname}
+      />
+    );
   }
 
   private getDocumentForm({ params, ...props }: any) {

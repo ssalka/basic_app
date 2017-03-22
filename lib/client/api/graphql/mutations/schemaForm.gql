@@ -11,11 +11,31 @@ mutation SchemaFormMutation(
     fields: $fields,
     description: $description,
     icon: $icon
-    ) {
-    _db _collection _id
-    name description icon path
-    fields { name type required isArray }
-    creator { _id username }
-    defaultView { type }
+  ) {
+    _db
+    _collection
+    _id
+    name
+    icon
+    description
+    path
+    slug
+
+    fields {
+      name
+      type
+      required
+      isArray
+      renderMethod
+    }
+
+    creator {
+      _id
+      username
+    }
+
+    defaultView {
+      type
+    }
   }
 }

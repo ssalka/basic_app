@@ -1,31 +1,33 @@
 declare const React;
-
 import { Link } from 'react-router';
 import { BaseComponent, Icon } from '../';
-import { IView } from 'lib/client/interfaces';
+import { ILink, ReactElement } from 'lib/client/interfaces';
 import '../../styles/SideBar.less';
 
 interface IProps {
   currentPath: string;
-  links: IView[];
+  links: ILink[];
 }
 
-export default class SideBar extends BaseComponent<IProps, any> {
+interface IState {
+  expanded: boolean;
+  isDoubleClick: boolean;
+}
+
+export default class SideBar extends BaseComponent<IProps, IState> {
   public static defaultProps: IProps = {
     currentPath: '',
     links: []
   };
 
-  public state = {
+  public state: IState = {
     expanded: false,
     isDoubleClick: false
   };
 
-  private toggle() {
-    this._toggle('expanded');
-  }
+  private toggle = () => this._toggle('expanded');
 
-  private handleClick(event) {
+  private handleClick(event: React.MouseEvent<HTMLElement>) {
     // only run function on double clicks
     if (!this.state.isDoubleClick) {
       this.state.isDoubleClick = true;
@@ -37,7 +39,7 @@ export default class SideBar extends BaseComponent<IProps, any> {
     this.toggle();
   }
 
-  private renderLink(link, key) {
+  private renderLink(link, key): ReactElement {
     const linkIsActive = link.path.includes(this.props.currentPath) ? 'active' : null;
 
     return (
@@ -60,7 +62,7 @@ export default class SideBar extends BaseComponent<IProps, any> {
 
     const className: string = sidebarClasses.join(' ');
     const toggleIcon: string = 'caret-' + (this.state.expanded ? 'left' : 'right');
-    const stopPropagation = (e: React.MouseEvent<HTMLElement>) => e.stopPropagation();
+    const stopPropagation = (e: React.MouseEvent<HTMLUListElement>) => e.stopPropagation();
 
     return (
       <aside className={className} onClick={this.handleClick}>

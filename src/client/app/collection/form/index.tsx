@@ -7,7 +7,7 @@ import { SchemaFormMutation } from 'lib/client/api/graphql/mutations';
 import { ViewComponent, Button, FlexRow, FlexColumn, IconSelector } from 'lib/client/components';
 import { IMutationSettings, ReactElement, Field, Collection } from 'lib/client/interfaces';
 import { READONLY_FIELDS } from 'lib/common/constants';
-import 'lib/client/styles/SchemaForm.less';
+import './styles.less';
 import * as handlers from './handlers';
 import * as components from './components';
 
@@ -32,6 +32,7 @@ interface IState {
   editingFields: boolean;
   selectingIcon: boolean;
   selectingType: boolean[];
+  selectingView: boolean[];
   showFieldOptions: boolean[];
 }
 
@@ -52,6 +53,7 @@ class SchemaForm extends ViewComponent<IProps, IState> {
     editingFields: false,
     selectingIcon: false,
     selectingType: [false],
+    selectingView: [false],
     showFieldOptions: [true]
   };
 
@@ -70,6 +72,9 @@ class SchemaForm extends ViewComponent<IProps, IState> {
     _.assign(this.state, {
       collection: new Collection(collection),
       selectingType: collection._id
+        ? collection.fields.map(() => false)
+        : [false],
+      selectingView: collection._id
         ? collection.fields.map(() => false)
         : [false],
       showFieldOptions: collection._id
@@ -123,7 +128,7 @@ class SchemaForm extends ViewComponent<IProps, IState> {
               <FlexRow>
                 <CollectionNameInput value={name} />
                 <IconSelector
-                  selected={collection.icon}
+                  selectedIcon={collection.icon}
                   onSelectIcon={selectIcon}
                   onClick={toggleIconPopover}
                   isOpen={selectingIcon}

@@ -2,7 +2,11 @@ declare const _;
 declare const React;
 
 import { ViewComponent } from 'lib/client/components';
+import { Field, IRenderMethod, ReactElement, SFC } from 'lib/client/interfaces';
+import { RENDER_METHODS } from 'lib/common/constants';
 import { Link } from 'react-router';
+import { RenderingService } from 'lib/client/services';
+import './styles.less';
 
 export default class DocumentView extends ViewComponent<any, any> {
   public static defaultProps = {
@@ -12,21 +16,37 @@ export default class DocumentView extends ViewComponent<any, any> {
   };
 
   private componentDidMount() {
-    const { document: _document } = this.props;
+    const { collection, document: _document } = this.props;
     console.info(
       _.singularize(_document.__typename), _document._id,
       _.omit(_document, '_id')
     );
   }
 
+  private renderField: SFC = (field: Field): ReactElement => (
+    <p>
+      <strong className="field-name">
+        {field.name}
+      </strong>
+      {RenderingService.renderField(this.props.document, field)}
+    </p>
+  )
+
   public render() {
-    const { document: _document } = this.props;
+    const { collection, document: _document } = this.props;
     const state = this.props;
 
     return (
-      <ViewComponent>
-        Document view for {_document._id}
+      <ViewComponent className="document-view">
         <Link to={{ pathname: `${location.pathname}/edit`, state }}>Edit Document</Link>
+        <br /><br />
+        {collection.fields
+          .filter((field: Field) => (
+            RenderingService.isNonemptyField(
+              _document[_.camelCase(field.name)]
+            )
+          ))
+          .map(this.renderField)}
       </ViewComponent>
     );
   }

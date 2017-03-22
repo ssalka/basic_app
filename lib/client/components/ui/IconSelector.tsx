@@ -8,7 +8,7 @@ import '../../styles/IconSelector.less';
 interface IProps extends ReactProps {
   isOpen: boolean;
   onClick: React.MouseEventHandler<any>;
-  selected: string;
+  selectedIcon: string;
   onSelectIcon(iconId: string): void;
 }
 
@@ -16,12 +16,12 @@ interface IState { icon: string; }
 
 export default class IconSelector extends ViewComponent<IProps, IState> {
   public static defaultProps: Partial<IProps> = {
-    selected: 'graph'
+    selectedIcon: 'graph'
   };
 
   constructor(props: IProps) {
     super(props);
-    this.state = { icon: props.selected };
+    this.state = { icon: props.selectedIcon };
   }
 
   private SelectedIcon(): ReactElement {

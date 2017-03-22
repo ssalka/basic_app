@@ -1,6 +1,6 @@
 {
   "name": "basic_app",
-  "version": "0.13.1",
+  "version": "0.14.0",
   "description": "Basic App",
   "scripts": {
     "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",
@@ -41,6 +41,7 @@
     "react-autobind": "^1.0.6",
     "react-dom": "^15.4.2",
     "react-filterable-table": "^0.1.7",
+    "react-rating": "^0.6.5",
     "react-router": "^2.8.1"
   },
   "devDependencies": {
@@ -72,12 +73,13 @@
     "react-addons-test-utils": "^15.4.1",
     "source-map-loader": "^0.1.6",
     "style-loader": "^0.13.1",
-    "ts-jest": "^19.0.0",
+    "ts-jest": "^19.0.2",
     "ts-loader": "^1.3.3",
     "tslint": "^4.5.1",
     "tslint-react": "^2.5.0",
     "typescript": "^2.2.0",
     "webpack": "^1.13.1",
+    "webpack-babel-jest": "^1.0.4",
     "webpack-dev-server": "^1.16.2"
   }
 }

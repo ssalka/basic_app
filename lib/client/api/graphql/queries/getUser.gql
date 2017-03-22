@@ -4,11 +4,26 @@ query getUser {
     username
     library {
       collections {
-        _db _collection _id
-        name icon description
-        path slug
-        fields { name type required isArray }
-        defaultView { type }
+        _db
+        _collection
+        _id
+        name
+        icon
+        description
+        path
+        slug
+
+        fields {
+          name
+          type
+          required
+          isArray
+          renderMethod
+        }
+
+        defaultView {
+          type
+        }
       }
     }
   }

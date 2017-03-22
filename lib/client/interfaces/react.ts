@@ -2,9 +2,11 @@ declare const React;
 
 export type ReactElement = React.ReactElement<any>;
 
+export type SFC = React.SFC<any> | ((...args: any[]) => ReactElement);
+
 export type EventHandler = React.EventHandler<any>;
 
-export type ReactProps = React.Props<any>;
+export type ReactProps = React.Props<any> & React.HTMLAttributes<any>;
 
 export interface IRouteProps extends ReactProps {
   history: {
@@ -42,5 +44,11 @@ export interface IQueryProps extends ReactProps {
 }
 
 export interface IComponentModule {
-  [key: string]: (...args: any[]) => ReactElement;
+  [key: string]: SFC;
+}
+
+export interface ILink {
+  name: string;
+  path: string;
+  icon: string;
 }

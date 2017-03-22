@@ -6,7 +6,7 @@ import api from 'lib/client/api';
 import { ViewComponent, FlexRow, FlexColumn, Button, TextInput, NumericInput } from 'lib/client/components';
 import { Collection, Field, ReactElement, IRouteProps } from 'lib/client/interfaces';
 import { getGraphQLCollectionType } from 'lib/common/graphql';
-import 'lib/client/styles/DocumentForm.less';
+import './styles.less';
 
 interface IProps extends IRouteProps {
   collection: Collection;

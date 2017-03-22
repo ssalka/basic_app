@@ -3,3 +3,4 @@ export * from './collection';
 export * from './graphql';
 export * from './react';
 export * from './user';
+export * from './view';

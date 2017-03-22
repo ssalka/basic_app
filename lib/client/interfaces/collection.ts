@@ -2,12 +2,20 @@ declare const _;
 
 import { User } from './user';
 
+export interface IRenderMethod {
+  key: string;
+  name: string;
+  targetProp: string;
+  inputType: string;
+}
+
 export class Field {
   constructor(
     public name: string = '',
     public type: string = 'STRING',
     public required: boolean = false,
-    public isArray: boolean = false
+    public isArray: boolean = false,
+    public renderMethod: string = 'PLAIN_TEXT'
   ) {}
 }
 

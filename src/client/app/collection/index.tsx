@@ -6,7 +6,7 @@ import { NonIdealState } from '@blueprintjs/core';
 import { ViewComponent, Table, FlexColumn } from 'lib/client/components';
 import { Collection, IRouteProps, IQueryProps, IComponentModule } from 'lib/client/interfaces';
 import getComponents from './components';
-import 'lib/client/styles/CollectionView.less';
+import './styles.less';
 
 export interface IProps extends IRouteProps, IQueryProps {
   collection: Collection;
@@ -90,8 +90,8 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
             <div {...viewProps}>
               <div onClick={handleLoadNextPage}>Load Next Page</div>
               <View
-                headers={_.map(collection.fields, 'name')}
-                content={this.state.documents}
+                fields={collection.fields}
+                records={this.state.documents}
                 onSelectDocument={handleSelectDocument}
                 pathname={location.pathname}
               />

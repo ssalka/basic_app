@@ -2,25 +2,26 @@ declare const _;
 declare const React;
 import { NonIdealState } from '@blueprintjs/core';
 import * as FilterableTable from 'react-filterable-table';
-import { IComponentModule, ReactElement } from 'lib/client/interfaces';
+import { Field, IComponentModule, ReactElement, ReactProps, SFC } from 'lib/client/interfaces';
+import { RenderingService } from 'lib/client/services';
 import { ViewComponent, Button } from '../';
 import '../../styles/Table.less';
 
-interface IProps extends React.Props<any> {
-  headers: string[];
-  content: any[];
-  onSelectDocument: Function;
+interface IProps extends ReactProps {
+  fields: Field[];
+  records: any[];
   pathname: string;
   tableProps: {
     tableClassName: string;
     initialSort: string;
   };
+  onSelectDocument(doc: any): void;
 }
 
 export default class Table extends ViewComponent<IProps, any> {
   public static defaultProps: IProps = {
-    headers: [],
-    content: [],
+    fields: [],
+    records: [],
     onSelectDocument: _.noop,
     pathname: '',
     tableProps: {
@@ -29,40 +30,45 @@ export default class Table extends ViewComponent<IProps, any> {
     }
   };
 
-  private getField(header: string, index: number): {} {
+  private getFieldProps(field: Field): object {
     const { onSelectDocument } = this.props;
     const handleClick: (doc: any) => React.MouseEventHandler<HTMLSpanElement> = (
       (doc: any) => () => onSelectDocument(doc)
     );
 
+    // TODO: optimize performance
+    const Component: SFC = ({ record }) => (
+      RenderingService.renderField(record, field, {
+        onClick: handleClick(record)
+      })
+    );
+
     return {
-      name: _.kebabCase(header),
-      displayName: header,
+      name: _.kebabCase(field.name),
+      displayName: field.name,
       sortable: true,
       inputFilterable: true,
       render: (props: any) => (
-        <span onClick={handleClick(props.record)}>
-          {props.value}
-        </span>
+        <Component {...props} />
       )
     };
   }
 
   private get components(): IComponentModule {
-    const { headers, content, pathname, tableProps: _tableProps } = this.props;
-    const initialSortField = { name: _tableProps.initialSort, visible: false };
-    const fields = headers.map(this.getField).concat(initialSortField as any);
+    const { fields, records, pathname, tableProps: _tableProps } = this.props;
+    const initialSortField: object = { name: _tableProps.initialSort, visible: false };
+    const fieldProps: object[] = fields.map(this.getFieldProps).concat(initialSortField);
     const tableProps = {
       ..._tableProps,
-      fields,
+      fields: fieldProps,
       pathname,
-      data: content
+      data: records
     };
 
     // Bug in react-filterable-table: tableClassName prop doesn't get set
     // NOTE: project ^ appears to be in its infancy...consider alternatives
     setTimeout(() => {
-      const table = document.querySelector('.table');
+      const table: Element = document.querySelector('.table');
       tableProps.tableClassName.split(' ').map(
         (className: string) => table.classList.add(className)
       );
@@ -75,7 +81,7 @@ export default class Table extends ViewComponent<IProps, any> {
       Placeholder: () => (
         <NonIdealState
           visual="table"
-          title="This table has no content"
+          title="This table has no records"
           description={<span>*Empty table description*</span>}
           action={(
             <Button
@@ -93,7 +99,7 @@ export default class Table extends ViewComponent<IProps, any> {
 
   public render() {
     const { Table, Placeholder }: IComponentModule = this.components;
-    const View: any = this.props.content.length ? Table : Placeholder;
+    const View: SFC = this.props.records.length ? Table : Placeholder;
 
     return (
       <div className="view">
