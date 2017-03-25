@@ -3,7 +3,7 @@ import { createStore } from 'cartiv';
 import api from '../';
 
 interface IStoreConfig {
-  api: any;
+  api: typeof api;
   name: string;
   actions: string[];
 }
