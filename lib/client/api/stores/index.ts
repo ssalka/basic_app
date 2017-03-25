@@ -1,3 +1,4 @@
+declare const React;
 import { createConnector } from 'cartiv';
 import UserStore from './UserStore';
 import createStore from './createStore';

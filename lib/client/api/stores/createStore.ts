@@ -1,5 +1,12 @@
+declare const _;
 import { createStore } from 'cartiv';
 import api from '../';
+
+interface IStoreConfig {
+  api: any;
+  name: string;
+  actions: string[];
+}
 
 const defaultConfig = {
   initialState: {},
@@ -8,7 +15,7 @@ const defaultConfig = {
 
 export default (config, methods) => {
   const { name, initialState, logUpdates } = _.defaults(config, defaultConfig);
-  const storeConfig = {
+  const storeConfig: IStoreConfig = {
     api, name,
     actions: _.keys(methods)
   };
