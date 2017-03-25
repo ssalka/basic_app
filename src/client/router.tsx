@@ -2,7 +2,7 @@ declare const _;
 declare const React;
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import api from 'lib/client/api';
-import { connect, UserStore, getCollectionStore } from 'lib/client/api/stores';
+import { connect, createStore, UserStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
@@ -27,15 +27,15 @@ interface IProps extends IQueryProps {
 
 @query(GetUser)
 @connect(UserStore)
-class AppRouter extends BaseComponent<any, any> {
+class AppRouter extends BaseComponent<IProps, any> {
   public static childContextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   };
 
-  private getCollectionStore = _.memoize((collection: Collection[], documents: any[] = []) => (
-    getCollectionStore({
-      name: getGraphQLCollectionType(collection as any),
+  private getCollectionStore = _.memoize((collection: Collection, documents: any[] = []) => (
+    createStore({
+      name: getGraphQLCollectionType(collection),
       logUpdates: true,
       initialState: {
         collection,
