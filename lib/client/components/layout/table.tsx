@@ -2,7 +2,7 @@ declare const _;
 declare const React;
 import { NonIdealState } from '@blueprintjs/core';
 import * as FilterableTable from 'react-filterable-table';
-import { Field, IComponentModule, ReactElement, ReactProps, SFC } from 'lib/client/interfaces';
+import { IDocument, Field, IComponentModule, ReactElement, ReactProps, SFC } from 'lib/client/interfaces';
 import { RenderingService } from 'lib/client/services';
 import { ViewComponent, Button } from '../';
 import '../../styles/Table.less';
@@ -32,8 +32,8 @@ export default class Table extends ViewComponent<IProps, any> {
 
   private getFieldProps(field: Field): object {
     const { onSelectDocument } = this.props;
-    const handleClick: (doc: any) => React.MouseEventHandler<HTMLSpanElement> = (
-      (doc: any) => () => onSelectDocument(doc)
+    const handleClick: (doc: IDocument) => React.MouseEventHandler<HTMLSpanElement> = (
+      (doc: IDocument) => () => onSelectDocument(doc)
     );
 
     // TODO: optimize performance

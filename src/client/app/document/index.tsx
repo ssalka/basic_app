@@ -2,16 +2,30 @@ declare const _;
 declare const React;
 
 import { ViewComponent } from 'lib/client/components';
-import { Field, IRenderMethod, ReactElement, SFC } from 'lib/client/interfaces';
 import { RENDER_METHODS } from 'lib/common/constants';
 import { Link } from 'react-router';
 import { RenderingService } from 'lib/client/services';
+import {
+  Collection,
+  Field,
+  IDocument,
+  IGraphQLDocument,
+  IRenderMethod,
+  ReactElement,
+  SFC
+} from 'lib/client/interfaces';
 import './styles.less';
 
-export default class DocumentView extends ViewComponent<any, any> {
-  public static defaultProps = {
-    collection: {},
-    document: {},
+interface IProps {
+  collection: Collection;
+  document: IDocument & IGraphQLDocument;
+  pathname: string;
+}
+
+export default class DocumentView extends ViewComponent<IProps, any> {
+  public static defaultProps: IProps = {
+    collection: new Collection(),
+    document: {} as IDocument & IGraphQLDocument,
     pathname: ''
   };
 

@@ -4,3 +4,7 @@ export interface IMutationSettings {
     [key: string]: any
   };
 }
+
+export interface IGraphQLDocument {
+  __typename: string;
+}

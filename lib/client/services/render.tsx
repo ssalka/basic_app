@@ -5,6 +5,7 @@ import { RENDER_METHODS } from 'lib/common/constants';
 import {
   Field,
   IComponentModule,
+  IDocument,
   IRenderMethod,
   ReactElement,
   ReactProps,
@@ -46,11 +47,11 @@ class RenderingService {
     return evaluator(val);
   }
 
-  private getProps(document: any, field: Field): ReactProps {
+  private getProps(document: IDocument, field: Field): ReactProps {
     const { targetProp }: IRenderMethod = _.find(RENDER_METHODS, {
       key: field.renderMethod || 'PLAIN_TEXT'
     });
-    const rawValue: any = _.get(document, _.camelCase(field.name));
+    const rawValue: IDocument = _.get(document, _.camelCase(field.name));
     const isPlainTextArrayField: boolean = field.isArray && (
       !field.renderMethod || field.renderMethod === 'PLAIN_TEXT'
     );

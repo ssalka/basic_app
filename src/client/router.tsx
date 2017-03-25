@@ -6,7 +6,6 @@ import { connect, createStore, UserStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
-import { Collection, IComponentModule, IContext, IUser, ReactElement, IQueryProps } from 'lib/client/interfaces';
 import common = require('lib/common');
 import { getGraphQLCollectionType } from 'lib/common/graphql';
 import Splash from './splash';
@@ -16,6 +15,15 @@ import CollectionView from './app/collection';
 import SchemaForm from './app/collection/form';
 import DocumentView from './app/document';
 import DocumentForm from './app/document/form';
+import {
+  Collection,
+  IComponentModule,
+  IContext,
+  IDocument,
+  IQueryProps,
+  IUser,
+  ReactElement
+} from 'lib/client/interfaces';
 import './styles.less';
 
 const { request, logger } = common as any;
@@ -33,7 +41,7 @@ class AppRouter extends BaseComponent<IProps, any> {
     user: React.PropTypes.object
   };
 
-  private getCollectionStore = _.memoize((collection: Collection, documents: any[] = []) => (
+  private getCollectionStore = _.memoize((collection: Collection, documents: IDocument[] = []) => (
     createStore({
       name: getGraphQLCollectionType(collection),
       logUpdates: true,
@@ -42,11 +50,11 @@ class AppRouter extends BaseComponent<IProps, any> {
         documents
       }
     }, {
-      loadDocuments(documents: any[]) {
+      loadDocuments(documents: IDocument[]) {
         this.setState({ documents });
       },
-      updateDocument(_document: any) {
-        const documents: any[] = this.state.documents.slice();
+      updateDocument(_document: IDocument) {
+        const documents: IDocument[] = this.state.documents.slice();
 
         const indexToUpdate: number = _.findIndex(documents, { _id: _document._id });
 

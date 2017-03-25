@@ -36,3 +36,7 @@ export class Collection {
     _.extend(this, collection);
   }
 }
+
+export interface IDocument {
+  _id: string;
+}

@@ -4,7 +4,7 @@ import { EditableText } from '@blueprintjs/core';
 import { browserHistory } from 'react-router';
 import api from 'lib/client/api';
 import { ViewComponent, FlexRow, FlexColumn, Button, TextInput, NumericInput } from 'lib/client/components';
-import { Collection, Field, ReactElement, IRouteProps } from 'lib/client/interfaces';
+import { Collection, Field, ReactElement, IDocument, IRouteProps } from 'lib/client/interfaces';
 import { getGraphQLCollectionType } from 'lib/common/graphql';
 import './styles.less';
 
@@ -12,7 +12,12 @@ interface IProps extends IRouteProps {
   collection: Collection;
 }
 
-export default class DocumentForm extends ViewComponent<IProps, any> {
+interface IState {
+  document: IDocument;
+  store: any;
+}
+
+export default class DocumentForm extends ViewComponent<IProps, IState> {
   public static defaultProps = {
     collection: {},
     location: {}
