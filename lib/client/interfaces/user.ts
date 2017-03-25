@@ -9,7 +9,7 @@ export interface IUser {
   };
   library: {
     views: any[];
-    collection: Collection[];
+    collections: Collection[];
   };
 }
 
@@ -23,7 +23,7 @@ export class User implements IUser {
     },
     public library: {
       views: any[],
-      collection: Collection[],
+      collections: Collection[],
     }
   ) {}
 }
