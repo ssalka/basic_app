@@ -187,7 +187,7 @@ function ViewSelectPopover({ field, isOpen, handleSelectView, handleTogglePopove
   );
   const SelectViewButton: ReactElement = (
     <Button
-      text={_.get(selectedView, 'name', 'Select Type')}
+      text={_.get(selectedView, 'name', 'Select View')}
       onClick={handleTogglePopover}
     />
   );
