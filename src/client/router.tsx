@@ -7,7 +7,6 @@ import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import common = require('lib/common');
-import { getGraphQLCollectionType } from 'lib/common/graphql';
 import Splash from './splash';
 import Login from './login';
 import App, { Home, Collections } from './app';
@@ -45,7 +44,7 @@ class AppRouter extends BaseComponent<IProps, any> {
 
   private getCollectionStore = _.memoize((collection: ICollection, documents: IDocument[] = []) => (
     createStore({
-      name: getGraphQLCollectionType(collection),
+      name: collection.typeFormats.graphql,
       logUpdates: true,
       initialState: {
         collection,

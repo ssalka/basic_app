@@ -13,6 +13,10 @@ query getUser {
         path
         slug
 
+        typeFormats {
+          graphql
+        }
+
         fields {
           name
           type

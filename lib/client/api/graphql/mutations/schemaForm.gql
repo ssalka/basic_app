@@ -21,6 +21,10 @@ mutation SchemaFormMutation(
     path
     slug
 
+    typeFormats {
+      graphql
+    }
+
     fields {
       name
       type
