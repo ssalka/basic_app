@@ -35,12 +35,12 @@ type Route = {
 export interface IQueryProps extends ReactProps {
   error?: any;
   loadNextPage?: Function;
-  loading: boolean;
-  networkStatus: number;
-  refetch: Function;
-  startPolling: Function;
-  stopPolling: Function;
-  variables: any;
+  loading?: boolean;
+  networkStatus?: number;
+  refetch?: Function;
+  startPolling?: Function;
+  stopPolling?: Function;
+  variables?: any;
 }
 
 export interface IComponentModule {
