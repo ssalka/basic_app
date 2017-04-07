@@ -51,12 +51,12 @@ class RenderingService {
     const { targetProp }: IRenderMethod = _.find(RENDER_METHODS, {
       key: field.renderMethod || 'PLAIN_TEXT'
     });
-    const rawValue: IDocument = _.get(document, _.camelCase(field.name));
+    const rawValue: IDocument | IDocument[] = _.get(document, _.camelCase(field.name));
     const isPlainTextArrayField: boolean = field.isArray && (
       !field.renderMethod || field.renderMethod === 'PLAIN_TEXT'
     );
     const displayValue = isPlainTextArrayField
-      ? rawValue.join(', ')
+      ? (rawValue as IDocument[]).join(', ')
       : rawValue;
 
     return { [targetProp]: displayValue };

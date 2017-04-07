@@ -36,8 +36,7 @@ interface IState {
   showFieldOptions: boolean[];
 }
 
-@mutation(SchemaFormMutation, mutationSettings)
-class SchemaForm extends ViewComponent<IProps, IState> {
+export class SchemaForm extends ViewComponent<IProps, IState> {
   public static defaultProps: IProps = {
     collection: new Collection({
       _id: null,
@@ -67,8 +66,10 @@ class SchemaForm extends ViewComponent<IProps, IState> {
     (handler: () => void) => handler.bind(this)
   );
 
-  constructor({ collection }) {
-    super({ collection });
+  constructor(props: Partial<IProps>) {
+    super(props);
+    const { collection } = props;
+
     _.assign(this.state, {
       collection: new Collection(collection),
       selectingType: collection._id
@@ -144,7 +145,7 @@ class SchemaForm extends ViewComponent<IProps, IState> {
 
               <div className="fields">
                 {collection.fields.map(({name, type}: Field, index: number): ReactElement => (
-                  <FlexColumn key={index}>
+                  <FlexColumn key={index} className="field">
                     <FlexRow className="field-main">
                       <FieldNameInput index={index} name={name} />
                       <TypeSelectPopover
@@ -173,4 +174,4 @@ class SchemaForm extends ViewComponent<IProps, IState> {
   }
 }
 
-export default SchemaForm;
+export default mutation(SchemaFormMutation, mutationSettings)(SchemaForm);
