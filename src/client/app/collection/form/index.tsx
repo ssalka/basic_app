@@ -36,8 +36,7 @@ interface IState {
   showFieldOptions: boolean[];
 }
 
-@mutation(SchemaFormMutation, mutationSettings)
-class SchemaForm extends ViewComponent<IProps, IState> {
+export class SchemaForm extends ViewComponent<IProps, IState> {
   public static defaultProps: IProps = {
     collection: new Collection({
       _id: null,
@@ -46,15 +45,6 @@ class SchemaForm extends ViewComponent<IProps, IState> {
       description: '',
       icon: 'graph'
     })
-  };
-
-  public state: IState = {
-    collection: {},
-    editingFields: false,
-    selectingIcon: false,
-    selectingType: [false],
-    selectingView: [false],
-    showFieldOptions: [true]
   };
 
   private handlers = _.mapValues(
@@ -67,10 +57,14 @@ class SchemaForm extends ViewComponent<IProps, IState> {
     (handler: () => void) => handler.bind(this)
   );
 
-  constructor({ collection }) {
-    super({ collection });
-    _.assign(this.state, {
+  constructor(props: Partial<IProps>) {
+    super(props);
+    const { collection } = props;
+
+    this.state = {
       collection: new Collection(collection),
+      editingFields: false,
+      selectingIcon: false,
       selectingType: collection._id
         ? collection.fields.map(() => false)
         : [false],
@@ -80,7 +74,7 @@ class SchemaForm extends ViewComponent<IProps, IState> {
       showFieldOptions: collection._id
         ? collection.fields.map(() => false)
         : [true]
-    });
+    };
   }
 
   public render() {
@@ -144,7 +138,7 @@ class SchemaForm extends ViewComponent<IProps, IState> {
 
               <div className="fields">
                 {collection.fields.map(({name, type}: Field, index: number): ReactElement => (
-                  <FlexColumn key={index}>
+                  <FlexColumn key={index} className="field">
                     <FlexRow className="field-main">
                       <FieldNameInput index={index} name={name} />
                       <TypeSelectPopover
@@ -162,7 +156,7 @@ class SchemaForm extends ViewComponent<IProps, IState> {
 
             {!editingFields && <AddFieldButton />}
 
-            <FlexRow className="fill-width">
+            <FlexRow className="action-buttons fill-width">
               <Button text="Save" type="submit" size="large" color="success" onClick={submitForm} />
               <Button text="Cancel" size="large" color="danger" onClick={browserHistory.goBack} />
             </FlexRow>
@@ -173,4 +167,4 @@ class SchemaForm extends ViewComponent<IProps, IState> {
   }
 }
 
-export default SchemaForm;
+export default mutation(SchemaFormMutation, mutationSettings)(SchemaForm);

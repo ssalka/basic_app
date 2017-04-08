@@ -30,6 +30,7 @@ export function DescriptionTextarea({ description }) {
 
   return (
     <EditableText
+      className="description"
       multiline={true}
       minLines={2}
       maxLines={4}
@@ -39,7 +40,6 @@ export function DescriptionTextarea({ description }) {
     />
   );
 }
-
 export function FieldNameInput({ index, name }) {
   const handleChange = (value: string) => this.setStateByPath(
     `collection.fields[${index}].name`, value

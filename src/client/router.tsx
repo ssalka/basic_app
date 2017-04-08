@@ -29,10 +29,11 @@ import './styles.less';
 const { request, logger } = common as any;
 const { User } = api;
 
-interface IProps extends IQueryProps {
-  user: IUser;
+interface IProps extends Partial<IQueryProps> {
+  user?: IUser;
 }
 
+// TODO: pass { self: true } here instead of in getUser.gql
 @query(GetUser)
 @connect(UserStore)
 class AppRouter extends BaseComponent<IProps, any> {
