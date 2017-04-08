@@ -47,15 +47,6 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
     })
   };
 
-  public state: IState = {
-    collection: {},
-    editingFields: false,
-    selectingIcon: false,
-    selectingType: [false],
-    selectingView: [false],
-    showFieldOptions: [true]
-  };
-
   private handlers = _.mapValues(
     handlers,
     (handler: () => void) => handler.bind(this)
@@ -70,8 +61,10 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
     super(props);
     const { collection } = props;
 
-    _.assign(this.state, {
+    this.state = {
       collection: new Collection(collection),
+      editingFields: false,
+      selectingIcon: false,
       selectingType: collection._id
         ? collection.fields.map(() => false)
         : [false],
@@ -81,7 +74,7 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
       showFieldOptions: collection._id
         ? collection.fields.map(() => false)
         : [true]
-    });
+    };
   }
 
   public render() {
@@ -163,7 +156,7 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
 
             {!editingFields && <AddFieldButton />}
 
-            <FlexRow className="fill-width">
+            <FlexRow className="action-buttons fill-width">
               <Button text="Save" type="submit" size="large" color="success" onClick={submitForm} />
               <Button text="Cancel" size="large" color="danger" onClick={browserHistory.goBack} />
             </FlexRow>
