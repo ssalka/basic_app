@@ -6,6 +6,7 @@ import { mutation } from 'lib/client/api/graphql';
 import { SchemaFormMutation } from 'lib/client/api/graphql/mutations';
 import { ViewComponent, Button, FlexRow, FlexColumn, IconSelector } from 'lib/client/components';
 import { IMutationSettings, ReactElement, Field, Collection } from 'lib/client/interfaces';
+import { IComponentModule, IFunctionModule } from 'lib/client/interfaces/react';
 import { READONLY_FIELDS } from 'lib/common/constants';
 import './styles.less';
 import * as handlers from './handlers';
@@ -47,15 +48,9 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
     })
   };
 
-  private handlers = _.mapValues(
-    handlers,
-    (handler: () => void) => handler.bind(this)
-  );
+  private handlers: IFunctionModule = this.bindModule(handlers);
 
-  private components = _.mapValues(
-    components,
-    (handler: () => void) => handler.bind(this)
-  );
+  private components: IComponentModule = this.bindModule(components);
 
   constructor(props: Partial<IProps>) {
     super(props);

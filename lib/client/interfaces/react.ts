@@ -47,6 +47,10 @@ export interface IComponentModule {
   [key: string]: SFC;
 }
 
+export interface IFunctionModule {
+  [handler: string]: (...args: any[]) => any;
+}
+
 export interface ILink {
   name: string;
   path: string;
