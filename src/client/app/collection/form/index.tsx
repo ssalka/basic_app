@@ -3,10 +3,11 @@ declare const React;
 
 import { browserHistory } from 'react-router';
 import { mutation } from 'lib/client/api/graphql';
+import { connect, CollectionStore } from 'lib/client/api/stores';
 import { SchemaFormMutation } from 'lib/client/api/graphql/mutations';
 import { ViewComponent, Button, FlexRow, FlexColumn, IconSelector } from 'lib/client/components';
-import { IMutationSettings, ReactElement, Field, Collection } from 'lib/client/interfaces';
-import { IComponentModule, IFunctionModule } from 'lib/client/interfaces/react';
+import { IMutationSettings, Field, Collection } from 'lib/client/interfaces';
+import { ReactElement, ReactProps, IComponentModule, IFunctionModule } from 'lib/client/interfaces/react';
 import { READONLY_FIELDS } from 'lib/common/constants';
 import './styles.less';
 import * as handlers from './handlers';
@@ -24,12 +25,13 @@ const mutationSettings: IMutationSettings = {
   variables: {}
 };
 
-type IProps = React.Props<any> & {
+interface IProps extends ReactProps {
   collection: Partial<Collection>;
-};
+}
 
 interface IState {
   collection: Partial<Collection>;
+  collections: Collection[];
   editingFields: boolean;
   selectingIcon: boolean;
   selectingType: boolean[];
@@ -37,6 +39,7 @@ interface IState {
   showFieldOptions: boolean[];
 }
 
+@connect(CollectionStore)
 export class SchemaForm extends ViewComponent<IProps, IState> {
   public static defaultProps: IProps = {
     collection: new Collection({
@@ -54,21 +57,19 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
 
   constructor(props: Partial<IProps>) {
     super(props);
-    const { collection } = props;
+    const collection = new Collection(props.collection);
+    const stubBooleanArray = (elseVal?: boolean): boolean[] => (
+      collection._id ? collection.fields.map(() => false) : [!!elseVal]
+    );
 
     this.state = {
-      collection: new Collection(collection),
+      collection,
+      collections: _.reject([collection], _.isEmpty),
       editingFields: false,
       selectingIcon: false,
-      selectingType: collection._id
-        ? collection.fields.map(() => false)
-        : [false],
-      selectingView: collection._id
-        ? collection.fields.map(() => false)
-        : [false],
-      showFieldOptions: collection._id
-        ? collection.fields.map(() => false)
-        : [true]
+      selectingType: stubBooleanArray(),
+      selectingView: stubBooleanArray(),
+      showFieldOptions: stubBooleanArray(true)
     };
   }
 
