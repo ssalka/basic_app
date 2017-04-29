@@ -39,7 +39,6 @@ interface IState {
   showFieldOptions: boolean[];
 }
 
-@connect(CollectionStore)
 export class SchemaForm extends ViewComponent<IProps, IState> {
   public static defaultProps: IProps = {
     collection: new Collection({
@@ -163,4 +162,7 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
   }
 }
 
-export default mutation(SchemaFormMutation, mutationSettings)(SchemaForm);
+export default _.flow([
+  mutation(SchemaFormMutation, mutationSettings),
+  connect(CollectionStore)
+])(SchemaForm);

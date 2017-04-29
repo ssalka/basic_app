@@ -26,6 +26,18 @@ describe("SchemaForm", () => {
     elements.actionButtons = schemaForm.find('.action-buttons');
   });
 
+  it("loads with the right initial state", () => {
+    expect(schemaForm.state()).toEqual({
+      collection: testCollection,
+      collections: [testCollection],
+      editingFields: false,
+      selectingIcon: false,
+      selectingType: testCollection.fields.map(() => false),
+      selectingView: testCollection.fields.map(() => false),
+      showFieldOptions: testCollection.fields.map(() => false)
+    });
+  });
+
   it("renders each section", () => {
     _.forEach(elements, element => assert(element.exists()));
   });
@@ -39,8 +51,8 @@ describe("SchemaForm", () => {
     });
 
     it("displays the name and description of the collection", () => {
-      assert(nameElement.exists(), 'Collection name field ');
-      assert(descriptionElement.exists());
+      assert(nameElement.exists(), "Collection name wasn't rendered");
+      assert(descriptionElement.exists(), "Collection description wasn't rendered");
       expect(nameElement.text()).toBe(testCollection.name);
       expect(descriptionElement.text()).toBe(testCollection.description);
     });
