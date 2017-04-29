@@ -5,13 +5,14 @@ import { browserHistory } from 'react-router';
 import { mutation } from 'lib/client/api/graphql';
 import { connect, CollectionStore } from 'lib/client/api/stores';
 import { SchemaFormMutation } from 'lib/client/api/graphql/mutations';
-import { ViewComponent, Button, FlexRow, FlexColumn, IconSelector } from 'lib/client/components';
+import { ViewComponent, Button, FlexRow, FlexColumn } from 'lib/client/components';
 import { IMutationSettings, Field, Collection } from 'lib/client/interfaces';
 import { ReactElement, ReactProps, IComponentModule, IFunctionModule } from 'lib/client/interfaces/react';
 import { READONLY_FIELDS } from 'lib/common/constants';
 import './styles.less';
 import * as handlers from './handlers';
 import * as components from './components';
+import SchemaFormHeader from './header';
 
 const mutationSettings: IMutationSettings = {
   getVariables: (collection: Collection) => _(collection)
@@ -31,9 +32,8 @@ interface IProps extends ReactProps {
 
 interface IState {
   collection: Partial<Collection>;
-  collections: Collection[];
+  collections?: Collection[];
   editingFields: boolean;
-  selectingIcon: boolean;
   selectingType: boolean[];
   selectingView: boolean[];
   showFieldOptions: boolean[];
@@ -65,31 +65,30 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
       collection,
       collections: _.reject([collection], _.isEmpty),
       editingFields: false,
-      selectingIcon: false,
       selectingType: stubBooleanArray(),
       selectingView: stubBooleanArray(),
       showFieldOptions: stubBooleanArray(true)
     };
   }
 
+  handleHeaderUpdate(updates: Partial<Collection>) {
+    const collection = { ...this.state.collection, ...updates };
+    this.setState({ collection });
+  }
+
   public render() {
     const {
       handlers: {
         submitForm,
-        toggleIconPopover,
-        toggleFieldOptions,
         selectIcon
       },
       state: {
         collection,
         editingFields,
-        selectingIcon,
         selectingType,
         showFieldOptions
       },
       components: {
-        CollectionNameInput,
-        DescriptionTextarea,
         FieldNameInput,
         TypeSelectPopover,
         ToggleEditButton,
@@ -113,18 +112,11 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
       <ViewComponent>
         <div className="form-popover pt-card pt-elevation-3">
           <form name="schema-form" onSubmit={submitForm}>
-            <div className="header">
-              <FlexRow>
-                <CollectionNameInput value={name} />
-                <IconSelector
-                  selectedIcon={collection.icon}
-                  onSelectIcon={selectIcon}
-                  onClick={toggleIconPopover}
-                  isOpen={selectingIcon}
-                />
-              </FlexRow>
-              <DescriptionTextarea description={collection.description} />
-            </div>
+            <SchemaFormHeader
+              handleChange={this.handleHeaderUpdate}
+              collection={collection}
+            />
+
             <div className="form-main">
               <FlexRow className="subheader" alignItems="center">
                 <h5>Schema</h5>

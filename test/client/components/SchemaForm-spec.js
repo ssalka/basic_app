@@ -31,7 +31,6 @@ describe("SchemaForm", () => {
       collection: testCollection,
       collections: [testCollection],
       editingFields: false,
-      selectingIcon: false,
       selectingType: testCollection.fields.map(() => false),
       selectingView: testCollection.fields.map(() => false),
       showFieldOptions: testCollection.fields.map(() => false)

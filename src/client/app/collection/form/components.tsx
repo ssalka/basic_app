@@ -6,28 +6,19 @@ import { EditableText, Checkbox } from '@blueprintjs/core';
 import { Button, FlexRow, FlexColumn, Popover, TypeSelect, ViewSelect } from 'lib/client/components';
 import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
 
-export function CollectionNameInput({ value }) {
-  const {
-    state: { collection },
-    handlers: { changeCollectionName }
-  } = this;
-
+export function CollectionNameInput({ name, handleChange }) {
   return (
     <h3>
       <EditableText
-        value={collection.name}
+        value={name}
         placeholder="New Collection"
-        onChange={changeCollectionName}
+        onChange={handleChange}
       />
     </h3>
   );
 }
 
-export function DescriptionTextarea({ description }) {
-  const handleChange = (value: string) => this.setStateByPath(
-    'collection.description', value
-  );
-
+export function DescriptionTextarea({ description, handleChange }) {
   return (
     <EditableText
       className="description"
