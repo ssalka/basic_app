@@ -29,11 +29,7 @@ describe("SchemaForm", () => {
   it("loads with the right initial state", () => {
     expect(schemaForm.state()).toEqual({
       collection: testCollection,
-      collections: [testCollection],
-      editingFields: false,
-      selectingType: testCollection.fields.map(() => false),
-      selectingView: testCollection.fields.map(() => false),
-      showFieldOptions: testCollection.fields.map(() => false)
+      collections: [testCollection]
     });
   });
 
@@ -91,6 +87,8 @@ describe("SchemaForm", () => {
     });
   });
 
+  // TODO: Test CollectionFormSchema component separately
+  // these tests are broken because the schema component now manages some of the state
   describe("Schema", () => {
 
     describe("Subheader Row", () => {

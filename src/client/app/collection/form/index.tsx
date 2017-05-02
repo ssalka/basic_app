@@ -2,17 +2,17 @@ declare const _;
 declare const React;
 
 import { browserHistory } from 'react-router';
+import api from 'lib/client/api';
 import { mutation } from 'lib/client/api/graphql';
 import { connect, CollectionStore } from 'lib/client/api/stores';
 import { SchemaFormMutation } from 'lib/client/api/graphql/mutations';
-import { ViewComponent, Button, FlexRow, FlexColumn } from 'lib/client/components';
+import { ViewComponent, Button, FlexRow } from 'lib/client/components';
 import { IMutationSettings, Field, Collection } from 'lib/client/interfaces';
-import { ReactElement, ReactProps, IComponentModule, IFunctionModule } from 'lib/client/interfaces/react';
+import { ReactProps, IRouteProps, IFunctionModule } from 'lib/client/interfaces/react';
 import { READONLY_FIELDS } from 'lib/common/constants';
-import './styles.less';
-import * as handlers from './handlers';
-import * as components from './components';
 import SchemaFormHeader from './header';
+import CollectionFormSchema from './schema';
+import './styles.less';
 
 const mutationSettings: IMutationSettings = {
   getVariables: (collection: Collection) => _(collection)
@@ -26,21 +26,18 @@ const mutationSettings: IMutationSettings = {
   variables: {}
 };
 
-interface IProps extends ReactProps {
+interface IProps extends ReactProps, IRouteProps {
   collection: Partial<Collection>;
+  upsertCollection?: (collection: Partial<Collection>) => Promise<Collection>;
 }
 
 interface IState {
   collection: Partial<Collection>;
   collections?: Collection[];
-  editingFields: boolean;
-  selectingType: boolean[];
-  selectingView: boolean[];
-  showFieldOptions: boolean[];
 }
 
 export class SchemaForm extends ViewComponent<IProps, IState> {
-  public static defaultProps: IProps = {
+  public static defaultProps: Partial<IProps> = {
     collection: new Collection({
       _id: null,
       name: '',
@@ -50,101 +47,56 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
     })
   };
 
-  private handlers: IFunctionModule = this.bindModule(handlers);
-
-  private components: IComponentModule = this.bindModule(components);
-
   constructor(props: Partial<IProps>) {
     super(props);
     const collection = new Collection(props.collection);
-    const stubBooleanArray = (elseVal?: boolean): boolean[] => (
-      collection._id ? collection.fields.map(() => false) : [!!elseVal]
-    );
 
     this.state = {
       collection,
       collections: _.reject([collection], _.isEmpty),
-      editingFields: false,
-      selectingType: stubBooleanArray(),
-      selectingView: stubBooleanArray(),
-      showFieldOptions: stubBooleanArray(true)
     };
   }
 
-  handleHeaderUpdate(updates: Partial<Collection>) {
-    const collection = { ...this.state.collection, ...updates };
+  updateCollection(updates: Partial<Collection>) {
+    const collection = _.assign({}, this.state.collection, updates);
     this.setState({ collection });
   }
 
-  public render() {
-    const {
-      handlers: {
-        submitForm,
-        selectIcon
-      },
-      state: {
-        collection,
-        editingFields,
-        selectingType,
-        showFieldOptions
-      },
-      components: {
-        FieldNameInput,
-        TypeSelectPopover,
-        ToggleEditButton,
-        DetailsButton,
-        AddFieldButton,
-        RemoveFieldButton,
-        FieldOptions
-      }
-    } = this;
+  updateFieldInCollection(index: number, updates: Partial<Field>) {
+    const { fields } = this.state.collection;
+    const field = _.assign({}, fields[index], updates);
+    this.setStateByPath(`collection.fields[${index}]`, field);
+  }
 
-    const onlyOneField: boolean = collection.fields.length === 1;
-    const OptionButton = (props: any): ReactElement => (
-      <div className="option-button">
-        {editingFields
-          ? <RemoveFieldButton disabled={onlyOneField} {...props} />
-          : <DetailsButton {...props} />}
-      </div>
-    );
+  submitForm(event) {
+    const { collection } = this.props;
+    event.preventDefault();
+
+    this.props.upsertCollection(collection)
+      .then(_.property('data.collection'))
+      .then((coll: Collection) => api.User.updateLibrary(coll) || coll)
+      .then((coll: Collection) => this.props.history.push(coll.path));
+  }
+
+  public render() {
+    const { collection } = this.state;
 
     return (
       <ViewComponent>
         <div className="form-popover pt-card pt-elevation-3">
-          <form name="schema-form" onSubmit={submitForm}>
+          <form name="schema-form" onSubmit={this.submitForm}>
             <SchemaFormHeader
-              handleChange={this.handleHeaderUpdate}
               collection={collection}
+              handleChange={this.updateCollection}
             />
 
-            <div className="form-main">
-              <FlexRow className="subheader" alignItems="center">
-                <h5>Schema</h5>
-                <ToggleEditButton />
-              </FlexRow>
-
-              <div className="fields">
-                {collection.fields.map(({name, type}: Field, index: number): ReactElement => (
-                  <FlexColumn key={index} className="field">
-                    <FlexRow className="field-main">
-                      <FieldNameInput index={index} name={name} />
-                      <TypeSelectPopover
-                        index={index}
-                        value={type}
-                        isOpen={selectingType[index]}
-                      />
-                      <OptionButton index={index} />
-                    </FlexRow>
-                    {showFieldOptions[index] && !editingFields && <FieldOptions index={index} />}
-                  </FlexColumn>
-                ))}
-              </div>
-            </div>
-
-            {!editingFields && <AddFieldButton />}
+            <CollectionFormSchema
+              collection={collection}
+              handleChange={this.updateFieldInCollection}
+            />
 
             <FlexRow className="action-buttons fill-width">
-              <Button text="Save" type="submit" size="large" color="success" onClick={submitForm} />
+              <Button text="Save" type="submit" size="large" color="success" onClick={this.submitForm} />
               <Button text="Cancel" size="large" color="danger" onClick={browserHistory.goBack} />
             </FlexRow>
           </form>

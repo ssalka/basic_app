@@ -3,13 +3,11 @@ declare const React;
 
 import { ViewComponent, FlexRow, IconSelector } from 'lib/client/components';
 import { Collection } from 'lib/client/interfaces';
-import { ReactProps, IComponentModule, IFunctionModule } from 'lib/client/interfaces/react';
-import * as handlers from './handlers';
-import * as components from './components';
+import { CollectionNameInput, DescriptionTextarea } from './components';
 
-interface IProps extends ReactProps {
+interface IProps {
   collection: Partial<Collection>;
-  handleChange?(updates: Partial<Collection>): void;
+  handleChange(updates: Partial<Collection>): void;
 }
 
 interface IState {
@@ -17,7 +15,7 @@ interface IState {
 }
 
 export default class SchemaFormHeader extends ViewComponent<IProps, IState> {
-  public static defaultProps: IProps = {
+  public static defaultProps: Partial<IProps> = {
     collection: new Collection({
       name: '',
       description: '',
@@ -29,56 +27,38 @@ export default class SchemaFormHeader extends ViewComponent<IProps, IState> {
     selectingIcon: false
   };
 
-  private handlers: IFunctionModule = this.bindModule(
-    _.pick(handlers, ['toggleIconPopover', 'selectIcon'])
-  );
+  toggleIconPopover() {
+    this._toggle('selectingIcon');
+  }
 
-  private components: IComponentModule = this.bindModule(
-    _.pick(components, ['CollectionNameInput', 'DescriptionTextarea'])
-  );
+  public handleUpdateField(field: string): (value: string) => void {
+    return value => this.props.handleChange({ [field]: value });
+  }
 
   public render() {
-    const {
-      props: {
-        collection
-      },
-      state: {
-        selectingIcon
-      },
-      handlers: {
-        toggleIconPopover,
-        selectIcon
-      },
-      components: {
-        CollectionNameInput,
-        DescriptionTextarea
-      }
-    } = this;
-
-    const handleUpdateName = (name: string) => (
-      console.log('name', name) || this.props.handleChange({ name })
-    );
-
-    const handleUpdateIcon = (icon: string) => (
-      this.props.handleChange({ icon })
-    );
-
-    const handleUpdateDescription = (description: string) => (
-      this.props.handleChange({ description })
-    );
+    const { collection } = this.props;
+    const { selectingIcon } = this.state;
 
     return (
       <div className="header">
         <FlexRow>
-          <CollectionNameInput name={collection.name} handleChange={handleUpdateName} />
+          <CollectionNameInput
+            name={collection.name}
+            handleChange={this.handleUpdateField('name')}
+          />
+
           <IconSelector
             selectedIcon={collection.icon}
-            onSelectIcon={handleUpdateIcon}
-            onClick={toggleIconPopover}
+            onSelectIcon={this.handleUpdateField('icon')}
+            onClick={this.toggleIconPopover}
             isOpen={selectingIcon}
           />
         </FlexRow>
-        <DescriptionTextarea description={collection.description} handleChange={handleUpdateDescription} />
+
+        <DescriptionTextarea
+          description={collection.description}
+          handleChange={this.handleUpdateField('description')}
+        />
       </div>
     );
   }

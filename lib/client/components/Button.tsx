@@ -14,7 +14,7 @@ interface IProps extends React.Props<any> {
   disabled?: boolean;
   text?: string;
   type?: string;
-  onClick?(): void;
+  onClick?(event: React.MouseEvent<HTMLButtonElement>): void;
 }
 
 export default (props: IProps): ReactElement => {
