@@ -14,18 +14,12 @@ import {
   FieldOptions,
   AddFieldButton
 } from './components';
-import {
-  addField,
-  removeField,
-  toggleRequired,
-  toggleIsArray,
-} from './handlers';
 
 type FieldOptionsEnum = 'required' | 'isArray' | 'renderMethod';
 
 interface IProps extends ReactProps {
   collection: Partial<Collection>;
-  handleChange(index: number, updates: Partial<Field>): void;
+  handleChange(index: number, updates?: Partial<Field> | null): void;
 }
 
 interface IState {
@@ -41,13 +35,6 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
     })
   };
 
-  private handlers: IFunctionModule = this.bindModule({
-    addField,
-    removeField,
-    toggleRequired,
-    toggleIsArray,
-  });
-
   constructor(props: Partial<IProps>) {
     super(props);
     const collection = new Collection(props.collection);
@@ -60,7 +47,7 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
     };
   }
 
-  editFormFields() {
+  toggleEditingFields() {
     this._toggle('editingFields');
   }
 
@@ -83,31 +70,36 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
     this.props.handleChange(index, newFieldOptions);
   }
 
+  addField() {
+    const { collection } = this.props;
+    collection.fields.push(new Field());
+    this.props.handleChange(collection.fields.length);
+    this.setState({
+      // only show field options of the newly-created field
+      showFieldOptions: _(collection.fields)
+        .map((field, i) => !i)
+        .reverse()
+        .value()
+    });
+  }
+
+  removeField(index: number) {
+    if (this.props.collection.fields.length !== 1) {
+      this.props.handleChange(index, null);
+    }
+  }
+
   public render() {
     const {
-      props: {
-        collection
-      },
-      state: {
-        editingFields,
-        showFieldOptions
-      }
+      props: { collection },
+      state: { editingFields, showFieldOptions }
     } = this;
-
-    const onlyOneField: boolean = collection.fields.length === 1;
-    const OptionButton: SFC = (props: any): ReactElement => (
-      <div className="option-button">
-        {editingFields
-          ? <RemoveFieldButton disabled={onlyOneField} onClick={this.handlers.removeField} />
-          : <DetailsButton onClick={() => this.toggleFieldOptions(props.index)} />}
-      </div>
-    );
 
     return (
       <div className="form-main">
         <FlexRow className="subheader" alignItems="center">
           <h5>Schema</h5>
-          <ToggleEditButton editingFields={editingFields} onClick={this.editFormFields} />
+          <ToggleEditButton editingFields={editingFields} onClick={this.toggleEditingFields} />
         </FlexRow>
 
         <div className="fields">
@@ -122,7 +114,11 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
                   onChange={newType => this.updateFieldType(index, newType)}
                   value={field.type}
                 />
-                <OptionButton index={index} />
+                <div className="option-button">
+                  {editingFields
+                    ? <RemoveFieldButton disabled={collection.fields.length === 1} onClick={this.removeField} />
+                    : <DetailsButton onClick={() => this.toggleFieldOptions(index)} />}
+                </div>
               </FlexRow>
 
               {!editingFields && showFieldOptions[index] && (
@@ -136,7 +132,7 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
           ))}
         </div>
 
-        {!editingFields && <AddFieldButton onClick={this.handlers.addField} />}
+        {!editingFields && <AddFieldButton onClick={this.addField} />}
       </div>
     );
   }

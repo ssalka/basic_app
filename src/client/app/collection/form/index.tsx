@@ -62,8 +62,20 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
     this.setState({ collection });
   }
 
-  updateFieldInCollection(index: number, updates: Partial<Field>) {
+  updateFieldInCollection(index: number, updates?: Partial<Field> | null) {
     const { fields } = this.state.collection;
+
+    if (index === fields.length) {
+      // add new field
+      fields.push(new Field());
+      this.updateCollection({ fields });
+    }
+    else if (_.isNull(updates)) {
+      // remove a field
+      fields.splice(index, 1);
+      this.updateCollection({ fields });
+    }
+
     const field = _.assign({}, fields[index], updates);
     this.setStateByPath(`collection.fields[${index}]`, field);
   }
