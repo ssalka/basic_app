@@ -1,4 +1,4 @@
-mutation SchemaFormMutation(
+mutation CollectionFormMutation(
   $_id: ID,
   $name: String!,
   $fields: [FieldInput!]!,

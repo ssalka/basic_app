@@ -5,12 +5,12 @@ import { browserHistory } from 'react-router';
 import api from 'lib/client/api';
 import { mutation } from 'lib/client/api/graphql';
 import { connect, CollectionStore } from 'lib/client/api/stores';
-import { SchemaFormMutation } from 'lib/client/api/graphql/mutations';
+import { CollectionFormMutation } from 'lib/client/api/graphql/mutations';
 import { ViewComponent, Button, FlexRow } from 'lib/client/components';
 import { IMutationSettings, Field, Collection } from 'lib/client/interfaces';
 import { ReactProps, IRouteProps, IFunctionModule } from 'lib/client/interfaces/react';
 import { READONLY_FIELDS } from 'lib/common/constants';
-import SchemaFormHeader from './header';
+import CollectionFormHeader from './header';
 import CollectionFormSchema from './schema';
 import './styles.less';
 
@@ -36,7 +36,7 @@ interface IState {
   collections?: Collection[];
 }
 
-export class SchemaForm extends ViewComponent<IProps, IState> {
+export class CollectionForm extends ViewComponent<IProps, IState> {
   public static defaultProps: Partial<IProps> = {
     collection: new Collection({
       _id: null,
@@ -85,7 +85,7 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
       <ViewComponent>
         <div className="form-popover pt-card pt-elevation-3">
           <form name="schema-form" onSubmit={this.submitForm}>
-            <SchemaFormHeader
+            <CollectionFormHeader
               collection={collection}
               handleChange={this.updateCollection}
             />
@@ -107,6 +107,6 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
 }
 
 export default _.flow([
-  mutation(SchemaFormMutation, mutationSettings),
+  mutation(CollectionFormMutation, mutationSettings),
   connect(CollectionStore)
-])(SchemaForm);
+])(CollectionForm);

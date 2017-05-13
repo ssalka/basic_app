@@ -11,7 +11,7 @@ import Splash from './splash';
 import Login from './login';
 import App, { Home, Collections } from './app';
 import CollectionView from './app/collection';
-import SchemaForm from './app/collection/form';
+import CollectionForm from './app/collection/form';
 import DocumentView from './app/document';
 import DocumentForm from './app/document/form';
 import {
@@ -135,9 +135,9 @@ class AppRouter extends BaseComponent<IProps, any> {
     return <DocumentFormWithMutation {...props} />;
   }
 
-  private getSchemaForm({ location: { state }, ...props }) {
+  private getCollectionForm({ location: { state }, ...props }) {
     return (
-      <SchemaForm collection={state.collection} {...props} />
+      <CollectionForm collection={state.collection} {...props} />
     );
   }
 
@@ -190,11 +190,11 @@ class AppRouter extends BaseComponent<IProps, any> {
             <Route path="home" component={Home} />
             <Route path="collections">
               <IndexRoute component={Collections} />
-              <Route path="add" component={SchemaForm} />
+              <Route path="add" component={CollectionForm} />
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />
                 <Route path="add" component={this.getDocumentForm} />
-                <Route path="edit" component={this.getSchemaForm} />
+                <Route path="edit" component={this.getCollectionForm} />
                 <Route path=":_id">
                   <IndexRoute component={this.getDocumentView} />
                   <Route path="edit" component={this.getDocumentForm} />

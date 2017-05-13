@@ -2,16 +2,16 @@ import assert from 'assert';
 import { mount } from 'enzyme';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
-import { SchemaForm } from 'src/client/app/collection/form';
+import { CollectionForm } from 'src/client/app/collection/form';
 
 
-describe("SchemaForm", () => {
+describe("CollectionForm", () => {
   const testCollection = new MockCollection({ _id: true });
-  let schemaForm;
+  let collectionForm;
   let elements = {};
 
-  function getSchemaForm(context) {
-    return mount(<SchemaForm collection={testCollection} />, { context });
+  function getCollectionForm(context) {
+    return mount(<CollectionForm collection={testCollection} />, { context });
   }
 
   function targetValue(value) {
@@ -19,15 +19,15 @@ describe("SchemaForm", () => {
   }
 
   beforeEach(() => {
-    schemaForm = getSchemaForm();
-    elements.header = schemaForm.find('.header');
-    elements.schema = schemaForm.find('.form-main');
-    elements.addFieldRow = schemaForm.find('.minimal-row');
-    elements.actionButtons = schemaForm.find('.action-buttons');
+    collectionForm = getCollectionForm();
+    elements.header = collectionForm.find('.header');
+    elements.schema = collectionForm.find('.form-main');
+    elements.addFieldRow = collectionForm.find('.minimal-row');
+    elements.actionButtons = collectionForm.find('.action-buttons');
   });
 
   it("loads with the right initial state", () => {
-    expect(schemaForm.state()).toEqual({
+    expect(collectionForm.state()).toEqual({
       collection: testCollection,
       collections: [testCollection]
     });
@@ -66,7 +66,7 @@ describe("SchemaForm", () => {
         .simulate('change', targetValue(newName));
 
       expect(nameElement.text()).toBe(newName);
-      expect(schemaForm.state('collection').name).toBe(newName);
+      expect(collectionForm.state('collection').name).toBe(newName);
     });
 
     it("updates the collection description", () => {
@@ -78,7 +78,7 @@ describe("SchemaForm", () => {
         .simulate('change', targetValue(newDescription));
 
       expect(descriptionElement.find('textarea').text()).toBe(newDescription);
-      expect(schemaForm.state('collection').description).toBe(newDescription);
+      expect(collectionForm.state('collection').description).toBe(newDescription);
     });
 
     xit("updates the collection icon", () => {
@@ -105,17 +105,17 @@ describe("SchemaForm", () => {
 
       it("toggles the `editingFields` state and updates the button", () => {
         const button = subheaderRow.find('button');
-        const showFieldOptions = schemaForm.state('showFieldOptions');
+        const showFieldOptions = collectionForm.state('showFieldOptions');
 
         button.simulate('click');
-        assert(schemaForm.state('editingFields'));
+        assert(collectionForm.state('editingFields'));
         expect(button.prop('className')).toContain('pt-icon-tick');
-        expect(schemaForm.state('showFieldOptions')).toEqual(showFieldOptions.map(_.stubFalse));
+        expect(collectionForm.state('showFieldOptions')).toEqual(showFieldOptions.map(_.stubFalse));
 
         button.simulate('click');
-        assert(!schemaForm.state('editingFields'));
+        assert(!collectionForm.state('editingFields'));
         expect(button.prop('className')).toContain('pt-icon-edit');
-        expect(schemaForm.state('showFieldOptions')).toEqual(showFieldOptions);
+        expect(collectionForm.state('showFieldOptions')).toEqual(showFieldOptions);
       });
     });
 
@@ -152,14 +152,14 @@ describe("SchemaForm", () => {
           const showFieldOptions = testCollection.fields.map(_.stubFalse);
           showFieldOptions[i] = true;
 
-          expect(schemaForm.state('showFieldOptions')).toEqual(showFieldOptions);
+          expect(collectionForm.state('showFieldOptions')).toEqual(showFieldOptions);
         });
       });
 
       describe("Field Options", () => {
         beforeEach(() => {
           // open all field options drawers
-          schemaForm.setState({
+          collectionForm.setState({
             showFieldOptions: testCollection.fields.map(_.stubTrue)
           });
         });
