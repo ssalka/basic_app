@@ -4,20 +4,25 @@ import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
 import CollectionFormSchema from 'src/client/app/collection/form/schema';
 
-
 describe("CollectionFormSchema", () => {
   const testCollection = new MockCollection({ _id: true });
   const elements = {};
   let formSchema, addFieldRow, actionButtons;
   let handleChange;
 
-  function getCollectionFormSchema(context) {
-    return mount(<CollectionFormSchema collection={testCollection} />, { context });
+  function getCollectionFormSchema() {
+    return mount(
+      <CollectionFormSchema
+        collection={testCollection}
+        handleChange={handleChange}
+      />
+    );
   }
 
   beforeEach(() => {
     formSchema = getCollectionFormSchema();
     addFieldRow = formSchema.find('.minimal-row');
+    handleChange = jest.fn();
   });
 
   it("loads with the right initial state", () => {
@@ -80,18 +85,6 @@ describe("CollectionFormSchema", () => {
       });
     });
 
-    it("expands the field options drawer", () => {
-      testCollection.fields.forEach((field, i) => {
-        const element = fields.at(i);
-        element.find('button.pt-icon-more').simulate('click');
-
-        const showFieldOptions = testCollection.fields.map(_.stubFalse);
-        showFieldOptions[i] = true;
-
-        expect(formSchema.state('showFieldOptions')).toEqual(showFieldOptions);
-      });
-    });
-
     describe("Field Options", () => {
       beforeEach(() => {
         // open all field options drawers
@@ -118,6 +111,32 @@ describe("CollectionFormSchema", () => {
       xit("displays the field render method");
     });
 
-    xdescribe("Add Field Row");
+    describe("Option Button", () => {
+      it("expands the field options drawer", () => {
+        testCollection.fields.forEach((field, i) => {
+          const element = fields.at(i);
+          element.find('button.pt-icon-more').simulate('click');
+
+          const showFieldOptions = testCollection.fields.map(_.stubFalse);
+          showFieldOptions[i] = true;
+
+          expect(formSchema.state('showFieldOptions')).toEqual(showFieldOptions);
+        });
+      });
+    });
+  });
+
+  describe("Add Field Row", () => {
+    it("displays a button to add a field", () => {
+      const addFieldButton = addFieldRow.find('button');
+      assert(addFieldButton.exists());
+      expect(addFieldButton.text()).toBe('Add Field');
+    });
+
+    it("adds an empty field to the schema when clicked", () => {
+      const { fields } = formSchema.prop('collection');
+      addFieldRow.find('button').simulate('click');
+      expect(formSchema.prop('handleChange')).toHaveBeenCalledWith(fields.length);
+    });
   });
 });

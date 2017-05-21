@@ -47,6 +47,18 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
     };
   }
 
+  componentDidUpdate(prevProps: IProps) {
+    if (prevProps.collection.fields.length < this.props.collection.fields.length) {
+      // only show field options of the newly-created field
+      this.setState({
+        showFieldOptions: _(this.props.collection.fields)
+          .map((field, i) => !i)
+          .reverse()
+          .value()
+      });
+    }
+  }
+
   toggleEditingFields() {
     this._toggle('editingFields');
   }
@@ -71,16 +83,8 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
   }
 
   addField() {
-    const { collection } = this.props;
-    collection.fields.push(new Field());
-    this.props.handleChange(collection.fields.length);
-    this.setState({
-      // only show field options of the newly-created field
-      showFieldOptions: _(collection.fields)
-        .map((field, i) => !i)
-        .reverse()
-        .value()
-    });
+    const { fields } = this.props.collection;
+    this.props.handleChange(fields.length);
   }
 
   removeField(index: number) {
@@ -116,7 +120,7 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
                 />
                 <div className="option-button">
                   {editingFields
-                    ? <RemoveFieldButton disabled={collection.fields.length === 1} onClick={this.removeField} />
+                    ? <RemoveFieldButton disabled={collection.fields.length === 1} onClick={() => this.removeField(index)} />
                     : <DetailsButton onClick={() => this.toggleFieldOptions(index)} />}
                 </div>
               </FlexRow>
