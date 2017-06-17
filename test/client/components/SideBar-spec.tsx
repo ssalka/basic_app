@@ -1,11 +1,12 @@
 import { mount } from 'enzyme';
 import { SideBar } from 'lib/client/components';
+import { ILink } from 'lib/client/interfaces';
 
 describe("SideBar", () => {
 
   let $;
   let sidebar;
-  const links = [
+  const links: ILink[] = [
     { name: 'Home', path: '/home', icon: 'home' },
     { name: 'Collections', path: '/collections', icon: 'graph' }
   ];

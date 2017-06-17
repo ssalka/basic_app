@@ -1,14 +1,15 @@
-import assert from 'assert';
+import * as assert from 'assert';
 import { setup, cleanup } from 'test/utils';
 import { Collection } from 'lib/server/models';
 import { MockCollection } from 'lib/server/models/mocks';
 import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
+import { Collection as ICollection } from 'lib/client/interfaces';
 
 describe("Collection", () => {
-  let collections;
+  let collections: ICollection[];
 
-  const fieldTypes = _.map(FIELD_TYPES.STANDARD, 'key');
-  const renderMethods = _.map(RENDER_METHODS, 'key');
+  const fieldTypes: string[] = _.map(FIELD_TYPES.STANDARD, 'key');
+  const renderMethods: string[] = _.map(RENDER_METHODS, 'key');
 
   const testCollection = new MockCollection({
     name: 'Test Collection'

@@ -1,4 +1,4 @@
-import assert from 'assert';
+import * as assert from 'assert';
 import { mount } from 'enzyme';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
