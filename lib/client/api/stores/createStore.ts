@@ -27,9 +27,13 @@ export default (config, methods) => {
     },
     storeDidUpdate(prevState) {
       if (logUpdates) {
-        console.info(`${name} store was updated:`, _.pickBy(
+        const updates = _.pickBy(
           this.state, (val, key) => !_.isEqual(val, prevState[key])
-        ));
+        );
+
+        if (_.isEmpty(updates)) return;
+
+        console.info(`${name} store was updated:`, updates);
       }
     }
   });

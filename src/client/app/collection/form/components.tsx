@@ -1,9 +1,10 @@
 declare const _;
 declare const React;
 
-import { Field, IRenderMethod, ReactElement, SFC } from 'lib/client/interfaces';
 import { EditableText, Checkbox } from '@blueprintjs/core';
+import { connect, CollectionStore } from 'lib/client/api/stores';
 import { Button, FlexRow, FlexColumn, Popover, TypeSelect, ViewSelect } from 'lib/client/components';
+import { Collection, Field, IRenderMethod, ReactElement, SFC } from 'lib/client/interfaces';
 import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
 
 export const CollectionNameInput: SFC = ({ name, handleChange }) => (
@@ -50,30 +51,21 @@ export const FieldNameInput: SFC = ({ name, onChange }) => (
   />
 );
 
-export const TypeSelectPopover: SFC = ({ onChange, onToggle, value }) => {
-  const selectedType = _.find(
-    FIELD_TYPES.STANDARD,
-    { key: value }
-  );
-  const SelectTypeButton: ReactElement = (
-    <Button
-      text={selectedType.name || 'Select Type'}
-      onClick={onToggle}
-    />
-  );
+export const TypeSelectPopover: SFC = ({ onChange, selectedType }) => {
+  const buttonText = selectedType.name || 'Select Type';
 
   return (
     <Popover
       className="popover-type-select"
-      target={SelectTypeButton}
+      target={<Button text={buttonText} />}
     >
       <TypeSelect
-        selectedType={selectedType.key}
+        selectedType={selectedType.key || selectedType._id}
         onSelectType={onChange}
       />
     </Popover>
   );
-}
+};
 
 export const DetailsButton: SFC = ({ onClick }) => (
   <Button

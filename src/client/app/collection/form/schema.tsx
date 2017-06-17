@@ -5,6 +5,7 @@ import { EditableText } from '@blueprintjs/core';
 import { ViewComponent, Button, FlexRow, FlexColumn } from 'lib/client/components';
 import { Field, Collection } from 'lib/client/interfaces/collection';
 import { ReactElement, ReactProps, SFC, IComponentModule, IFunctionModule } from 'lib/client/interfaces/react';
+import { findFieldType, findDocumentById } from 'lib/common/helpers';
 import {
   DetailsButton,
   RemoveFieldButton,
@@ -19,6 +20,7 @@ type FieldOptionsEnum = 'required' | 'isArray' | 'renderMethod';
 
 interface IProps extends ReactProps {
   collection: Partial<Collection>;
+  collections: Collection[];
   handleChange(index: number, updates?: Partial<Field> | null): void;
 }
 
@@ -32,7 +34,8 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
     collection: new Collection({
       _id: null,
       fields: [new Field()]
-    })
+    }),
+    collections: []
   };
 
   constructor(props: Partial<IProps>) {
@@ -95,7 +98,7 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
 
   public render() {
     const {
-      props: { collection },
+      props: { collection, collections },
       state: { editingFields, showFieldOptions }
     } = this;
 
@@ -115,8 +118,9 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
                   onChange={newName => this.updateFieldName(index, newName)}
                 />
                 <TypeSelectPopover
+                  collections={collections}
                   onChange={newType => this.updateFieldType(index, newType)}
-                  value={field.type}
+                  selectedType={findFieldType(field.type) || findDocumentById(collections, field.type)}
                 />
                 <div className="option-button">
                   {editingFields

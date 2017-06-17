@@ -91,7 +91,7 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
   }
 
   public render() {
-    const { collection } = this.state;
+    const { collection, collections } = this.state;
 
     return (
       <ViewComponent>
@@ -104,6 +104,7 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
 
             <CollectionFormSchema
               collection={collection}
+              collections={collections}
               handleChange={this.updateFieldInCollection}
             />
 
@@ -119,6 +120,6 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
 }
 
 export default _.flow([
-  mutation(CollectionFormMutation, mutationSettings),
-  connect(CollectionStore)
+  connect(CollectionStore),
+  mutation(CollectionFormMutation, mutationSettings)
 ])(CollectionForm);

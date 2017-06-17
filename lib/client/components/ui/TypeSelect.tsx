@@ -48,21 +48,19 @@ class TypeSelect extends ViewComponent<IProps, IState> {
   }
 
   private getNodes(collections: Collection[], selectedType: string): ITreeNode[] {
-    const [standardTypes, collectionTypes]: ITreeNode[] = [
-      this.state.nodes[0],
-      _.assign({}, this.state.nodes[1], {
-        childNodes: collections.map(
-          ({ _id, name, icon }: Collection): ITreeNode => ({
-            id: _id,
-            iconName: icon,
-            label: name,
-            isSelected: _id === selectedType
-          })
-        )
+    const childNodes: ITreeNode[] = collections.map(
+      ({ _id, name, icon }) => ({
+        id: _id,
+        iconName: icon,
+        label: name,
+        isSelected: _id === selectedType
       })
-    ];
+    );
 
-    return [standardTypes, collectionTypes];
+    const nodes = this.state.nodes.slice();
+    _.assign(nodes[1], { childNodes });
+
+    return nodes;
   }
 
   private handleNodeClick(nodeData: ITreeNode) {
@@ -91,7 +89,6 @@ class TypeSelect extends ViewComponent<IProps, IState> {
   }
 
   public render() {
-    console.log(this.state.collections);
     const typeCategories: ITreeNode[] = this.getNodes(this.state.collections, this.props.selectedType);
 
     return (
