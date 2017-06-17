@@ -1,6 +1,7 @@
-const _ = require('lodash');
-const { ModelGen, types: { Mixed } } = require('lib/server/utils');
-const MockCollection = require('lib/server/models/mocks/collection');
+import _ from 'lodash';
+import * as utils from 'lib/server/utils';
+import MockCollection = require('lib/server/models/mocks/collection');
+const { ModelGen, types: { Mixed } } = utils;
 
 describe("ModelGen", () => {
   const name = 'TestModel';
@@ -18,7 +19,7 @@ describe("ModelGen", () => {
         }
       },
       statics: {
-        findByField(field) {
+        findByField(field: any) {
           return this.findOne({ field });
         }
       }

@@ -1,14 +1,32 @@
-import async from 'async';
+import * as async from 'async';
 import { setup, cleanup } from 'test/utils';
+import { Collection as ICollection, User as IUser, Field } from 'lib/client/interfaces';
 import { Collection } from 'lib/server/models';
 import { MockCollection } from 'lib/server/models/mocks';
-import getResolvers from 'lib/server/graphql/resolvers';
+import getResolvers = require('lib/server/graphql/resolvers');
 import { ModelGen } from 'lib/server/utils';
 
+interface ResolverContext {
+  user?: IUser;
+}
+
+type Resolver = (root: any, query: Record<string, any>, context: ResolverContext) => Promise<IUser>;
+
+type ResolverMap = Record<string, Resolver>;
+
+interface Resolvers {
+  Query: ResolverMap;
+  Mutation: ResolverMap;
+}
+
 describe("GraphQL Resolvers", () => {
-  let collection;
-  let resolvers, collections;
-  let Query, Mutation, User, _Collection;
+  let collection: ICollection;
+  let resolvers: Resolvers;
+  let collections: ICollection[];
+  let Query: ResolverMap;
+  let Mutation: ResolverMap;
+  let User: ResolverMap;
+  let _Collection: ResolverMaps;
 
   beforeAll(done => setup({
     mocks: {
@@ -67,10 +85,13 @@ describe("GraphQL Resolvers", () => {
     });
 
     describe("upsert_testUser_testcollection", () => {
-      let Model, existingDocument;
-      let fieldName, newValue, partialDocument;
+      let Model; // TODO: get Mongoose types
+      let existingDocument: Record<string, any>;
+      let fieldName: string;
+      let newValue: any;
+      let partialDocument: Record<string, any>;
 
-      const getNewValue = _.partial(_.get, {
+      const getNewValue: (type: string) => any = _.partial(_.get, {
         BOOLEAN: true,
         STRING: 'new string value',
         NUMBER: _.random(0, 50000),
@@ -78,7 +99,7 @@ describe("GraphQL Resolvers", () => {
       });
 
       beforeEach(done => {
-        const { name, type } = _.sample(collection.fields);
+        const { name, type }: Field = _.sample(collection.fields);
         fieldName = _.camelCase(name);
         newValue = getNewValue(type);
         partialDocument = {
