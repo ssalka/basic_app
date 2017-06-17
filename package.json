@@ -4,7 +4,7 @@
   "description": "Basic App",
   "scripts": {
     "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",
-    "lint": "tslint --type-check 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}'",
+    "lint": "tslint --type-check 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}'",
     "start": "NODE_PATH=. node index.js",
     "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --forceExit --noStackTrace"
   },

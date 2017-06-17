@@ -1,4 +1,4 @@
-import assert from 'assert';
+import * as assert from 'assert';
 import { RenderingService } from 'lib/client/services';
 import { Field } from 'lib/client/interfaces';
 import { BaseComponent } from 'lib/client/components';
@@ -11,7 +11,7 @@ describe("Rendering Service", () => {
     it("returns true if a field value is well-defined", () => {
       // NOTE: well-defined ~== truthy || 0 (or if an array, recursively evaluates each element)
 
-      const nonemptyValues = [
+      const nonemptyValues: any[] = [
         'Truthy string',
         0,
         new Date(),
@@ -60,8 +60,8 @@ describe("Rendering Service", () => {
         children: document.target
       });
 
-      const Component = () => RenderingService.renderField(document, field, props);
-      const renderedField = shallow(<Component />);
+      const Component: SFC = () => RenderingService.renderField(document, field, props);
+      const renderedField = shallow(<Component></Component>);
 
       expect(_.first(renderedField.nodes).props).toEqual(expectedProps);
 

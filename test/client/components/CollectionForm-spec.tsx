@@ -1,9 +1,9 @@
-import assert from 'assert';
+import * as assert from 'assert';
 import { mount } from 'enzyme';
+import { Collection, Field } from 'lib/client/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
 import { CollectionForm } from 'src/client/app/collection/form';
-
 
 describe("CollectionForm", () => {
   const testCollection = new MockCollection({ _id: true });
@@ -35,7 +35,7 @@ describe("CollectionForm", () => {
 
   describe("#updateCollection", () => {
     it("updates top-level properties of the collection", () => {
-      const updates = {
+      const updates: Partial<Collection> = {
         name: 'Something Else',
         icon: 'graph'
       };
@@ -47,7 +47,7 @@ describe("CollectionForm", () => {
   });
 
   describe("#updateFieldInCollection", () => {
-    let fields;
+    let fields: Field[];
 
     beforeEach(() => fields = collectionForm.state('collection').fields.slice());
 
