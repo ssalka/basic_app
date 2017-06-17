@@ -1,0 +1,15 @@
+machine:
+  node:
+    version: 6.9.1
+  npm:
+    version: 3.10.8
+
+dependencies:
+  override:
+    - npm install -g jest@19.0.2 tslint@4.5.1
+    - npm install
+
+test:
+  override:
+    - npm run lint
+    - npm test
