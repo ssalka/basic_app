@@ -1,3 +1,4 @@
+declare const _;
 import { createStore } from 'cartiv';
 import api from '../';
 
@@ -29,7 +30,8 @@ export default createStore({
 
       if (collectionIndex === -1) {
         user.library.collections.push(updates);
-      } else {
+      }
+      else {
         user.library.collections[collectionIndex] = updates;
         this.setState({ user });
       }

@@ -5,7 +5,6 @@ import { browserHistory } from 'react-router';
 import api from 'lib/client/api';
 import { ViewComponent, FlexRow, FlexColumn, Button, TextInput, NumericInput } from 'lib/client/components';
 import { Collection, Field, ReactElement, IDocument, IRouteProps } from 'lib/client/interfaces';
-import { getGraphQLCollectionType } from 'lib/common/graphql';
 import './styles.less';
 
 interface IProps extends IRouteProps {
@@ -69,7 +68,7 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     super(props);
     this.state = {
       document: _.get(props, 'location.state.document', {}),
-      store: api[getGraphQLCollectionType(props.collection)]
+      store: api[props.collection.typeFormats.graphql]
     };
   }
 

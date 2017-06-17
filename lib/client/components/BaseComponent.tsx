@@ -8,6 +8,10 @@ export default class BaseComponent<P, S> extends Component<P, S> {
     autoBind(this);
   }
 
+  public bindModule(module: object): any {
+    return _.mapValues(module, (item: any) => item.bind(this));
+  }
+
   public setStateByPath(path, value) {
     const state = _.cloneDeep(this.state);
     _.set(state, path, value);

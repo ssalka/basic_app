@@ -4,20 +4,33 @@ import { InputGroup, IInputGroupProps } from '@blueprintjs/core';
 import { Link } from 'react-router';
 
 import api from 'lib/client/api';
-import { connect, UserStore } from 'lib/client/api/stores';
+import { connect, CollectionStore, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, Button } from 'lib/client/components';
+import { IQueryProps, IRouteProps } from 'lib/client/interfaces';
 import './styles.less';
 
-const { User } = api;
+const { Collection, User } = api;
 
+interface IProps extends IRouteProps, Partial<IQueryProps> {}
+
+interface IState {
+  register: boolean;
+  formData: {
+    username: string;
+    password: string;
+    email: string;
+  };
+}
+
+@connect(CollectionStore)
 @connect(UserStore)
-class Login extends ViewComponent<any, any> {
+class Login extends ViewComponent<IProps, IState> {
   public static contextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   };
 
-  public state = {
+  public state: IState = {
     register: false,
     formData: {
       username: '',
@@ -64,6 +77,7 @@ class Login extends ViewComponent<any, any> {
     this.props.refetch().then(({ data: {user} }) => {
       if (user) {
         User.set(user);
+        Collection.add(user.library.collections);
       }
       this.props.history.push('/home');
     });

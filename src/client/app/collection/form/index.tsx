@@ -2,14 +2,17 @@ declare const _;
 declare const React;
 
 import { browserHistory } from 'react-router';
+import api from 'lib/client/api';
 import { mutation } from 'lib/client/api/graphql';
-import { SchemaFormMutation } from 'lib/client/api/graphql/mutations';
-import { ViewComponent, Button, FlexRow, FlexColumn, IconSelector } from 'lib/client/components';
-import { IMutationSettings, ReactElement, Field, Collection } from 'lib/client/interfaces';
+import { connect, CollectionStore } from 'lib/client/api/stores';
+import { CollectionFormMutation } from 'lib/client/api/graphql/mutations';
+import { ViewComponent, Button, FlexRow } from 'lib/client/components';
+import { IMutationSettings, Field, Collection } from 'lib/client/interfaces';
+import { ReactProps, IRouteProps, IFunctionModule } from 'lib/client/interfaces/react';
 import { READONLY_FIELDS } from 'lib/common/constants';
+import CollectionFormHeader from './header';
+import CollectionFormSchema from './schema';
 import './styles.less';
-import * as handlers from './handlers';
-import * as components from './components';
 
 const mutationSettings: IMutationSettings = {
   getVariables: (collection: Collection) => _(collection)
@@ -23,21 +26,18 @@ const mutationSettings: IMutationSettings = {
   variables: {}
 };
 
-type IProps = React.Props<any> & {
+interface IProps extends ReactProps, IRouteProps {
   collection: Partial<Collection>;
-};
+  upsertCollection?: (collection: Partial<Collection>) => Promise<Collection>;
+}
 
 interface IState {
   collection: Partial<Collection>;
-  editingFields: boolean;
-  selectingIcon: boolean;
-  selectingType: boolean[];
-  selectingView: boolean[];
-  showFieldOptions: boolean[];
+  collections?: Collection[];
 }
 
-export class SchemaForm extends ViewComponent<IProps, IState> {
-  public static defaultProps: IProps = {
+export class CollectionForm extends ViewComponent<IProps, IState> {
+  public static defaultProps: Partial<IProps> = {
     collection: new Collection({
       _id: null,
       name: '',
@@ -47,117 +47,69 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
     })
   };
 
-  private handlers = _.mapValues(
-    handlers,
-    (handler: () => void) => handler.bind(this)
-  );
-
-  private components = _.mapValues(
-    components,
-    (handler: () => void) => handler.bind(this)
-  );
-
   constructor(props: Partial<IProps>) {
     super(props);
-    const { collection } = props;
+    const collection = new Collection(props.collection);
 
     this.state = {
-      collection: new Collection(collection),
-      editingFields: false,
-      selectingIcon: false,
-      selectingType: collection._id
-        ? collection.fields.map(() => false)
-        : [false],
-      selectingView: collection._id
-        ? collection.fields.map(() => false)
-        : [false],
-      showFieldOptions: collection._id
-        ? collection.fields.map(() => false)
-        : [true]
+      collection,
+      collections: _.reject([collection], _.isEmpty),
     };
   }
 
-  public render() {
-    const {
-      handlers: {
-        submitForm,
-        toggleIconPopover,
-        toggleFieldOptions,
-        selectIcon
-      },
-      state: {
-        collection,
-        editingFields,
-        selectingIcon,
-        selectingType,
-        showFieldOptions
-      },
-      components: {
-        CollectionNameInput,
-        DescriptionTextarea,
-        FieldNameInput,
-        TypeSelectPopover,
-        ToggleEditButton,
-        DetailsButton,
-        AddFieldButton,
-        RemoveFieldButton,
-        FieldOptions
-      }
-    } = this;
+  updateCollection(updates: Partial<Collection>) {
+    const collection = _.assign({}, this.state.collection, updates);
+    this.setState({ collection });
+  }
 
-    const onlyOneField: boolean = collection.fields.length === 1;
-    const OptionButton = (props: any): ReactElement => (
-      <div className="option-button">
-        {editingFields
-          ? <RemoveFieldButton disabled={onlyOneField} {...props} />
-          : <DetailsButton {...props} />}
-      </div>
-    );
+  updateFieldInCollection(index: number, updates?: Partial<Field> | null) {
+    const { fields } = this.state.collection;
+
+    if (index === fields.length) {
+      // add new field
+      fields.push(new Field());
+      this.updateCollection({ fields });
+    }
+    else if (_.isNull(updates)) {
+      // remove a field
+      fields.splice(index, 1);
+      this.updateCollection({ fields });
+    }
+
+    const field = _.assign({}, fields[index], updates);
+    this.setStateByPath(`collection.fields[${index}]`, field);
+  }
+
+  submitForm(event) {
+    const { collection } = this.props;
+    event.preventDefault();
+
+    this.props.upsertCollection(collection)
+      .then(_.property('data.collection'))
+      .then((coll: Collection) => api.User.updateLibrary(coll) || coll)
+      .then((coll: Collection) => this.props.history.push(coll.path));
+  }
+
+  public render() {
+    const { collection, collections } = this.state;
 
     return (
       <ViewComponent>
         <div className="form-popover pt-card pt-elevation-3">
-          <form name="schema-form" onSubmit={submitForm}>
-            <div className="header">
-              <FlexRow>
-                <CollectionNameInput value={name} />
-                <IconSelector
-                  selectedIcon={collection.icon}
-                  onSelectIcon={selectIcon}
-                  onClick={toggleIconPopover}
-                  isOpen={selectingIcon}
-                />
-              </FlexRow>
-              <DescriptionTextarea description={collection.description} />
-            </div>
-            <div className="form-main">
-              <FlexRow className="subheader" alignItems="center">
-                <h5>Schema</h5>
-                <ToggleEditButton />
-              </FlexRow>
+          <form name="schema-form" onSubmit={this.submitForm}>
+            <CollectionFormHeader
+              collection={collection}
+              handleChange={this.updateCollection}
+            />
 
-              <div className="fields">
-                {collection.fields.map(({name, type}: Field, index: number): ReactElement => (
-                  <FlexColumn key={index} className="field">
-                    <FlexRow className="field-main">
-                      <FieldNameInput index={index} name={name} />
-                      <TypeSelectPopover
-                        index={index}
-                        value={type}
-                        isOpen={selectingType[index]}
-                      />
-                      <OptionButton index={index} />
-                    </FlexRow>
-                    {showFieldOptions[index] && !editingFields && <FieldOptions index={index} />}
-                  </FlexColumn>
-                ))}
-              </div>
-            </div>
-
-            {!editingFields && <AddFieldButton />}
+            <CollectionFormSchema
+              collection={collection}
+              collections={collections}
+              handleChange={this.updateFieldInCollection}
+            />
 
             <FlexRow className="action-buttons fill-width">
-              <Button text="Save" type="submit" size="large" color="success" onClick={submitForm} />
+              <Button text="Save" type="submit" size="large" color="success" onClick={this.submitForm} />
               <Button text="Cancel" size="large" color="danger" onClick={browserHistory.goBack} />
             </FlexRow>
           </form>
@@ -167,4 +119,7 @@ export class SchemaForm extends ViewComponent<IProps, IState> {
   }
 }
 
-export default mutation(SchemaFormMutation, mutationSettings)(SchemaForm);
+export default _.flow([
+  connect(CollectionStore),
+  mutation(CollectionFormMutation, mutationSettings)
+])(CollectionForm);

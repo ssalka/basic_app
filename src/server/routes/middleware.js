@@ -112,15 +112,8 @@ module.exports = {
 
   graphiql: graphiqlExpress({ endpointURL: '/graphql' }),
 
-  schema(_, res) {
-    res.set(
-      'Content-Type',
-      'text/plain'
-    );
-    flow(
-      res.send,
-      printSchema,
-      getGraphQLSchema
-    )(req.body);
+  schema(req, res) {
+    res.set('Content-Type', 'text/plain');
+    res.send(flow(getGraphQLSchema, printSchema)(req.body));
   }
 };

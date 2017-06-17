@@ -1,5 +1,12 @@
+declare const _;
 import { createStore } from 'cartiv';
 import api from '../';
+
+interface IStoreConfig {
+  api: typeof api;
+  name: string;
+  actions: string[];
+}
 
 const defaultConfig = {
   initialState: {},
@@ -8,7 +15,7 @@ const defaultConfig = {
 
 export default (config, methods) => {
   const { name, initialState, logUpdates } = _.defaults(config, defaultConfig);
-  const storeConfig = {
+  const storeConfig: IStoreConfig = {
     api, name,
     actions: _.keys(methods)
   };
@@ -20,9 +27,13 @@ export default (config, methods) => {
     },
     storeDidUpdate(prevState) {
       if (logUpdates) {
-        console.info(`${name} store was updated:`, _.pickBy(
+        const updates = _.pickBy(
           this.state, (val, key) => !_.isEqual(val, prevState[key])
-        ));
+        );
+
+        if (_.isEmpty(updates)) return;
+
+        console.info(`${name} store was updated:`, updates);
       }
     }
   });

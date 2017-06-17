@@ -31,6 +31,9 @@ export class Collection {
   public path: string;
   public defaultView?: any;
   public views: any[];
+  public typeFormats: {
+    graphql: string;
+  };
 
   constructor(collection: Partial<Collection> = {}) {
     _.extend(this, collection);

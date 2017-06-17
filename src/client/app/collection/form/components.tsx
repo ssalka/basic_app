@@ -1,158 +1,95 @@
 declare const _;
 declare const React;
 
-import { Field, IRenderMethod, ReactElement } from 'lib/client/interfaces';
 import { EditableText, Checkbox } from '@blueprintjs/core';
+import { connect, CollectionStore } from 'lib/client/api/stores';
 import { Button, FlexRow, FlexColumn, Popover, TypeSelect, ViewSelect } from 'lib/client/components';
+import { Collection, Field, IRenderMethod, ReactElement, SFC } from 'lib/client/interfaces';
 import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
 
-export function CollectionNameInput({ value }) {
-  const {
-    state: { collection },
-    handlers: { changeCollectionName }
-  } = this;
-
-  return (
-    <h3>
-      <EditableText
-        value={collection.name}
-        placeholder="New Collection"
-        onChange={changeCollectionName}
-      />
-    </h3>
-  );
-}
-
-export function DescriptionTextarea({ description }) {
-  const handleChange = (value: string) => this.setStateByPath(
-    'collection.description', value
-  );
-
-  return (
+export const CollectionNameInput: SFC = ({ name, handleChange }) => (
+  <h3>
     <EditableText
-      className="description"
-      multiline={true}
-      minLines={2}
-      maxLines={4}
-      value={description}
-      placeholder="Description"
-      onChange={handleChange}
-    />
-  );
-}
-export function FieldNameInput({ index, name }) {
-  const handleChange = (value: string) => this.setStateByPath(
-    `collection.fields[${index}].name`, value
-  );
-
-  return (
-    <EditableText
-      placeholder="New Field"
       value={name}
+      placeholder="New Collection"
       onChange={handleChange}
     />
-  );
-}
+  </h3>
+);
 
-export function TypeSelectPopover({ index, value, isOpen }) {
-  const { selectType, toggleTypePopover } = this.handlers;
-  const handleClick = () => toggleTypePopover(index);
-  const handleSelectType = (type: string) => selectType(type, index);
-  const selectedType = _.find(
-    FIELD_TYPES.STANDARD,
-    { key: value }
-  );
-  const SelectTypeButton: ReactElement = (
-    <Button
-      text={selectedType.name || 'Select Type'}
-      onClick={handleClick}
-    />
-  );
+export const DescriptionTextarea: SFC = ({ description, handleChange }) => (
+  <EditableText
+    className="description"
+    multiline={true}
+    minLines={2}
+    maxLines={4}
+    value={description}
+    placeholder="Description"
+    onChange={handleChange}
+  />
+);
 
-  return (
-    <Popover
-      isOpen={isOpen}
-      className="popover-type-select"
-      target={SelectTypeButton}
-    >
-      <TypeSelect
-        selectedType={selectedType.key}
-        onSelectType={handleSelectType}
-      />
-    </Popover>
-  );
-}
-
-export function ToggleEditButton() {
-  const { editFormFields } = this.handlers;
-  const props = this.state.editingFields
+export const ToggleEditButton: SFC = ({ editingFields, onClick }) => {
+  const props = editingFields
     ? { icon: 'tick', color: 'success' }
     : { icon: 'edit', color: 'warning' };
 
   return (
     <Button
       minimal={true}
-      onClick={editFormFields}
+      onClick={onClick}
       {...props}
     />
   );
-}
+};
 
-export function AddFieldButton() {
-  const { addField } = this.handlers;
+export const FieldNameInput: SFC = ({ name, onChange }) => (
+  <EditableText
+    placeholder="New Field"
+    value={name}
+    onChange={onChange}
+  />
+);
+
+export const TypeSelectPopover: SFC = ({ onChange, selectedType }) => {
+  const buttonText = selectedType.name || 'Select Type';
 
   return (
-    <FlexRow className="minimal-row">
-      <Button
-        onClick={addField}
-        text="Add Field"
-        icon="add"
-        minimal={true}
-        size="small"
+    <Popover
+      className="popover-type-select"
+      target={<Button text={buttonText} />}
+    >
+      <TypeSelect
+        selectedType={selectedType.key || selectedType._id}
+        onSelectType={onChange}
       />
-    </FlexRow>
+    </Popover>
   );
-}
+};
 
-export function DetailsButton({ index }) {
-  const handleClick = () => this.handlers.toggleFieldOptions(index);
+export const DetailsButton: SFC = ({ onClick }) => (
+  <Button
+    icon="more"
+    size="small"
+    color="primary"
+    onClick={onClick}
+  />
+);
 
-  return (
-    <Button
-      icon="more"
-      size="small"
-      color="primary"
-      onClick={handleClick}
-    />
-  );
-}
+export const RemoveFieldButton: SFC = ({ disabled, onClick }) => (
+  <Button
+    icon="minus"
+    size="small"
+    color="danger"
+    onClick={onClick}
+    disabled={disabled}
+  />
+);
 
-export function RemoveFieldButton({ disabled }) {
-  const { removeField } = this.handlers;
-
-  return (
-    <Button
-      icon="minus"
-      size="small"
-      color="danger"
-      onClick={removeField}
-      disabled={disabled}
-    />
-  );
-}
-
-export function FieldOptions({ index, selectingView }) {
-  const {
-    selectView,
-    toggleRequired,
-    toggleIsArray,
-    toggleViewPopover
-  } = this.handlers;
-  const field: Field = this.state.collection.fields[index];
-  const handleCheckRequired = () => toggleRequired(index);
-  const handleCheckIsArray = () => toggleIsArray(index);
-  const handleTogglePopover = () => toggleViewPopover(index);
-  const handleSelectView = (renderMethod: IRenderMethod) => selectView(renderMethod, index);
+export const FieldOptions: SFC = ({ index, field, onChange, onTogglePopover }: any) => {
+  const handleCheckRequired = () => onChange(index, { required: !field.required });
+  const handleCheckIsArray = () => onChange(index, { isArray: !field.isArray });
+  const handleSelectView = (renderMethod: IRenderMethod) => onChange(index, { renderMethod: renderMethod.key });
   const renderMethod: IRenderMethod = _.find(RENDER_METHODS, { key: field.renderMethod }) || RENDER_METHODS[0];
 
   return (
@@ -162,9 +99,8 @@ export function FieldOptions({ index, selectingView }) {
         <FlexColumn justifyContent="space-around">
           <ViewSelectPopover
             field={field}
-            isOpen={selectingView}
             handleSelectView={handleSelectView}
-            handleTogglePopover={handleTogglePopover}
+            handleTogglePopover={onTogglePopover}
           />
         </FlexColumn>
         <div>
@@ -180,21 +116,20 @@ export function FieldOptions({ index, selectingView }) {
   );
 }
 
-function ViewSelectPopover({ field, isOpen, handleSelectView, handleTogglePopover }) {
+const ViewSelectPopover: SFC = ({ field, handleSelectView, handleTogglePopover }) => {
   const selectedView: IRenderMethod | undefined = _.find(RENDER_METHODS, { key: field.renderMethod });
   const isValidRenderMethod = (renderMethod: IRenderMethod): boolean => (
     _.includes([field.type, 'MIXED'], renderMethod.inputType)
   );
   const SelectViewButton: ReactElement = (
     <Button
-      text={_.get(selectedView, 'name', 'Select Type')}
+      text={_.get(selectedView, 'name', 'Select View')}
       onClick={handleTogglePopover}
     />
   );
 
   return (
     <Popover
-      isOpen={isOpen}
       className="popover-view-select"
       target={SelectViewButton}
     >
@@ -205,4 +140,16 @@ function ViewSelectPopover({ field, isOpen, handleSelectView, handleTogglePopove
       />
     </Popover>
   );
-}
+};
+
+export const AddFieldButton: SFC = ({ onClick }) => (
+  <FlexRow className="minimal-row">
+    <Button
+      onClick={onClick}
+      text="Add Field"
+      icon="add"
+      minimal={true}
+      size="small"
+    />
+  </FlexRow>
+);

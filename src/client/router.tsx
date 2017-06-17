@@ -7,27 +7,27 @@ import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import common = require('lib/common');
-import { getGraphQLCollectionType } from 'lib/common/graphql';
 import Splash from './splash';
 import Login from './login';
 import App, { Home, Collections } from './app';
 import CollectionView from './app/collection';
-import SchemaForm from './app/collection/form';
+import CollectionForm from './app/collection/form';
 import DocumentView from './app/document';
 import DocumentForm from './app/document/form';
 import {
-  Collection,
+  Collection as ICollection,
   IComponentModule,
   IContext,
   IDocument,
   IQueryProps,
+  IRouteProps,
   IUser,
   ReactElement
 } from 'lib/client/interfaces';
 import './styles.less';
 
 const { request, logger } = common as any;
-const { User } = api;
+const { User, Collection } = api;
 
 interface IProps extends Partial<IQueryProps> {
   user?: IUser;
@@ -42,9 +42,9 @@ class AppRouter extends BaseComponent<IProps, any> {
     user: React.PropTypes.object
   };
 
-  private getCollectionStore = _.memoize((collection: Collection, documents: IDocument[] = []) => (
+  private getCollectionStore = _.memoize((collection: ICollection, documents: IDocument[] = []) => (
     createStore({
-      name: getGraphQLCollectionType(collection),
+      name: collection.typeFormats.graphql,
       logUpdates: true,
       initialState: {
         collection,
@@ -89,6 +89,7 @@ class AppRouter extends BaseComponent<IProps, any> {
     if (this.props.user) {
       context.user = this.props.user;
       User.set(this.props.user);
+      Collection.add(this.props.user.library.collections);
     } else if (_.has(this.state, 'user')) {
       context.user = this.state.user;
     }
@@ -134,9 +135,9 @@ class AppRouter extends BaseComponent<IProps, any> {
     return <DocumentFormWithMutation {...props} />;
   }
 
-  private getSchemaForm({ location: { state }, ...props }) {
+  private getCollectionForm({ location: { state }, ...props }) {
     return (
-      <SchemaForm collection={state.collection} {...props} />
+      <CollectionForm collection={state.collection} {...props} />
     );
   }
 
@@ -175,7 +176,7 @@ class AppRouter extends BaseComponent<IProps, any> {
   public render() {
     const { Site, NotFound } = this.components;
     const collections = _.get(this.props, 'user.library.collections', []);
-    const getLoginPage = (props: React.Props<any>) => (
+    const getLoginPage = (props: IRouteProps) => (
       <Login {...props} refetch={this.props.refetch} />
     );
 
@@ -189,11 +190,11 @@ class AppRouter extends BaseComponent<IProps, any> {
             <Route path="home" component={Home} />
             <Route path="collections">
               <IndexRoute component={Collections} />
-              <Route path="add" component={SchemaForm} />
+              <Route path="add" component={CollectionForm} />
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />
                 <Route path="add" component={this.getDocumentForm} />
-                <Route path="edit" component={this.getSchemaForm} />
+                <Route path="edit" component={this.getCollectionForm} />
                 <Route path=":_id">
                   <IndexRoute component={this.getDocumentView} />
                   <Route path="edit" component={this.getDocumentForm} />
