@@ -15,6 +15,11 @@ const config = {
     filename: 'client.js'
   },
   module: {
+    preLoaders: [{
+      test: /\.tsx?$/,
+      include: clientDirectories,
+      loader: 'tslint-loader'
+    }],
     loaders: [{
       test: /\.tsx?$/,
       include: clientDirectories,
@@ -54,7 +59,11 @@ const config = {
       { from: 'node_modules/@blueprintjs/core/dist/blueprint.css.map' },
       { from: 'node_modules/@blueprintjs/core/resources', to: 'resources' }
     ])
-  ]
+  ],
+  tslint: {
+    formatter: 'stylish',
+    configFile: 'tslint.json'
+  }
 };
 
 if (process.env.NODE_ENV === 'production') {
