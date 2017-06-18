@@ -7,7 +7,7 @@ describe("NavBar", () => {
   }
 
   it("shows the sign-in button if there is no user", () => {
-    const navbar = getNavBar();
+    const navbar: string = getNavBar();
     const button = navbar.find('button');
     expect(button.text()).toBe('Sign In');
   });

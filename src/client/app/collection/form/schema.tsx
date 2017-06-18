@@ -73,22 +73,19 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
     this.setState({ showFieldOptions: visibleFieldOptions });
   }
 
-  updateFieldName(index: number, name: string) {
-    this.props.handleChange(index, { name });
-  }
-
-  updateFieldType(index: number, type: string) {
-    this.props.handleChange(index, { type });
-  }
-
-  updateFieldOptions(index: number, newFieldOptions: Pick<Field, FieldOptionsEnum>) {
-    this.props.handleChange(index, newFieldOptions);
+  getUpdateHandler = (index, key?) => value => {
+    const update = key ? { [key]: value } : value;
+    this.props.handleChange(index, update);
   }
 
   addField() {
     const { fields } = this.props.collection;
     this.props.handleChange(fields.length);
   }
+
+  getRemoveFieldHandler = (index: number) => () => this.removeField(index);
+
+  getToggleOptionsHandler = (index: number) => () => this.toggleFieldOptions(index);
 
   removeField(index: number) {
     if (this.props.collection.fields.length !== 1) {
@@ -115,17 +112,22 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
               <FlexRow className="field-main">
                 <FieldNameInput
                   name={field.name}
-                  onChange={newName => this.updateFieldName(index, newName)}
+                  onChange={this.getUpdateHandler(index, 'name')}
                 />
                 <TypeSelectPopover
                   collections={collections}
-                  onChange={newType => this.updateFieldType(index, newType)}
+                  onChange={this.getUpdateHandler(index, 'type')}
                   selectedType={findFieldType(field.type) || findDocumentById(collections, field.type)}
                 />
                 <div className="option-button">
-                  {editingFields
-                    ? <RemoveFieldButton disabled={collection.fields.length === 1} onClick={() => this.removeField(index)} />
-                    : <DetailsButton onClick={() => this.toggleFieldOptions(index)} />}
+                  {editingFields ? (
+                    <RemoveFieldButton
+                      disabled={collection.fields.length === 1}
+                      onClick={this.getRemoveFieldHandler(index)}
+                    />
+                  ) : (
+                    <DetailsButton onClick={this.getToggleOptionsHandler(index)} />
+                  )}
                 </div>
               </FlexRow>
 
@@ -133,7 +135,7 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
                 <FieldOptions
                   index={index}
                   field={field}
-                  onChange={this.updateFieldOptions}
+                  onChange={this.getUpdateHandler(index)}
                 />
               )}
             </FlexColumn>

@@ -1,11 +1,14 @@
-const _ = require('lodash');
-const middleware = require('src/server/routes/middleware');
-const models = require('lib/server/models');
-const { generateToken } = require('lib/common');
+import * as _ from 'lodash';
+import * as middleware from 'src/server/routes/middleware';
+import * as models from 'lib/server/models';
+import generateToken = require('lib/common/generateToken');
+import { Collection as ICollection, User as IUser } from 'lib/client/interfaces';
 
 describe("middleware", () => {
 
-  let req, res, next;
+  let req: Record<string, any>;
+  let res: Record<string, any>;
+  let next: (err?) => void;
   let Session, User;
 
   beforeEach(() => {
@@ -14,7 +17,7 @@ describe("middleware", () => {
 
   describe("#findUserByToken", () => {
 
-    const user = { username: 'test_user' };
+    const user: Partial<IUser> = { username: 'test_user' };
     const session = { user, token: generateToken() };
 
     beforeEach(() => {
@@ -114,7 +117,7 @@ describe("middleware", () => {
   describe("#startSession", () => {
 
     let session;
-    const user = {
+    const user: Partial<IUser> = {
       _id: 'userId',
       username: 'test_user'
     };
@@ -150,7 +153,7 @@ describe("middleware", () => {
     const session = {
       token: generateToken()
     };
-    const user = {
+    const user: Partial<IUser> = {
       _id: 'userId',
       username: 'test_user'
     };
