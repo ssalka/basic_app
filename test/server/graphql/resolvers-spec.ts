@@ -6,22 +6,22 @@ import { MockCollection } from 'lib/server/models/mocks';
 import getResolvers = require('lib/server/graphql/resolvers');
 import { ModelGen } from 'lib/server/utils';
 
-interface ResolverContext {
+interface IResolverContext {
   user?: IUser;
 }
 
-type Resolver = (root: any, query: Record<string, any>, context: ResolverContext) => Promise<IUser>;
+type Resolver = (root: any, query: Record<string, any>, context: IResolverContext) => Promise<IUser>;
 
 type ResolverMap = Record<string, Resolver>;
 
-interface Resolvers {
+interface IResolvers {
   Query: ResolverMap;
   Mutation: ResolverMap;
 }
 
 describe("GraphQL Resolvers", () => {
   let collection: ICollection;
-  let resolvers: Resolvers;
+  let resolvers: IResolvers;
   let collections: ICollection[];
   let Query: ResolverMap;
   let Mutation: ResolverMap;
@@ -33,7 +33,9 @@ describe("GraphQL Resolvers", () => {
       Collection: [{ name: 'Test Collection' }]
     }
   }, (err, mocks) => {
-    if (err) return done(err);
+    if (err) {
+      return done(err);
+    }
 
     collections = mocks.Collection;
 
@@ -66,7 +68,9 @@ describe("GraphQL Resolvers", () => {
   });
 
   describe("Mutation", () => {
-    let authenticate, upsertCollection, upsert_testUser_testcollection;
+    let authenticate;
+    let upsertCollection;
+    let upsert_testUser_testcollection;
 
     beforeEach(() => ({
       authenticate,
@@ -95,7 +99,7 @@ describe("GraphQL Resolvers", () => {
         BOOLEAN: true,
         STRING: 'new string value',
         NUMBER: _.random(0, 50000),
-        DATETIME: new Date
+        DATETIME: new Date()
       });
 
       beforeEach(done => {

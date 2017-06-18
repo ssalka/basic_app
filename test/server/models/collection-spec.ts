@@ -20,7 +20,9 @@ describe("Collection", () => {
       Collection: [testCollection]
     }
   }, (err, results) => {
-    if (err) return done(err);
+    if (err) {
+      return done(err);
+    }
     collections = results.Collection;
     done();
   }));

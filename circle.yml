@@ -1,0 +1,24 @@
+machine:
+  environment:
+    NODE_ENV: test
+    PATH: "${PATH}:${HOME}/${CIRCLE_PROJECT_REPONAME}/node_modules/.bin"
+  node:
+    version: 6.9.1
+  npm:
+    version: 3.10.8
+
+dependencies:
+  cache_directories:
+    - /opt/circleci/nodejs/v6.9.1/bin
+    - /opt/circleci/nodejs/v6.9.1/lib/node_modules
+    - ~/.cache/yarn
+  pre:
+    - if [ ! -e /opt/circleci/nodejs/v6.9.1/bin/jest ]; then npm install -g jest@19.0.2; fi
+    - if [ ! -e /opt/circleci/nodejs/v6.9.1/bin/tslint ]; then npm install -g tslint@4.5.1; fi
+  override:
+    - yarn
+
+test:
+  override:
+    - yarn run lint
+    - yarn test
