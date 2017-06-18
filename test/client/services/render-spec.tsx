@@ -61,11 +61,11 @@ describe("Rendering Service", () => {
       });
 
       const Component: SFC = () => RenderingService.renderField(document, field, props);
-      const renderedField = shallow(<Component></Component>);
+      const renderedField = shallow(<Component />);
 
       expect(_.first(renderedField.nodes).props).toEqual(expectedProps);
 
       renderedField.simulate('click');
     });
-  })
+  });
 });

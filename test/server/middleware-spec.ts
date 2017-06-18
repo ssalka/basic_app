@@ -5,11 +5,11 @@ import generateToken = require('lib/common/generateToken');
 import { Collection as ICollection, User as IUser } from 'lib/client/interfaces';
 
 describe("middleware", () => {
-
   let req: Record<string, any>;
   let res: Record<string, any>;
   let next: (err?) => void;
-  let Session, User;
+  let Session;
+  let User;
 
   beforeEach(() => {
     req = {}; res = {};
@@ -196,6 +196,7 @@ describe("middleware", () => {
       Session.findByToken = jest.fn(() => ({
         then(cb) {
           cb(session);
+
           return this;
         },
         catch: jest.fn()
@@ -213,6 +214,7 @@ describe("middleware", () => {
       Session.findByToken = jest.fn(() => ({
         then(cb) {
           cb(null);
+
           return this;
         },
         catch: jest.fn()

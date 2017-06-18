@@ -7,7 +7,9 @@ import CollectionFormSchema from 'src/client/app/collection/form/schema';
 describe("CollectionFormSchema", () => {
   const testCollection = new MockCollection({ _id: true });
   const elements = {};
-  let formSchema, addFieldRow, actionButtons;
+  let formSchema;
+  let addFieldRow;
+  let actionButtons;
   let handleChange;
 
   function getCollectionFormSchema() {

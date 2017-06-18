@@ -23,7 +23,10 @@ describe("CollectionFormHeader", () => {
     return { target: { value } };
   }
 
-  let nameElement, descriptionElement, iconElement;
+  let nameElement;
+  let descriptionElement;
+  let iconElement;
+
   beforeEach(() => {
     formHeader = getCollectionFormHeader();
     nameElement = formHeader.find('h3 .pt-editable-text');
