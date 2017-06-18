@@ -2,10 +2,12 @@
   "extends": ["tslint:recommended", "tslint-react"],
   "rules": {
     "array-type": [true, "array"],
+    "arrow-parens": false,
     "arrow-return-shorthand": true,
     "import-spacing": true,
     "jsx-no-multiline-js": false,
     "max-classes-per-file": false,
+    "member-access": false,
     "member-ordering": [true, {
       "order": [
         "static-field",

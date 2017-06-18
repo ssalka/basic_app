@@ -86,10 +86,10 @@ export const RemoveFieldButton: SFC = ({ disabled, onClick }) => (
   />
 );
 
-export const FieldOptions: SFC = ({ index, field, onChange, onTogglePopover }: any) => {
-  const handleCheckRequired = () => onChange(index, { required: !field.required });
-  const handleCheckIsArray = () => onChange(index, { isArray: !field.isArray });
-  const handleSelectView = (renderMethod: IRenderMethod) => onChange(index, { renderMethod: renderMethod.key });
+export const FieldOptions: SFC = ({ field, onChange, onTogglePopover }: any) => {
+  const handleCheckRequired = () => onChange({ required: !field.required });
+  const handleCheckIsArray = () => onChange({ isArray: !field.isArray });
+  const handleSelectView = (renderMethod: IRenderMethod) => onChange({ renderMethod: renderMethod.key });
   const renderMethod: IRenderMethod = _.find(RENDER_METHODS, { key: field.renderMethod }) || RENDER_METHODS[0];
 
   return (
@@ -114,7 +114,7 @@ export const FieldOptions: SFC = ({ index, field, onChange, onTogglePopover }: a
       </FlexRow>
     </FlexColumn>
   );
-}
+};
 
 const ViewSelectPopover: SFC = ({ field, handleSelectView, handleTogglePopover }) => {
   const selectedView: IRenderMethod | undefined = _.find(RENDER_METHODS, { key: field.renderMethod });

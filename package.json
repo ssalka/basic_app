@@ -4,7 +4,7 @@
   "description": "Basic App",
   "scripts": {
     "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",
-    "lint": "tslint --type-check 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}'",
+    "lint": "tslint --type-check 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}' --format stylish",
     "start": "NODE_PATH=. node index.js",
     "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --forceExit --noStackTrace"
   },
@@ -77,6 +77,7 @@
     "ts-jest": "^19.0.2",
     "ts-loader": "^1.3.3",
     "tslint": "^4.5.1",
+    "tslint-loader": "^3.5.3",
     "tslint-react": "^2.5.0",
     "typescript": "^2.2.0",
     "webpack": "^1.13.1",
