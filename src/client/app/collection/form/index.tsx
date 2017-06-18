@@ -28,7 +28,7 @@ const mutationSettings: IMutationSettings = {
 
 interface IProps extends ReactProps, IRouteProps {
   collection: Partial<Collection>;
-  upsertCollection?: (collection: Partial<Collection>) => Promise<Collection>;
+  upsertCollection?(collection: Partial<Collection>): Promise<Collection>;
 }
 
 interface IState {

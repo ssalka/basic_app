@@ -31,9 +31,9 @@ export default (config, methods) => {
           this.state, (val, key) => !_.isEqual(val, prevState[key])
         );
 
-        if (_.isEmpty(updates)) return;
-
-        console.info(`${name} store was updated:`, updates);
+        if (!_.isEmpty(updates)) {
+          console.info(`${name} store was updated:`, updates);
+        }
       }
     }
   });
