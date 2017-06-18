@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import * as utils from 'lib/server/utils';
-import * as MockCollection from 'lib/server/models/mocks/collection';
+import MockCollection = require('lib/server/models/mocks/Collection');
 const { ModelGen, types: { Mixed } } = utils;
 
 describe("ModelGen", () => {
