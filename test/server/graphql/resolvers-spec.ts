@@ -1,3 +1,4 @@
+import * as assert from 'assert';
 import * as async from 'async';
 import { setup, cleanup } from 'test/utils';
 import { Collection as ICollection, User as IUser, Field } from 'lib/client/interfaces';
@@ -34,7 +35,7 @@ describe("GraphQL Resolvers", () => {
     }
   }, (err, mocks) => {
     if (err) {
-      return done(err);
+      assert.ifError(err);
     }
 
     collections = mocks.Collection;
