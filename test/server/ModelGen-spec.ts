@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import * as utils from 'lib/server/utils';
 import MockCollection = require('lib/server/models/mocks/Collection');
-const { ModelGen, types: { ObjectId, Mixed } } = utils;
+const { ModelGen, types: { ObjectId, Mixed, ref } } = utils;
 
 describe("ModelGen", () => {
   const name = 'TestModel';
@@ -47,7 +47,7 @@ describe("ModelGen", () => {
         dateField: { type: Date, required: false },
         booleanField: { type: Boolean, required: false },
         ratingField: { type: Number, required: false },
-        collectionRef: { type: ObjectId, ref: 'CollectionRef' }
+        collectionRef: ref('CollectionRef', false)
       });
     });
   });
