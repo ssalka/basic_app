@@ -2240,6 +2240,10 @@ function.prototype.name@^1.0.0:
     function-bind "^1.1.0"
     is-callable "^1.1.2"
 
+funfix@^3.6.0:
+  version "3.6.0"
+  resolved "https://registry.yarnpkg.com/funfix/-/funfix-3.6.0.tgz#d616bee57fce9cfa7790a020b40770924ae695e7"
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
