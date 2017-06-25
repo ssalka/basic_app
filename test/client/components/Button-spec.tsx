@@ -21,7 +21,7 @@ describe("Button", () => {
       'test-class',
       'icon',
       'pt-icon-blank',
-      'pt-large',
+      'pt-icon-large',
       'rounded',
       'pt-intent-success',
       'pt-minimal'
