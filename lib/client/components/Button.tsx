@@ -49,7 +49,7 @@ function getClassName({
     classNameList.push(`icon pt-icon-${icon}`);
   }
   if (size) {
-    classNameList.push(`pt-${size}`);
+    classNameList.push(`pt-icon-${size}`);
   }
   if (rounded || (icon && !(text || children))) {
     classNameList.push('rounded');
