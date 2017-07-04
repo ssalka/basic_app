@@ -5,7 +5,7 @@ import { EditableText } from '@blueprintjs/core';
 import { ViewComponent, Button, FlexRow, FlexColumn } from 'lib/client/components';
 import { Field, Collection } from 'lib/client/interfaces/collection';
 import { ReactElement, ReactProps, SFC, IComponentModule, IFunctionModule } from 'lib/client/interfaces/react';
-import { findFieldType, findDocumentById } from 'lib/common/helpers';
+import { findFieldType, findCollection } from 'lib/common/helpers';
 import {
   DetailsButton,
   RemoveFieldButton,
@@ -117,7 +117,7 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
                 <TypeSelectPopover
                   collections={collections}
                   onChange={this.getUpdateHandler(index, 'type')}
-                  selectedType={findFieldType(field.type) || findDocumentById(collections, field.type)}
+                  selectedType={findFieldType(field.type) || findCollection(collections, field.type)}
                 />
                 <div className="option-button">
                   {editingFields ? (

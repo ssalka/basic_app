@@ -49,11 +49,11 @@ class TypeSelect extends ViewComponent<IProps, IState> {
 
   private getNodes(collections: Collection[], selectedType: string): ITreeNode[] {
     const childNodes: ITreeNode[] = collections.map(
-      ({ _id, name, icon }) => ({
-        id: _id,
+      ({ _collection, name, icon }) => ({
+        id: _collection,
         iconName: icon,
         label: name,
-        isSelected: _id === selectedType
+        isSelected: _collection === selectedType
       })
     );
 
