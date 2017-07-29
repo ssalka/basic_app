@@ -8,12 +8,13 @@
     "module": "commonjs",
     "noImplicitAny": false,
     "sourceMap": true,
-    "target": "es5"
+    "target": "es5",
+    "types": ["lodash", "react", "react-dom", "react-router"],
+    "lib": ["DOM", "DOM.Iterable", "ScriptHost", "ES2016"]
   },
   "include": [
     "lib/client",
     "lib/common",
-    "src/client",
-    "test"
+    "src/client"
   ]
 }
