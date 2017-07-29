@@ -13,6 +13,7 @@
   "include": [
     "lib/client",
     "lib/common",
-    "src/client"
+    "src/client",
+    "test"
   ]
 }
