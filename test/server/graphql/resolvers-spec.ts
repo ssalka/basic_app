@@ -3,7 +3,7 @@ import * as async from 'async';
 import { setup, cleanup } from 'test/utils';
 import { Collection as ICollection, User as IUser, Field } from 'lib/client/interfaces';
 import { Collection } from 'lib/server/models';
-import { MockCollection } from 'lib/server/models/mocks';
+import { MockCollection, MockUser } from 'lib/server/models/mocks';
 import getResolvers = require('lib/server/graphql/resolvers');
 import { ModelGen } from 'lib/server/utils';
 
@@ -27,11 +27,16 @@ describe("GraphQL Resolvers", () => {
   let Query: ResolverMap;
   let Mutation: ResolverMap;
   let User: ResolverMap;
-  let _Collection: ResolverMaps;
+  let _Collection: ResolverMap;
+
+  let user: IUser;
+  let context: IResolverContext;
 
   beforeAll(done => setup({
     mocks: {
-      Collection: [{ name: 'Test Collection' }]
+      Collection: [{
+        name: 'Test Collection'
+      }]
     }
   }, (err, mocks) => {
     if (err) {
@@ -47,8 +52,11 @@ describe("GraphQL Resolvers", () => {
       Collection: _Collection
     } = getResolvers(collections);
 
-    collection = collections[0];
-    expect(collection).toBeDefined();
+    expect(collections[0]).toBeDefined();
+    collection = _.omit(collections[0], '_collection_unique');
+
+    user = new MockUser({ _id: collection.creator });
+    context = { user };
 
     done();
   }));
@@ -84,8 +92,27 @@ describe("GraphQL Resolvers", () => {
     });
 
     describe("upsertCollection", () => {
-      it("updates an existing collection");
+      let newCollection: ICollection;
+
+      beforeEach(() => newCollection = new MockCollection({ creator: user._id }));
+
+      afterEach(done => Collection.remove({ _id: newCollection._id }, done));
+
+      it("updates an existing collection", done => {
+        const updatedCollection = _.defaults({ name: 'New Collection Name' }, collection);
+
+        Collection.upsert = jest.fn(val => Promise.resolve(val));
+
+        upsertCollection(_, updatedCollection, context)
+          .then(coll => {
+            expect(Collection.upsert).toHaveBeenCalledWith(updatedCollection);
+            done();
+          })
+          .catch(assert.ifError);
+      });
+
       it("creates a new collection if it doesn't already exist");
+
       it("adds a new view document if creating collection");
     });
 
@@ -96,7 +123,7 @@ describe("GraphQL Resolvers", () => {
       let newValue: any;
       let partialDocument: Record<string, any>;
 
-      const getNewValue: (type: string) => any = _.partial(_.get, {
+      const getNewValue: (type: string) => boolean | string | number | Date = _.partial(_.get, {
         BOOLEAN: true,
         STRING: 'new string value',
         NUMBER: _.random(0, 50000),
