@@ -79,12 +79,12 @@ describe("GraphQL Resolvers", () => {
   describe("Mutation", () => {
     let authenticate;
     let upsertCollection;
-    let upsert_testUser_testcollection;
+    let upsert_test_user_testcollection;
 
     beforeEach(() => ({
       authenticate,
       upsertCollection,
-      upsert_testUser_testcollection
+      upsert_test_user_testcollection
     } = Mutation));
 
     describe("authenticate", () => {
@@ -94,14 +94,14 @@ describe("GraphQL Resolvers", () => {
     describe("upsertCollection", () => {
       let newCollection: ICollection;
 
-      beforeEach(() => newCollection = new MockCollection({ creator: user._id }));
+      beforeEach(() => newCollection = new MockCollection());
 
       afterEach(done => Collection.remove({ _id: newCollection._id }, done));
 
       it("updates an existing collection", done => {
         const updatedCollection = _.defaults({ name: 'New Collection Name' }, collection);
 
-        Collection.upsert = jest.fn(val => Promise.resolve(val));
+        Collection.upsert = jest.fn(coll => Promise.resolve(coll));
 
         upsertCollection(_, updatedCollection, context)
           .then(coll => {
@@ -111,12 +111,27 @@ describe("GraphQL Resolvers", () => {
           .catch(assert.ifError);
       });
 
-      it("creates a new collection if it doesn't already exist");
+      it("creates a new collection if one doesn't already exist", () => {
+        const collectionWithoutId = _.omit(collection, '_id');
+        const { username } = user;
+        const collectionName = collection.name.replace(/\s/g, '').toLowerCase();
+        Collection.createWithView = jest.fn((coll, view) => Promise.resolve(coll));
 
-      it("adds a new view document if creating collection");
+        upsertCollection(_, collectionWithoutId, context);
+
+        expect(Collection.createWithView).toHaveBeenCalledWith({
+          ...collectionWithoutId,
+          _db: 'test_collections',
+          _collection: `${username}_${collectionName}`
+        }, {
+          name: collection.name,
+          type: 'TABLE',
+          creator: context.user._id
+        });
+      });
     });
 
-    describe("upsert_testUser_testcollection", () => {
+    describe("upsert_test_user_testcollection", () => {
       let Model; // TODO: get Mongoose types
       let existingDocument: Record<string, any>;
       let fieldName: string;
@@ -148,7 +163,7 @@ describe("GraphQL Resolvers", () => {
       it("updates a document in a user collection", done => {
         partialDocument._id = existingDocument._id;
 
-        upsert_testUser_testcollection(_, partialDocument).then(updatedDocument => {
+        upsert_test_user_testcollection(_, partialDocument).then(updatedDocument => {
           expect(updatedDocument).not.toBeNull();
           expect(updatedDocument[fieldName]).toEqual(newValue);
 
@@ -163,7 +178,7 @@ describe("GraphQL Resolvers", () => {
       it("creates a new document in the collection if no _id is given", done => {
         expect(partialDocument._id).toBeUndefined();
         async.waterfall([
-          cb => upsert_testUser_testcollection(_, partialDocument)
+          cb => upsert_test_user_testcollection(_, partialDocument)
             .then(document => cb(null, document))
             .catch(cb),
           (document, cb) => Model.findById(document._id)
@@ -180,7 +195,7 @@ describe("GraphQL Resolvers", () => {
         const { name: otherField } = _(collection.fields).map('name').sample();
         partialDocument[otherField] = null;
 
-        upsert_testUser_testcollection(_, partialDocument).then(document => {
+        upsert_test_user_testcollection(_, partialDocument).then(document => {
           expect(document[otherField]).not.toBeNull();
           done();
         });
@@ -190,7 +205,7 @@ describe("GraphQL Resolvers", () => {
         partialDocument._id = existingDocument._id;
         partialDocument[fieldName] = null;
 
-        upsert_testUser_testcollection(_, partialDocument).then(document => {
+        upsert_test_user_testcollection(_, partialDocument).then(document => {
           expect(document[fieldName]).toBeUndefined();
           done();
         });
