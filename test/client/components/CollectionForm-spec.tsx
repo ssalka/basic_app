@@ -6,12 +6,12 @@ import { MockCollection } from 'lib/server/models/mocks';
 import { CollectionForm } from 'src/client/app/collection/form';
 
 describe("CollectionForm", () => {
-  const testCollection = new MockCollection({ _id: true });
+  const testCollection = new MockCollection();
   let collectionForm;
-  let elements = {};
+  let elements: Record<string, any> = {};
 
-  function getCollectionForm(context) {
-    return mount(<CollectionForm collection={testCollection} />, { context });
+  function getCollectionForm() {
+    return mount(<CollectionForm collection={testCollection} />);
   }
 
   beforeEach(() => {

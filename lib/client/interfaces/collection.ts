@@ -22,7 +22,9 @@ export class Field {
     public type: string = 'STRING',
     public required: boolean = false,
     public isArray: boolean = false,
-    public renderMethod: string = 'PLAIN_TEXT'
+    public renderMethod: string = 'PLAIN_TEXT',
+    public _collection?: string,
+    public view?: string
   ) {}
 }
 
