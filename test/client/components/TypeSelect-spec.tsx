@@ -1,59 +1,43 @@
 import * as assert from 'assert';
 import { mount, ReactWrapper } from 'enzyme';
-import { Collection, Field } from 'lib/client/interfaces';
+import TypeSelect, { IProps as TypeSelectProps, IState as TypeSelectState } from 'lib/client/components/ui/TypeSelect';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
-import { TypeSelectPopover, ITypeSelectPopoverProps } from 'src/client/app/collection/form/components';
 
-describe('TypeSelectPopover', () => {
+
+describe('TypeSelect', () => {
   const testCollection = new MockCollection();
-  let typeSelectPopover: ReactWrapper<ITypeSelectPopoverProps, {}>;
-  let props: ITypeSelectPopoverProps;
-  let popoverContainer: HTMLElement;
   let selectedType = FIELD_TYPES.STANDARD[1];
+  let typeSelect: ReactWrapper<TypeSelectProps, TypeSelectState>;
+  let typeSelectProps: TypeSelectProps;
 
-  function getTypeSelectPopover() {
-    return mount(
-      <TypeSelectPopover {...props} />,
-      { attachTo: popoverContainer }
-    );
+  function getTypeSelect() {
+    return mount(<TypeSelect {...typeSelectProps} />);
   }
 
+  const expectedTree: Record<'standard' | 'collection', string[]> = {
+    standard: _.map(FIELD_TYPES.STANDARD, 'name'),
+    collection: [testCollection.name]
+  };
+
   beforeEach(() => {
-    popoverContainer = document.createElement('div');
-    document.body.appendChild(popoverContainer);
-
-    props = {
+    typeSelectProps = {
       collections: [testCollection],
-      onChange: jest.fn(),
-      selectedType,
-      inline: true,
-      hoverCloseDelay: 0,
-      hoverOpenDelay: 0,
-      isOpen: true
+      selectedType: 'STRING',
+      onSelectType: jest.fn()
     };
-
-    typeSelectPopover = getTypeSelectPopover();
   });
 
-  afterEach(() => {
-    typeSelectPopover.detach();
-    popoverContainer.remove();
-  });
+  it('loads with the correct initial values', () => {
+    typeSelect = getTypeSelect();
+    assert(typeSelect.exists());
 
-  it('renders', () => {
-    assert(typeSelectPopover.exists());
-    expect(typeSelectPopover.text()).toBe(selectedType.name);
+    const [standardTypeNode, collectionNode] = typeSelect.state('nodes');
 
-    const types: string[] = _.map(
-      document.querySelectorAll('.pt-tree-node-list .pt-tree-node-label'),
-      'textContent'
-    );
+    expect(_.map(standardTypeNode.childNodes, 'label')).toEqual(expectedTree.standard);
 
-    expect(types).toEqual([
-      'Standard Types',
-      ..._.map(FIELD_TYPES.STANDARD, 'name'),
-      'Collections'
-    ]);
+    typeSelect.instance().handleNodeClick({ id: 'category-collections' });
+
+    expect(_.map(collectionNode.childNodes, 'label')).toEqual(expectedTree.collection);
   });
 });

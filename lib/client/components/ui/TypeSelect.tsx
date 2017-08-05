@@ -6,18 +6,18 @@ import { Collection } from 'lib/client/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import 'lib/client/styles/TypeSelect.less';
 
-interface IProps {
+export interface IProps {
   collections?: Collection[];
   selectedType: string;
   onSelectType(id: string | number): void;
 }
 
-interface IState {
+export interface IState {
   nodes: ITreeNode[];
 }
 
 export default class TypeSelect extends ViewComponent<IProps, IState> {
-  public state: IState = {
+  state: IState = {
     nodes: [{
       id: 'category-standard',
       hasCaret: true,
@@ -44,7 +44,7 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
     );
   }
 
-  private getNodes(collections: Collection[], selectedType: string): ITreeNode[] {
+  getNodes(collections: Collection[], selectedType: string): ITreeNode[] {
     const childNodes: ITreeNode[] = collections.map(
       ({ _collection, name, icon }) => ({
         id: _collection,
@@ -60,7 +60,7 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
     return nodes;
   }
 
-  private handleNodeClick(nodeData: ITreeNode) {
+  handleNodeClick(nodeData: ITreeNode) {
     if (_.includes(nodeData.id, 'category')) {
       this.toggleNode(nodeData);
     }
@@ -78,14 +78,14 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
     this.setState(this.state);
   }
 
-  private toggleNode(nodeData: ITreeNode) {
+  toggleNode(nodeData: ITreeNode) {
     const index: number = _.findIndex(this.state.nodes, _.pick(nodeData, 'id'));
     const nodes: ITreeNode[] = this.state.nodes.slice();
     nodes[index].isExpanded = !nodes[index].isExpanded;
     this.setState({ nodes });
   }
 
-  public render() {
+  render() {
     const typeCategories: ITreeNode[] = this.getNodes(this.props.collections, this.props.selectedType);
 
     return (
