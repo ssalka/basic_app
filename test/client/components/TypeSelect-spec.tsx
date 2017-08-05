@@ -24,6 +24,7 @@ describe('TypeSelectPopover', () => {
     document.body.appendChild(popoverContainer);
 
     props = {
+      collections: [testCollection],
       onChange: jest.fn(),
       selectedType,
       inline: true,
@@ -41,8 +42,8 @@ describe('TypeSelectPopover', () => {
   });
 
   it('renders', () => {
-    assert(typeSelectPopover.find(`.pt-popover-target`).exists());
-    expect(typeSelectPopover.find(`.pt-popover-target`).text()).toBe(selectedType.name);
+    assert(typeSelectPopover.exists());
+    expect(typeSelectPopover.text()).toBe(selectedType.name);
 
     const types: string[] = _.map(
       document.querySelectorAll('.pt-tree-node-list .pt-tree-node-label'),
@@ -52,8 +53,7 @@ describe('TypeSelectPopover', () => {
     expect(types).toEqual([
       'Standard Types',
       ..._.map(FIELD_TYPES.STANDARD, 'name'),
-      'Collections',
-      // TODO: pass collections down to TypeSelect
+      'Collections'
     ]);
   });
 });

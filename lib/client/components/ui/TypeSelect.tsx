@@ -1,31 +1,28 @@
 declare const _;
 declare const React;
 import { Tree, ITreeNode } from '@blueprintjs/core';
-import { connect, CollectionStore } from 'lib/client/api/stores';
 import { ViewComponent } from 'lib/client/components';
 import { Collection } from 'lib/client/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import 'lib/client/styles/TypeSelect.less';
 
 interface IProps {
+  collections?: Collection[];
   selectedType: string;
   onSelectType(id: string | number): void;
 }
 
 interface IState {
-  collections?: Collection[];
   nodes: ITreeNode[];
 }
 
-@connect(CollectionStore)
-class TypeSelect extends ViewComponent<IProps, IState> {
+export default class TypeSelect extends ViewComponent<IProps, IState> {
   public state: IState = {
-    collections: [],
     nodes: [{
       id: 'category-standard',
       hasCaret: true,
       label: 'Standard Types',
-    isExpanded: true
+      isExpanded: true
     }, {
       id: 'category-collections',
       hasCaret: true,
@@ -89,7 +86,7 @@ class TypeSelect extends ViewComponent<IProps, IState> {
   }
 
   public render() {
-    const typeCategories: ITreeNode[] = this.getNodes(this.state.collections, this.props.selectedType);
+    const typeCategories: ITreeNode[] = this.getNodes(this.props.collections, this.props.selectedType);
 
     return (
       <div className="type-select">
@@ -103,5 +100,3 @@ class TypeSelect extends ViewComponent<IProps, IState> {
     );
   }
 }
-
-export default TypeSelect;

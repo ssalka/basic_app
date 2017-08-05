@@ -52,11 +52,12 @@ export const FieldNameInput: SFC = ({ name, onChange }) => (
 );
 
 export interface ITypeSelectPopoverProps {
-  onChange(value: string): void;
+  collections: Collection[];
   selectedType: IType | Collection;
+  onChange(value: string): void;
 }
 
-export const TypeSelectPopover: SFC = ({ onChange, selectedType, ...props }: ITypeSelectPopoverProps) => {
+export const TypeSelectPopover: SFC = ({ collections, onChange, selectedType, ...props }: ITypeSelectPopoverProps) => {
   const buttonText = selectedType.name || 'Select Type';
   const selectedTypeKey = (selectedType as IType).key || (selectedType as Collection)._id;
 
@@ -67,6 +68,7 @@ export const TypeSelectPopover: SFC = ({ onChange, selectedType, ...props }: ITy
       target={<Button text={buttonText} />}
     >
       <TypeSelect
+        collections={collections}
         selectedType={selectedTypeKey}
         onSelectType={onChange}
       />
