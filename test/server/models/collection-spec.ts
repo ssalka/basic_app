@@ -36,7 +36,9 @@ describe("Collection", () => {
       expect(collection.name).toEqual(testCollection.name);
 
       const primitiveFields = collection.toObject().fields.slice(0, -1);
-      expect(primitiveFields).toEqual(testCollection.fields.slice(0, -1));
+      _.zipWith(primitiveFields, testCollection, ([field, testField], i) => {
+        expect(field).toEqual(testField, `field ${i} doesn't match`);
+      });
       assert(
         // TODO: add separate assertion for collection fields
         _.every(primitiveFields, _.conforms({

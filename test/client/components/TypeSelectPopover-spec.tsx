@@ -5,8 +5,7 @@ import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
 import { TypeSelectPopover, ITypeSelectPopoverProps } from 'src/client/app/collection/form/components';
 
-
-describe('TypeSelectPopover', () => {
+describe("TypeSelectPopover", () => {
   const testCollection = new MockCollection();
   let selectedType = FIELD_TYPES.STANDARD[1];
   let typeSelectPopover: ReactWrapper<ITypeSelectPopoverProps, {}>;
@@ -42,7 +41,7 @@ describe('TypeSelectPopover', () => {
     popoverContainer.remove();
   });
 
-  it('renders the popover target and content', () => {
+  it("renders the popover target and content", () => {
     assert(typeSelectPopover.exists());
     expect(typeSelectPopover.text()).toBe(selectedType.name);
 
