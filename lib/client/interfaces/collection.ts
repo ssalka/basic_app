@@ -9,6 +9,13 @@ export interface IRenderMethod {
   inputType: string;
 }
 
+export interface IType {
+  key: string;
+  name: string;
+  primitiveType: Function;
+  icon: string;
+}
+
 export class Field {
   constructor(
     public name: string = '',
