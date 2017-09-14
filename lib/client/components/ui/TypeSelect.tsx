@@ -2,14 +2,14 @@ declare const _;
 declare const React;
 import { Tree, ITreeNode } from '@blueprintjs/core';
 import { ViewComponent } from 'lib/client/components';
-import { Collection, IType } from 'lib/client/interfaces';
+import { Collection, Field, IType } from 'lib/client/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import 'lib/client/styles/TypeSelect.less';
 
 export interface IProps {
   collections?: Collection[];
-  selectedType: string;
-  onSelectType(id: string | number): void;
+  selectedType: IType | Collection;
+  onSelectType(udpatedTypeInfo: Partial<Field>): void;
 }
 
 export interface IState {
@@ -35,12 +35,12 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
     super(props);
 
     this.state.nodes[0].childNodes = FIELD_TYPES.STANDARD.map(
-      typeToTreeNode(props.selectedType)
+      typeToTreeNode(props.selectedType as IType)
     );
   }
 
-  getNodes(collections: Collection[], selectedType: string): ITreeNode[] {
-    const childNodes: ITreeNode[] = collections.map(collectionToTreeNode(selectedType));
+  getNodes(collections: Collection[], selectedType: IType | Collection): ITreeNode[] {
+    const childNodes: ITreeNode[] = collections.map(collectionToTreeNode(selectedType as Collection));
     const nodes = this.state.nodes.slice();
     _.assign(nodes[1], { childNodes });
 
@@ -52,7 +52,11 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
       return this.toggleNode(nodeData);
     }
 
-    this.props.onSelectType(nodeData.id);
+    const typeCategory = _.map(this.state.nodes[0].childNodes, 'id').includes(nodeData.id) ? 'type' : '_collection';
+
+    const updatedTypeInfo: Partial<Field> = typeCategory === 'type'
+      ? { type: nodeData.id as string, _collection: undefined }
+      : { type: FIELD_TYPES.COLLECTION, _collection: nodeData.id as string };
 
     const nodes: ITreeNode[] = this.state.nodes.map(({ childNodes, ...node }) => ({
       ...node,
@@ -61,6 +65,8 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
         isSelected: !nodeData.isSelected && childNode.id === nodeData.id
       }))
     }));
+
+    this.props.onSelectType(updatedTypeInfo);
 
     this.setState({ nodes });
   }
@@ -88,20 +94,20 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
   }
 }
 
-export const typeToTreeNode = (selected: string) => (
+export const typeToTreeNode = (selectedType: IType) => (
   ({ key, icon, name }: IType): ITreeNode => ({
     id: key,
     iconName: icon,
     label: name,
-    isSelected: key === selected
+    isSelected: key === selectedType.key
   })
 );
 
-export const collectionToTreeNode = (selected: string) => (
-  ({ _collection, icon, name }: Collection): ITreeNode => ({
-    id: _collection,
+export const collectionToTreeNode = (selectedCollection: Collection) => (
+  ({ _id, icon, name }: Collection): ITreeNode => ({
+    id: _id,
     iconName: icon,
     label: name,
-    isSelected: _collection === selected
+    isSelected: _id === selectedCollection._id
   })
 );
