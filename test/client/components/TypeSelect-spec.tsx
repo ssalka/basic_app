@@ -12,7 +12,7 @@ import { MockCollection } from 'lib/server/models/mocks';
 describe("TypeSelect", () => {
   const testCollection = new MockCollection();
   const collections = [testCollection];
-  let selectedType = FIELD_TYPES.STANDARD[1].key;
+  let selectedType = FIELD_TYPES.STANDARD[1];
   let typeSelect: ReactWrapper<TypeSelectProps, TypeSelectState> | TypeSelect;
   let typeSelectProps: TypeSelectProps;
 
@@ -84,7 +84,10 @@ describe("TypeSelect", () => {
 
       typeSelect.handleNodeClick(typeToSelect);
 
-      expect(typeSelectProps.onSelectType).toHaveBeenCalledWith(typeToSelect.id);
+      expect(typeSelectProps.onSelectType).toHaveBeenCalledWith({
+        _collection: undefined,
+        type: typeToSelect.id
+      });
     });
 
     it("updates the isSelected field of the newly selected tree node", () => {
