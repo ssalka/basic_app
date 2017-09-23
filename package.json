@@ -10,8 +10,8 @@
     "url": "https://github.com/ssalka/basic_app"
   },
   "engines": {
-    "node": "^6.9.1",
-    "npm": "^3.10.8"
+    "node": "^8.4.0",
+    "npm": "^5.3.0"
   },
   "scripts": {
     "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",
@@ -20,7 +20,7 @@
     "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --noStackTrace"
   },
   "dependencies": {
-    "@blueprintjs/core": "^1.21.0",
+    "@blueprintjs/core": "1.21.0",
     "apollo-client": "0.8.7",
     "async": "2.1.4",
     "body-parser": "1.15.2",
@@ -28,12 +28,12 @@
     "cookie-parser": "1.4.3",
     "express": "4.14.0",
     "express-session": "1.14.2",
-    "funfix": "^3.6.0",
+    "funfix": "3.6.0",
     "graphql": "0.8.2",
-    "graphql-server-express": "^0.9.0",
+    "graphql-server-express": "0.9.0",
     "graphql-tag": "1.1.2",
     "graphql-tools": "0.10.1",
-    "grid-styled": "^2.0.0-4",
+    "grid-styled": "2.0.0-4",
     "lodash": "4.17.2",
     "lodash-inflection": "1.5.0",
     "mongoose": "4.7.6",
@@ -50,13 +50,13 @@
     "react-filterable-table": "0.1.7",
     "react-rating": "0.6.5",
     "react-router": "2.8.1",
-    "styled-components": "^2.1.0"
+    "styled-components": "2.1.0"
   },
   "devDependencies": {
     "@types/dom4": "1.5.20",
     "@types/enzyme": "2.8.4",
     "@types/es6-promise": "0.0.32",
-    "@types/jest": "^20.0.5",
+    "@types/jest": "20.0.5",
     "@types/lodash": "4.14.53",
     "@types/react": "15.0.12",
     "@types/react-dom": "0.14.23",
@@ -76,6 +76,7 @@
     "css-loader": "0.25.0",
     "enzyme": "2.9.1",
     "jest": "19.0.2",
+    "jest-cli": "19.0.2",
     "jest-css-modules": "1.1.0",
     "jest-transform-graphql": "1.0.0",
     "json-loader": "0.5.4",
