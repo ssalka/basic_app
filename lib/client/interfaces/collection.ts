@@ -9,13 +9,22 @@ export interface IRenderMethod {
   inputType: string;
 }
 
+export interface IType {
+  key: string;
+  name: string;
+  primitiveType: Function;
+  icon: string;
+}
+
 export class Field {
   constructor(
     public name: string = '',
     public type: string = 'STRING',
     public required: boolean = false,
     public isArray: boolean = false,
-    public renderMethod: string = 'PLAIN_TEXT'
+    public renderMethod: string = 'PLAIN_TEXT',
+    public _collection?: string,
+    public view?: string
   ) {}
 }
 

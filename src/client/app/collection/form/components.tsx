@@ -4,7 +4,7 @@ declare const React;
 import { EditableText, Checkbox } from '@blueprintjs/core';
 import { connect, CollectionStore } from 'lib/client/api/stores';
 import { Button, FlexRow, FlexColumn, Popover, TypeSelect, ViewSelect } from 'lib/client/components';
-import { Collection, Field, IRenderMethod, ReactElement, SFC } from 'lib/client/interfaces';
+import { Collection, Field, IRenderMethod, IType, ReactElement, SFC } from 'lib/client/interfaces';
 import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
 
 export const CollectionNameInput: SFC = ({ name, handleChange }) => (
@@ -51,16 +51,24 @@ export const FieldNameInput: SFC = ({ name, onChange }) => (
   />
 );
 
-export const TypeSelectPopover: SFC = ({ onChange, selectedType }) => {
+export interface ITypeSelectPopoverProps {
+  collections: Collection[];
+  selectedType: IType | Collection;
+  onChange(value: Partial<Field>): void;
+}
+
+export const TypeSelectPopover: SFC = ({ collections, onChange, selectedType, ...props }: ITypeSelectPopoverProps) => {
   const buttonText = selectedType.name || 'Select Type';
 
   return (
     <Popover
+      {...props}
       className="popover-type-select"
       target={<Button text={buttonText} />}
     >
       <TypeSelect
-        selectedType={selectedType.key || selectedType._id}
+        collections={collections}
+        selectedType={selectedType}
         onSelectType={onChange}
       />
     </Popover>

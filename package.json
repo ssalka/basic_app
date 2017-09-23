@@ -17,7 +17,7 @@
     "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",
     "lint": "tslint --type-check 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}' --format stylish",
     "start": "NODE_PATH=. node index.js",
-    "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --forceExit --noStackTrace"
+    "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --noStackTrace"
   },
   "dependencies": {
     "@blueprintjs/core": "^1.21.0",
@@ -54,7 +54,9 @@
   },
   "devDependencies": {
     "@types/dom4": "1.5.20",
+    "@types/enzyme": "2.8.4",
     "@types/es6-promise": "0.0.32",
+    "@types/jest": "^20.0.5",
     "@types/lodash": "4.14.53",
     "@types/react": "15.0.12",
     "@types/react-dom": "0.14.23",
@@ -72,7 +74,7 @@
     "babel-preset-react": "6.16.0",
     "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.25.0",
-    "enzyme": "2.8.2",
+    "enzyme": "2.9.1",
     "jest": "19.0.2",
     "jest-css-modules": "1.1.0",
     "jest-transform-graphql": "1.0.0",

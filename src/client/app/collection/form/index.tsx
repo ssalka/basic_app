@@ -81,7 +81,7 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
   }
 
   submitForm(event) {
-    const { collection } = this.props;
+    const { collection } = this.state;
     event.preventDefault();
 
     this.props.upsertCollection(collection)

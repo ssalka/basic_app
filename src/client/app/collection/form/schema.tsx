@@ -116,8 +116,8 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
                 />
                 <TypeSelectPopover
                   collections={collections}
-                  onChange={this.getUpdateHandler(index, 'type')}
-                  selectedType={findFieldType(field.type) || findDocumentById(collections, field.type)}
+                  onChange={this.getUpdateHandler(index)}
+                  selectedType={findFieldType(field.type) || findDocumentById(collections, field._collection)}
                 />
                 <div className="option-button">
                   {editingFields ? (

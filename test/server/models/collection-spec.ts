@@ -34,16 +34,22 @@ describe("Collection", () => {
       expect(err).toBeNull();
       expect(collection).not.toBeNull();
       expect(collection.name).toEqual(testCollection.name);
+
+      const primitiveFields = collection.toObject().fields.slice(0, -1);
+      _.zipWith(primitiveFields, testCollection, ([field, testField], i) => {
+        expect(field).toEqual(testField, `field ${i} doesn't match`);
+      });
       assert(
-        _.every(collection.fields, _.conforms({
+        // TODO: add separate assertion for collection fields
+        _.every(primitiveFields, _.conforms({
           name: _.isString,
           type: type => _.includes(fieldTypes, type),
           required: _.isBoolean,
           isArray: _.isBoolean,
           renderMethod: method => _.includes(renderMethods, method)
-        }))
+        })),
+        "A primitive field doesn't match the Field schema"
       );
-      expect(collection.toObject().fields).toEqual(testCollection.fields);
       done();
     });
   });

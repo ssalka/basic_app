@@ -5,7 +5,9 @@ import { MockCollection } from 'lib/server/models/mocks';
 import CollectionFormSchema from 'src/client/app/collection/form/schema';
 
 describe("CollectionFormSchema", () => {
-  const testCollection = new MockCollection({ _id: true });
+  const testCollection = new MockCollection();
+  const collections = [testCollection];
+
   const elements = {};
   let formSchema;
   let addFieldRow;
@@ -16,6 +18,7 @@ describe("CollectionFormSchema", () => {
     return mount(
       <CollectionFormSchema
         collection={testCollection}
+        collections={collections}
         handleChange={handleChange}
       />
     );
@@ -74,16 +77,13 @@ describe("CollectionFormSchema", () => {
     });
 
     it("displays each field's name and type", () => {
-      testCollection.fields.forEach((field, i) => {
+      testCollection.fields.forEach(({ name, type, _collection }, i) => {
         const element = fields.at(i);
+        const matchedField = _.find(FIELD_TYPES.STANDARD, { key: type }) || _.find(collections, { _id: _collection });
 
-        expect(element.find('.pt-editable-text').first().text()).toBe(
-          testCollection.fields[i].name
-        );
-
-        expect(element.find('.pt-popover-target .pt-button').first().text()).toBe(
-          _.find(FIELD_TYPES.STANDARD, { key: testCollection.fields[i].type }).name
-        );
+        assert(matchedField);
+        expect(element.find('.pt-editable-text').first().text()).toBe(name);
+        expect(element.find('.pt-popover-target .pt-button').first().text()).toBe(matchedField.name);
       });
     });
 
