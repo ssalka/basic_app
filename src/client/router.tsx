@@ -176,15 +176,12 @@ class AppRouter extends BaseComponent<IProps, any> {
   public render() {
     const { Site, NotFound } = this.components;
     const collections = _.get(this.props, 'user.library.collections', []);
-    const getLoginPage = (props: IRouteProps) => (
-      <Login {...props} refetch={this.props.refetch} />
-    );
 
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
           <IndexRoute component={Splash} />
-          <Route path="login" component={getLoginPage} />
+          <Route path="login" component={Login} />
 
           <Route component={this.renderIfAuthenticated}>
             <Route path="home" component={Home} />
