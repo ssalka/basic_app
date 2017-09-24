@@ -65,13 +65,12 @@ module.exports = {
     });
   },
 
-  loginSuccess(req, res) {
-    const { session, user } = req;
+  loginSuccess(req, res, next) {
+    const { token } = req.session;
 
-    res.json({
-      user: pick(user, USER_FIELDS),
-      token: session.token
-    });
+    User.findByIdAndPopulate(req.user._id)
+      .then(user => res.json({ user, token }))
+      .catch(next);
   },
 
   /**
