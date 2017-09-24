@@ -33,10 +33,10 @@ module.exports = {
       cb => Session.findByToken(token).exec(cb),
       (session, cb) => isEmpty(session)
         ? cb({ message: 'No matching document', statusCode: 404 })
-        : User.findById(session.user._id).exec(cb),
+        : User.findByIdAndPopulate(session.user).exec(cb),
     ], (err, user) => err
-      ? res.status(err.statusCode || 500).json({ err: err.message || err })
-      : res.json({ user: pick(user, USER_FIELDS) })
+      ? res.status(err.statusCode || 500).send(err.message || err)
+      : res.json({ user: user.toObject() })
     );
    },
 
@@ -69,7 +69,10 @@ module.exports = {
     const { token } = req.session;
 
     User.findByIdAndPopulate(req.user._id)
-      .then(user => res.json({ user, token }))
+      .then(user => res.json({
+        token,
+        user: user.toObject()
+      }))
       .catch(next);
   },
 

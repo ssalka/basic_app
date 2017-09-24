@@ -12,9 +12,7 @@ interface IState {
   navLinks: ILink[];
 }
 
-interface IProps extends IQueryProps {
-  user?: IUser;
-}
+interface IProps extends IQueryProps {}
 
 @connect(UserStore)
 class App extends ViewComponent<IProps, IState> {

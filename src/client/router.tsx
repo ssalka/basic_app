@@ -1,10 +1,10 @@
 declare const _;
 declare const React;
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import axios from 'axios';
 import api from 'lib/client/api';
 import { connect, createStore, UserStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
-import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import common = require('lib/common');
 import Splash from './splash';
@@ -19,7 +19,6 @@ import {
   IComponentModule,
   IContext,
   IDocument,
-  IQueryProps,
   IRouteProps,
   IUser,
   ReactElement
@@ -29,14 +28,12 @@ import './styles.less';
 const { request, logger } = common as any;
 const { User, Collection } = api;
 
-interface IProps extends Partial<IQueryProps> {
+interface IAppRouterState {
   user?: IUser;
 }
 
-// TODO: pass { self: true } here instead of in getUser.gql
-@query(GetUser)
 @connect(UserStore)
-class AppRouter extends BaseComponent<IProps, any> {
+class AppRouter extends BaseComponent<{}, IAppRouterState> {
   public static childContextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
@@ -68,37 +65,41 @@ class AppRouter extends BaseComponent<IProps, any> {
     })
   ));
 
-  private componentWillReceiveProps({ user, loading, error }: IProps) {
-    if (error) {
-      console.error(error);
-    }
-    if (!(loading || user) && _.includes(location.pathname, 'home')) {
-      // done loading; no user; in protected route
-      browserHistory.push('/login');
-    }
-  }
+  private renderIfAuthenticated: React.SFC<IRouteProps> = (
+    props => this.state.user ? <App {...props} /> : <div />
+  );
 
-  private renderIfAuthenticated = (props: IProps): ReactElement => (
-    this.props.user
-      ? <App {...props} />
-      : <div />
-  )
+  componentDidMount() {
+    if (!localStorage.token) {
+      return;
+    }
+
+    axios.get('/api/me')
+      .then(res => {
+        if (res.data.user) {
+          User.set(res.data.user);
+        }
+      })
+      .catch(err => {
+        if (err.response.status === 403 && location.pathname !== '/login') {
+          browserHistory.push('/login');
+        }
+      });
+  }
 
   public getChildContext(): IContext {
     const context: IContext = { appName: document.title };
-    if (this.props.user) {
-      context.user = this.props.user;
-      User.set(this.props.user);
-      Collection.add(this.props.user.library.collections);
-    } else if (_.has(this.state, 'user')) {
+    if (this.state.user) {
       context.user = this.state.user;
+      User.set(this.state.user);
+      Collection.add(this.state.user.library.collections);
     }
 
     return context;
   }
 
   private getCollectionBySlug(slug: string) {
-    const collections = _.get(this.props.user, 'library.collections', []);
+    const collections = _.get(this.state.user, 'library.collections', []);
 
     return _.find(collections, { slug });
   }
