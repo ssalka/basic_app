@@ -25,9 +25,7 @@ module.exports = {
 
   findUserByToken(req, res) {
     const { token } = req.session;
-    if (!token) return res.status(403).json({
-      err: 'No session token was provided'
-    });
+    if (!token) return res.status(403).send('No session token was provided');
 
     async.waterfall([
       cb => Session.findByToken(token).exec(cb),

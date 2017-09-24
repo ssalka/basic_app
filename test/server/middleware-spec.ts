@@ -1,6 +1,7 @@
 import * as _ from 'lodash';
 import * as middleware from 'src/server/routes/middleware';
 import * as models from 'lib/server/models';
+import { MockCollection, MockUser } from 'lib/server/models/mocks';
 import generateToken = require('lib/common/generateToken');
 import { Collection as ICollection, User as IUser } from 'lib/client/interfaces';
 
@@ -10,6 +11,7 @@ describe("middleware", () => {
   let next: (err?) => void;
   let Session;
   let User;
+  let populatedUser;
 
   beforeEach(() => {
     req = {}; res = {};
@@ -22,11 +24,19 @@ describe("middleware", () => {
 
     beforeEach(() => {
       const json = jest.fn();
+      const send = jest.fn();
       const status = jest.fn().mockReturnValue(res);
 
       ({ Session, User } = models);
       _.assign(req, _.cloneDeep({ session }));
-      _.assign(res, { json, status });
+      _.assign(res, { json, send, status });
+
+      populatedUser = new User({
+        ...user,
+        library: {
+          collections: [new MockCollection()]
+        }
+      });
     });
 
     it("finds the session and returns the user", () => {
@@ -34,14 +44,16 @@ describe("middleware", () => {
         exec: cb => cb(null, session)
       }));
 
-      User.findById = jest.fn(() => ({
-        exec: cb => cb(null, user)
+      User.findByIdAndPopulate = jest.fn(() => ({
+        exec: cb => cb(null, populatedUser)
       }));
 
       middleware.findUserByToken(req, res);
 
       expect(res.status).not.toHaveBeenCalled();
-      expect(res.json).toHaveBeenCalledWith({ user });
+      expect(res.json).toHaveBeenCalledWith({
+        user: populatedUser.toObject()
+      });
     });
 
     it("sends an error if no session is found", () => {
@@ -53,7 +65,7 @@ describe("middleware", () => {
       middleware.findUserByToken(req, res);
 
       expect(res.status).toHaveBeenCalledWith(404);
-      expect(res.json).toHaveBeenCalledWith({ err });
+      expect(res.send).toHaveBeenCalledWith(err);
     });
 
     it("sends back a 403 if there is no session token", () => {
@@ -63,7 +75,7 @@ describe("middleware", () => {
       middleware.findUserByToken(req, res);
 
       expect(res.status).toHaveBeenCalledWith(403);
-      expect(res.json).toHaveBeenCalledWith({ err });
+      expect(res.send).toHaveBeenCalledWith(err);
     });
 
     it("logs caught errors", () => {
@@ -75,7 +87,7 @@ describe("middleware", () => {
       middleware.findUserByToken(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
-      expect(res.json).toHaveBeenCalledWith({ err });
+      expect(res.send).toHaveBeenCalledWith(err);
     });
 
   });
@@ -162,14 +174,29 @@ describe("middleware", () => {
       const json = jest.fn();
       _.assign(req, { session, user });
       _.assign(res, { json });
+
+      populatedUser = new User({
+        ...user,
+        library: {
+          collections: [new MockCollection()]
+        }
+      });
     });
 
     it("sends the user and session token to the client", () => {
+      User.findByIdAndPopulate = jest.fn(() => ({
+        then: cb => (
+          cb(populatedUser),
+          { catch: _.noop }
+        )
+      }));
+
       middleware.loginSuccess(req, res);
 
       expect(res.json).toHaveBeenCalled();
       expect(res.json.mock.calls[0][0]).toEqual({
-        user, token: session.token
+        token: session.token,
+        user: populatedUser.toObject()
       });
     });
 
