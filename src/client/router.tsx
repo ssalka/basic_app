@@ -3,7 +3,7 @@ declare const React;
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import axios from 'axios';
 import api from 'lib/client/api';
-import { connect, createStore, UserStore } from 'lib/client/api/stores';
+import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import common = require('lib/common');
@@ -18,7 +18,6 @@ import {
   Collection as ICollection,
   IComponentModule,
   IContext,
-  IDocument,
   IRouteProps,
   IUser,
   ReactElement
@@ -38,32 +37,6 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   };
-
-  private getCollectionStore = _.memoize((collection: ICollection, documents: IDocument[] = []) => (
-    createStore({
-      name: collection.typeFormats.graphql,
-      logUpdates: true,
-      initialState: {
-        collection,
-        documents
-      }
-    }, {
-      loadDocuments(documents: IDocument[]) {
-        this.setState({ documents });
-      },
-      updateDocument(_document: IDocument) {
-        const documents: IDocument[] = this.state.documents.slice();
-
-        const indexToUpdate: number = _.findIndex(documents, { _id: _document._id });
-
-        indexToUpdate >= 0
-          ? documents.splice(indexToUpdate, 1, _document)
-          : documents.push(_document);
-
-        this.setState({ documents });
-      }
-    })
-  ));
 
   private renderIfAuthenticated: React.SFC<IRouteProps> = (
     props => this.state.user ? <App {...props} /> : <div />
@@ -89,6 +62,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
 
   public getChildContext(): IContext {
     const context: IContext = { appName: document.title };
+
     if (this.state.user) {
       context.user = this.state.user;
       User.set(this.state.user);
@@ -106,7 +80,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
 
   private getCollectionView({ params, ...props }: any) {
     const collection = props.collection = this.getCollectionBySlug(params.collection);
-    const CollectionStore = this.getCollectionStore(collection);
+    const CollectionStore = getCollectionStore({ collection });
     const CollectionViewWithQuery = getGraphQLComponent(CollectionView, CollectionStore, { collection });
 
     return <CollectionViewWithQuery {...props} />;
@@ -128,7 +102,10 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
   private getDocumentForm({ params, ...props }: any) {
     const _document = _.pick(params, '_id');
     const collection = props.collection = this.getCollectionBySlug(params.collection);
-    const CollectionStore = this.getCollectionStore(collection, [_document]);
+    const CollectionStore = getCollectionStore({
+      collection,
+      documents: [_document]
+    });
     const DocumentFormWithMutation = getGraphQLComponent(DocumentForm, CollectionStore, {
       collection, document: _document
     });
