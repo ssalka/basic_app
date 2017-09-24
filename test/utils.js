@@ -1,5 +1,5 @@
 import async from 'async';
-import { dbName, waitForConnection, closeConnection } from 'lib/server/db';
+import { systemDbName, waitForConnection, closeConnection } from 'lib/server/db';
 import * as models from 'lib/server/models';
 import * as mocks from 'lib/server/models/mocks';
 
@@ -8,7 +8,7 @@ const setupOptions = {
 };
 
 export function setup(options, done) {
-  if (dbName !== 'test') return done('Not running in test mode');
+  if (systemDbName !== 'test') return done('Not running in test mode');
   _.defaults(options, setupOptions);
   const results = {};
   async.series([
@@ -38,7 +38,7 @@ const cleanupOptions = {
 };
 
 export function cleanup(done, options = {}) {
-  if (dbName !== 'test') return done('Not running in test mode');
+  if (systemDbName !== 'test') return done('Not running in test mode');
   _.defaults(options, cleanupOptions);
   setImmediate(() => async.series([
     cb => async.eachOf(models, (Model, name, _cb) => {
