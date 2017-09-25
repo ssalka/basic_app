@@ -69,18 +69,13 @@ class Login extends ViewComponent<IProps, IState> {
   }
 
   private loginCallback(response) {
-    const { token } = response.body;
-    localStorage.token = token;
+    const { token, user } = response.body;
 
-    // User library is not sent along with login response...
-    // TODO: migrate rest of auth endpoints to graphql
-    this.props.refetch().then(({ data: {user} }) => {
-      if (user) {
-        User.set(user);
-        Collection.add(user.library.collections);
-      }
-      this.props.history.push('/home');
-    });
+    localStorage.token = token;
+    User.set(user);
+    Collection.add(user.library.collections);
+
+    this.props.history.push('/home');
   }
 
   private getInput({name, icon}) {

@@ -1,10 +1,10 @@
 declare const _;
 declare const React;
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import axios from 'axios';
 import api from 'lib/client/api';
-import { connect, createStore, UserStore } from 'lib/client/api/stores';
+import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
 import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
-import { GetUser } from 'lib/client/api/graphql/queries';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import common = require('lib/common');
 import Splash from './splash';
@@ -18,8 +18,6 @@ import {
   Collection as ICollection,
   IComponentModule,
   IContext,
-  IDocument,
-  IQueryProps,
   IRouteProps,
   IUser,
   ReactElement
@@ -29,83 +27,60 @@ import './styles.less';
 const { request, logger } = common as any;
 const { User, Collection } = api;
 
-interface IProps extends Partial<IQueryProps> {
+interface IAppRouterState {
   user?: IUser;
 }
 
-// TODO: pass { self: true } here instead of in getUser.gql
-@query(GetUser)
 @connect(UserStore)
-class AppRouter extends BaseComponent<IProps, any> {
+class AppRouter extends BaseComponent<{}, IAppRouterState> {
   public static childContextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   };
 
-  private getCollectionStore = _.memoize((collection: ICollection, documents: IDocument[] = []) => (
-    createStore({
-      name: collection.typeFormats.graphql,
-      logUpdates: true,
-      initialState: {
-        collection,
-        documents
-      }
-    }, {
-      loadDocuments(documents: IDocument[]) {
-        this.setState({ documents });
-      },
-      updateDocument(_document: IDocument) {
-        const documents: IDocument[] = this.state.documents.slice();
+  private renderIfAuthenticated: React.SFC<IRouteProps> = (
+    props => this.state.user ? <App {...props} /> : <div />
+  );
 
-        const indexToUpdate: number = _.findIndex(documents, { _id: _document._id });
-
-        indexToUpdate >= 0
-          ? documents.splice(indexToUpdate, 1, _document)
-          : documents.push(_document);
-
-        this.setState({ documents });
-      }
-    })
-  ));
-
-  private componentWillReceiveProps({ user, loading, error }: IProps) {
-    if (error) {
-      console.error(error);
+  componentDidMount() {
+    if (!localStorage.token) {
+      return;
     }
-    if (!(loading || user) && _.includes(location.pathname, 'home')) {
-      // done loading; no user; in protected route
-      browserHistory.push('/login');
-    }
+
+    axios.get('/api/me')
+      .then(res => {
+        if (res.data.user) {
+          User.set(res.data.user);
+        }
+      })
+      .catch(err => {
+        if (err.response.status === 403 && location.pathname !== '/login') {
+          browserHistory.push('/login');
+        }
+      });
   }
-
-  private renderIfAuthenticated = (props: IProps): ReactElement => (
-    this.props.user
-      ? <App {...props} />
-      : <div />
-  )
 
   public getChildContext(): IContext {
     const context: IContext = { appName: document.title };
-    if (this.props.user) {
-      context.user = this.props.user;
-      User.set(this.props.user);
-      Collection.add(this.props.user.library.collections);
-    } else if (_.has(this.state, 'user')) {
+
+    if (this.state.user) {
       context.user = this.state.user;
+      User.set(this.state.user);
+      Collection.add(this.state.user.library.collections);
     }
 
     return context;
   }
 
   private getCollectionBySlug(slug: string) {
-    const collections = _.get(this.props.user, 'library.collections', []);
+    const collections = _.get(this.state.user, 'library.collections', []);
 
     return _.find(collections, { slug });
   }
 
   private getCollectionView({ params, ...props }: any) {
     const collection = props.collection = this.getCollectionBySlug(params.collection);
-    const CollectionStore = this.getCollectionStore(collection);
+    const CollectionStore = getCollectionStore({ collection });
     const CollectionViewWithQuery = getGraphQLComponent(CollectionView, CollectionStore, { collection });
 
     return <CollectionViewWithQuery {...props} />;
@@ -127,7 +102,10 @@ class AppRouter extends BaseComponent<IProps, any> {
   private getDocumentForm({ params, ...props }: any) {
     const _document = _.pick(params, '_id');
     const collection = props.collection = this.getCollectionBySlug(params.collection);
-    const CollectionStore = this.getCollectionStore(collection, [_document]);
+    const CollectionStore = getCollectionStore({
+      collection,
+      documents: [_document]
+    });
     const DocumentFormWithMutation = getGraphQLComponent(DocumentForm, CollectionStore, {
       collection, document: _document
     });
@@ -176,15 +154,12 @@ class AppRouter extends BaseComponent<IProps, any> {
   public render() {
     const { Site, NotFound } = this.components;
     const collections = _.get(this.props, 'user.library.collections', []);
-    const getLoginPage = (props: IRouteProps) => (
-      <Login {...props} refetch={this.props.refetch} />
-    );
 
     return (
       <Router history={browserHistory}>
         <Route path="/" component={Site}>
           <IndexRoute component={Splash} />
-          <Route path="login" component={getLoginPage} />
+          <Route path="login" component={Login} />
 
           <Route component={this.renderIfAuthenticated}>
             <Route path="home" component={Home} />

@@ -25,18 +25,16 @@ module.exports = {
 
   findUserByToken(req, res) {
     const { token } = req.session;
-    if (!token) return res.status(403).json({
-      err: 'No session token was provided'
-    });
+    if (!token) return res.status(403).send('No session token was provided');
 
     async.waterfall([
       cb => Session.findByToken(token).exec(cb),
       (session, cb) => isEmpty(session)
         ? cb({ message: 'No matching document', statusCode: 404 })
-        : User.findById(session.user._id).exec(cb),
+        : User.findByIdAndPopulate(session.user).exec(cb),
     ], (err, user) => err
-      ? res.status(err.statusCode || 500).json({ err: err.message || err })
-      : res.json({ user: pick(user, USER_FIELDS) })
+      ? res.status(err.statusCode || 500).send(err.message || err)
+      : res.json({ user: user.toObject() })
     );
    },
 
@@ -65,13 +63,15 @@ module.exports = {
     });
   },
 
-  loginSuccess(req, res) {
-    const { session, user } = req;
+  loginSuccess(req, res, next) {
+    const { token } = req.session;
 
-    res.json({
-      user: pick(user, USER_FIELDS),
-      token: session.token
-    });
+    User.findByIdAndPopulate(req.user._id)
+      .then(user => res.json({
+        token,
+        user: user.toObject()
+      }))
+      .catch(next);
   },
 
   /**
