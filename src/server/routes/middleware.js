@@ -6,7 +6,7 @@ const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { printSchema } = require('graphql/utilities/schemaPrinter');
 
 const { index } = require('../config');
-const getGraphQLSchema = require('lib/server/graphql');
+const schema = require('lib/server/graphql');
 const { User, Session, Collection } = require('lib/server/models');
 const { ModelGen } = require('lib/server/utils');
 const { logger, generateToken } = require('lib/common');
@@ -108,8 +108,8 @@ module.exports = {
    * GRAPHQL ENDPOINTS
    */
 
-  graphql: graphqlExpress(({ body, user }) => ({
-    schema: getGraphQLSchema(body),
+  graphql: graphqlExpress(({ user }) => ({
+    schema,
     context: { user }
   })),
 
