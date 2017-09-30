@@ -4,7 +4,6 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import axios from 'axios';
 import api from 'lib/client/api';
 import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
-import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import common = require('lib/common');
 import Splash from './splash';
@@ -122,24 +121,16 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     );
   }
 
-  private getDocumentForm({ params, ...props }: any) {
-    const _document = _.pick(params, '_id');
-    const collection = props.collection = this.getCollectionBySlug(params.collection);
-    const CollectionStore = getCollectionStore({
-      collection,
-      documents: [_document]
-    });
-    const DocumentFormWithMutation = getGraphQLComponent(DocumentForm, CollectionStore, {
-      collection, document: _document
-    });
+  private getDocumentForm({ params, ...props }: IRouteProps) {
+    const collection = this.getCollectionBySlug(params.collection);
 
-    return <DocumentFormWithMutation {...props} />;
+    return <DocumentForm collection={collection} {...props} />;
   }
 
   private getCollectionForm({ location: { state }, ...props }) {
-    return (
-      <CollectionForm collection={state.collection} {...props} />
-    );
+    const { collection } = state;
+
+    return <CollectionForm collection={collection} {...props} />;
   }
 
   private logout() {

@@ -1,7 +1,7 @@
 const passport = require('passport');
 const async = require('async');
-const { flow, isEmpty, pick } = require('lodash');
-const { invokeMap } = require('lodash/fp');
+const _ = require('lodash');
+const { invoke, invokeMap } = require('lodash/fp');
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { printSchema } = require('graphql/utilities/schemaPrinter');
 
@@ -10,6 +10,7 @@ const getGraphQLSchema = require('lib/server/graphql');
 const { User, Session, Collection } = require('lib/server/models');
 const { ModelGen } = require('lib/server/utils');
 const { logger, generateToken } = require('lib/common');
+const { READONLY_FIELDS } = require('lib/common/constants');
 
 // Send these fields to client upon successful authentication
 const USER_FIELDS = [
@@ -31,7 +32,7 @@ module.exports = {
 
     async.waterfall([
       cb => Session.findByToken(token).exec(cb),
-      (session, cb) => isEmpty(session)
+      (session, cb) => _.isEmpty(session)
         ? cb({ message: 'No matching document', statusCode: 404 })
         : User.findByIdAndPopulate(session.user).exec(cb),
     ], (err, user) => err
@@ -54,12 +55,12 @@ module.exports = {
 
   startSession(req, res, next) {
     Session.create({
-      user: pick(req.user, ['_id', 'username']),
+      user: _.pick(req.user, ['_id', 'username']),
       token: generateToken()
     }, (err, sess) => {
       if (err) return next(err);
       Object.assign(req.session,
-        pick(sess, ['user', 'token'])
+        _.pick(sess, ['user', 'token'])
       );
       next();
     });
@@ -116,7 +117,7 @@ module.exports = {
 
   schema(req, res) {
     res.set('Content-Type', 'text/plain');
-    res.send(flow(getGraphQLSchema, printSchema)(req.body));
+    res.send(_.flow(getGraphQLSchema, printSchema)(req.body));
   },
 
   /**
@@ -143,7 +144,7 @@ module.exports = {
       .catch(next);
   },
 
-  updateDocumentInCollection(req, res, next) {
+  upsertDocumentInCollection(req, res, next) {
     const { collectionId, documentId } = req.params;
     const { document: newDocument } = req.body;
 
@@ -151,7 +152,9 @@ module.exports = {
       .then(collection => {
         const Model = ModelGen.getOrGenerateModel(collection);
 
-        return Model.findById(documentId);
+        return documentId === 'undefined'
+          ? Model.create(newDocument)
+          : Model.findById(documentId);
       })
       .then(document => {
         if (!document) return Model.create(newDocument);
@@ -176,6 +179,8 @@ module.exports = {
           (err, doc) => err ? reject(err) : resolve(doc)
         ));
       })
+      .then(invoke('toObject'))
+      .then(document => res.json(document))
       .catch(next);
   }
 };
