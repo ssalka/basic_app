@@ -1,12 +1,14 @@
 const passport = require('passport');
 const async = require('async');
 const { flow, isEmpty, pick } = require('lodash');
+const { invokeMap } = require('lodash/fp');
 const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
 const { printSchema } = require('graphql/utilities/schemaPrinter');
 
 const { index } = require('../config');
 const getGraphQLSchema = require('lib/server/graphql');
 const { User, Session, Collection } = require('lib/server/models');
+const { ModelGen } = require('lib/server/utils');
 const { logger, generateToken } = require('lib/common');
 
 // Send these fields to client upon successful authentication
@@ -121,8 +123,23 @@ module.exports = {
    * COLLECTION & DOCUMENT ROUTES
    */
 
-  loadDocumentsInCollection(req, res) {
-    // TODO
-    res.json([]);
+  loadDocumentsInCollection(req, res, next) {
+    const { _id } = req.params;
+    const { limit = 0 } = req.query;
+
+    Collection.findById(_id)
+      .then(collection => {
+        const Model = ModelGen.getOrGenerateModel(collection);
+        const query = Model.find();
+
+        if (limit) {
+          query.limit(limit);
+        }
+
+        return query.exec();
+      })
+      .then(invokeMap('toObject'))
+      .then(docs => res.json(docs))
+      .catch(next);
   }
 };

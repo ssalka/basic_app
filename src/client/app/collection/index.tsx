@@ -10,29 +10,21 @@ import './styles.less';
 
 export interface IProps extends IRouteProps, IQueryProps {
   collection: Collection;
-  documents: any[];
-  loading: boolean;
   store: any;
 }
 
 export interface IState {
+  loading: boolean;
   documents: any[];
 }
 
 export default class CollectionView extends ViewComponent<IProps, IState> {
-  public static defaultProps: Partial<IProps> = {
-    collection: {} as Collection,
+  state = {
+    documents: [],
     loading: true
   };
 
-  constructor(props: IProps) {
-    super(props);
-    this.state = {
-      documents: props.documents || []
-    };
-  }
-
-  private componentDidMount() {
+  componentDidMount() {
     const { collection } = this.props;
 
     console.info(
@@ -41,15 +33,7 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
     );
   }
 
-  private componentWillReceiveProps(nextProps: IProps) {
-    const { collection, store } = nextProps;
-    if (!_.isEqual(nextProps.documents, this.state.documents)) {
-      // TODO: warn if overwriting unsaved changes
-      store.loadDocuments(nextProps.documents);
-    }
-  }
-
-  private getView(view) {
+  getView(view) {
     const views = {
       TABLE: {
         component: Table,
@@ -62,7 +46,7 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
     return views[view] || views.TABLE;
   }
 
-  private openDocument(doc) {
+  openDocument(doc) {
     const { collection, history }: Partial<IProps> = this.props;
 
     return history.push({
@@ -71,12 +55,13 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
     });
   }
 
-  public render() {
-    const { collection, loading, loadNextPage, location }: Partial<IProps> = this.props;
+  render() {
+    const { documents, loading }: IState = this.state;
+    const { collection, location }: Partial<IProps> = this.props;
     const { CollectionHeader, Loading, Placeholder }: any = getComponents(this.props, this.state);
-    const noDocuments: boolean = _.isEmpty(this.state.documents);
-    const handleLoadNextPage: React.MouseEventHandler<any> = () => loadNextPage();
-    const handleSelectDocument: React.MouseEventHandler<any> = (doc: object) => this.openDocument(doc);
+    const noDocuments: boolean = _.isEmpty(documents);
+    const handleSelectDocument: React.MouseEventHandler<any>
+      = (doc: object) => this.openDocument(doc);
     const {
       component: View,
       props: viewProps
@@ -88,10 +73,9 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
         {loading ? <Loading /> : (
           noDocuments ? <Placeholder /> : (
             <div {...viewProps}>
-              <div onClick={handleLoadNextPage}>Load Next Page</div>
               <View
                 fields={collection.fields}
-                records={this.state.documents}
+                records={documents}
                 onSelectDocument={handleSelectDocument}
                 pathname={location.pathname}
               />
