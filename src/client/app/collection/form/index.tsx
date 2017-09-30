@@ -1,6 +1,7 @@
 declare const _;
 declare const React;
 
+import axios from 'axios';
 import { browserHistory } from 'react-router';
 import api from 'lib/client/api';
 import { mutation } from 'lib/client/api/graphql';
@@ -14,21 +15,8 @@ import CollectionFormHeader from './header';
 import CollectionFormSchema from './schema';
 import './styles.less';
 
-const mutationSettings: IMutationSettings = {
-  getVariables: (collection: Collection) => _(collection)
-    .defaults({ _db: 'test' })
-    .assign({
-      fields: collection.fields.map(
-        (field: Field) => _.omit(field, READONLY_FIELDS)
-      )
-    })
-    .value(),
-  variables: {}
-};
-
 interface IProps extends ReactProps, IRouteProps {
   collection: Partial<Collection>;
-  upsertCollection?(collection: Partial<Collection>): Promise<Collection>;
 }
 
 interface IState {
@@ -80,14 +68,18 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
     this.setStateByPath(`collection.fields[${index}]`, field);
   }
 
+  upsertCollection?(collection: Partial<Collection>): Promise<Collection>;
+
   submitForm(event) {
     const { collection } = this.state;
     event.preventDefault();
 
-    this.props.upsertCollection(collection)
-      .then(_.property('data.collection'))
-      .then((coll: Collection) => api.User.updateLibrary(coll) || coll)
-      .then((coll: Collection) => this.props.history.push(coll.path));
+    axios.post(`/api/collections/${collection._id}`, collection)
+      .then(({ data: coll }) => (
+        api.User.updateLibrary(coll),
+        this.props.history.push(coll.path)
+      ))
+      .catch(console.error);
   }
 
   public render() {
@@ -119,7 +111,4 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
   }
 }
 
-export default _.flow([
-  connect(CollectionStore),
-  mutation(CollectionFormMutation, mutationSettings)
-])(CollectionForm);
+export default connect(CollectionStore)(CollectionForm);
