@@ -4,13 +4,12 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 import axios from 'axios';
 import api from 'lib/client/api';
 import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
-import { getGraphQLComponent, query, queries } from 'lib/client/api/graphql';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import common = require('lib/common');
 import Splash from './splash';
 import Login from './login';
 import App, { Home, Collections } from './app';
-import CollectionView from './app/collection';
+import CollectionView, { IProps as CollectionViewProps } from './app/collection';
 import CollectionForm from './app/collection/form';
 import DocumentView from './app/document';
 import DocumentForm from './app/document/form';
@@ -79,9 +78,32 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
   }
 
   private getCollectionView({ params, ...props }: any) {
-    const collection = props.collection = this.getCollectionBySlug(params.collection);
-    const CollectionStore = getCollectionStore({ collection });
-    const CollectionViewWithQuery = getGraphQLComponent(CollectionView, CollectionStore, { collection });
+    const collection = this.getCollectionBySlug(params.collection);
+    const collectionStore = getCollectionStore({ collection });
+
+    const store = api[collection.typeFormats.pascalCase];
+
+    // Queries for Schema Form
+    const collectionName = collection._collection;
+
+    @connect(collectionStore)
+    class CollectionViewWithQuery extends CollectionView {
+      static defaultProps: Partial<CollectionViewProps> = {
+        collection,
+        store
+      };
+
+      componentDidMount() {
+        super.componentDidMount();
+
+        if (!this.state.documents.length) {
+          axios.get(`/api/collections/${collection._id}/documents`)
+            .then(({ data: documents }) => documents)
+            .then(store.loadDocuments)
+            .catch(console.error);
+        }
+      }
+    }
 
     return <CollectionViewWithQuery {...props} />;
   }
@@ -99,24 +121,16 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     );
   }
 
-  private getDocumentForm({ params, ...props }: any) {
-    const _document = _.pick(params, '_id');
-    const collection = props.collection = this.getCollectionBySlug(params.collection);
-    const CollectionStore = getCollectionStore({
-      collection,
-      documents: [_document]
-    });
-    const DocumentFormWithMutation = getGraphQLComponent(DocumentForm, CollectionStore, {
-      collection, document: _document
-    });
+  private getDocumentForm({ params, ...props }: IRouteProps) {
+    const collection = this.getCollectionBySlug(params.collection);
 
-    return <DocumentFormWithMutation {...props} />;
+    return <DocumentForm collection={collection} {...props} />;
   }
 
   private getCollectionForm({ location: { state }, ...props }) {
-    return (
-      <CollectionForm collection={state.collection} {...props} />
-    );
+    const { collection } = state;
+
+    return <CollectionForm collection={collection} {...props} />;
   }
 
   private logout() {

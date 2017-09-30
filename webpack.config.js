@@ -34,9 +34,6 @@ const config = {
     }, {
       test: /\.json$/,
       loader: 'json'
-    }, {
-      test: /\.gql$/,
-      loader: 'graphql-tag/loader'
     }]
   },
   resolve: {

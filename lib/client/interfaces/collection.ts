@@ -41,7 +41,7 @@ export class Collection {
   public defaultView?: any;
   public views: any[];
   public typeFormats: {
-    graphql: string;
+    pascalCase: string;
   };
 
   constructor(collection: Partial<Collection> = {}) {

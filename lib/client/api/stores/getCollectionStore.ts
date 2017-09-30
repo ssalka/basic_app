@@ -4,12 +4,15 @@ import { IDocument } from 'lib/client/interfaces';
 
 export default _.memoize(initialState => (
   createStore({
-    name: initialState.collection.typeFormats.graphql,
+    name: initialState.collection.typeFormats.pascalCase,
     logUpdates: true,
-    initialState: _.defaults(initialState, { documents: [] })
+    initialState: _.defaults(initialState, {
+      documents: [],
+      loading: true
+    })
   }, {
     loadDocuments(documents: IDocument[]) {
-      this.setState({ documents });
+      this.setState({ documents, loading: false });
     },
     updateDocument(doc: IDocument) {
       const documents: IDocument[] = this.state.documents.slice();

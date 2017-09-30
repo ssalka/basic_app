@@ -9,7 +9,6 @@ import {
   Collection,
   Field,
   IDocument,
-  IGraphQLDocument,
   IRenderMethod,
   ReactElement,
   SFC
@@ -18,21 +17,21 @@ import './styles.less';
 
 interface IProps {
   collection: Collection;
-  document: IDocument & IGraphQLDocument;
+  document: IDocument;
   pathname: string;
 }
 
 export default class DocumentView extends ViewComponent<IProps, any> {
   public static defaultProps: IProps = {
     collection: new Collection(),
-    document: {} as IDocument & IGraphQLDocument,
+    document: {} as IDocument,
     pathname: ''
   };
 
   private componentDidMount() {
     const { collection, document: _document } = this.props;
     console.info(
-      _.singularize(_document.__typename), _document._id,
+      _.singularize(collection.name), _document._id,
       _.omit(_document, '_id')
     );
   }

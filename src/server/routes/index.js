@@ -1,34 +1,14 @@
 const express = require('express');
 const middleware = require('./middleware');
+const api = require('./api');
 
 const router = express.Router();
-
-/**
- * GRAPHQL ROUTES
- */
-
-if (process.env.NODE_ENV !== 'production') {
-  router.get('/graphiql',
-    middleware.graphiql
-  );
-
-  router.get('/schema',
-    middleware.schema
-  );
-}
-
-router.post('/graphql',
-  middleware.graphql
-);
-
 
 /**
  * REST ROUTES
  */
 
-router.get('/api/me',
-  middleware.findUserByToken
-);
+router.use('/api', api);
 
 router.get('/*',
   middleware.sendIndex

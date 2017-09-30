@@ -1,5 +1,6 @@
 declare const _;
 declare const React;
+import axios from 'axios';
 import { EditableText } from '@blueprintjs/core';
 import { browserHistory } from 'react-router';
 import api from 'lib/client/api';
@@ -7,13 +8,12 @@ import { ViewComponent, FlexRow, FlexColumn, Button, TextInput, NumericInput } f
 import { Collection, Field, ReactElement, IDocument, IRouteProps } from 'lib/client/interfaces';
 import './styles.less';
 
-interface IProps extends IRouteProps {
+interface IProps extends Partial<IRouteProps> {
   collection: Collection;
 }
 
 interface IState {
   document: IDocument;
-  store: any;
 }
 
 export default class DocumentForm extends ViewComponent<IProps, IState> {
@@ -29,11 +29,11 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
         value = value.currentTarget.value;
       }
 
-      const safeGraphQLValue = value === '' ? null : value;
+      const nullableValue = value === '' ? null : value;
       const newValue = (
-        field.type === 'NUMBER' && !_.isNull(safeGraphQLValue)
-          ? parseInt(safeGraphQLValue, 10)
-          : safeGraphQLValue
+        field.type === 'NUMBER' && !_.isNull(nullableValue)
+          ? parseInt(nullableValue, 10)
+          : nullableValue
       );
 
       const valueAsArray = _(newValue || '')
@@ -53,13 +53,12 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     },
     submitForm(event: React.FormEvent<any>) {
       const { collection, history }: Partial<IProps> = this.props;
-      const { document: _document, store } = this.state;
-      const upsertCollection = `upsert_${collection._collection}`;
+      const { document: _document } = this.state;
       event.preventDefault();
 
-      this.props[upsertCollection](_document)
-        .then((response: any) => response.data[upsertCollection])
-        .then(store.updateDocument)
+      this.upsertDocument(_document)
+        .then(({ data: updatedDocument }) => updatedDocument)
+        .then(doc => this.setState({ document: doc }))
         .then(() => history.push(collection.path));
     }
   }, (handler: Function) => handler.bind(this));
@@ -67,9 +66,17 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
   constructor(props) {
     super(props);
     this.state = {
-      document: _.get(props, 'location.state.document', {}),
-      store: api[props.collection.typeFormats.graphql]
+      document: _.get(props, 'location.state.document', {})
     };
+  }
+
+  upsertDocument = newDocument => {
+    const {
+      props: { collection },
+      state: { document }
+    } = this;
+
+    return axios.post(`/api/collections/${collection._id}/documents/${document._id}`, { document: newDocument });
   }
 
   private getField(field: Field) {

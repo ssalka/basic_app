@@ -23,6 +23,7 @@ export interface IRouteProps extends ReactProps {
     pathname: string;
     state: any;
   };
+  params: Record<string, string>;
   route: Route;
   routes: Route[];
 }
