@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import api from 'lib/client/api';
 import { connect, CollectionStore } from 'lib/client/api/stores';
 import { ViewComponent, Button, FlexRow } from 'lib/client/components';
-import { IMutationSettings, Field, Collection } from 'lib/client/interfaces';
+import { Field, Collection } from 'lib/client/interfaces';
 import { ReactProps, IRouteProps, IFunctionModule } from 'lib/client/interfaces/react';
 import { READONLY_FIELDS } from 'lib/common/constants';
 import CollectionFormHeader from './header';

@@ -81,7 +81,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     const collection = this.getCollectionBySlug(params.collection);
     const collectionStore = getCollectionStore({ collection });
 
-    const store = api[collection.typeFormats.graphql];
+    const store = api[collection.typeFormats.pascalCase];
 
     // Queries for Schema Form
     const collectionName = collection._collection;

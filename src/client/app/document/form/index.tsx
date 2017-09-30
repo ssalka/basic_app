@@ -29,11 +29,11 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
         value = value.currentTarget.value;
       }
 
-      const safeGraphQLValue = value === '' ? null : value;
+      const nullableValue = value === '' ? null : value;
       const newValue = (
-        field.type === 'NUMBER' && !_.isNull(safeGraphQLValue)
-          ? parseInt(safeGraphQLValue, 10)
-          : safeGraphQLValue
+        field.type === 'NUMBER' && !_.isNull(nullableValue)
+          ? parseInt(nullableValue, 10)
+          : nullableValue
       );
 
       const valueAsArray = _(newValue || '')
