@@ -134,8 +134,8 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
               </div>
             </div>
             <FlexRow className="fill-width">
-              <Button text="Save" type="submit" size="large" color="success" onClick={submitForm} />
-              <Button text="Cancel" size="large" color="danger" onClick={browserHistory.goBack} />
+              <Button text="Save" type="submit" color="success" onClick={submitForm} />
+              <Button text="Cancel" color="danger" onClick={browserHistory.goBack} />
             </FlexRow>
           </form>
         </div>

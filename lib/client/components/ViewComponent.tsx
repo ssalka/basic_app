@@ -3,15 +3,15 @@ import BaseComponent from './BaseComponent';
 import { ReactProps } from 'lib/client/interfaces';
 import request = require('lib/common/request');
 
-export default class ViewComponent<P extends ReactProps, S> extends BaseComponent<P, S> {
-  public post(path, body) {
+export default class ViewComponent<P = React.HTMLAttributes<HTMLElement>, S = {}> extends BaseComponent<P, S> {
+  post(path, body) {
     return request.post(path, body);
   }
 
-  public setStateByPath(path, value) { super.setStateByPath(path, value); }
+  setStateByPath(path, value) { super.setStateByPath(path, value); }
 
-  public render() {
-    const { children, className } = this.props;
+  render() {
+    const { children, className } = this.props as any;
 
     return (
       <section className={`container ${className}`}>

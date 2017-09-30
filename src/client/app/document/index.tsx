@@ -11,24 +11,25 @@ import {
   IDocument,
   IRenderMethod,
   ReactElement,
+  ReactProps,
   SFC
 } from 'lib/client/interfaces';
 import './styles.less';
 
-interface IProps {
+interface IProps extends ReactProps {
   collection: Collection;
   document: IDocument;
   pathname: string;
 }
 
 export default class DocumentView extends ViewComponent<IProps, any> {
-  public static defaultProps: IProps = {
+  static defaultProps: IProps = {
     collection: new Collection(),
     document: {} as IDocument,
     pathname: ''
   };
 
-  private componentDidMount() {
+  componentDidMount() {
     const { collection, document: _document } = this.props;
     console.info(
       _.singularize(collection.name), _document._id,
@@ -36,7 +37,7 @@ export default class DocumentView extends ViewComponent<IProps, any> {
     );
   }
 
-  private renderField: SFC = (field: Field): ReactElement => (
+  renderField: SFC = (field: Field): ReactElement => (
     <p>
       <strong className="field-name">
         {field.name}
@@ -45,7 +46,7 @@ export default class DocumentView extends ViewComponent<IProps, any> {
     </p>
   )
 
-  public render() {
+  render() {
     const { collection, document: _document } = this.props;
     const state = this.props;
 

@@ -1,7 +1,7 @@
 declare const _;
 declare const React;
 import { Link } from 'react-router';
-import { NonIdealState } from '@blueprintjs/core';
+import { NonIdealState, IconName } from '@blueprintjs/core';
 import { Icon, FlexRow, Button } from 'lib/client/components';
 import { IComponentModule } from 'lib/client/interfaces';
 import { IProps, IState } from './';
@@ -48,7 +48,7 @@ export default function getComponents(
     ),
     Placeholder: () => (
       <NonIdealState
-        visual={icon || 'document'}
+        visual={(icon || 'document') as IconName}
         title={`You don't have any ${name}`}
         description={<span>All {name.toLowerCase()} you add will be visible here</span>}
         action={<AddDocumentButton />}
