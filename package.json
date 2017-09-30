@@ -32,6 +32,8 @@
     "grid-styled": "2.0.0-4",
     "lodash": "4.17.2",
     "lodash-inflection": "1.5.0",
+    "material-ui": "^1.0.0-beta.12",
+    "material-ui-icons": "^1.0.0-beta.10",
     "mongoose": "4.7.6",
     "mongoose-schema-extend": "0.2.2",
     "passport": "0.3.2",
