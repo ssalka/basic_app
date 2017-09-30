@@ -115,5 +115,14 @@ module.exports = {
   schema(req, res) {
     res.set('Content-Type', 'text/plain');
     res.send(flow(getGraphQLSchema, printSchema)(req.body));
+  },
+
+  /**
+   * COLLECTION & DOCUMENT ROUTES
+   */
+
+  loadDocumentsInCollection(req, res) {
+    // TODO
+    res.json([]);
   }
 };

@@ -1,5 +1,6 @@
 const express = require('express');
 const middleware = require('./middleware');
+const api = require('./api');
 
 const router = express.Router();
 
@@ -26,9 +27,7 @@ router.post('/graphql',
  * REST ROUTES
  */
 
-router.get('/api/me',
-  middleware.findUserByToken
-);
+router.use('/api', api);
 
 router.get('/*',
   middleware.sendIndex
