@@ -99,8 +99,8 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
             />
 
             <FlexRow className="action-buttons fill-width">
-              <Button text="Save" type="submit" size="large" color="success" onClick={this.submitForm} />
-              <Button text="Cancel" size="large" color="danger" onClick={browserHistory.goBack} />
+              <Button text="Save" type="submit" color="success" onClick={this.submitForm} />
+              <Button text="Cancel" color="danger" onClick={browserHistory.goBack} />
             </FlexRow>
           </form>
         </div>
