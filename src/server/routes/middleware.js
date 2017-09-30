@@ -124,10 +124,10 @@ module.exports = {
    */
 
   loadDocumentsInCollection(req, res, next) {
-    const { _id } = req.params;
+    const { collectionId } = req.params;
     const { limit = 0 } = req.query;
 
-    Collection.findById(_id)
+    Collection.findById(collectionId)
       .then(collection => {
         const Model = ModelGen.getOrGenerateModel(collection);
         const query = Model.find();
@@ -140,6 +140,42 @@ module.exports = {
       })
       .then(invokeMap('toObject'))
       .then(docs => res.json(docs))
+      .catch(next);
+  },
+
+  updateDocumentInCollection(req, res, next) {
+    const { collectionId, documentId } = req.params;
+    const { document: newDocument } = req.body;
+
+    Collection.findById(collectionId)
+      .then(collection => {
+        const Model = ModelGen.getOrGenerateModel(collection);
+
+        return Model.findById(documentId);
+      })
+      .then(document => {
+        if (!document) return Model.create(newDocument);
+
+        // TODO: investigate whether this is still necessary
+        // undefined values come out of GraphQL as null
+        // don't want to set these on documents
+        const denullify = val => _.isArray(val)
+          ? _.reject(val, _.isNull)
+          : _.isNull(val) ? undefined : val;
+
+
+        // TODO: diffing algorithm
+        const updates = _(newDocument)
+          .omit(READONLY_FIELDS)
+          .mapValues(denullify)
+          .value();
+
+        _.assign(document, updates);
+
+        return new Promise((resolve, reject) => document.save(
+          (err, doc) => err ? reject(err) : resolve(doc)
+        ));
+      })
       .catch(next);
   }
 };
