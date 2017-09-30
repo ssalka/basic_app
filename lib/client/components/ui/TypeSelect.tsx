@@ -1,6 +1,6 @@
 declare const _;
 declare const React;
-import { Tree, ITreeNode } from '@blueprintjs/core';
+import { Tree, ITreeNode, IconName } from '@blueprintjs/core';
 import { ViewComponent } from 'lib/client/components';
 import { Collection, Field, IType } from 'lib/client/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
@@ -97,7 +97,7 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
 export const typeToTreeNode = (selectedType: IType) => (
   ({ key, icon, name }: IType): ITreeNode => ({
     id: key,
-    iconName: icon,
+    iconName: icon as IconName,
     label: name,
     isSelected: key === selectedType.key
   })
@@ -106,7 +106,7 @@ export const typeToTreeNode = (selectedType: IType) => (
 export const collectionToTreeNode = (selectedCollection: Collection) => (
   ({ _id, icon, name }: Collection): ITreeNode => ({
     id: _id,
-    iconName: icon,
+    iconName: icon as IconName,
     label: name,
     isSelected: _id === selectedCollection._id
   })

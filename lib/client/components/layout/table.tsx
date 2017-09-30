@@ -1,6 +1,6 @@
 declare const _;
 declare const React;
-import { NonIdealState } from '@blueprintjs/core';
+import { NonIdealState, IconName } from '@blueprintjs/core';
 import * as FilterableTable from 'react-filterable-table';
 import { IDocument, Field, IComponentModule, ReactElement, ReactProps, SFC } from 'lib/client/interfaces';
 import { RenderingService } from 'lib/client/services';
@@ -80,7 +80,7 @@ export default class Table extends ViewComponent<IProps, any> {
       ),
       Placeholder: () => (
         <NonIdealState
-          visual="table"
+          visual={"table" as IconName}
           title="This table has no records"
           description={<span>*Empty table description*</span>}
           action={(

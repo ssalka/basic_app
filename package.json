@@ -20,7 +20,7 @@
     "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --noStackTrace"
   },
   "dependencies": {
-    "@blueprintjs/core": "1.21.0",
+    "@blueprintjs/core": "^1.29.0",
     "async": "2.1.4",
     "axios": "^0.16.2",
     "body-parser": "1.15.2",
