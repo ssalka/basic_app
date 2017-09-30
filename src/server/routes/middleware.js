@@ -2,25 +2,15 @@ const passport = require('passport');
 const async = require('async');
 const _ = require('lodash');
 const { invoke, invokeMap } = require('lodash/fp');
-const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
-const { printSchema } = require('graphql/utilities/schemaPrinter');
 
 const { index } = require('../config');
-const schema = require('lib/server/graphql');
 const { User, Session, Collection } = require('lib/server/models');
 const { ModelGen } = require('lib/server/utils');
-const { logger, generateToken } = require('lib/common');
+const { generateToken } = require('lib/common');
 const { READONLY_FIELDS } = require('lib/common/constants');
 
-// Send these fields to client upon successful authentication
-const USER_FIELDS = [
-  '_id',
-  'username',
-  'createdAt'
-];
-
 module.exports = {
-  sendIndex: (_, res) => res.sendFile(index),
+  sendIndex: (req, res) => res.sendFile(index),
 
   /**
    *  AUTH & REGISTRATION
@@ -102,22 +92,6 @@ module.exports = {
     const { username } = req.user;
     req.logout();
     res.json({ username });
-  },
-
-  /**
-   * GRAPHQL ENDPOINTS
-   */
-
-  graphql: graphqlExpress(({ user }) => ({
-    schema,
-    context: { user }
-  })),
-
-  graphiql: graphiqlExpress({ endpointURL: '/graphql' }),
-
-  schema(req, res) {
-    res.set('Content-Type', 'text/plain');
-    res.send(_.flow(getGraphQLSchema, printSchema)(req.body));
   },
 
   /**
