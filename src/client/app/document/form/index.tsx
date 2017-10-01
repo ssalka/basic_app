@@ -18,52 +18,11 @@ interface IState {
 }
 
 export default class DocumentForm extends ViewComponent<IProps, IState> {
-  public static defaultProps = {
+  static defaultProps = {
     collection: {},
     collections: [],
     location: {}
   };
-
-  private handlers = _.mapValues({
-    updateField: _.curry((field: Field, value: string & React.FormEvent<any>) => {
-      if (value.currentTarget) {
-        // TODO: transform TextInput onChange cb to pass a value instead of event
-        value = value.currentTarget.value;
-      }
-
-      const nullableValue = value === '' ? null : value;
-      const newValue = (
-        field.type === 'NUMBER' && !_.isNull(nullableValue)
-          ? parseInt(nullableValue, 10)
-          : nullableValue
-      );
-
-      const valueAsArray = _(newValue || '')
-        .split('; ')
-        .compact();
-
-      this.setStateByPath(
-        `document.${_.camelCase(field.name)}`,
-        field.isArray ? valueAsArray.value() : newValue
-      );
-    }),
-    clearField: (field: Field) => () => {
-      this.setStateByPath(
-        `document.${_.camelCase(field.name)}`,
-        undefined
-      );
-    },
-    submitForm(event: React.FormEvent<any>) {
-      const { collection, history }: Partial<IProps> = this.props;
-      const { document: _document } = this.state;
-      event.preventDefault();
-
-      this.upsertDocument(_document)
-        .then(({ data: updatedDocument }) => updatedDocument)
-        .then(doc => this.setState({ document: doc }))
-        .then(() => history.push(collection.path));
-    }
-  }, (handler: Function) => handler.bind(this));
 
   constructor(props) {
     super(props);
@@ -81,7 +40,34 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     return axios.post(`/api/collections/${collection._id}/documents/${document._id}`, { document: newDocument });
   }
 
-  private getField(field: Field) {
+  clearField = (field: Field) => () => {
+    this.setStateByPath(`document.${_.camelCase(field.name)}`, undefined);
+  }
+
+  updateField = _.curry((field: Field, value: string & React.FormEvent<any>) => {
+    if (value.currentTarget) {
+      // TODO: transform TextInput onChange cb to pass a value instead of event
+      value = value.currentTarget.value;
+    }
+
+    const nullableValue = value === '' ? null : value;
+    const newValue = (
+      field.type === 'NUMBER' && !_.isNull(nullableValue)
+        ? parseInt(nullableValue, 10)
+        : nullableValue
+    );
+
+    const valueAsArray = _(newValue || '')
+      .split('; ')
+      .compact();
+
+    this.setStateByPath(
+      `document.${_.camelCase(field.name)}`,
+      field.isArray ? valueAsArray.value() : newValue
+    );
+  });
+
+  getField(field: Field) {
     const documentValue: any = this.state.document[_.camelCase(field.name)];
 
     // TODO: support more input types, eg textarea, date/time picker, ...
@@ -98,7 +84,7 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
           </strong>
           <Input
             value={inputValue}
-            onChange={this.handlers.updateField(field)}
+            onChange={this.updateField(field)}
           />
         {field.type === 'NUMBER' && (
           <Button
@@ -106,7 +92,7 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
             color="default"
             size="small"
             minimal={true}
-            onClick={this.handlers.clearField(field)}
+            onClick={this.clearField(field)}
           />
         )}
         </label>
@@ -114,17 +100,24 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     );
   }
 
-  public render() {
-    const {
-      getField,
-      props: { collection },
-      handlers: { submitForm }
-    } = this;
+  submitForm(event: React.FormEvent<any>) {
+    const { collection, history }: Partial<IProps> = this.props;
+    const { document: _document } = this.state;
+    event.preventDefault();
+
+    this.upsertDocument(_document)
+      .then(({ data: updatedDocument }) => updatedDocument)
+      .then(doc => this.setState({ document: doc }))
+      .then(() => history.push(collection.path));
+  }
+
+  render() {
+    const { collection } = this.props;
 
     return (
       <ViewComponent>
         <div className="form-popover pt-card pt-elevation-3">
-          <form name="document-form" onSubmit={submitForm}>
+          <form name="document-form" onSubmit={this.submitForm}>
             <div className="header">
               <FlexRow>
                 <h3>Document Form</h3>
@@ -132,11 +125,11 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
             </div>
             <div className="form-main">
               <div className="fields">
-                {_.map(collection.fields, getField.bind(this))}
+                {collection.fields.map(this.getField)}
               </div>
             </div>
             <FlexRow className="fill-width">
-              <Button text="Save" type="submit" color="success" onClick={submitForm} />
+              <Button text="Save" type="submit" color="success" onClick={this.submitForm} />
               <Button text="Cancel" color="danger" onClick={browserHistory.goBack} />
             </FlexRow>
           </form>
