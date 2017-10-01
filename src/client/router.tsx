@@ -129,8 +129,15 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
 
   getDocumentForm({ params, ...props }: IRouteProps) {
     const collection = this.getCollectionBySlug(params.collection);
+    const collections = this.getCollections();
 
-    return <DocumentForm collection={collection} {...props} />;
+    return (
+      <DocumentForm
+        {...props}
+        collection={collection}
+        collections={collections}
+      />
+    );
   }
 
   getCollectionForm({ location: { state }, ...props }) {

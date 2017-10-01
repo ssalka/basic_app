@@ -10,6 +10,7 @@ import './styles.less';
 
 interface IProps extends Partial<IRouteProps> {
   collection: Collection;
+  collections: Collection[];
 }
 
 interface IState {
@@ -19,6 +20,7 @@ interface IState {
 export default class DocumentForm extends ViewComponent<IProps, IState> {
   public static defaultProps = {
     collection: {},
+    collections: [],
     location: {}
   };
 
