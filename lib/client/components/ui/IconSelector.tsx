@@ -38,12 +38,12 @@ export default class IconSelector extends ViewComponent<IProps, IState> {
 
   handleRequestClose = () => this.setState({
     open: false
-  });
+  })
 
   handleTargetClick = () => this.setState({
     open: true,
     anchorElement: findDOMNode(this.selectedIconRef)
-  });
+  })
 
   setIcon(icon: IIcon) {
     this.setState({ icon: icon.id });
