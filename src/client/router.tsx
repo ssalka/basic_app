@@ -47,10 +47,12 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     }
 
     axios.get('/api/me')
-      .then(res => {
-        if (res.data.user) {
-          User.set(res.data.user);
-        }
+      .then(({ data: { user } }) => {
+        User.set(user);
+
+        user.library.collections.forEach(
+          collection => getCollectionStore({ collection })
+        );
       })
       .catch(err => {
         if (err.response.status === 403 && location.pathname !== '/login') {
