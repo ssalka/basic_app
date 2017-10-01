@@ -129,8 +129,15 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
 
   private getCollectionForm({ location: { state }, ...props }) {
     const { collection } = state;
+    const collections = _.get(this.state.user, 'library.collections', []);
 
-    return <CollectionForm collection={collection} {...props} />;
+    return (
+      <CollectionForm
+        {...props}
+        collection={collection}
+        collections={collections}
+      />
+    );
   }
 
   private logout() {

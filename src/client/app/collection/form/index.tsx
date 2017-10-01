@@ -15,11 +15,11 @@ import './styles.less';
 
 interface IProps extends ReactProps, IRouteProps {
   collection: Partial<Collection>;
+  collections?: Collection[];
 }
 
 interface IState {
   collection: Partial<Collection>;
-  collections?: Collection[];
 }
 
 export class CollectionForm extends ViewComponent<IProps, IState> {
@@ -35,11 +35,9 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
 
   constructor(props: Partial<IProps>) {
     super(props);
-    const collection = new Collection(props.collection);
 
     this.state = {
-      collection,
-      collections: _.reject([collection], _.isEmpty),
+      collection: new Collection(props.collection)
     };
   }
 
@@ -81,7 +79,8 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
   }
 
   public render() {
-    const { collection, collections } = this.state;
+    const { collections } = this.props;
+    const { collection } = this.state;
 
     return (
       <ViewComponent>
