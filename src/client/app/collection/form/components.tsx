@@ -61,17 +61,25 @@ export const TypeSelectPopover: SFC = ({ collections, onChange, selectedType, ..
   const buttonText = selectedType.name || 'Select Type';
 
   return (
-    <Popover
-      {...props}
-      className="popover-type-select"
-      target={<Button text={buttonText} />}
-    >
-      <TypeSelect
-        collections={collections}
-        selectedType={selectedType}
-        onSelectType={onChange}
-      />
-    </Popover>
+    <div>
+      <Popover
+        target={<Button text={buttonText} />}
+        anchorOrigin={{
+          vertical: 'center',
+          horizontal: 'right'
+        }}
+        transformOrigin={{
+          vertical: 'center',
+          horizontal: 'left'
+        }}
+      >
+        <TypeSelect
+          collections={collections}
+          selectedType={selectedType}
+          onSelectType={onChange}
+        />
+      </Popover>
+    </div>
   );
 };
 
@@ -137,10 +145,7 @@ const ViewSelectPopover: SFC = ({ field, handleSelectView, handleTogglePopover }
   );
 
   return (
-    <Popover
-      className="popover-view-select"
-      target={SelectViewButton}
-    >
+    <Popover target={SelectViewButton}>
       <ViewSelect
         renderMethods={RENDER_METHODS.filter(isValidRenderMethod)}
         selectedView={selectedView}
