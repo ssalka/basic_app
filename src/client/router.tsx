@@ -32,12 +32,12 @@ interface IAppRouterState {
 
 @connect(UserStore)
 class AppRouter extends BaseComponent<{}, IAppRouterState> {
-  public static childContextTypes = {
+  static childContextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   };
 
-  private renderIfAuthenticated: React.SFC<IRouteProps> = (
+  renderIfAuthenticated: React.SFC<IRouteProps> = (
     props => this.state.user ? <App {...props} /> : <div />
   );
 
@@ -59,7 +59,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
       });
   }
 
-  public getChildContext(): IContext {
+  getChildContext(): IContext {
     const context: IContext = { appName: document.title };
 
     if (this.state.user) {
@@ -71,13 +71,19 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     return context;
   }
 
-  private getCollectionBySlug(slug: string) {
-    const collections = _.get(this.state.user, 'library.collections', []);
+  getCollections = (): ICollection[] => _.get(
+    this.state.user,
+    'library.collections',
+    []
+  );
+
+  getCollectionBySlug(slug: string) {
+    const collections = this.getCollections();
 
     return _.find(collections, { slug });
   }
 
-  private getCollectionView({ params, ...props }: any) {
+  getCollectionView({ params, ...props }: any) {
     const collection = this.getCollectionBySlug(params.collection);
     const collectionStore = getCollectionStore({ collection });
 
@@ -108,7 +114,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     return <CollectionViewWithQuery {...props} />;
   }
 
-  private getDocumentView({ params, location: { state, pathname }, ...props }) {
+  getDocumentView({ params, location: { state, pathname }, ...props }) {
     const collection = this.getCollectionBySlug(params.collection);
     const _document = state.document || _.pick(params, '_id');
 
@@ -121,15 +127,15 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     );
   }
 
-  private getDocumentForm({ params, ...props }: IRouteProps) {
+  getDocumentForm({ params, ...props }: IRouteProps) {
     const collection = this.getCollectionBySlug(params.collection);
 
     return <DocumentForm collection={collection} {...props} />;
   }
 
-  private getCollectionForm({ location: { state }, ...props }) {
+  getCollectionForm({ location: { state }, ...props }) {
     const { collection } = state;
-    const collections = _.get(this.state.user, 'library.collections', []);
+    const collections = this.getCollections();
 
     return (
       <CollectionForm
@@ -140,7 +146,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     );
   }
 
-  private logout() {
+  logout() {
     const { token } = localStorage;
     if (token) {
       request.post('/logout', { token })
@@ -149,7 +155,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     }
   }
 
-  private logoutCallback() {
+  logoutCallback() {
     User.unset();
     browserHistory.push('/');
   }
@@ -172,9 +178,8 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     };
   }
 
-  public render() {
+  render() {
     const { Site, NotFound } = this.components;
-    const collections = _.get(this.props, 'user.library.collections', []);
 
     return (
       <Router history={browserHistory}>
@@ -184,13 +189,16 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
 
           <Route component={this.renderIfAuthenticated}>
             <Route path="home" component={Home} />
+
             <Route path="collections">
               <IndexRoute component={Collections} />
               <Route path="add" component={CollectionForm} />
+
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />
                 <Route path="add" component={this.getDocumentForm} />
                 <Route path="edit" component={this.getCollectionForm} />
+
                 <Route path=":_id">
                   <IndexRoute component={this.getDocumentView} />
                   <Route path="edit" component={this.getDocumentForm} />
