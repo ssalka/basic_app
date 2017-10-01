@@ -3,8 +3,7 @@ declare const React;
 
 import { findDOMNode } from 'react-dom';
 import Icon from 'material-ui/Icon';
-import Popover from 'material-ui/Popover';
-import { ViewComponent, FlexRow } from '../';
+import { ViewComponent, FlexRow, Popover } from '../';
 import { IIcon, ReactElement, ReactProps } from 'lib/client/interfaces';
 import { ICONS } from 'lib/common/constants';
 import '../../styles/IconSelector.less';
@@ -97,27 +96,19 @@ export default class IconSelector extends ViewComponent<IProps, IState> {
     const { IconGroups } = this;
 
     return (
-      <div>
+      <Popover target={(
         <Icon
           className={`pt-icon pt-icon-${this.state.icon}`}
           style={{ fontSize: 20 }}
           ref={this.setRef}
           onClick={this.handleTargetClick}
         />
-
-        <Popover
-          open={this.state.open}
-          anchorEl={this.state.anchorElement}
-          onRequestClose={this.handleRequestClose}
-          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-          transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-        >
-          <h4 style={{ margin: 20 }}>
-            Select an Icon
-          </h4>
-          <IconGroups />
-        </Popover>
-      </div>
+      )}>
+        <h4 style={{ margin: 20 }}>
+          Select an Icon
+        </h4>
+        <IconGroups />
+      </Popover>
     );
   }
 }
