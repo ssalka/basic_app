@@ -1,4 +1,5 @@
 declare const _;
+import axios from 'axios';
 import { createStore } from 'lib/client/api/stores';
 import { IDocument } from 'lib/client/interfaces';
 
@@ -11,7 +12,21 @@ export default _.memoize(initialState => (
       loading: true
     })
   }, {
-    loadDocuments(documents: IDocument[]) {
+    getDocuments() {
+      return this.state.documents;
+    },
+    loadDocuments() {
+      const { _id } = this.state.collection;
+
+      return axios
+        .get(`/api/collections/${_id}/documents`)
+        .then(({ data: documents }) => (
+          this.loadDocumentsSuccess(documents),
+          documents
+        ))
+        .catch(console.error);
+    },
+    loadDocumentsSuccess(documents: IDocument[]) {
       this.setState({ documents, loading: false });
     },
     updateDocument(doc: IDocument) {

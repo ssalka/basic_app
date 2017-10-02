@@ -7,6 +7,8 @@ interface IProps extends React.Props<any> {
   rounded?: boolean;
   size?: string;
   className?: string;
+  value: string;
+  onChange: React.EventHandler<React.ChangeEvent<HTMLInputElement>>;
 }
 
 export default ({ intent, rounded, size, ...props }: IProps): ReactElement => {

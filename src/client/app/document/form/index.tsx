@@ -4,17 +4,28 @@ import axios from 'axios';
 import { EditableText } from '@blueprintjs/core';
 import { browserHistory } from 'react-router';
 import api from 'lib/client/api';
-import { ViewComponent, FlexRow, FlexColumn, Button, TextInput, NumericInput } from 'lib/client/components';
+import { FIELD_TYPES } from 'lib/common/constants';
+import { findDocumentById } from 'lib/common/helpers';
 import { Collection, Field, ReactElement, IDocument, IRouteProps } from 'lib/client/interfaces';
+import {
+  ViewComponent,
+  FlexRow,
+  FlexColumn,
+  Button,
+  TextInput,
+  NumericInput,
+  CollectionSelect
+} from 'lib/client/components';
 import './styles.less';
 
-interface IProps extends Partial<IRouteProps> {
+export interface IProps extends Partial<IRouteProps> {
   collection: Collection;
   collections: Collection[];
 }
 
 interface IState {
   document: IDocument;
+  documents?: IDocument[]
 }
 
 export default class DocumentForm extends ViewComponent<IProps, IState> {
@@ -67,25 +78,51 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     );
   });
 
-  getField(field: Field) {
+  getInput(field: Field): ReactElement {
     const documentValue: any = this.state.document[_.camelCase(field.name)];
-
-    // TODO: support more input types, eg textarea, date/time picker, ...
-    const Input: any = field.type === 'STRING' ? TextInput : NumericInput;
-
-    // TODO: separate form inputs per value
     const inputValue: any = field.isArray ? (documentValue || []).join('; ') : documentValue;
 
-    return (
-      <FlexColumn className="document-field" key={field.name}>
-        <label className="pt-label pt-inline">
-          <strong className="field-name">
-            {field.name}
-          </strong>
-          <Input
+    if (field._collection) {
+      const collection = findDocumentById(this.props.collections, field._collection) as Collection;
+
+      return (
+        <CollectionSelect
+          collection={collection}
+          documents={this.state.documents || []}
+          onChange={this.updateField(field)}
+        />
+      );
+    }
+
+    // TODO: support more input types, eg textarea, date/time picker, ...
+    switch (field.type) {
+      case 'NUMBER':
+      return (
+        <NumericInput
+          value={inputValue}
+          onChange={this.updateField(field)}
+        />
+      );
+      case 'STRING':
+      default:
+        return (
+          <TextInput
             value={inputValue}
             onChange={this.updateField(field)}
           />
+        );
+    }
+  }
+
+  getField = (field: Field) => (
+    <FlexColumn className="document-field" key={field.name}>
+      <label className="pt-label pt-inline">
+        <strong className="field-name">
+          {field.name}
+        </strong>
+
+        {this.getInput(field)}
+
         {field.type === 'NUMBER' && (
           <Button
             icon="cross"
@@ -95,10 +132,9 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
             onClick={this.clearField(field)}
           />
         )}
-        </label>
-      </FlexColumn>
-    );
-  }
+      </label>
+    </FlexColumn>
+  )
 
   submitForm(event: React.FormEvent<any>) {
     const { collection, history }: Partial<IProps> = this.props;

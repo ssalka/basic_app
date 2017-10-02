@@ -6,15 +6,17 @@ import api from 'lib/client/api';
 import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import common = require('lib/common');
+import { findDocumentById } from 'lib/common/helpers';
 import Splash from './splash';
 import Login from './login';
 import App, { Home, Collections } from './app';
 import CollectionView, { IProps as CollectionViewProps } from './app/collection';
 import CollectionForm from './app/collection/form';
 import DocumentView from './app/document';
-import DocumentForm from './app/document/form';
+import DocumentForm, { IProps as DocumentFormProps } from './app/document/form';
 import {
   Collection as ICollection,
+  Field,
   IComponentModule,
   IContext,
   IRouteProps,
@@ -107,7 +109,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
         if (!this.state.documents.length) {
           axios.get(`/api/collections/${collection._id}/documents`)
             .then(({ data: documents }) => documents)
-            .then(store.loadDocuments)
+            .then(store.loadDocumentsSuccess)
             .catch(console.error);
         }
       }
@@ -133,11 +135,20 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     const collection = this.getCollectionBySlug(params.collection);
     const collections = this.getCollections();
 
+    const collectionField = _.find(collection.fields, field => field._collection);
+    const linkedCollection = findDocumentById(collections, collectionField._collection) as ICollection;
+    const collectionStore = getCollectionStore({ collection: linkedCollection });
+    api[linkedCollection.typeFormats.pascalCase].loadDocuments();
+
+    const Form = collectionField
+      ? connect(collectionStore)(DocumentForm)
+      : DocumentForm;
+
     return (
-      <DocumentForm
-        {...props}
+      <Form
         collection={collection}
         collections={collections}
+        {...props}
       />
     );
   }
