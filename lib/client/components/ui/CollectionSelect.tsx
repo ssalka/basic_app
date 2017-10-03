@@ -4,6 +4,7 @@ import { Classes, MenuItem } from '@blueprintjs/core';
 import { MultiSelect } from '@blueprintjs/labs';
 import { IDocument, Collection } from 'lib/client/interfaces';
 import ViewComponent from '../ViewComponent';
+import styled from 'styled-components';
 
 interface ICollectionSelectProps {
   collection: Collection;
@@ -73,17 +74,23 @@ export default class CollectionSelect extends ViewComponent<ICollectionSelectPro
     const MultiSelectOfCollection: any = MultiSelect.ofType<CollectionType>();
 
     return (
-      <MultiSelectOfCollection
-        items={documents.slice(0, 1000)}
-        itemPredicate={this.filterItem}
-        itemRenderer={this.renderItem}
-        noResults={<MenuItem disabled={true} text="No results." />}
-        onItemSelect={this.handleSelect}
-        popoverProps={{ popoverClassName: Classes.MINIMAL }}
-        tagRenderer={this.renderTag}
-        tagInputProps={{ onRemove: this.handleTagRemove }}
-        selectedItems={this.state.selectedDocuments}
-      />
+      <MultiSelectContainer>
+        <MultiSelectOfCollection
+          items={documents.slice(0, 1000)}
+          itemPredicate={this.filterItem}
+          itemRenderer={this.renderItem}
+          noResults={<MenuItem disabled={true} text="No results." />}
+          onItemSelect={this.handleSelect}
+          popoverProps={{ popoverClassName: Classes.MINIMAL }}
+          resetOnSelect={true}
+          selectedItems={this.state.selectedDocuments}
+          tagRenderer={this.renderTag}
+          tagInputProps={{
+            onRemove: this.handleTagRemove,
+            placeholder: '' // BUG: blueprint resets text to "Search..." after selecting an item
+          }}
+        />
+      </MultiSelectContainer>
     );
   }
 
@@ -97,3 +104,12 @@ export default class CollectionSelect extends ViewComponent<ICollectionSelectPro
     />
   )
 }
+
+const MultiSelectContainer = styled.div`
+  display: inline-block;
+  max-width: 330px;
+
+  input {
+    border: 0;
+  }
+`;
