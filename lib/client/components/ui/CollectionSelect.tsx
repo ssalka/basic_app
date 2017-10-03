@@ -65,7 +65,6 @@ export default class CollectionSelect extends ViewComponent<ICollectionSelectPro
     });
   }
 
-  // TODO: implement a way to indicate identifying information of documents
   renderTag = (doc: IDocument): string => doc[this.state.firstField] || doc._id;
 
   render() {

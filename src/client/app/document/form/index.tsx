@@ -25,7 +25,7 @@ export interface IProps extends Partial<IRouteProps> {
 
 interface IState {
   document: IDocument;
-  documents?: IDocument[]
+  documents?: IDocument[];
 }
 
 export default class DocumentForm extends ViewComponent<IProps, IState> {
