@@ -9,7 +9,7 @@ import styled from 'styled-components';
 interface ICollectionSelectProps {
   collection: Collection;
   documents: IDocument[];
-  onChange(value: string): void;
+  onChange?(documents: IDocument[]): void;
 }
 
 interface ICollectionSelectState {
@@ -29,6 +29,13 @@ export default class CollectionSelect extends ViewComponent<ICollectionSelectPro
       selectedDocuments: [],
       firstField: _.camelCase(props.collection.fields[0].name)
     };
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    const [currentSelectedDocs, nextSelectedDocs] = _.map([this.state, nextState], 'selectedDocuments');
+    if (this.props.onChange && !_.isEqualWith(currentSelectedDocs, nextSelectedDocs, '_id')) {
+      this.props.onChange(nextSelectedDocs);
+    }
   }
 
   filterItem = (query: string, doc: IDocument, index: number): boolean => (

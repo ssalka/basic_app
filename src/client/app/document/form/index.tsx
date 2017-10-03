@@ -78,6 +78,21 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     );
   });
 
+  updateCollectionField = _.curry((field: Field, collections: Collection[]) => {
+    const newValue = field.isArray
+      ? collections
+      : collections[0];
+
+    if (!field.isArray && _.isEmpty(newValue) || !(newValue as Collection)._id) {
+      return console.error('A valid document is required for use in a collection field. Got', newValue);
+    }
+
+    this.setStateByPath(
+      `document.${_.camelCase(field.name)}`,
+      field.isArray ? _.map(newValue, '_id') : (newValue as Collection)._id
+    );
+  });
+
   getInput(field: Field): ReactElement {
     const documentValue: any = this.state.document[_.camelCase(field.name)];
     const inputValue: any = field.isArray ? (documentValue || []).join('; ') : documentValue;
@@ -89,7 +104,7 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
         <CollectionSelect
           collection={collection}
           documents={this.state.documents || []}
-          onChange={this.updateField(field)}
+          onChange={this.updateCollectionField(field)}
         />
       );
     }
