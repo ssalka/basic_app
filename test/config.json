@@ -11,7 +11,7 @@
     "tsx"
   ],
   "moduleNameMapper": {
-    "\\.less$": "<rootDir>/node_modules/jest-css-modules"
+    "\\.(css|less)$": "<rootDir>/node_modules/jest-css-modules"
   },
   "moduleDirectories": [
     "node_modules",
