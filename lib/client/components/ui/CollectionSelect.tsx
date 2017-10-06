@@ -1,122 +1,60 @@
 declare const _;
 declare const React;
 import { Classes, MenuItem } from '@blueprintjs/core';
-import { MultiSelect } from '@blueprintjs/labs';
+import { ReactSelectProps } from 'react-select';
+import Select from 'react-virtualized-select';
+import createFilterOptions from 'react-select-fast-filter-options';
 import { IDocument, Collection } from 'lib/client/interfaces';
 import ViewComponent from '../ViewComponent';
 import styled from 'styled-components';
 
-interface ICollectionSelectProps {
-  collection: Collection;
-  documents: IDocument[];
-  onChange?(documents: IDocument[]): void;
+import 'react-select/dist/react-select.css';
+import 'react-virtualized/styles.css';
+import 'react-virtualized-select/styles.css';
+
+interface ICollectionSelectProps extends ReactSelectProps {
+  documents: IDocument | IDocument[];
+  value?: IDocument | IDocument[];
+  onChange?(newFieldValue: IDocument | IDocument[]): void;
+  labelKey: string;
 }
 
-interface ICollectionSelectState {
-  selectedDocuments: IDocument[];
-  firstField: string;
-}
-
-export default class CollectionSelect extends ViewComponent<ICollectionSelectProps, ICollectionSelectState> {
+export default class CollectionSelect extends ViewComponent<ICollectionSelectProps> {
   static defaultProps = {
     documents: [],
-    selectedDocuments: []
+    value: []
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedDocuments: [],
-      firstField: _.camelCase(props.collection.fields[0].name)
-    };
+  handleChange(newFieldValue: IDocument | IDocument[]) {
+    this.props.onChange(newFieldValue);
   }
-
-  componentWillUpdate(nextProps, nextState) {
-    const [currentSelectedDocs, nextSelectedDocs] = _.map([this.state, nextState], 'selectedDocuments');
-    if (this.props.onChange && !_.isEqualWith(currentSelectedDocs, nextSelectedDocs, '_id')) {
-      this.props.onChange(nextSelectedDocs);
-    }
-  }
-
-  filterItem = (query: string, doc: IDocument, index: number): boolean => (
-    (doc[this.state.firstField] || '').toLowerCase().includes(query.toLowerCase())
-  );
-
-  handleTagRemove = (_tag: string, index: number) => {
-    this.deselectDocument(this.state.selectedDocuments[index]);
-  }
-
-  isDocumentSelected = (doc: IDocument): boolean  => (
-    _.map(this.state.selectedDocuments, '_id').includes(doc._id)
-  );
-
-  handleSelect = (doc: IDocument) => {
-    if (!this.isDocumentSelected(doc)) {
-      this.selectDocument(doc);
-    }
-    else {
-      this.deselectDocument(doc);
-    }
-  }
-
-  selectDocument(doc: IDocument) {
-    this.setState({
-      selectedDocuments: [...this.state.selectedDocuments, doc]
-    });
-  }
-
-  deselectDocument(doc: IDocument) {
-    this.setState({
-      selectedDocuments: this.state.selectedDocuments.filter(
-        _doc => _doc._id !== doc._id
-      )
-    });
-  }
-
-  renderTag = (doc: IDocument): string => doc[this.state.firstField] || doc._id;
 
   render() {
-    const { documents } = this.props;
-    type CollectionType = typeof documents[0];
-    const MultiSelectOfCollection: any = MultiSelect.ofType<CollectionType>();
+    const {
+      documents,
+      ...props
+    } = this.props;
+
+    const filterOptions = createFilterOptions({
+      valueKey: this.props.labelKey
+    });
 
     return (
       <MultiSelectContainer>
-        <MultiSelectOfCollection
-          items={documents.slice(0, 1000)}
-          itemPredicate={this.filterItem}
-          itemRenderer={this.renderItem}
-          noResults={<MenuItem disabled={true} text="No results." />}
-          onItemSelect={this.handleSelect}
-          popoverProps={{ popoverClassName: Classes.MINIMAL }}
-          resetOnSelect={true}
-          selectedItems={this.state.selectedDocuments}
-          tagRenderer={this.renderTag}
-          tagInputProps={{
-            onRemove: this.handleTagRemove,
-            placeholder: '' // BUG: blueprint resets text to "Search..." after selecting an item
-          }}
+        <Select
+          {...props}
+          autofocus={true}
+          filterOptions={filterOptions}
+          options={documents}
         />
       </MultiSelectContainer>
     );
   }
-
-  renderItem = ({ handleClick, isActive, item }) => (
-    <MenuItem
-      iconName={this.isDocumentSelected(item) ? "tick" : "blank"}
-      key={item._id}
-      onClick={handleClick}
-      text={this.renderTag(item)}
-      shouldDismissPopover={false}
-    />
-  )
 }
 
 const MultiSelectContainer = styled.div`
   display: inline-block;
-  max-width: 330px;
-
-  input {
-    border: 0;
+  .Select {
+    min-width: 200px;
   }
 `;

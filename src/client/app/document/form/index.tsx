@@ -78,20 +78,38 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     );
   });
 
-  updateCollectionField = _.curry((field: Field, collections: Collection[]) => {
-    const newValue = field.isArray
-      ? collections
-      : collections[0];
-
-    if (!field.isArray && _.isEmpty(newValue) || !(newValue as Collection)._id) {
-      return console.error('A valid document is required for use in a collection field. Got', newValue);
+  updateCollectionField = _.curry((field: Field, newFieldValue: Collection | Collection[]) => {
+    if (_.isNull(newFieldValue)) {
+      // value cleared by form
+      return [];
     }
+
+    const collectionId = (newFieldValue as Collection)._id;
+    const invalidCollectionField = !field.isArray && !collectionId;
+    const invalidArrayField = field.isArray && !_.isArray(newFieldValue);
+
+    // if (invalidCollectionField || invalidArrayField) {
+    //   return console.error('A valid document is required for use in a collection field. Got', newFieldValue);
+    // }
 
     this.setStateByPath(
       `document.${_.camelCase(field.name)}`,
-      field.isArray ? _.map(newValue, '_id') : (newValue as Collection)._id
+      field.isArray ? _.map(newFieldValue, '_id') : collectionId
     );
   });
+
+  getLinkedDocuments(field: Field): IDocument | IDocument[] {
+    const { document: doc, documents } = this.state;
+    const _id = _.get(doc, _.camelCase(field.name));
+
+    if (!(documents && _id)) {
+      return [];
+    }
+
+    const search = field.isArray ? _.filter : _.find;
+
+    return search(this.state.documents, { _id });
+  }
 
   getInput(field: Field): ReactElement {
     const documentValue: any = this.state.document[_.camelCase(field.name)];
@@ -102,8 +120,10 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
 
       return (
         <CollectionSelect
-          collection={collection}
+          multi={field.isArray}
+          labelKey={_.camelCase(this.props.collection.fields[0].name)}
           documents={this.state.documents || []}
+          value={this.getLinkedDocuments(field)}
           onChange={this.updateCollectionField(field)}
         />
       );
