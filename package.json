@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^1.29.0",
-    "@blueprintjs/labs": "^0.10.0",
     "async": "2.1.4",
     "axios": "^0.16.2",
     "body-parser": "1.15.2",
