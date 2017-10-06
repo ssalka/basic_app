@@ -42,15 +42,6 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     };
   }
 
-  upsertDocument = newDocument => {
-    const {
-      props: { collection },
-      state: { document }
-    } = this;
-
-    return axios.post(`/api/collections/${collection._id}/documents/${document._id}`, { document: newDocument });
-  }
-
   clearField = (field: Field) => () => {
     this.setStateByPath(`document.${_.camelCase(field.name)}`, undefined);
   }
@@ -78,19 +69,19 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     );
   });
 
-  updateCollectionField = _.curry((field: Field, newFieldValue: Collection | Collection[]) => {
+  updateCollectionField = _.curry((field: Field, newFieldValue: Collection | Collection[]): void => {
     if (_.isNull(newFieldValue)) {
       // value cleared by form
-      return [];
+      return this.setStateByPath(`document.${_.camelCase(field.name)}`, []);
     }
 
     const collectionId = (newFieldValue as Collection)._id;
     const invalidCollectionField = !field.isArray && !collectionId;
     const invalidArrayField = field.isArray && !_.isArray(newFieldValue);
 
-    // if (invalidCollectionField || invalidArrayField) {
-    //   return console.error('A valid document is required for use in a collection field. Got', newFieldValue);
-    // }
+    if (invalidCollectionField || invalidArrayField) {
+      return console.error('A valid document is required for use in a collection field. Got', newFieldValue);
+    }
 
     this.setStateByPath(
       `document.${_.camelCase(field.name)}`,
@@ -110,6 +101,21 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
 
     return search(this.state.documents, { _id });
   }
+
+  submitForm(event: React.FormEvent<any>) {
+    const { collection, history }: Partial<IProps> = this.props;
+    const { document: _document } = this.state;
+    event.preventDefault();
+
+    this.upsertDocumentInCollection(collection, _document)
+      .then(({ data: updatedDocument }) => updatedDocument)
+      .then(doc => this.setState({ document: doc }))
+      .then(() => history.push(collection.path));
+  }
+
+  upsertDocumentInCollection = (collection: Collection, doc: IDocument) => (
+    axios.post(`/api/collections/${collection._id}/documents/${doc._id}`, { document: doc })
+  )
 
   getInput(field: Field): ReactElement {
     const documentValue: any = this.state.document[_.camelCase(field.name)];
@@ -149,39 +155,6 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     }
   }
 
-  getField = (field: Field) => (
-    <FlexColumn className="document-field" key={field.name}>
-      <label className="pt-label pt-inline">
-        <strong className="field-name">
-          {field.name}
-        </strong>
-
-        {this.getInput(field)}
-
-        {field.type === 'NUMBER' && (
-          <Button
-            icon="cross"
-            color="default"
-            size="small"
-            minimal={true}
-            onClick={this.clearField(field)}
-          />
-        )}
-      </label>
-    </FlexColumn>
-  )
-
-  submitForm(event: React.FormEvent<any>) {
-    const { collection, history }: Partial<IProps> = this.props;
-    const { document: _document } = this.state;
-    event.preventDefault();
-
-    this.upsertDocument(_document)
-      .then(({ data: updatedDocument }) => updatedDocument)
-      .then(doc => this.setState({ document: doc }))
-      .then(() => history.push(collection.path));
-  }
-
   render() {
     const { collection } = this.props;
 
@@ -196,7 +169,27 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
             </div>
             <div className="form-main">
               <div className="fields">
-                {collection.fields.map(this.getField)}
+                {collection.fields.map((field: Field) => (
+                  <FlexColumn className="document-field" key={field.name}>
+                    <label className="pt-label pt-inline">
+                      <strong className="field-name">
+                        {field.name}
+                      </strong>
+
+                      {this.getInput(field)}
+
+                      {field.type === 'NUMBER' && (
+                        <Button
+                          icon="cross"
+                          color="default"
+                          size="small"
+                          minimal={true}
+                          onClick={this.clearField(field)}
+                        />
+                      )}
+                    </label>
+                  </FlexColumn>
+                ))}
               </div>
             </div>
             <FlexRow className="fill-width">
