@@ -14,11 +14,15 @@ import CollectionFormSchema from './schema';
 import './styles.less';
 
 interface IProps extends ReactProps, IRouteProps {
+  // initial state of collection
   collection: Partial<Collection>;
+
+  // user's library of collections
   collections?: Collection[];
 }
 
 interface IState {
+  // current state of collection
   collection: Partial<Collection>;
 }
 

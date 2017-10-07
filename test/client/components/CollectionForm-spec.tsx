@@ -11,7 +11,12 @@ describe("CollectionForm", () => {
   let elements: Record<string, any> = {};
 
   function getCollectionForm() {
-    return mount(<CollectionForm collection={testCollection} />);
+    return mount(
+      <CollectionForm
+        collection={testCollection}
+        collections={[testCollection]}
+      />
+    );
   }
 
   beforeEach(() => {
@@ -24,8 +29,7 @@ describe("CollectionForm", () => {
 
   it("loads with the right initial state", () => {
     expect(collectionForm.state()).toEqual({
-      collection: testCollection,
-      collections: [testCollection]
+      collection: testCollection
     });
   });
 
