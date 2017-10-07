@@ -1,11 +1,8 @@
 const passport = require('passport');
 const async = require('async');
 const { flow, isEmpty, pick } = require('lodash');
-const { graphqlExpress, graphiqlExpress } = require('graphql-server-express');
-const { printSchema } = require('graphql/utilities/schemaPrinter');
 
 const { index } = require('../config');
-const getGraphQLSchema = require('lib/server/graphql');
 const { User, Session, Collection } = require('lib/server/models');
 const { logger, generateToken } = require('lib/common');
 
@@ -99,21 +96,5 @@ module.exports = {
     const { username } = req.user;
     req.logout();
     res.json({ username });
-  },
-
-  /**
-   * GRAPHQL ENDPOINTS
-   */
-
-  graphql: graphqlExpress(({ body, user }) => ({
-    schema: getGraphQLSchema(body),
-    context: { user }
-  })),
-
-  graphiql: graphiqlExpress({ endpointURL: '/graphql' }),
-
-  schema(req, res) {
-    res.set('Content-Type', 'text/plain');
-    res.send(flow(getGraphQLSchema, printSchema)(req.body));
   }
 };
