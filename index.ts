@@ -4,4 +4,4 @@ const entryFile = {
   test: 'test'
 }[process.env.NODE_ENV];
 
-require(entryFile);
+import(entryFile);
