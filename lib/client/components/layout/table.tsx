@@ -2,7 +2,7 @@ declare const _;
 declare const React;
 import { NonIdealState, IconName } from '@blueprintjs/core';
 import * as FilterableTable from 'react-filterable-table';
-import { IDocument, Field, IComponentModule, ReactElement, ReactProps, SFC } from 'lib/client/interfaces';
+import { IDocument, Field, IComponentModule, ReactElement, ReactProps, SFC } from 'lib/common/interfaces';
 import { RenderingService } from 'lib/client/services';
 import { ViewComponent, Button } from '../';
 import '../../styles/Table.less';

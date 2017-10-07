@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import { RenderingService } from 'lib/client/services';
-import { Field } from 'lib/client/interfaces';
+import { Field } from 'lib/common/interfaces';
 import { BaseComponent } from 'lib/client/components';
 import { shallow } from 'enzyme';
 

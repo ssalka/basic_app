@@ -6,7 +6,7 @@ import { browserHistory } from 'react-router';
 import api from 'lib/client/api';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { findDocumentById } from 'lib/common/helpers';
-import { Collection, Field, ReactElement, IDocument, IRouteProps } from 'lib/client/interfaces';
+import { Collection, Field, ReactElement, IDocument, IRouteProps } from 'lib/common/interfaces';
 import {
   ViewComponent,
   FlexRow,

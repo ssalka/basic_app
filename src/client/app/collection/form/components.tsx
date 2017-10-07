@@ -4,7 +4,7 @@ declare const React;
 import { EditableText, Checkbox } from '@blueprintjs/core';
 import { connect, CollectionStore } from 'lib/client/api/stores';
 import { Button, FlexRow, FlexColumn, Popover, TypeSelect, ViewSelect } from 'lib/client/components';
-import { Collection, Field, IRenderMethod, IType, ReactElement, SFC } from 'lib/client/interfaces';
+import { Collection, Field, IRenderMethod, IType, ReactElement, SFC } from 'lib/common/interfaces';
 import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
 
 export const CollectionNameInput: SFC = ({ name, handleChange }) => (

@@ -1,5 +1,5 @@
 declare const React;
-import { ReactElement } from 'lib/client/interfaces';
+import { ReactElement } from 'lib/common/interfaces';
 
 interface IProps extends React.Props<any> {
   name: string;

@@ -1,7 +1,7 @@
 declare const _;
 declare const React;
 import { Button, IButtonProps } from '@blueprintjs/core';
-import { ReactElement } from '../interfaces';
+import { ReactElement } from 'lib/common/interfaces';
 import '../styles/Button.less';
 
 interface IProps extends React.Props<any> {

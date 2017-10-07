@@ -4,7 +4,7 @@ import { NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router';
 import { connect, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
-import { Collection, ReactElement } from 'lib/client/interfaces';
+import { Collection, ReactElement } from 'lib/common/interfaces';
 
 @connect(UserStore)
 class Collections extends ViewComponent<any, any> {

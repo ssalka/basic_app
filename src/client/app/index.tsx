@@ -1,7 +1,7 @@
 declare const _;
 declare const React;
 import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
-import { ILink, IUser, IRouteProps, ReactElement, IQueryProps, Collection } from 'lib/client/interfaces';
+import { ILink, IUser, IRouteProps, ReactElement, IQueryProps, Collection } from 'lib/common/interfaces';
 import { connect, UserStore } from 'lib/client/api/stores';
 import Home from './home';
 import Collections from './collections';

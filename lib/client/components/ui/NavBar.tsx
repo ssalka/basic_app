@@ -1,7 +1,7 @@
 declare const React;
 import { Link } from 'react-router';
 import { InputGroup } from '@blueprintjs/core';
-import { IContext, ReactElement } from 'lib/client/interfaces';
+import { IContext, ReactElement } from 'lib/common/interfaces';
 import { BaseComponent, Button, Icon } from '../';
 import '../../styles/Navbar.less';
 

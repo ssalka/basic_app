@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import api from 'lib/client/api';
 import { connect, CollectionStore, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, Button } from 'lib/client/components';
-import { IQueryProps, IRouteProps } from 'lib/client/interfaces';
+import { IQueryProps, IRouteProps } from 'lib/common/interfaces';
 import './styles.less';
 
 const { Collection, User } = api;

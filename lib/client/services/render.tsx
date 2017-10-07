@@ -10,7 +10,7 @@ import {
   ReactElement,
   ReactProps,
   SFC
-} from 'lib/client/interfaces';
+} from 'lib/common/interfaces';
 
 class RenderingService {
   private componentMap: IComponentModule = {

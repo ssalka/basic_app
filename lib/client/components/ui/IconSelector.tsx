@@ -1,7 +1,7 @@
 declare const _;
 declare const React;
 import { ViewComponent, Icon, Popover, FlexRow } from '../';
-import { IIcon, ReactElement, ReactProps } from 'lib/client/interfaces';
+import { IIcon, ReactElement, ReactProps } from 'lib/common/interfaces';
 import { ICONS } from 'lib/common/constants';
 import '../../styles/IconSelector.less';
 

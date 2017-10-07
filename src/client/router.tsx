@@ -22,7 +22,7 @@ import {
   IRouteProps,
   IUser,
   ReactElement
-} from 'lib/client/interfaces';
+} from 'lib/common/interfaces';
 import './styles.less';
 
 const { request, logger } = common as any;

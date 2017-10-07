@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import { mount, ReactWrapper } from 'enzyme';
-import { Collection, Field } from 'lib/client/interfaces';
+import { Collection, Field } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
 import { TypeSelectPopover, ITypeSelectPopoverProps } from 'src/client/app/collection/form/components';

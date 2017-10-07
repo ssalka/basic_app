@@ -3,8 +3,8 @@ declare const React;
 
 import { EditableText } from '@blueprintjs/core';
 import { ViewComponent, Button, FlexRow, FlexColumn } from 'lib/client/components';
-import { Field, Collection } from 'lib/client/interfaces/collection';
-import { ReactElement, ReactProps, SFC, IComponentModule, IFunctionModule } from 'lib/client/interfaces/react';
+import { Field, Collection } from 'lib/common/interfaces/collection';
+import { ReactElement, ReactProps, SFC, IComponentModule, IFunctionModule } from 'lib/common/interfaces/react';
 import { findFieldType, findDocumentById } from 'lib/common/helpers';
 import {
   DetailsButton,

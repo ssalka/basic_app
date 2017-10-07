@@ -2,7 +2,7 @@ declare const _;
 declare const React;
 
 import { ViewComponent, FlexRow, IconSelector } from 'lib/client/components';
-import { Collection } from 'lib/client/interfaces';
+import { Collection } from 'lib/common/interfaces';
 import { CollectionNameInput, DescriptionTextarea } from './components';
 
 interface IProps {

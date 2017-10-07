@@ -3,7 +3,7 @@ import { setup, cleanup } from 'test/utils';
 import { Collection } from 'lib/server/models';
 import { MockCollection } from 'lib/server/models/mocks';
 import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
-import { Collection as ICollection } from 'lib/client/interfaces';
+import { Collection as ICollection } from 'lib/common/interfaces';
 
 describe("Collection", () => {
   let collections: ICollection[];

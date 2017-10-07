@@ -1,6 +1,6 @@
 declare const _;
 import createStore from './createStore';
-import { Collection } from 'lib/client/interfaces';
+import { Collection } from 'lib/common/interfaces';
 
 export default createStore({
   name: 'Collection',

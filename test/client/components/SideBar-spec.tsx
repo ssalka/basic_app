@@ -1,6 +1,6 @@
 import { mount } from 'enzyme';
 import { SideBar } from 'lib/client/components';
-import { ILink } from 'lib/client/interfaces';
+import { ILink } from 'lib/common/interfaces';
 
 describe("SideBar", () => {
 

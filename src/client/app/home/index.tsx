@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { User } from 'lib/client/api';
 import { connect, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
-import { Collection, ReactElement } from 'lib/client/interfaces';
+import { Collection, ReactElement } from 'lib/common/interfaces';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
 

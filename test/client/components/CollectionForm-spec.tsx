@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import { mount } from 'enzyme';
-import { Collection, Field } from 'lib/client/interfaces';
+import { Collection, Field } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
 import { CollectionForm } from 'src/client/app/collection/form';

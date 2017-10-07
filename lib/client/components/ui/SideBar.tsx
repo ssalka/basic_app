@@ -1,7 +1,7 @@
 declare const React;
 import { Link } from 'react-router';
 import { BaseComponent, Icon } from '../';
-import { ILink, ReactElement } from 'lib/client/interfaces';
+import { ILink, ReactElement } from 'lib/common/interfaces';
 import '../../styles/SideBar.less';
 
 interface IProps {
