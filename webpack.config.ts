@@ -25,10 +25,6 @@ const config = {
       include: clientDirectories,
       loader: 'ts-loader'
     }, {
-      test: /\.js$/,
-      include: clientDirectories,
-      loader: 'babel'
-    }, {
       test: /\.(less|css)$/,
       loaders: ["style", "css", "less"]
     }, {

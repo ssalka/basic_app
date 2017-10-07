@@ -24,7 +24,6 @@
   ],
   "testRegex": "(/test/.*\\-spec)\\.(j|t)sx?$",
   "transform": {
-    ".js": "<rootDir>/node_modules/webpack-babel-jest",
     ".tsx?": "<rootDir>/node_modules/ts-jest/preprocessor.js"
   },
   "setupTestFrameworkScriptFile": "./test/index.js",
