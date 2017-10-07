@@ -13,7 +13,7 @@ import {
   ReactElement,
   ReactProps,
   SFC
-} from 'lib/client/interfaces';
+} from 'lib/common/interfaces';
 import './styles.less';
 
 interface IProps extends ReactProps {

@@ -1,13 +1,13 @@
 import * as assert from 'assert';
 import { mount, ReactWrapper } from 'enzyme';
-import { Collection, Field } from 'lib/client/interfaces';
+import { Collection, Field } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
 import { TypeSelectPopover, ITypeSelectPopoverProps } from 'src/client/app/collection/form/components';
 
-describe("TypeSelectPopover", () => {
+describe('TypeSelectPopover', () => {
   const testCollection = new MockCollection();
-  let selectedType = FIELD_TYPES.STANDARD[1];
+  const selectedType = FIELD_TYPES.STANDARD[1];
   let typeSelectPopover: ReactWrapper<ITypeSelectPopoverProps, {}>;
   let props: ITypeSelectPopoverProps;
   let popoverContainer: HTMLElement;
@@ -41,7 +41,7 @@ describe("TypeSelectPopover", () => {
     popoverContainer.remove();
   });
 
-  it("renders the popover target and content", () => {
+  it('renders the popover target and content', () => {
     assert(typeSelectPopover.exists());
     expect(typeSelectPopover.text()).toBe(selectedType.name);
 

@@ -3,7 +3,7 @@ declare const React;
 import { Link } from 'react-router';
 import { NonIdealState, IconName } from '@blueprintjs/core';
 import { Icon, FlexRow, Button } from 'lib/client/components';
-import { IComponentModule } from 'lib/client/interfaces';
+import { IComponentModule } from 'lib/common/interfaces';
 import { IProps, IState } from './';
 
 export default function getComponents(

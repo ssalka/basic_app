@@ -4,7 +4,7 @@ import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
 import CollectionFormHeader from 'src/client/app/collection/form/header';
 
-describe("CollectionFormHeader", () => {
+describe('CollectionFormHeader', () => {
   const testCollection = new MockCollection({ _id: true });
   let formHeader;
   let handleChange;
@@ -37,7 +37,7 @@ describe("CollectionFormHeader", () => {
     }));
   });
 
-  it("displays the name and description of the collection", () => {
+  it('displays the name and description of the collection', () => {
     assert(nameElement.exists(), "Collection name wasn't rendered");
     assert(descriptionElement.exists(), "Collection description wasn't rendered");
     expect(nameElement.text()).toBe(testCollection.name);
@@ -49,7 +49,7 @@ describe("CollectionFormHeader", () => {
     expect(iconElement.prop('className')).toContain(`pt-icon-${testCollection.icon}`);
   });
 
-  it("updates the collection name", () => {
+  it('updates the collection name', () => {
     const newName = 'New Collection Name';
 
     nameElement
@@ -60,7 +60,7 @@ describe("CollectionFormHeader", () => {
     expect(nameElement.text()).toBe(newName);
   });
 
-  it("updates the collection description", () => {
+  it('updates the collection description', () => {
     const newDescription = 'Updated collection description';
 
     descriptionElement
@@ -71,7 +71,7 @@ describe("CollectionFormHeader", () => {
     expect(descriptionElement.find('textarea').text()).toBe(newDescription);
   });
 
-  xit("updates the collection icon", () => {
+  xit('updates the collection icon', () => {
     // TODO - how to access popover content?
     // (rendered in a separate react-root element)
   });

@@ -1,6 +1,6 @@
 declare const _;
 declare const React;
-import { ReactElement } from '../interfaces';
+import { ReactElement } from 'lib/common/interfaces';
 
 interface IProps extends React.Props<any> {
   intent?: 'default' | 'primary' | 'success' | 'info' | 'warning' | 'danger';

@@ -1,12 +1,12 @@
 import { mount } from 'enzyme';
 import { Button } from 'lib/client/components';
 
-describe("Button", () => {
+describe('Button', () => {
   function getButton(props) {
     return mount(<Button {...props} />).find('Button');
   }
 
-  it("maps `props` to the `className` attribute", () => {
+  it('maps `props` to the `className` attribute', () => {
     const button = getButton({
       className: 'test-class',
       icon: 'blank',
@@ -32,7 +32,7 @@ describe("Button", () => {
     );
   });
 
-  it("displays text from the `text` attribute", () => {
+  it('displays text from the `text` attribute', () => {
     const button = getButton({
       icon: 'blank',
       text: 'Test Button'
@@ -41,7 +41,7 @@ describe("Button", () => {
     expect(button.text()).toBe('Test Button');
   });
 
-  it("handles an onClick when triggered", done => {
+  it('handles an onClick when triggered', done => {
     const button = getButton({
       onClick: done
     });

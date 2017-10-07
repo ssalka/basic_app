@@ -5,7 +5,7 @@ import axios from 'axios';
 import api from 'lib/client/api';
 import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
-import common = require('lib/common');
+import { request, logger } from 'lib/common';
 import { findDocumentById } from 'lib/common/helpers';
 import Splash from './splash';
 import Login from './login';
@@ -22,10 +22,9 @@ import {
   IRouteProps,
   IUser,
   ReactElement
-} from 'lib/client/interfaces';
+} from 'lib/common/interfaces';
 import './styles.less';
 
-const { request, logger } = common as any;
 const { User, Collection } = api;
 
 interface IAppRouterState {
@@ -79,7 +78,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     this.state.user,
     'library.collections',
     []
-  );
+  )
 
   getCollectionBySlug(slug: string) {
     const collections = this.getCollections();
@@ -233,6 +232,6 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
       </Router>
     );
   }
-};
+}
 
 export default AppRouter;

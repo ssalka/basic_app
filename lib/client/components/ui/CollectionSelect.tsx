@@ -4,7 +4,7 @@ import { Classes, MenuItem } from '@blueprintjs/core';
 import { ReactSelectProps } from 'react-select';
 import Select from 'react-virtualized-select';
 import createFilterOptions from 'react-select-fast-filter-options';
-import { IDocument, Collection } from 'lib/client/interfaces';
+import { IDocument, Collection } from 'lib/common/interfaces';
 import ViewComponent from '../ViewComponent';
 import styled from 'styled-components';
 

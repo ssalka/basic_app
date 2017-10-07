@@ -3,9 +3,9 @@ import { setup, cleanup } from 'test/utils';
 import { Collection } from 'lib/server/models';
 import { MockCollection } from 'lib/server/models/mocks';
 import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
-import { Collection as ICollection } from 'lib/client/interfaces';
+import { Collection as ICollection } from 'lib/common/interfaces';
 
-describe("Collection", () => {
+describe('Collection', () => {
   let collections: ICollection[];
 
   const fieldTypes: string[] = _.map(FIELD_TYPES.STANDARD, 'key');
@@ -29,7 +29,7 @@ describe("Collection", () => {
 
   afterAll(cleanup);
 
-  it("finds a test collection", done => {
+  it('finds a test collection', done => {
     Collection.findOne((err, collection) => {
       expect(err).toBeNull();
       expect(collection).not.toBeNull();

@@ -2,15 +2,15 @@ declare const _;
 declare const React;
 import { Link } from 'react-router';
 import { ViewComponent } from 'lib/client/components';
-import { IContext } from 'lib/client/interfaces';
+import { IContext } from 'lib/common/interfaces';
 
 export default class Splash extends ViewComponent<{}, {}> {
-  public static contextTypes = {
+  static contextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   };
 
-  public render() {
+  render() {
     const context: IContext = this.context;
     const EnterLink = _.isEmpty(context.user)
       ? <Link to="/login">Log In</Link>
@@ -25,4 +25,4 @@ export default class Splash extends ViewComponent<{}, {}> {
       </div>
     );
   }
-};
+}

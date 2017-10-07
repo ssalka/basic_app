@@ -2,7 +2,7 @@ declare const _;
 declare const React;
 import { Tree, ITreeNode, IconName } from '@blueprintjs/core';
 import { ViewComponent } from 'lib/client/components';
-import { Collection, Field, IType } from 'lib/client/interfaces';
+import { Collection, Field, IType } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import 'lib/client/styles/TypeSelect.less';
 

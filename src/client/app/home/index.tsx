@@ -5,18 +5,18 @@ import { Link } from 'react-router';
 import { User } from 'lib/client/api';
 import { connect, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
-import { Collection, ReactElement } from 'lib/client/interfaces';
+import { Collection, ReactElement } from 'lib/common/interfaces';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
 
 @connect(UserStore)
 class Home extends ViewComponent<any, any> {
-  private addView() {
+  addView() {
     // TODO
-    console.log("open a new view");
+    console.log('open a new view');
   }
 
-  private AddButton(props): ReactElement {
+  AddButton(props): ReactElement {
     return (
       <Link to={props.href}>
         <Button icon="add" minimal={true} rounded={true} {..._.omit(props, 'href')} />
@@ -24,7 +24,7 @@ class Home extends ViewComponent<any, any> {
     );
   }
 
-  private renderCollections(collections: Collection[] = []) {
+  renderCollections(collections: Collection[] = []) {
     const description: string = 'Use Collections to describe and organize your data. Import or sync with any source.';
     const { AddButton } = this;
 
@@ -60,7 +60,7 @@ class Home extends ViewComponent<any, any> {
     );
   }
 
-  private renderViews(views = []) {
+  renderViews(views = []) {
     const description = 'Views allows you to define new visual representations of your data.';
     const { AddButton } = this;
 
@@ -96,7 +96,7 @@ class Home extends ViewComponent<any, any> {
     );
   }
 
-  public render() {
+  render() {
     const { collections, views } = _.get(this.state, 'user.library', {});
 
     return (
@@ -111,6 +111,6 @@ class Home extends ViewComponent<any, any> {
       </section>
     );
   }
-};
+}
 
 export default Home;

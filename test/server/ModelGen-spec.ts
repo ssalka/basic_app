@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import * as utils from 'lib/server/utils';
-import MockCollection = require('lib/server/models/mocks/Collection');
-const { ModelGen, types: { ObjectId, Mixed, ref } } = utils;
+import { ModelGen, types } from 'lib/server/utils';
+import { MockCollection } from 'lib/server/models/mocks';
+const { ObjectId, Mixed, ref } = types;
 
-describe("ModelGen", () => {
+describe('ModelGen', () => {
   const name = 'TestModel';
 
   const schema = {
@@ -37,10 +37,10 @@ describe("ModelGen", () => {
 
   beforeEach(() => ModelGen.reset());
 
-  describe("#getSchema", () => {
+  describe('#getSchema', () => {
     const { fields } = new MockCollection();
 
-    it("maps a list of Fields to a mongoose schema", () => {
+    it('maps a list of Fields to a mongoose schema', () => {
       expect(ModelGen.getSchema(fields)).toEqual({
         stringField: { type: String, required: false },
         numberField: { type: Number, required: false },
@@ -52,12 +52,12 @@ describe("ModelGen", () => {
     });
   });
 
-  describe("#getOrGenerateModel", () => {
+  describe('#getOrGenerateModel', () => {
     // TODO
   });
 
-  describe("#generateModel", () => {
-    it("sets the properties on the schema", () => {
+  describe('#generateModel', () => {
+    it('sets the properties on the schema', () => {
       const Model = ModelGen.generateModel(name, schema, extensions, settings);
 
       const ModelSchema = Model.schema;
@@ -69,8 +69,8 @@ describe("ModelGen", () => {
     });
   });
 
-  describe("#modelExists", () => {
-    it("returns true if a collection with the given name already exists in the db", () => {
+  describe('#modelExists', () => {
+    it('returns true if a collection with the given name already exists in the db', () => {
       let result = ModelGen.modelExists(settings.dbName, name);
 
       expect(result).toBe(false);
@@ -84,8 +84,8 @@ describe("ModelGen", () => {
     });
   });
 
-  describe("#trackCollection", () => {
-    it("adds the collection being generated to a database map", () => {
+  describe('#trackCollection', () => {
+    it('adds the collection being generated to a database map', () => {
       const { dbName } = settings;
       ModelGen.trackCollection(dbName, name, 'Model');
 

@@ -1,7 +1,7 @@
 declare const React;
 import BaseComponent from './BaseComponent';
-import { ReactProps } from 'lib/client/interfaces';
-import request = require('lib/common/request');
+import { ReactProps } from 'lib/common/interfaces';
+import request from 'lib/common/request';
 
 export default class ViewComponent<P = React.HTMLAttributes<HTMLElement>, S = {}> extends BaseComponent<P, S> {
   post(path, body) {

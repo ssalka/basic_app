@@ -4,14 +4,13 @@ import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
 import CollectionFormSchema from 'src/client/app/collection/form/schema';
 
-describe("CollectionFormSchema", () => {
+describe('CollectionFormSchema', () => {
   const testCollection = new MockCollection();
   const collections = [testCollection];
 
   const elements = {};
   let formSchema;
   let addFieldRow;
-  let actionButtons;
   let handleChange;
 
   function getCollectionFormSchema() {
@@ -30,14 +29,14 @@ describe("CollectionFormSchema", () => {
     handleChange = jest.fn();
   });
 
-  it("loads with the right initial state", () => {
+  it('loads with the right initial state', () => {
     expect(formSchema.state()).toEqual({
       editingFields: false,
       showFieldOptions: testCollection.fields.map(_.stubFalse)
     });
   });
 
-  describe("Subheader Row", () => {
+  describe('Subheader Row', () => {
     let subheaderRow;
     beforeEach(() => {
       subheaderRow = formSchema.find('.subheader');
@@ -49,7 +48,7 @@ describe("CollectionFormSchema", () => {
       expect(subheaderRow.find('button').prop('className')).toContain('pt-icon-edit');
     });
 
-    it("toggles the `editingFields` state and updates the button", () => {
+    it('toggles the `editingFields` state and updates the button', () => {
       const button = subheaderRow.find('button');
       const showFieldOptions = formSchema.state('showFieldOptions');
 
@@ -65,7 +64,7 @@ describe("CollectionFormSchema", () => {
     });
   });
 
-  describe("Fields", () => {
+  describe('Fields', () => {
     let fields;
     beforeEach(() => {
       fields = formSchema.find('.field');
@@ -87,7 +86,7 @@ describe("CollectionFormSchema", () => {
       });
     });
 
-    describe("Field Options", () => {
+    describe('Field Options', () => {
       beforeEach(() => {
         // open all field options drawers
         formSchema.setState({
@@ -95,7 +94,7 @@ describe("CollectionFormSchema", () => {
         });
       });
 
-      it("renders the checkboxes for each field", () => {
+      it('renders the checkboxes for each field', () => {
         testCollection.fields.forEach((field, i) => {
           const element = fields.at(i);
 
@@ -110,11 +109,11 @@ describe("CollectionFormSchema", () => {
         });
       });
 
-      xit("displays the field render method");
+      xit('displays the field render method');
     });
 
-    describe("Option Button", () => {
-      it("expands the field options drawer", () => {
+    describe('Option Button', () => {
+      it('expands the field options drawer', () => {
         testCollection.fields.forEach((field, i) => {
           const element = fields.at(i);
           element.find('button.pt-icon-more').simulate('click');
@@ -128,14 +127,14 @@ describe("CollectionFormSchema", () => {
     });
   });
 
-  describe("Add Field Row", () => {
-    it("displays a button to add a field", () => {
+  describe('Add Field Row', () => {
+    it('displays a button to add a field', () => {
       const addFieldButton = addFieldRow.find('button');
       assert(addFieldButton.exists());
       expect(addFieldButton.text()).toBe('Add Field');
     });
 
-    it("adds an empty field to the schema when clicked", () => {
+    it('adds an empty field to the schema when clicked', () => {
       const { fields } = formSchema.prop('collection');
       addFieldRow.find('button').simulate('click');
       expect(formSchema.prop('handleChange')).toHaveBeenCalledWith(fields.length);

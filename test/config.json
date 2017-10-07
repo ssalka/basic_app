@@ -1,4 +1,5 @@
 {
+  "rootDir": "../",
   "globals": {
     "ts-jest": {
       "tsConfigFile": "tsconfig.test.json"
@@ -23,9 +24,8 @@
   ],
   "testRegex": "(/test/.*\\-spec)\\.(j|t)sx?$",
   "transform": {
-    ".js": "<rootDir>/node_modules/webpack-babel-jest",
     ".tsx?": "<rootDir>/node_modules/ts-jest/preprocessor.js"
   },
-  "setupTestFrameworkScriptFile": "<rootDir>/index.js",
+  "setupTestFrameworkScriptFile": "./test/index.js",
   "verbose": true
 }

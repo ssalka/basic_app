@@ -4,7 +4,7 @@ import { NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router';
 import { connect, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
-import { Collection, ReactElement } from 'lib/client/interfaces';
+import { Collection, ReactElement } from 'lib/common/interfaces';
 
 @connect(UserStore)
 class Collections extends ViewComponent<any, any> {
@@ -12,7 +12,7 @@ class Collections extends ViewComponent<any, any> {
     return _.get(this.state, 'user.library.collections', []);
   }
 
-  private AddCollectionButton(props): ReactElement {
+  AddCollectionButton(props): ReactElement {
     return (
       <Link to="collections/add">
         <Button icon="add" minimal={true} rounded={true} {...props} />
@@ -20,7 +20,7 @@ class Collections extends ViewComponent<any, any> {
     );
   }
 
-  private CollectionList(): ReactElement {
+  CollectionList(): ReactElement {
     const { collections, AddCollectionButton } = this;
 
     return (
@@ -56,7 +56,7 @@ class Collections extends ViewComponent<any, any> {
     );
   }
 
-  public render() {
+  render() {
     const { CollectionList } = this;
 
     return (
@@ -72,6 +72,6 @@ class Collections extends ViewComponent<any, any> {
       </section>
     );
   }
-};
+}
 
 export default Collections;

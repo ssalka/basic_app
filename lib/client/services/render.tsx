@@ -1,6 +1,6 @@
 declare const _;
 declare const React;
-import Rating = require('react-rating');
+import * as Rating from 'react-rating';
 import { RENDER_METHODS } from 'lib/common/constants';
 import {
   Field,
@@ -10,7 +10,7 @@ import {
   ReactElement,
   ReactProps,
   SFC
-} from 'lib/client/interfaces';
+} from 'lib/common/interfaces';
 
 class RenderingService {
   private componentMap: IComponentModule = {

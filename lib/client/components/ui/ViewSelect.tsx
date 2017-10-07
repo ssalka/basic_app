@@ -2,7 +2,7 @@ declare const _;
 declare const React;
 import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { ViewComponent } from 'lib/client/components';
-import { IRenderMethod } from 'lib/client/interfaces';
+import { IRenderMethod } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 
 interface IProps {

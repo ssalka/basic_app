@@ -1,7 +1,7 @@
 declare const _;
 import axios from 'axios';
 import { createStore } from 'lib/client/api/stores';
-import { IDocument } from 'lib/client/interfaces';
+import { IDocument } from 'lib/common/interfaces';
 
 export default _.memoize(initialState => (
   createStore({
