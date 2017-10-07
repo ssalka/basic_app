@@ -14,7 +14,7 @@
     "npm": "^5.3.0"
   },
   "scripts": {
-    "lint": "tslint --type-check 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}' --format stylish",
+    "lint": "tslint 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}' --format stylish",
     "start": "NODE_PATH=. ts-node -F -P tsconfig.server.json index",
     "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --noStackTrace"
   },
