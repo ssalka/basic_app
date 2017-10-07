@@ -14,9 +14,8 @@
     "npm": "^5.3.0"
   },
   "scripts": {
-    "dev": "NODE_PATH=. nodemon --watch lib/server --watch src/server index.js",
     "lint": "tslint --type-check 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}' --format stylish",
-    "start": "NODE_PATH=. node index.js",
+    "start": "NODE_PATH=. ts-node -P tsconfig.server.json index",
     "test": "NODE_ENV=test NODE_PATH=. jest --config test/config.json --noStackTrace"
   },
   "dependencies": {
@@ -47,7 +46,8 @@
     "react-router": "2.8.1",
     "react-select-fast-filter-options": "^0.2.3",
     "react-virtualized-select": "^3.1.0",
-    "styled-components": "2.1.0"
+    "styled-components": "2.1.0",
+    "ts-node": "^3.3.0"
   },
   "devDependencies": {
     "@types/dom4": "1.5.20",
@@ -61,8 +61,8 @@
     "@types/passport": "^0.3.4",
     "@types/passport-local": "^1.0.31",
     "@types/passport-local-mongoose": "^4.0.11",
-    "@types/react": "15.0.12",
-    "@types/react-dom": "0.14.23",
+    "@types/react": "^15.6.4",
+    "@types/react-dom": "^15.5.6",
     "@types/react-router": "3.0.5",
     "@types/react-select": "^1.0.58",
     "babel-core": "6.18.2",
