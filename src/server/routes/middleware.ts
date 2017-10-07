@@ -7,9 +7,8 @@ import * as config from '../config';
 import { READONLY_FIELDS } from 'lib/common/constants';
 import * as db from 'lib/server/db';
 import { User, Session, Collection } from 'lib/server/models';
-import { ModelGen } from 'lib/server/utils';
-import * as common from 'lib/common';
-const { logger, generateToken } = common;
+import { generateToken, ModelGen } from 'lib/server/utils';
+import { logger } from 'lib/common';
 const { collectionsDbName } = db;
 
 // Send these fields to client upon successful authentication

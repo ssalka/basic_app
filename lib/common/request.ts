@@ -1,13 +1,19 @@
-const popsicle = require('popsicle');
+import * as _ from 'lodash';
+import * as popsicle from 'popsicle';
 
 function generateRequest(baseUrl = '') {
   const get = url => popsicle
     .get(baseUrl + url)
     .use(popsicle.plugins.parse('json'));
 
-  const post = (url, body, params={}) => {
-    if (!url) return console.error('No URL was specified for POST request');
-    if (_.isEmpty(body)) return console.error('No body was given for POST request');
+  const post = (url, body, params: any = {}) => {
+    if (!url) {
+      return console.error('No URL was specified for POST request');
+    }
+    else if (_.isEmpty(body)) {
+      return console.error('No body was given for POST request');
+    }
+
     url = baseUrl + url;
 
     const headers = {
@@ -21,9 +27,9 @@ function generateRequest(baseUrl = '') {
     return popsicle
       .post({ headers, url, body })
       .use(popsicle.plugins.parse('json'));
-  }
+  };
 
   return { get, post };
 };
 
-module.exports = generateRequest();
+export default generateRequest();
