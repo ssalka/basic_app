@@ -27,4 +27,4 @@ export default class BaseComponent<P, S> extends Component<P, S> {
       key, !_.get(this.state, key)
     ));
   }
-};
+}

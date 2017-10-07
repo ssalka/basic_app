@@ -4,11 +4,11 @@ import { Field } from 'lib/common/interfaces';
 import { BaseComponent } from 'lib/client/components';
 import { shallow } from 'enzyme';
 
-describe("Rendering Service", () => {
-  describe("#isNonemptyField", () => {
+describe('Rendering Service', () => {
+  describe('#isNonemptyField', () => {
     const { isNonemptyField } = RenderingService;
 
-    it("returns true if a field value is well-defined", () => {
+    it('returns true if a field value is well-defined', () => {
       // NOTE: well-defined ~== truthy || 0 (or if an array, recursively evaluates each element)
 
       const nonemptyValues: any[] = [
@@ -21,7 +21,7 @@ describe("Rendering Service", () => {
       assert(_.every(nonemptyValues, isNonemptyField));
     });
 
-    it("returns false for falsy values and empty arrays", () => {
+    it('returns false for falsy values and empty arrays', () => {
       const isEmptyField = _.negate(isNonemptyField);
 
       const emptyValues = [
@@ -35,10 +35,10 @@ describe("Rendering Service", () => {
     });
   });
 
-  describe("#getProps", () => {
+  describe('#getProps', () => {
     const { getProps } = RenderingService;
 
-    it("returns an object containing the prop and value to set on a React element", () => {
+    it('returns an object containing the prop and value to set on a React element', () => {
       const testCases = [
         [{ key: 'value' }, { name: 'key', renderMethod: 'PLAIN_TEXT' }],
         [{ rating: 4.5 }, { name: 'rating', renderMethod: 'RATING' }],
@@ -51,10 +51,10 @@ describe("Rendering Service", () => {
     });
   });
 
-  describe("#renderField", () => {
-    it("renders a React element, given document, field to render, and optional props", done => {
+  describe('#renderField', () => {
+    it('renders a React element, given document, field to render, and optional props', done => {
       const field = new Field('target');
-      const document = { target: "Display Text" };
+      const document = { target: 'Display Text' };
       const props = { onClick: done };
       const expectedProps = _.assign({}, props, {
         children: document.target

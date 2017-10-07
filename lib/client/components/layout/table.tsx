@@ -80,7 +80,7 @@ export default class Table extends ViewComponent<IProps, any> {
       ),
       Placeholder: () => (
         <NonIdealState
-          visual={"table" as IconName}
+          visual={'table' as IconName}
           title="This table has no records"
           description={<span>*Empty table description*</span>}
           action={(
@@ -107,4 +107,4 @@ export default class Table extends ViewComponent<IProps, any> {
       </div>
     );
   }
-};
+}

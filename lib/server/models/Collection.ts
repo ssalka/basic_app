@@ -94,10 +94,12 @@ const statics = {
     const query: any = {};
     if (creator) query.creator = creator;
     if (ids) query._id = { $in: ids };
+
     return this.find(query).limit(limit);
   },
   createWithView(collection, view) {
     const Collection = this;
+
     return new Promise((resolve, reject) => {
       async.waterfall([
         // Create the collection

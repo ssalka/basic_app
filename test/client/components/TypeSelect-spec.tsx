@@ -9,10 +9,10 @@ import TypeSelect, {
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
 
-describe("TypeSelect", () => {
+describe('TypeSelect', () => {
   const testCollection = new MockCollection();
   const collections = [testCollection];
-  let selectedType = FIELD_TYPES.STANDARD[1];
+  const selectedType = FIELD_TYPES.STANDARD[1];
   let typeSelect: ReactWrapper<TypeSelectProps, TypeSelectState> | TypeSelect;
   let typeSelectProps: TypeSelectProps;
 
@@ -33,7 +33,7 @@ describe("TypeSelect", () => {
     };
   });
 
-  it("loads with the correct initial values", () => {
+  it('loads with the correct initial values', () => {
     typeSelect = getTypeSelect();
     assert(typeSelect.exists());
 
@@ -46,8 +46,8 @@ describe("TypeSelect", () => {
     expect(_.map(collectionsNode.childNodes, 'label')).toEqual(expectedTree.collection);
   });
 
-  describe("#getNodes", () => {
-    it("returns an array of tree nodes", () => {
+  describe('#getNodes', () => {
+    it('returns an array of tree nodes', () => {
       typeSelect = getTypeSelect();
 
       const [standardTypeNodes, collectionNodes] = _.map(
@@ -65,8 +65,8 @@ describe("TypeSelect", () => {
     });
   });
 
-  describe("#handleNodeClick", () => {
-    it("expands/closes categories", () => {
+  describe('#handleNodeClick', () => {
+    it('expands/closes categories', () => {
       typeSelect = getTypeSelect().instance();
       typeSelect.toggleNode = jest.fn();
 
@@ -77,7 +77,7 @@ describe("TypeSelect", () => {
       expect(typeSelect.toggleNode).toHaveBeenCalledWith(categoryToExpand);
     });
 
-    it("calls the onSelectType prop with the id of the new type", () => {
+    it('calls the onSelectType prop with the id of the new type', () => {
       typeSelect = getTypeSelect().instance();
 
       const typeToSelect = typeSelect.state.nodes[0].childNodes[2];
@@ -90,7 +90,7 @@ describe("TypeSelect", () => {
       });
     });
 
-    it("updates the isSelected field of the newly selected tree node", () => {
+    it('updates the isSelected field of the newly selected tree node', () => {
       typeSelect = getTypeSelect().instance();
 
       const getNewType = () => typeSelect.state.nodes[0].childNodes[2];

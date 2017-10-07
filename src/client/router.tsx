@@ -78,7 +78,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     this.state.user,
     'library.collections',
     []
-  );
+  )
 
   getCollectionBySlug(slug: string) {
     const collections = this.getCollections();
@@ -232,6 +232,6 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
       </Router>
     );
   }
-};
+}
 
 export default AppRouter;

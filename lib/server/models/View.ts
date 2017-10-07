@@ -28,11 +28,12 @@ const ViewSchema = {
 const statics = {
   findByCollection(collection) {
     if (!collection.views.length) return [];
+
     return collection.views.length === 1
       ? [this.findById(collection.views[0])]
       : this.find({ _id: { $in: collection.views } });
   }
-}
+};
 
 const View = ModelGen.generateModel(
   'View', ViewSchema, {

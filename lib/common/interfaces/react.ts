@@ -24,24 +24,13 @@ export interface IRouteProps extends ReactProps {
     state: any;
   };
   params: Record<string, string>;
-  route: Route;
-  routes: Route[];
+  route: IRoute;
+  routes: IRoute[];
 }
 
-type Route = {
-  childRoutes: Route[],
-  component(props): void
-};
-
-export interface IQueryProps extends ReactProps {
-  error?: any;
-  loadNextPage?: Function;
-  loading?: boolean;
-  networkStatus?: number;
-  refetch?: Function;
-  startPolling?: Function;
-  stopPolling?: Function;
-  variables?: any;
+interface IRoute {
+  childRoutes: IRoute[];
+  component(props): void;
 }
 
 export interface IComponentModule {

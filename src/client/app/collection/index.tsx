@@ -4,11 +4,11 @@ declare const React;
 import { Link } from 'react-router';
 import { NonIdealState } from '@blueprintjs/core';
 import { ViewComponent, Table, FlexColumn } from 'lib/client/components';
-import { Collection, IRouteProps, IQueryProps, IComponentModule } from 'lib/common/interfaces';
+import { Collection, IRouteProps, IComponentModule } from 'lib/common/interfaces';
 import getComponents from './components';
 import './styles.less';
 
-export interface IProps extends IRouteProps, IQueryProps {
+export interface IProps extends IRouteProps {
   collection: Collection;
   store: any;
 }

@@ -15,19 +15,19 @@ interface IState {
 }
 
 export default class SideBar extends BaseComponent<IProps, IState> {
-  public static defaultProps: IProps = {
+  static defaultProps: IProps = {
     currentPath: '',
     links: []
   };
 
-  public state: IState = {
+  state: IState = {
     expanded: false,
     isDoubleClick: false
   };
 
-  private toggle = () => this._toggle('expanded');
+  toggle = () => this._toggle('expanded');
 
-  private handleClick(event: React.MouseEvent<HTMLElement>) {
+  handleClick(event: React.MouseEvent<HTMLElement>) {
     // only run function on double clicks
     if (!this.state.isDoubleClick) {
       this.state.isDoubleClick = true;
@@ -39,7 +39,7 @@ export default class SideBar extends BaseComponent<IProps, IState> {
     this.toggle();
   }
 
-  private renderLink(link, key): ReactElement {
+  renderLink(link, key): ReactElement {
     const linkIsActive = link.path.includes(this.props.currentPath) ? 'active' : null;
 
     return (
@@ -54,8 +54,8 @@ export default class SideBar extends BaseComponent<IProps, IState> {
     );
   }
 
-  public render() {
-    let sidebarClasses: string[] = ['sidebar', 'pt-elevation-1'];
+  render() {
+    const sidebarClasses: string[] = ['sidebar', 'pt-elevation-1'];
     if (this.state.expanded) {
       sidebarClasses.push('expanded');
     }

@@ -30,6 +30,6 @@ function generateRequest(baseUrl = '') {
   };
 
   return { get, post };
-};
+}
 
 export default generateRequest();

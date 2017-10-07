@@ -12,7 +12,7 @@ export interface IRenderMethod {
 export interface IType {
   key: string;
   name: string;
-  primitiveType: Function;
+  primitiveType(val: any): any;
   icon: string;
 }
 

@@ -6,12 +6,10 @@ import { Link } from 'react-router';
 import api from 'lib/client/api';
 import { connect, CollectionStore, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, Button } from 'lib/client/components';
-import { IQueryProps, IRouteProps } from 'lib/common/interfaces';
+import { IRouteProps } from 'lib/common/interfaces';
 import './styles.less';
 
 const { Collection, User } = api;
-
-interface IProps extends IRouteProps, Partial<IQueryProps> {}
 
 interface IState {
   register: boolean;
@@ -24,7 +22,7 @@ interface IState {
 
 @connect(CollectionStore)
 @connect(UserStore)
-class Login extends ViewComponent<IProps, IState> {
+class Login extends ViewComponent<IRouteProps, IState> {
   public static contextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
@@ -145,6 +143,6 @@ class Login extends ViewComponent<IProps, IState> {
       </div>
     );
   }
-};
+}
 
 export default Login;

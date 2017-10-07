@@ -2,7 +2,7 @@ import { mount } from 'enzyme';
 import { SideBar } from 'lib/client/components';
 import { ILink } from 'lib/common/interfaces';
 
-describe("SideBar", () => {
+describe('SideBar', () => {
 
   let $;
   let sidebar;
@@ -19,22 +19,22 @@ describe("SideBar", () => {
     $ = (...args) => sidebar.find(...args);
   });
 
-  it("loads with the proper `className`", () => {
+  it('loads with the proper `className`', () => {
     expect(sidebar.state('expanded')).toBe(false);
     expect($('aside').prop('className')).not.toContain('expanded');
   });
 
-  it("applies styling via `className` to expand", () => {
+  it('applies styling via `className` to expand', () => {
     sidebar.setState({ expanded: true });
     expect($('aside').prop('className')).toContain('expanded');
   });
 
-  it("expands/closes when the arrow icon is clicked", () => {
+  it('expands/closes when the arrow icon is clicked', () => {
     $('#sidebar-expand .icon').simulate('click');
     expect(sidebar.state('expanded')).toBe(true);
   });
 
-  it("expands/closes on double-click", () => {
+  it('expands/closes on double-click', () => {
     sidebar.simulate('click').simulate('click');
     expect(sidebar.state('expanded')).toBe(true);
   });
@@ -58,7 +58,7 @@ describe("SideBar", () => {
     expect(sidebar.state('expanded')).toBe(false);
   });
 
-  it("renders a list of collection pages", () => {
+  it('renders a list of collection pages', () => {
     $('li').forEach((li, i) => {
       const link = links[i];
       expect(li.find('.icon').prop('className')).toContain(link.icon);
@@ -67,7 +67,7 @@ describe("SideBar", () => {
     });
   });
 
-  it("sets class `active` on the active list item", () => {
+  it('sets class `active` on the active list item', () => {
     expect($('li').first().prop('className')).toContain('active');
   });
 });

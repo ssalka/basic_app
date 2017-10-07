@@ -18,7 +18,10 @@ export const sendIndex = (_, res) => res.sendFile(indexHtml);
 
 export function findUserByToken(req, res) {
   const { token } = req.session;
-  if (!token) return res.status(403).send('No session token was provided');
+
+  if (!token) {
+    return res.status(403).send('No session token was provided');
+  }
 
   async.waterfall([
     cb => Session.findByToken(token).exec(cb),
@@ -48,7 +51,10 @@ export function startSession(req, res, next) {
     user: _.pick(req.user, ['_id', 'username']),
     token: generateToken()
   }, (err, sess) => {
-    if (err) return next(err);
+    if (err) {
+      return next(err);
+    }
+
     _.assign(
       req.session,
       _.pick(sess, ['user', 'token'])
@@ -75,9 +81,9 @@ export function loginSuccess(req, res, next) {
 export function closeSession(req, res, next) {
   Session.findByToken(req.session.token)
     .then((session, err) => {
-      if (err || !session) return next(
-        err || 'Session not found'
-      );
+      if (err || !session) {
+        return next(err || 'Session not found');
+      }
 
       async.parallel([
         cb => session.remove(cb),
@@ -169,7 +175,9 @@ export function upsertDocumentInCollection(req, res, next) {
         : Model.findById(documentId);
     })
     .then(document => {
-      if (!document) return Model.create(newDocument);
+      if (!document) {
+        return Model.create(newDocument);
+      }
 
       // TODO: investigate whether this is still necessary
       // undefined values come out of GraphQL as null
@@ -177,7 +185,6 @@ export function upsertDocumentInCollection(req, res, next) {
       const denullify = val => _.isArray(val)
         ? _.reject(val, _.isNull)
         : _.isNull(val) ? undefined : val;
-
 
       // TODO: diffing algorithm
       const updates = _(newDocument)

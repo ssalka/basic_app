@@ -42,7 +42,7 @@ const types = FIELD_TYPES.STANDARD.reduce(
 
 class ModelGen {
   dbs: Record<string, Record<string, any>>;
-  constructor(public defaults=_defaults) {
+  constructor(public defaults = _defaults) {
     this.dbs = {};
   }
 
@@ -67,6 +67,7 @@ class ModelGen {
   getOrGenerateModel(collection) {
     const { name, fields, creator, _collection } = collection;
     const schema = this.getSchema(fields);
+
     return this.getModel(collectionsDbName, _collection) || (
       this.generateModel(name, schema,
         { options: { collection: _collection } },
@@ -112,7 +113,7 @@ class ModelGen {
    * @param {Object} settings
    * @returns {Object}
    */
-  generateModel(name='Model', schema={}, extensions={}, settings={}) {
+  generateModel(name = 'Model', schema = {}, extensions = {}, settings = {}) {
     const { // Unpack extensions & settings, filling in any missing defaults
       extensions: { props, options },
       settings: { BaseSchema, dbName, propTypes }
@@ -141,9 +142,9 @@ class ModelGen {
     // Set properties
     _(props).pick(propTypes).forEach((propSet, type) => {
       _.forEach(propSet, (prop, name) => {
-        if (ModelSchema[type][name]) return console.warn(`
-          ${_.singularize(type)} '${name}' already exists on ModelSchema.${type}
-        `);
+        if (ModelSchema[type][name]) {
+          return console.warn(`${_.singularize(type)} '${name}' already exists on ModelSchema.${type}`);
+        }
 
         ModelSchema[type][name] = prop;
       });
@@ -165,11 +166,15 @@ class ModelGen {
    * @param {String} modelName
    */
   modelExists(dbName, modelName) {
-    const modelExists = _.includes(_.keys(this.dbs[dbName]), modelName);
-    if (modelExists) console.info([
-      `Model \`${modelName}\` already has a collection in database ${dbName}.`,
-      'Returning model for registered collection'
-    ].join(' '));
+    const modelExists = _.keys(this.dbs[dbName]).includes(modelName);
+
+    if (modelExists) {
+      console.info([
+        `Model \`${modelName}\` already has a collection in database ${dbName}.`,
+        'Returning model for registered collection'
+      ].join(' '));
+    }
+
     return modelExists;
   }
 
@@ -193,6 +198,6 @@ class ModelGen {
     connections.app.models = {};
     connections.collections.models = {};
   }
-};
+}
 
 export default new ModelGen();
