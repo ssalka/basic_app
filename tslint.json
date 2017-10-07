@@ -11,10 +11,8 @@
     "member-ordering": [true, {
       "order": [
         "static-field",
-        "instance-field",
-        "constructor",
         "static-method",
-        "instance-method"
+        "constructor"
       ]
     }],
     "newline-before-return": true,

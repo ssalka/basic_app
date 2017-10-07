@@ -8,6 +8,7 @@ import TextInput from './TextInput';
 
 export * from './layout';
 export * from './ui';
+export * from './views';
 export {
   BaseComponent,
   ViewComponent,

@@ -6,15 +6,17 @@ import api from 'lib/client/api';
 import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
 import common = require('lib/common');
+import { findDocumentById } from 'lib/common/helpers';
 import Splash from './splash';
 import Login from './login';
 import App, { Home, Collections } from './app';
 import CollectionView, { IProps as CollectionViewProps } from './app/collection';
 import CollectionForm from './app/collection/form';
 import DocumentView from './app/document';
-import DocumentForm from './app/document/form';
+import DocumentForm, { IProps as DocumentFormProps } from './app/document/form';
 import {
   Collection as ICollection,
+  Field,
   IComponentModule,
   IContext,
   IRouteProps,
@@ -32,12 +34,12 @@ interface IAppRouterState {
 
 @connect(UserStore)
 class AppRouter extends BaseComponent<{}, IAppRouterState> {
-  public static childContextTypes = {
+  static childContextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object
   };
 
-  private renderIfAuthenticated: React.SFC<IRouteProps> = (
+  renderIfAuthenticated: React.SFC<IRouteProps> = (
     props => this.state.user ? <App {...props} /> : <div />
   );
 
@@ -47,10 +49,12 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     }
 
     axios.get('/api/me')
-      .then(res => {
-        if (res.data.user) {
-          User.set(res.data.user);
-        }
+      .then(({ data: { user } }) => {
+        User.set(user);
+
+        user.library.collections.forEach(
+          collection => getCollectionStore({ collection })
+        );
       })
       .catch(err => {
         if (err.response.status === 403 && location.pathname !== '/login') {
@@ -59,7 +63,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
       });
   }
 
-  public getChildContext(): IContext {
+  getChildContext(): IContext {
     const context: IContext = { appName: document.title };
 
     if (this.state.user) {
@@ -71,13 +75,19 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     return context;
   }
 
-  private getCollectionBySlug(slug: string) {
-    const collections = _.get(this.state.user, 'library.collections', []);
+  getCollections = (): ICollection[] => _.get(
+    this.state.user,
+    'library.collections',
+    []
+  );
+
+  getCollectionBySlug(slug: string) {
+    const collections = this.getCollections();
 
     return _.find(collections, { slug });
   }
 
-  private getCollectionView({ params, ...props }: any) {
+  getCollectionView({ params, ...props }: any) {
     const collection = this.getCollectionBySlug(params.collection);
     const collectionStore = getCollectionStore({ collection });
 
@@ -99,7 +109,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
         if (!this.state.documents.length) {
           axios.get(`/api/collections/${collection._id}/documents`)
             .then(({ data: documents }) => documents)
-            .then(store.loadDocuments)
+            .then(store.loadDocumentsSuccess)
             .catch(console.error);
         }
       }
@@ -108,7 +118,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     return <CollectionViewWithQuery {...props} />;
   }
 
-  private getDocumentView({ params, location: { state, pathname }, ...props }) {
+  getDocumentView({ params, location: { state, pathname }, ...props }) {
     const collection = this.getCollectionBySlug(params.collection);
     const _document = state.document || _.pick(params, '_id');
 
@@ -121,19 +131,42 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     );
   }
 
-  private getDocumentForm({ params, ...props }: IRouteProps) {
+  getDocumentForm({ params, ...props }: IRouteProps) {
     const collection = this.getCollectionBySlug(params.collection);
+    const collections = this.getCollections();
 
-    return <DocumentForm collection={collection} {...props} />;
+    const collectionField = _.find(collection.fields, field => field._collection);
+    const linkedCollection = findDocumentById(collections, collectionField._collection) as ICollection;
+    const collectionStore = getCollectionStore({ collection: linkedCollection });
+    api[linkedCollection.typeFormats.pascalCase].loadDocuments();
+
+    const Form = collectionField
+      ? connect(collectionStore)(DocumentForm)
+      : DocumentForm;
+
+    return (
+      <Form
+        collection={collection}
+        collections={collections}
+        {...props}
+      />
+    );
   }
 
-  private getCollectionForm({ location: { state }, ...props }) {
+  getCollectionForm({ location: { state }, ...props }) {
     const { collection } = state;
+    const collections = this.getCollections();
 
-    return <CollectionForm collection={collection} {...props} />;
+    return (
+      <CollectionForm
+        {...props}
+        collection={collection}
+        collections={collections}
+      />
+    );
   }
 
-  private logout() {
+  logout() {
     const { token } = localStorage;
     if (token) {
       request.post('/logout', { token })
@@ -142,7 +175,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     }
   }
 
-  private logoutCallback() {
+  logoutCallback() {
     User.unset();
     browserHistory.push('/');
   }
@@ -165,9 +198,8 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     };
   }
 
-  public render() {
+  render() {
     const { Site, NotFound } = this.components;
-    const collections = _.get(this.props, 'user.library.collections', []);
 
     return (
       <Router history={browserHistory}>
@@ -177,13 +209,16 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
 
           <Route component={this.renderIfAuthenticated}>
             <Route path="home" component={Home} />
+
             <Route path="collections">
               <IndexRoute component={Collections} />
               <Route path="add" component={CollectionForm} />
+
               <Route path=":collection">
                 <IndexRoute component={this.getCollectionView} />
                 <Route path="add" component={this.getDocumentForm} />
                 <Route path="edit" component={this.getCollectionForm} />
+
                 <Route path=":_id">
                   <IndexRoute component={this.getDocumentView} />
                   <Route path="edit" component={this.getDocumentForm} />

@@ -9,8 +9,19 @@
     "noImplicitAny": false,
     "sourceMap": true,
     "target": "es5",
-    "types": ["lodash", "react", "react-dom", "react-router"],
-    "lib": ["DOM", "DOM.Iterable", "ScriptHost", "ES2016"]
+    "types": [
+      "lodash",
+      "react",
+      "react-dom",
+      "react-router",
+      "react-select"
+    ],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2016",
+      "ScriptHost"
+    ]
   },
   "include": [
     "lib/client",

@@ -230,6 +230,18 @@
 > A visual representation of one or more documents
 
 ## Examples
+- simple
+  - Used for rendering a single document in a generic list
+  - Fields
+    - Primary
+      - The name or title of the document
+      - TODO: implement user choice for primary display field
+    - Secondary
+      - A secondary property of the document
+      - Examples
+        - The artist of a song
+        - The last updated field of a note
+      - TODO: implement user choice for secondary display field
 - raw
 - outline / markdown
 - table
