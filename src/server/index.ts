@@ -7,7 +7,7 @@ import { Strategy } from 'passport-local';
 
 import { User } from 'lib/server/models';
 
-import * as routes from './routes';
+import routes from './routes';
 import * as config from './config';
 
 const app = express();

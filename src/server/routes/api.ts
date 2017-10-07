@@ -1,12 +1,12 @@
-const express = require('express');
-const {
+import * as express from 'express';
+import {
   findUserByToken,
   loadDocumentsInCollection,
   upsertCollection,
   upsertDocumentInCollection
-} = require('./middleware');
+} from './middleware';
 
-module.exports = express.Router()
+export default express.Router()
   .get('/me', findUserByToken)
   .post('/collections/:collectionId', upsertCollection)
   .get('/collections/:collectionId/documents', loadDocumentsInCollection)
