@@ -1,8 +1,6 @@
-const webpack = require('webpack');
-const WebpackDevServer = require('webpack-dev-server');
-const config = require('webpack.config');
-
-config.entry.unshift('webpack-dev-server/client?http://localhost:8080/', 'webpack/hot/dev-server');
+import * as webpack from 'webpack';
+import * as WebpackDevServer from 'webpack-dev-server';
+import config from 'webpack.config';
 
 // Start WDS for client-side hot reloading
 new WebpackDevServer(webpack(config), {
@@ -17,4 +15,4 @@ new WebpackDevServer(webpack(config), {
 });
 
 // Start the actual server
-require('./server');
+import './server';

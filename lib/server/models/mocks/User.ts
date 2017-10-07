@@ -1,7 +1,7 @@
-const _ = require('lodash');
-const { User, Collection } = require('../');
+import * as _ from 'lodash';
+import { User, Collection } from '../';
 
-class MockUser {
+export default class MockUser {
   constructor(user = {}) {
     const collection = new Collection();
 
@@ -23,5 +23,3 @@ class MockUser {
     return new User(userWithDefaults).toObject();
   }
 }
-
-module.exports = MockUser;

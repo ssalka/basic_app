@@ -1,6 +1,6 @@
 declare const _;
 declare const React;
-import Rating = require('react-rating');
+import * as Rating from 'react-rating';
 import { RENDER_METHODS } from 'lib/common/constants';
 import {
   Field,

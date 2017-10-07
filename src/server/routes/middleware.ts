@@ -3,22 +3,14 @@ import * as async from 'async';
 import * as _ from 'lodash';
 import { invoke, invokeMap } from 'lodash/fp';
 
-import * as config from '../config';
+import { indexHtml } from '../config';
+import { logger } from 'lib/common';
 import { READONLY_FIELDS } from 'lib/common/constants';
-import * as db from 'lib/server/db';
+import { collectionsDbName } from 'lib/server/db';
 import { User, Session, Collection } from 'lib/server/models';
 import { generateToken, ModelGen } from 'lib/server/utils';
-import { logger } from 'lib/common';
-const { collectionsDbName } = db;
 
-// Send these fields to client upon successful authentication
-const USER_FIELDS = [
-  '_id',
-  'username',
-  'createdAt'
-];
-
-export const sendIndex = (_, res) => res.sendFile(config.index);
+export const sendIndex = (_, res) => res.sendFile(indexHtml);
 
 /**
  *  AUTH & REGISTRATION

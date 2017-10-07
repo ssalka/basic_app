@@ -1,9 +1,11 @@
-const { collectionsDbName } = require('lib/server/db');
-const { Collection, User, View } = require('../');
-const { ObjectId } = require('lib/server/utils/types');
+import * as _ from 'lodash';
+import { collectionsDbName } from 'lib/server/db';
+import { Collection, User, View } from '../';
+import { ObjectId } from 'lib/server/utils/types';
+import { Collection as ICollection } from 'lib/common/interfaces';
 
-class MockCollection {
-  constructor(defaults = {}) {
+export default class MockCollection {
+  constructor(defaults: ICollection = {}) {
     const user = new User({ username: 'test_user' });
     const view = new View();
 
@@ -81,5 +83,3 @@ class MockCollection {
     return collection;
   }
 }
-
-module.exports = MockCollection;

@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as middleware from 'src/server/routes/middleware';
 import * as models from 'lib/server/models';
 import { MockCollection, MockUser } from 'lib/server/models/mocks';
-import generateToken = require('lib/common/generateToken');
+import { generateToken } from 'lib/server/utils';
 import { Collection as ICollection, User as IUser } from 'lib/common/interfaces';
 
 describe("middleware", () => {

@@ -6,18 +6,17 @@ import * as passport from 'passport';
 import { Strategy } from 'passport-local';
 
 import { User } from 'lib/server/models';
-
+import { publicPath, sessionConfig } from './config';
 import routes from './routes';
-import * as config from './config';
 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session(config.session));
+app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(express.static(config.publicPath));
+app.use(express.static(publicPath));
 
 passport.use(new Strategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
