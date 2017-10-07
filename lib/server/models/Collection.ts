@@ -1,9 +1,11 @@
-const _ = require('lodash');
-const async = require('async');
-const User = require('./User');
-const View = require('./View');
-const { ModelGen, types: { ref, Mixed } } = require('../utils');
-const { FIELD_TYPES, RENDER_METHODS, VIEW_TYPES } = require('lib/common/constants');
+import * as _ from 'lodash';
+import * as async from 'async';
+import User from './User';
+import View from './View';
+import { ModelGen, types } from '../utils';
+import { FIELD_TYPES, RENDER_METHODS, VIEW_TYPES } from 'lib/common/constants';
+
+const { ref, Mixed } = types;
 
 const CollectionSchema = {
   name: {
@@ -89,7 +91,7 @@ const statics = {
     return this.find({ creator: _id });
   },
   search({ ids, creator, limit = 0 }) {
-    const query = {};
+    const query: any = {};
     if (creator) query.creator = creator;
     if (ids) query._id = { $in: ids };
     return this.find(query).limit(limit);
@@ -133,4 +135,4 @@ const Collection = ModelGen.generateModel(
   }
 );
 
-module.exports = Collection;
+export default Collection;

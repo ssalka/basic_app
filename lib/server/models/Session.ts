@@ -1,4 +1,6 @@
-const { ModelGen, types: { ref } } = require('../utils');
+import { ModelGen, types } from '../utils';
+
+const { ref } = types;
 
 const SessionSchema = {
   token: {
@@ -20,4 +22,4 @@ const Session = ModelGen.generateModel(
   }
 );
 
-module.exports = Session;
+export default Session;

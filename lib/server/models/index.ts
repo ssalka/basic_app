@@ -1,7 +1,7 @@
-import * as Collection from './Collection';
-import * as Session from './Session';
-import * as User from './User';
-import * as View from './View';
+import Collection from './Collection';
+import Session from './Session';
+import User from './User';
+import View from './View';
 
 export {
   Collection,

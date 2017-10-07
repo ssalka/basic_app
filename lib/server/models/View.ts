@@ -1,5 +1,7 @@
-const { ModelGen, types: { ref } } = require('../utils');
-const { VIEW_TYPES } = require('lib/common/constants');
+import { VIEW_TYPES } from 'lib/common/constants';
+import { ModelGen, types } from '../utils';
+
+const { ref } = types;
 
 const ViewSchema = {
   name: {
@@ -38,4 +40,4 @@ const View = ModelGen.generateModel(
   }
 );
 
-module.exports = View;
+export default View;

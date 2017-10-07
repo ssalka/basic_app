@@ -1,10 +1,14 @@
-const { connection, connections, systemDbName, collectionsDbName } = require('../db');
-const { Mixed, ref } = require('./types');
-const { FIELD_TYPES, COLLECTION } = require('lib/common/constants');
-const { Schema } = require('mongoose');
-const _ = require('lodash');
-_.mixin(require('lodash-inflection'));
-require('mongoose-schema-extend');
+import * as _ from 'lodash';
+import * as inflection from 'lodash-inflection';
+import { Schema } from 'mongoose';
+import 'mongoose-schema-extend';
+
+import { FIELD_TYPES } from 'lib/common/constants';
+import * as db from '../db';
+import { Mixed, ref } from './types';
+const { connection, connections, systemDbName, collectionsDbName } = db;
+
+_.mixin(inflection);
 
 const _defaults = {
   // Consumed by mongoose
@@ -37,8 +41,8 @@ const types = FIELD_TYPES.STANDARD.reduce(
 );
 
 class ModelGen {
-  constructor(defaults=_defaults) {
-    this.defaults = defaults;
+  dbs: Record<string, Record<string, any>>;
+  constructor(public defaults=_defaults) {
     this.dbs = {};
   }
 
@@ -78,7 +82,7 @@ class ModelGen {
    * @returns {Object}
    */
   getSchema(fields) {
-    return _.reduce(fields, (schema, field) => {
+    return _.reduce(fields, (schema, field: any) => {
       const fieldName = _.camelCase(field.name);
       let fieldProps;
 
@@ -112,7 +116,7 @@ class ModelGen {
     const { // Unpack extensions & settings, filling in any missing defaults
       extensions: { props, options },
       settings: { BaseSchema, dbName, propTypes }
-    } = _.merge({}, this.defaults, { extensions, settings });
+    }: any = _.merge({}, this.defaults, { extensions, settings });
 
     // Check for cached model
     if (this.modelExists(dbName, name)) return this.dbs[dbName][name];
@@ -191,4 +195,4 @@ class ModelGen {
   }
 };
 
-module.exports = new ModelGen();
+export default new ModelGen();
