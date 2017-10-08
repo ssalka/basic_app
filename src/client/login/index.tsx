@@ -1,12 +1,11 @@
 declare const _;
 declare const React;
 import { InputGroup, IInputGroupProps } from '@blueprintjs/core';
-import { Link } from 'react-router-dom';
+import { RouteComponentProps, Link } from 'react-router-dom';
 
 import api from 'lib/client/api';
 import { connect, CollectionStore, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, Button } from 'lib/client/components';
-import { IRouteProps } from 'lib/common/interfaces';
 import './styles.less';
 
 const { Collection, User } = api;
@@ -22,7 +21,7 @@ interface IState {
 
 @connect(CollectionStore)
 @connect(UserStore)
-class Login extends ViewComponent<IRouteProps, IState> {
+class Login extends ViewComponent<RouteComponentProps<any>, IState> {
   public static contextTypes = {
     appName: React.PropTypes.string,
     user: React.PropTypes.object

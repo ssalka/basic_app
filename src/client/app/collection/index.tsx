@@ -1,14 +1,14 @@
 declare const _;
 declare const React;
 
-import { Link } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { NonIdealState } from '@blueprintjs/core';
 import { ViewComponent, Table, FlexColumn } from 'lib/client/components';
-import { Collection, IRouteProps, IComponentModule } from 'lib/common/interfaces';
+import { Collection, IComponentModule } from 'lib/common/interfaces';
 import getComponents from './components';
 import './styles.less';
 
-export interface IProps extends IRouteProps {
+export interface IProps extends RouteComponentProps<any> {
   collection: Collection;
   store: any;
 }

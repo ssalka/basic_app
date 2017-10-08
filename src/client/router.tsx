@@ -16,7 +16,6 @@ import {
   Field,
   IComponentModule,
   IContext,
-  IRouteProps,
   IUser,
   ReactElement
 } from 'lib/common/interfaces';
