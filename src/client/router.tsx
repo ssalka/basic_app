@@ -15,7 +15,6 @@ import {
   Collection as ICollection,
   Field,
   IComponentModule,
-  IContext,
   IUser,
   ReactElement
 } from 'lib/common/interfaces';
@@ -29,13 +28,6 @@ interface IAppRouterState {
 
 @connect(UserStore)
 class AppRouter extends BaseComponent<{}, IAppRouterState> {
-  static childContextTypes = {
-    appName: React.PropTypes.string,
-    user: React.PropTypes.object
-  };
-
-  renderIfAuthenticated = props => this.state.user ? <App {...props} /> : <div />;
-
   componentDidMount() {
     if (!localStorage.token) {
       return;
@@ -48,6 +40,8 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
         user.library.collections.forEach(
           collection => getCollectionStore({ collection })
         );
+
+        Collection.add(user.library.collections);
       })
       .catch(err => {
         if (err.response.status === 403 && location.pathname !== '/login') {
@@ -56,17 +50,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
       });
   }
 
-  getChildContext(): IContext {
-    const context: IContext = { appName: document.title };
-
-    if (this.state.user) {
-      context.user = this.state.user;
-      User.set(this.state.user);
-      Collection.add(this.state.user.library.collections);
-    }
-
-    return context;
-  }
+  renderIfAuthenticated = props => this.state.user ? <App {...props} /> : <div />;
 
   logout({ history }) {
     const { token } = localStorage;
@@ -89,12 +73,12 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
   render() {
     return (
       <Flex column={true} align="stretch">
-        <NavBar />
+        <NavBar title="App Name" user={this.state.user} />
         <Router>
           <Switch>
             <Route path="/" exact={true} component={Splash} />
-            <Route path="/login" component={Login} />
-            <Route path="/logout" render={this.logout} />
+            <Route path="/login" exact={true} component={Login} />
+            <Route path="/logout" exact={true} render={this.logout} />
             <Route render={this.renderIfAuthenticated} />
             <Route path="/:param" render={NotFound} />
           </Switch>
