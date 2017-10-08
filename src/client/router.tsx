@@ -1,7 +1,9 @@
 declare const _;
 declare const React;
-import { Router, Route, IndexRoute, browserHistory } from 'react-router-dom';
 import axios from 'axios';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Flex } from 'grid-styled';
+
 import api from 'lib/client/api';
 import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
 import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
@@ -57,7 +59,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
       })
       .catch(err => {
         if (err.response.status === 403 && location.pathname !== '/login') {
-          browserHistory.push('/login');
+          console.log('redirect to login');
         }
       });
   }
@@ -165,73 +167,64 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
     );
   }
 
-  logout() {
+  logout({ history }) {
     const { token } = localStorage;
     if (token) {
       request.post('/logout', { token })
-        .then(this.logoutCallback)
+        .then(() => {
+          User.unset();
+          history.push('/');
+        })
         .catch(console.error);
     }
-  }
 
-  logoutCallback() {
-    User.unset();
-    browserHistory.push('/');
-  }
-
-  get components(): IComponentModule {
-    return {
-      Site: ({children}) => (
-        <FlexColumn>
-          <NavBar />
-          <main>
-            {children}
-          </main>
-        </FlexColumn>
-      ),
-      NotFound: () => (
-        <ViewComponent>
-          <h2>Not found</h2>
-        </ViewComponent>
-      )
-    };
+    return (
+      <div>
+        Logging out...
+      </div>
+    );
   }
 
   render() {
-    const { Site, NotFound } = this.components;
-
     return (
-      <Router history={browserHistory}>
-        <Route path="/" component={Site}>
-          <IndexRoute component={Splash} />
-          <Route path="login" component={Login} />
+      <Router>
+        <Flex column={true} align="stretch">
+          <NavBar />
+          <Switch>
+            <Route path="/" exact={true} component={Splash} />
+            <Route path="/login" component={Login} />
+            <Route path="/logout" render={this.logout} />
+            <Route path="/:param" render={NotFound} />
+            {/*<Route component={this.renderIfAuthenticated}>
+              <Route path="home" component={Home} />
 
-          <Route component={this.renderIfAuthenticated}>
-            <Route path="home" component={Home} />
+              <Route path="collections">
+                <IndexRoute component={Collections} />
+                <Route path="add" component={CollectionForm} />
 
-            <Route path="collections">
-              <IndexRoute component={Collections} />
-              <Route path="add" component={CollectionForm} />
+                <Route path=":collection">
+                  <IndexRoute component={this.getCollectionView} />
+                  <Route path="add" component={this.getDocumentForm} />
+                  <Route path="edit" component={this.getCollectionForm} />
 
-              <Route path=":collection">
-                <IndexRoute component={this.getCollectionView} />
-                <Route path="add" component={this.getDocumentForm} />
-                <Route path="edit" component={this.getCollectionForm} />
-
-                <Route path=":_id">
-                  <IndexRoute component={this.getDocumentView} />
-                  <Route path="edit" component={this.getDocumentForm} />
+                  <Route path=":_id">
+                    <IndexRoute component={this.getDocumentView} />
+                    <Route path="edit" component={this.getDocumentForm} />
+                  </Route>
                 </Route>
               </Route>
-            </Route>
-          </Route>
-
-          <Route path="logout" onEnter={this.logout} />
-          <Route path="*" component={NotFound} />
-        </Route>
+            </Route>*/}
+          </Switch>
+        </Flex>
       </Router>
     );
   }
 }
+
+const NotFound = ({ match }) => (
+  <ViewComponent>
+    <h2>Not found: {match.params.param}</h2>
+  </ViewComponent>
+);
 
 export default AppRouter;

@@ -2,7 +2,6 @@ declare const _;
 declare const React;
 import axios from 'axios';
 import { EditableText } from '@blueprintjs/core';
-import { browserHistory } from 'react-router-dom';
 import api from 'lib/client/api';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { findDocumentById } from 'lib/common/helpers';
@@ -194,7 +193,7 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
             </div>
             <FlexRow className="fill-width">
               <Button text="Save" type="submit" color="success" onClick={this.submitForm} />
-              <Button text="Cancel" color="danger" onClick={browserHistory.goBack} />
+              <Button text="Cancel" color="danger" onClick={this.props.history.goBack} />
             </FlexRow>
           </form>
         </div>
