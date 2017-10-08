@@ -5,6 +5,8 @@ import { ObjectId } from 'lib/server/utils/types';
 import { Collection, Field } from 'lib/common/interfaces';
 
 export default class MockCollection {
+  _id: string;
+
   constructor(defaults: Partial<Collection> = {}) {
     const user = new User({ username: 'test_user' });
     const view = new View();
