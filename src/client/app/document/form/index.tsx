@@ -2,10 +2,11 @@ declare const _;
 declare const React;
 import axios from 'axios';
 import { EditableText } from '@blueprintjs/core';
+import { RouteComponentProps } from 'react-router-dom';
 import api from 'lib/client/api';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { findDocumentById } from 'lib/common/helpers';
-import { Collection, Field, ReactElement, IDocument, IRouteProps } from 'lib/common/interfaces';
+import { Collection, Field, ReactElement, IDocument } from 'lib/common/interfaces';
 import {
   ViewComponent,
   FlexRow,
@@ -17,7 +18,7 @@ import {
 } from 'lib/client/components';
 import './styles.less';
 
-export interface IProps extends Partial<IRouteProps> {
+export interface IProps extends Partial<RouteComponentProps<any>> {
   collection: Collection;
   collections: Collection[];
 }

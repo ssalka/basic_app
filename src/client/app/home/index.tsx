@@ -9,6 +9,12 @@ import { Collection, ReactElement } from 'lib/common/interfaces';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
 
+const AddButton = ({ href = '', ...props }) =>  (
+  <Link to={href}>
+    <Button icon="add" minimal={true} rounded={true} {...props} />
+  </Link>
+);
+
 @connect(UserStore)
 class Home extends ViewComponent<any, any> {
   addView() {
@@ -16,17 +22,8 @@ class Home extends ViewComponent<any, any> {
     console.log('open a new view');
   }
 
-  AddButton(props): ReactElement {
-    return (
-      <Link to={props.href}>
-        <Button icon="add" minimal={true} rounded={true} {..._.omit(props, 'href')} />
-      </Link>
-    );
-  }
-
   renderCollections(collections: Collection[] = []) {
     const description: string = 'Use Collections to describe and organize your data. Import or sync with any source.';
-    const { AddButton } = this;
 
     return (
       <div className="pt-callout pt-elevation-1">
@@ -62,7 +59,6 @@ class Home extends ViewComponent<any, any> {
 
   renderViews(views = []) {
     const description = 'Views allows you to define new visual representations of your data.';
-    const { AddButton } = this;
 
     return (
       <div className="pt-callout pt-elevation-1">

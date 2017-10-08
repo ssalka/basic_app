@@ -1,5 +1,5 @@
 declare const React;
-import { Link } from 'react-router-dom';
+import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { BaseComponent, Icon } from '../';
 import { ILink, ReactElement } from 'lib/common/interfaces';
 import '../../styles/SideBar.less';
@@ -66,9 +66,11 @@ export default class SideBar extends BaseComponent<IProps, IState> {
 
     return (
       <aside className={className} onClick={this.handleClick}>
-        <ul className="pt-menu pt-large" onClick={stopPropagation}>
-          {this.props.links.map(this.renderLink)}
-        </ul>
+        <Router>
+          <ul className="pt-menu pt-large" onClick={stopPropagation}>
+            {this.props.links.map(this.renderLink)}
+          </ul>
+        </Router>
         <div id="sidebar-expand">
           <Icon
             name={toggleIcon}
