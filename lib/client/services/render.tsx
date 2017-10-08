@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import * as Rating from 'react-rating';
 import { RENDER_METHODS } from 'lib/common/constants';
 import {
@@ -36,25 +36,24 @@ class RenderingService {
         _.negate(_.isEmpty),
         () => _.some(val, this.isNonemptyField)
       ]);
-    }
-    else {
-      evaluator = _.overSome([
-        _.identity,
-        _.isNumber
-      ]);
+    } else {
+      evaluator = _.overSome([_.identity, _.isNumber]);
     }
 
     return evaluator(val);
-  }
+  };
 
   private getProps(document: IDocument, field: Field): ReactProps {
     const { targetProp }: IRenderMethod = _.find(RENDER_METHODS, {
       key: field.renderMethod || 'PLAIN_TEXT'
     });
-    const rawValue: IDocument | IDocument[] = _.get(document, _.camelCase(field.name));
-    const isPlainTextArrayField: boolean = field.isArray && (
-      !field.renderMethod || field.renderMethod === 'PLAIN_TEXT'
+    const rawValue: IDocument | IDocument[] = _.get(
+      document,
+      _.camelCase(field.name)
     );
+    const isPlainTextArrayField: boolean =
+      field.isArray &&
+      (!field.renderMethod || field.renderMethod === 'PLAIN_TEXT');
     const displayValue = isPlainTextArrayField
       ? (rawValue as IDocument[]).join(', ')
       : rawValue;
@@ -62,16 +61,15 @@ class RenderingService {
     return { [targetProp]: displayValue };
   }
 
-  public renderField(document: any, field: Field, props: ReactProps = {}): ReactElement {
+  public renderField(
+    document: any,
+    field: Field,
+    props: ReactProps = {}
+  ): ReactElement {
     const renderMethod: string = field.renderMethod || 'PLAIN_TEXT';
     const Component: SFC = this.componentMap[renderMethod];
 
-    return (
-      <Component
-        {...props}
-        {...this.getProps(document, field)}
-      />
-    );
+    return <Component {...props} {...this.getProps(document, field)} />;
   }
 }
 

@@ -2,9 +2,10 @@ import * as _ from 'lodash';
 import { FIELD_TYPES } from './constants';
 
 export function mapToKeyValueArray(object) {
-  return _(object).pickBy().map(
-    (val, key) => ({ [key]: val })
-  ).value();
+  return _(object)
+    .pickBy()
+    .map((val, key) => ({ [key]: val }))
+    .value();
 }
 
 export function findFieldType(key) {

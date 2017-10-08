@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 import { createConnector } from 'cartiv';
 import CollectionStore from './CollectionStore';
 import UserStore from './UserStore';
@@ -7,10 +7,4 @@ import getCollectionStore from './getCollectionStore';
 
 const connect = createConnector(React);
 
-export {
-  connect,
-  createStore,
-  getCollectionStore,
-  CollectionStore,
-  UserStore
-};
+export { connect, createStore, getCollectionStore, CollectionStore, UserStore };

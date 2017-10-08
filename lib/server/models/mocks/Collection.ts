@@ -13,9 +13,7 @@ export default class MockCollection {
 
     if (defaults.name && !defaults._collection) {
       const prefix = user.username;
-      const suffix = defaults.name
-        .replace(/\s/g, '')
-        .toLowerCase();
+      const suffix = defaults.name.replace(/\s/g, '').toLowerCase();
 
       defaults._collection = `${prefix}_${suffix}`;
     }
@@ -69,7 +67,9 @@ export default class MockCollection {
       views: [view._id]
     });
 
-    const collection: Collection = new CollectionModel(collectionWithDefaults).toObject();
+    const collection: Collection = new CollectionModel(
+      collectionWithDefaults
+    ).toObject();
 
     if (!defaults.fields) {
       const collectionField: Field = {

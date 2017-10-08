@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 
 export type ReactElement = React.ReactElement<any>;
 

@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { mount } from 'enzyme';
 import { Button } from 'lib/client/components';
 
@@ -27,9 +28,7 @@ describe('Button', () => {
       'pt-minimal'
     ];
 
-    expect(button.props().className).toEqual(
-      expectedClassNames.join(' ')
-    );
+    expect(button.props().className).toEqual(expectedClassNames.join(' '));
   });
 
   it('displays text from the `text` attribute', () => {

@@ -16,10 +16,8 @@ const statics = {
   }
 };
 
-const Session = ModelGen.generateModel(
-  'Session', SessionSchema, {
-    props: { statics }
-  }
-);
+const Session = ModelGen.generateModel('Session', SessionSchema, {
+  props: { statics }
+});
 
 export default Session;

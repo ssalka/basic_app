@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 
 import { RouteComponentProps } from 'react-router-dom';
 import { NonIdealState } from '@blueprintjs/core';
@@ -27,10 +27,7 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
   componentDidMount() {
     const { collection } = this.props;
 
-    console.info(
-      'User Collection', collection._id,
-      _.omit(collection, '_id')
-    );
+    console.info('User Collection', collection._id, _.omit(collection, '_id'));
   }
 
   getView(view) {
@@ -38,7 +35,7 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
       TABLE: {
         component: Table,
         props: {
-          className: 'flex-view scroll',
+          className: 'flex-view scroll'
         }
       }
     };
@@ -58,29 +55,33 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
   render() {
     const { documents, loading }: IState = this.state;
     const { collection, location }: Partial<IProps> = this.props;
-    const { CollectionHeader, Loading, Placeholder }: any = getComponents(this.props, this.state);
+    const { CollectionHeader, Loading, Placeholder }: any = getComponents(
+      this.props,
+      this.state
+    );
     const noDocuments: boolean = _.isEmpty(documents);
-    const handleSelectDocument: React.MouseEventHandler<any>
-      = (doc: object) => this.openDocument(doc);
-    const {
-      component: View,
-      props: viewProps
-    } = this.getView(collection.defaultView.type);
+    const handleSelectDocument: React.MouseEventHandler<any> = (doc: object) =>
+      this.openDocument(doc);
+    const { component: View, props: viewProps } = this.getView(
+      collection.defaultView.type
+    );
 
     return (
       <FlexColumn className="collection-view">
         <CollectionHeader />
-        {loading ? <Loading /> : (
-          noDocuments ? <Placeholder /> : (
-            <div {...viewProps}>
-              <View
-                fields={collection.fields}
-                records={documents}
-                onSelectDocument={handleSelectDocument}
-                pathname={location.pathname}
-              />
-            </div>
-          )
+        {loading ? (
+          <Loading />
+        ) : noDocuments ? (
+          <Placeholder />
+        ) : (
+          <div {...viewProps}>
+            <View
+              fields={collection.fields}
+              records={documents}
+              onSelectDocument={handleSelectDocument}
+              pathname={location.pathname}
+            />
+          </div>
         )}
       </FlexColumn>
     );

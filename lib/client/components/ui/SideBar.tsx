@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { BaseComponent, Icon } from '../';
 import { ILink, ReactElement } from 'lib/common/interfaces';
@@ -31,7 +31,7 @@ export default class SideBar extends BaseComponent<IProps, IState> {
     // only run function on double clicks
     if (!this.state.isDoubleClick) {
       this.state.isDoubleClick = true;
-      setTimeout(() => this.state.isDoubleClick = false, 500);
+      setTimeout(() => (this.state.isDoubleClick = false), 500);
 
       return;
     }
@@ -40,15 +40,15 @@ export default class SideBar extends BaseComponent<IProps, IState> {
   }
 
   renderLink(link, key): ReactElement {
-    const linkIsActive = link.path.includes(this.props.currentPath) ? 'active' : null;
+    const linkIsActive = link.path.includes(this.props.currentPath)
+      ? 'active'
+      : null;
 
     return (
       <li key={key} className={linkIsActive}>
         <Link to={link.path} className="pt-menu-item">
           <Icon name={link.icon} />
-          <span className="text">
-            {link.name}
-          </span>
+          <span className="text">{link.name}</span>
         </Link>
       </li>
     );
@@ -61,8 +61,10 @@ export default class SideBar extends BaseComponent<IProps, IState> {
     }
 
     const className: string = sidebarClasses.join(' ');
-    const toggleIcon: string = 'caret-' + (this.state.expanded ? 'left' : 'right');
-    const stopPropagation = (e: React.MouseEvent<HTMLUListElement>) => e.stopPropagation();
+    const toggleIcon: string =
+      'caret-' + (this.state.expanded ? 'left' : 'right');
+    const stopPropagation = (e: React.MouseEvent<HTMLUListElement>) =>
+      e.stopPropagation();
 
     return (
       <aside className={className} onClick={this.handleClick}>
@@ -72,11 +74,7 @@ export default class SideBar extends BaseComponent<IProps, IState> {
           </ul>
         </Router>
         <div id="sidebar-expand">
-          <Icon
-            name={toggleIcon}
-            size={14}
-            onClick={this.toggle}
-          />
+          <Icon name={toggleIcon} size={14} onClick={this.toggle} />
         </div>
       </aside>
     );

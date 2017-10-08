@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import { ViewComponent, Icon, Popover, FlexRow } from '../';
 import { IIcon, ReactElement, ReactProps } from 'lib/common/interfaces';
 import { ICONS } from 'lib/common/constants';
@@ -12,7 +12,9 @@ interface IProps extends ReactProps {
   onSelectIcon(iconId: string): void;
 }
 
-interface IState { icon: string; }
+interface IState {
+  icon: string;
+}
 
 export default class IconSelector extends ViewComponent<IProps, IState> {
   public static defaultProps: Partial<IProps> = {
@@ -25,9 +27,7 @@ export default class IconSelector extends ViewComponent<IProps, IState> {
   }
 
   private SelectedIcon(): ReactElement {
-    return (
-      <Icon name={this.state.icon} onClick={this.props.onClick} />
-    );
+    return <Icon name={this.state.icon} onClick={this.props.onClick} />;
   }
 
   private setIcon(icon: IIcon) {
@@ -36,9 +36,10 @@ export default class IconSelector extends ViewComponent<IProps, IState> {
   }
 
   private IconGrid({ name, icons }): ReactElement {
-    const getIconSetter: (icon: IIcon) => React.MouseEventHandler<HTMLSpanElement> = (
-      (icon: IIcon) => () => this.setIcon(icon)
-    );
+    const getIconSetter: (
+      icon: IIcon
+    ) => React.MouseEventHandler<HTMLSpanElement> = (icon: IIcon) => () =>
+      this.setIcon(icon);
 
     return (
       <div key={name} className="icon-grid">
@@ -56,7 +57,10 @@ export default class IconSelector extends ViewComponent<IProps, IState> {
     const { IconGrid } = this;
 
     return (
-      <div className="scroll-y" style={{ maxHeight: '300px', maxWidth: '250px' }}>
+      <div
+        className="scroll-y"
+        style={{ maxHeight: '300px', maxWidth: '250px' }}
+      >
         {_(ICONS)
           .groupBy('group')
           .map((icons: IIcon[], group: string): {} => ({ name: group, icons }))
@@ -68,17 +72,10 @@ export default class IconSelector extends ViewComponent<IProps, IState> {
   }
 
   public render() {
-    const {
-      SelectedIcon, IconGroups,
-      props: { isOpen }
-    } = this;
+    const { SelectedIcon, IconGroups, props: { isOpen } } = this;
 
     return (
-      <Popover
-        target={<SelectedIcon />}
-        isOpen={isOpen}
-        position="bottom"
-      >
+      <Popover target={<SelectedIcon />} isOpen={isOpen} position="bottom">
         <h4>Select an Icon</h4>
         <IconGroups />
       </Popover>

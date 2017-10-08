@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 
 import { ViewComponent, FlexRow, IconSelector } from 'lib/client/components';
 import { Collection } from 'lib/common/interfaces';
@@ -14,7 +14,10 @@ interface IState {
   selectingIcon: boolean;
 }
 
-export default class CollectionFormHeader extends ViewComponent<IProps, IState> {
+export default class CollectionFormHeader extends ViewComponent<
+  IProps,
+  IState
+> {
   public static defaultProps: Partial<IProps> = {
     collection: new Collection({
       name: '',

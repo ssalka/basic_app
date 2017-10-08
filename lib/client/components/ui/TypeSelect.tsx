@@ -1,6 +1,6 @@
-declare const _;
-declare const React;
-import { Tree, ITreeNode, IconName } from '@blueprintjs/core';
+import * as _ from 'lodash';
+import * as React from 'react';
+import { Tree, ITreeNode as TreeNode, IconName } from '@blueprintjs/core';
 import { ViewComponent } from 'lib/client/components';
 import { Collection, Field, IType } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
@@ -12,23 +12,30 @@ export interface IProps {
   onSelectType(udpatedTypeInfo: Partial<Field>): void;
 }
 
+interface ITreeNode extends TreeNode {
+  id: string;
+}
+
 export interface IState {
   nodes: ITreeNode[];
 }
 
 export default class TypeSelect extends ViewComponent<IProps, IState> {
   state: IState = {
-    nodes: [{
-      id: 'category-standard',
-      hasCaret: true,
-      label: 'Standard Types',
-      isExpanded: true
-    }, {
-      id: 'category-collections',
-      hasCaret: true,
-      label: 'Collections',
-      isExpanded: false
-    }]
+    nodes: [
+      {
+        id: 'category-standard',
+        hasCaret: true,
+        label: 'Standard Types',
+        isExpanded: true
+      },
+      {
+        id: 'category-collections',
+        hasCaret: true,
+        label: 'Collections',
+        isExpanded: false
+      }
+    ]
   };
 
   constructor(props: IProps) {
@@ -39,8 +46,13 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
     );
   }
 
-  getNodes(collections: Collection[], selectedType: IType | Collection): ITreeNode[] {
-    const childNodes: ITreeNode[] = collections.map(collectionToTreeNode(selectedType as Collection));
+  getNodes(
+    collections: Collection[],
+    selectedType: IType | Collection
+  ): ITreeNode[] {
+    const childNodes: ITreeNode[] = collections.map(
+      collectionToTreeNode(selectedType as Collection)
+    );
     const nodes = this.state.nodes.slice();
     _.assign(nodes[1], { childNodes });
 
@@ -48,23 +60,30 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
   }
 
   handleNodeClick(nodeData: ITreeNode) {
-    if (_.includes(nodeData.id, 'category')) {
+    if (nodeData.id.includes('category')) {
       return this.toggleNode(nodeData);
     }
 
-    const typeCategory = _.map(this.state.nodes[0].childNodes, 'id').includes(nodeData.id) ? 'type' : '_collection';
+    const typeCategory = _.map(this.state.nodes[0].childNodes, 'id').includes(
+      nodeData.id
+    )
+      ? 'type'
+      : '_collection';
 
-    const updatedTypeInfo: Partial<Field> = typeCategory === 'type'
-      ? { type: nodeData.id as string, _collection: undefined }
-      : { type: FIELD_TYPES.COLLECTION, _collection: nodeData.id as string };
+    const updatedTypeInfo: Partial<Field> =
+      typeCategory === 'type'
+        ? { type: nodeData.id as string, _collection: undefined }
+        : { type: FIELD_TYPES.COLLECTION, _collection: nodeData.id as string };
 
-    const nodes: ITreeNode[] = this.state.nodes.map(({ childNodes, ...node }) => ({
-      ...node,
-      childNodes: childNodes.map(childNode => ({
-        ...childNode,
-        isSelected: !nodeData.isSelected && childNode.id === nodeData.id
-      }))
-    }));
+    const nodes: ITreeNode[] = this.state.nodes.map(
+      ({ childNodes, ...node }) => ({
+        ...node,
+        childNodes: childNodes.map(childNode => ({
+          ...childNode,
+          isSelected: !nodeData.isSelected && childNode.id === nodeData.id
+        }))
+      })
+    );
 
     this.props.onSelectType(updatedTypeInfo);
 
@@ -79,7 +98,10 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
   }
 
   render() {
-    const typeCategories: ITreeNode[] = this.getNodes(this.props.collections, this.props.selectedType);
+    const typeCategories: ITreeNode[] = this.getNodes(
+      this.props.collections,
+      this.props.selectedType
+    );
 
     return (
       <div className="type-select">
@@ -94,20 +116,24 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
   }
 }
 
-export const typeToTreeNode = (selectedType: IType) => (
-  ({ key, icon, name }: IType): ITreeNode => ({
-    id: key,
-    iconName: icon as IconName,
-    label: name,
-    isSelected: key === selectedType.key
-  })
-);
+export const typeToTreeNode = (selectedType: IType) => ({
+  key,
+  icon,
+  name
+}: IType): ITreeNode => ({
+  id: key,
+  iconName: icon as IconName,
+  label: name,
+  isSelected: key === selectedType.key
+});
 
-export const collectionToTreeNode = (selectedCollection: Collection) => (
-  ({ _id, icon, name }: Collection): ITreeNode => ({
-    id: _id,
-    iconName: icon as IconName,
-    label: name,
-    isSelected: _id === selectedCollection._id
-  })
-);
+export const collectionToTreeNode = (selectedCollection: Collection) => ({
+  _id,
+  icon,
+  name
+}: Collection): ITreeNode => ({
+  id: _id,
+  iconName: icon as IconName,
+  label: name,
+  isSelected: _id === selectedCollection._id
+});

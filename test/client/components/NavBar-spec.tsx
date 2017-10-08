@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { mount } from 'enzyme';
 import { NavBar } from 'lib/client/components';
 
@@ -9,7 +10,7 @@ describe('NavBar', () => {
   }
 
   describe('when no user is signed in', () => {
-    beforeEach(() => user = null);
+    beforeEach(() => (user = null));
 
     it('shows the sign-in button', () => {
       const navbar: string = getNavBar();
@@ -19,7 +20,7 @@ describe('NavBar', () => {
   });
 
   describe('when a user is signed in', () => {
-    beforeEach(() => user = { username: 'ssalka' });
+    beforeEach(() => (user = { username: 'ssalka' }));
 
     it('shows the logout button', () => {
       const navbar = getNavBar();

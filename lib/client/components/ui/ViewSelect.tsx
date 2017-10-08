@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
 import { ViewComponent } from 'lib/client/components';
 import { IRenderMethod } from 'lib/common/interfaces';
@@ -18,15 +18,17 @@ export default class ViewSelect extends ViewComponent<IProps, {}> {
   };
 
   public render() {
-    const selectView = (renderMethod: IRenderMethod) => (
-      () => this.props.onSelectView(renderMethod)
-    );
+    const selectView = (renderMethod: IRenderMethod) => () =>
+      this.props.onSelectView(renderMethod);
 
     return (
       <Menu>
         {this.props.renderMethods.map((renderMethod: IRenderMethod) => (
           <MenuItem
-            className={_.isEqual(renderMethod, this.props.selectedView) && 'pt-active pt-intent-primary'}
+            className={
+              _.isEqual(renderMethod, this.props.selectedView) &&
+              'pt-active pt-intent-primary'
+            }
             iconName="new-text-box"
             onClick={selectView(renderMethod)}
             text={renderMethod.name}

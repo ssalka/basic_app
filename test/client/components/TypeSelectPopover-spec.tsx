@@ -1,9 +1,14 @@
 import * as assert from 'assert';
+import * as _ from 'lodash';
+import * as React from 'react';
 import { mount, ReactWrapper } from 'enzyme';
 import { Collection, Field } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
-import { TypeSelectPopover, ITypeSelectPopoverProps } from 'src/client/app/collection/form/components';
+import {
+  TypeSelectPopover,
+  ITypeSelectPopoverProps
+} from 'src/client/app/collection/form/components';
 
 describe('TypeSelectPopover', () => {
   const testCollection = new MockCollection();
@@ -13,10 +18,9 @@ describe('TypeSelectPopover', () => {
   let popoverContainer: HTMLElement;
 
   function getTypeSelectPopover() {
-    return mount(
-      <TypeSelectPopover {...props} />,
-      { attachTo: popoverContainer }
-    );
+    return mount(<TypeSelectPopover {...props} />, {
+      attachTo: popoverContainer
+    });
   }
 
   beforeEach(() => {

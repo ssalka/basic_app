@@ -1,8 +1,15 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import { NonIdealState, IconName } from '@blueprintjs/core';
 import * as FilterableTable from 'react-filterable-table';
-import { IDocument, Field, IComponentModule, ReactElement, ReactProps, SFC } from 'lib/common/interfaces';
+import {
+  IDocument,
+  Field,
+  IComponentModule,
+  ReactElement,
+  ReactProps,
+  SFC
+} from 'lib/common/interfaces';
 import { RenderingService } from 'lib/client/services';
 import { ViewComponent, Button } from '../';
 import '../../styles/Table.less';
@@ -32,32 +39,35 @@ export default class Table extends ViewComponent<IProps, any> {
 
   private getFieldProps(field: Field): object {
     const { onSelectDocument } = this.props;
-    const handleClick: (doc: IDocument) => React.MouseEventHandler<HTMLSpanElement> = (
-      (doc: IDocument) => () => onSelectDocument(doc)
-    );
+    const handleClick: (
+      doc: IDocument
+    ) => React.MouseEventHandler<HTMLSpanElement> = (doc: IDocument) => () =>
+      onSelectDocument(doc);
 
     // TODO: optimize performance
-    const Component: SFC = ({ record }) => (
+    const Component: SFC = ({ record }) =>
       RenderingService.renderField(record, field, {
         onClick: handleClick(record)
-      })
-    );
+      });
 
     return {
       name: _.kebabCase(field.name),
       displayName: field.name,
       sortable: true,
       inputFilterable: true,
-      render: (props: any) => (
-        <Component {...props} />
-      )
+      render: (props: any) => <Component {...props} />
     };
   }
 
   private get components(): IComponentModule {
     const { fields, records, pathname, tableProps: _tableProps } = this.props;
-    const initialSortField: object = { name: _tableProps.initialSort, visible: false };
-    const fieldProps: object[] = fields.map(this.getFieldProps).concat(initialSortField);
+    const initialSortField: object = {
+      name: _tableProps.initialSort,
+      visible: false
+    };
+    const fieldProps: object[] = fields
+      .map(this.getFieldProps)
+      .concat(initialSortField);
     const tableProps = {
       ..._tableProps,
       fields: fieldProps,
@@ -69,21 +79,19 @@ export default class Table extends ViewComponent<IProps, any> {
     // NOTE: project ^ appears to be in its infancy...consider alternatives
     setTimeout(() => {
       const table: Element = document.querySelector('.table');
-      tableProps.tableClassName.split(' ').map(
-        (className: string) => table.classList.add(className)
-      );
+      tableProps.tableClassName
+        .split(' ')
+        .map((className: string) => table.classList.add(className));
     });
 
     return {
-      Table: () => (
-        <FilterableTable {...tableProps} />
-      ),
+      Table: () => <FilterableTable {...tableProps} />,
       Placeholder: () => (
         <NonIdealState
           visual={'table' as IconName}
           title="This table has no records"
           description={<span>*Empty table description*</span>}
-          action={(
+          action={
             <Button
               icon="add"
               text="Add a Record"
@@ -91,7 +99,7 @@ export default class Table extends ViewComponent<IProps, any> {
               minimal={true}
               rounded={true}
             />
-          )}
+          }
         />
       )
     };

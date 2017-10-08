@@ -6,8 +6,12 @@ import {
   upsertDocumentInCollection
 } from './middleware';
 
-export default express.Router()
+export default express
+  .Router()
   .get('/me', findUserByToken)
   .post('/collections/:collectionId', upsertCollection)
   .get('/collections/:collectionId/documents', loadDocumentsInCollection)
-  .post('/collections/:collectionId/documents/:documentId', upsertDocumentInCollection);
+  .post(
+    '/collections/:collectionId/documents/:documentId',
+    upsertDocumentInCollection
+  );

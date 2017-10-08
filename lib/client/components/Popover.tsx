@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 import { ViewComponent } from './';
 import { Popover, PopoverInteractionKind, Position } from '@blueprintjs/core';
 

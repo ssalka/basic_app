@@ -33,10 +33,11 @@ _.forEach(connections, (conn, name) => {
   });
 });
 
-export const waitForConnection = cb => async.until(
-  () => _.isEqualWith(connections, openConnections, _.keys as any),
-  setImmediate,
-  () => cb(_.some(openConnections, isOpen => !isOpen))
-);
+export const waitForConnection = cb =>
+  async.until(
+    () => _.isEqualWith(connections, openConnections, _.keys as any),
+    setImmediate,
+    () => cb(_.some(openConnections, isOpen => !isOpen))
+  );
 
 export const closeConnection = cb => mongoose.disconnect(cb);

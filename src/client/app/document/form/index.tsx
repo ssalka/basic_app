@@ -1,12 +1,17 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import axios from 'axios';
 import { EditableText } from '@blueprintjs/core';
 import { RouteComponentProps } from 'react-router-dom';
 import api from 'lib/client/api';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { findDocumentById } from 'lib/common/helpers';
-import { Collection, Field, ReactElement, IDocument } from 'lib/common/interfaces';
+import {
+  Collection,
+  Field,
+  ReactElement,
+  IDocument
+} from 'lib/common/interfaces';
 import {
   ViewComponent,
   FlexRow,
@@ -38,60 +43,68 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
   constructor(props) {
     super(props);
     this.state = {
-      document: _.get(props, 'location.state.document', {})
+      document: _.get(props, 'location.state.document', {} as IDocument)
     };
   }
 
   clearField = (field: Field) => () => {
     this.setStateByPath(`document.${_.camelCase(field.name)}`, undefined);
-  }
+  };
 
-  updateField = _.curry((field: Field, value: string & React.FormEvent<any>) => {
-    if (value.currentTarget) {
-      // TODO: transform TextInput onChange cb to pass a value instead of event
-      value = value.currentTarget.value;
+  updateField = _.curry(
+    (field: Field, value: string | React.FormEvent<any>) => {
+      if ((value as React.FormEvent<any>).currentTarget) {
+        // TODO: transform TextInput onChange cb to pass a value instead of event
+        value = (value as React.FormEvent<any>).currentTarget.value;
+      }
+
+      const nullableValue: string = value === '' ? null : value as string;
+      const newValue =
+        field.type === 'NUMBER' && !_.isNull(nullableValue)
+          ? parseInt(nullableValue, 10)
+          : nullableValue;
+
+      const valueAsArray = _((newValue as string) || '')
+        .split('; ')
+        .compact();
+
+      this.setStateByPath(
+        `document.${_.camelCase(field.name)}`,
+        field.isArray ? valueAsArray.value() : newValue
+      );
     }
+  );
 
-    const nullableValue = value === '' ? null : value;
-    const newValue = (
-      field.type === 'NUMBER' && !_.isNull(nullableValue)
-        ? parseInt(nullableValue, 10)
-        : nullableValue
-    );
+  updateCollectionField = _.curry(
+    (field: Field, newFieldValue: Collection | Collection[]): void => {
+      if (_.isNull(newFieldValue)) {
+        // value cleared by form
+        return this.setStateByPath(`document.${_.camelCase(field.name)}`, []);
+      }
 
-    const valueAsArray = _(newValue || '')
-      .split('; ')
-      .compact();
+      const collectionId = (newFieldValue as Collection)._id;
+      const invalidCollectionField = !field.isArray && !collectionId;
+      const invalidArrayField = field.isArray && !_.isArray(newFieldValue);
 
-    this.setStateByPath(
-      `document.${_.camelCase(field.name)}`,
-      field.isArray ? valueAsArray.value() : newValue
-    );
-  });
+      if (invalidCollectionField || invalidArrayField) {
+        return console.error(
+          'A valid document is required for use in a collection field. Got',
+          newFieldValue
+        );
+      }
 
-  updateCollectionField = _.curry((field: Field, newFieldValue: Collection | Collection[]): void => {
-    if (_.isNull(newFieldValue)) {
-      // value cleared by form
-      return this.setStateByPath(`document.${_.camelCase(field.name)}`, []);
+      this.setStateByPath(
+        `document.${_.camelCase(field.name)}`,
+        field.isArray
+          ? _.map(newFieldValue as Collection[], '_id')
+          : collectionId
+      );
     }
-
-    const collectionId = (newFieldValue as Collection)._id;
-    const invalidCollectionField = !field.isArray && !collectionId;
-    const invalidArrayField = field.isArray && !_.isArray(newFieldValue);
-
-    if (invalidCollectionField || invalidArrayField) {
-      return console.error('A valid document is required for use in a collection field. Got', newFieldValue);
-    }
-
-    this.setStateByPath(
-      `document.${_.camelCase(field.name)}`,
-      field.isArray ? _.map(newFieldValue, '_id') : collectionId
-    );
-  });
+  );
 
   getLinkedDocuments(field: Field): IDocument | IDocument[] {
     const { document: doc, documents } = this.state;
-    const _id = _.get(doc, _.camelCase(field.name));
+    const _id: string = _.get(doc, _.camelCase(field.name));
 
     if (!(documents && _id)) {
       return [];
@@ -113,16 +126,22 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
       .then(() => history.push(collection.path));
   }
 
-  upsertDocumentInCollection = (collection: Collection, doc: IDocument) => (
-    axios.post(`/api/collections/${collection._id}/documents/${doc._id}`, { document: doc })
-  )
+  upsertDocumentInCollection = (collection: Collection, doc: IDocument) =>
+    axios.post(`/api/collections/${collection._id}/documents/${doc._id}`, {
+      document: doc
+    });
 
   getInput(field: Field): ReactElement {
     const documentValue: any = this.state.document[_.camelCase(field.name)];
-    const inputValue: any = field.isArray ? (documentValue || []).join('; ') : documentValue;
+    const inputValue: any = field.isArray
+      ? (documentValue || []).join('; ')
+      : documentValue;
 
     if (field._collection) {
-      const collection = findDocumentById(this.props.collections, field._collection) as Collection;
+      const collection = findDocumentById(
+        this.props.collections,
+        field._collection
+      ) as Collection;
 
       return (
         <CollectionSelect
@@ -138,19 +157,13 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     // TODO: support more input types, eg textarea, date/time picker, ...
     switch (field.type) {
       case 'NUMBER':
-      return (
-        <NumericInput
-          value={inputValue}
-          onChange={this.updateField(field)}
-        />
-      );
+        return (
+          <NumericInput value={inputValue} onChange={this.updateField(field)} />
+        );
       case 'STRING':
       default:
         return (
-          <TextInput
-            value={inputValue}
-            onChange={this.updateField(field)}
-          />
+          <TextInput value={inputValue} onChange={this.updateField(field)} />
         );
     }
   }
@@ -172,9 +185,7 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
                 {collection.fields.map((field: Field) => (
                   <FlexColumn className="document-field" key={field.name}>
                     <label className="pt-label pt-inline">
-                      <strong className="field-name">
-                        {field.name}
-                      </strong>
+                      <strong className="field-name">{field.name}</strong>
 
                       {this.getInput(field)}
 
@@ -193,8 +204,17 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
               </div>
             </div>
             <FlexRow className="fill-width">
-              <Button text="Save" type="submit" color="success" onClick={this.submitForm} />
-              <Button text="Cancel" color="danger" onClick={this.props.history.goBack} />
+              <Button
+                text="Save"
+                type="submit"
+                color="success"
+                onClick={this.submitForm}
+              />
+              <Button
+                text="Cancel"
+                color="danger"
+                onClick={this.props.history.goBack}
+              />
             </FlexRow>
           </form>
         </div>

@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import { Button, IButtonProps } from '@blueprintjs/core';
 import { ReactElement } from 'lib/common/interfaces';
 import '../styles/Button.less';
@@ -20,13 +20,9 @@ interface IProps extends React.Props<any> {
 export default (props: IProps): ReactElement => {
   const className: string = getClassName(props);
   const { type, onClick, children, text }: Partial<IProps> = props;
-  const buttonProps: IButtonProps = _.pickBy(
-    { type, className, onClick }
-  );
+  const buttonProps: IButtonProps = _.pickBy({ type, className, onClick });
 
-  return (
-    <Button {...buttonProps}>{text || children}</Button>
-  );
+  return <Button {...buttonProps}>{text || children}</Button>;
 };
 
 function getClassName({

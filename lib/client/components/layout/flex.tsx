@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 
 interface IProps extends React.Props<any>, React.HTMLAttributes<any> {
   className?: string;
@@ -23,7 +23,9 @@ export default function getFlexComponent(type: 'row' | 'column') {
     const flexProps: Partial<IProps> = _.assign({
       className: classNames.concat(className, `flex-${type}`).join(' '),
       style: _.assign(style, {
-        justifyContent, alignItems, flexWrap: flexWrap ? 'wrap' : 'nowrap'
+        justifyContent,
+        alignItems,
+        flexWrap: flexWrap ? 'wrap' : 'nowrap'
       }),
       ...props
     });
