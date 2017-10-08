@@ -12,7 +12,7 @@ dependencies:
     - /opt/circleci/nodejs/v8.4.0/bin
     - /opt/circleci/nodejs/v8.4.0/lib/node_modules
   pre:
-    - if [ ! -e /opt/circleci/nodejs/v8.4.0/bin/jest ]; then npm install -g jest@19.0.2; fi
+    - if [ ! -e /opt/circleci/nodejs/v8.4.0/bin/jest ]; then npm install -g jest@21.1.2; fi
     - if [ ! -e /opt/circleci/nodejs/v8.4.0/bin/tslint ]; then npm install -g tslint@5.7.0; fi
 
 test:
