@@ -1,14 +1,13 @@
-import * as _ from 'lodash';
+import * as lodash from 'lodash';
 import * as inflection from 'lodash-inflection';
 import { Schema } from 'mongoose';
 import 'mongoose-schema-extend';
 
 import { FIELD_TYPES } from 'lib/common/constants';
-import * as db from '../db';
+import { connections, systemDbName, collectionsDbName } from '../db';
 import { Mixed, ref } from './types';
-const { connection, connections, systemDbName, collectionsDbName } = db;
 
-_.mixin(inflection);
+const _: any = lodash.mixin(inflection);
 
 const _defaults = {
   // Consumed by mongoose
@@ -195,8 +194,8 @@ class ModelGen {
    */
   reset() {
     this.dbs = {};
-    connections.app.models = {};
-    connections.collections.models = {};
+    (connections.app as any).models = {};
+    (connections.collections as any).models = {};
   }
 }
 

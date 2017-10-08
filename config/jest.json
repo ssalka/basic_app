@@ -1,10 +1,5 @@
 {
   "rootDir": "../",
-  "globals": {
-    "ts-jest": {
-      "tsConfigFile": "tsconfig.test.json"
-    }
-  },
   "moduleFileExtensions": [
     "js",
     "json",

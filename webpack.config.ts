@@ -3,8 +3,9 @@ import * as webpack from 'webpack';
 import * as CopyWebpackPlugin from 'copy-webpack-plugin';
 
 const clientDirectories = [
-  path.resolve('./src/client'),
-  path.resolve('./lib')
+  path.resolve('./lib/client'),
+  path.resolve('./lib/common'),
+  path.resolve('./src/client')
 ];
 
 const config = {
@@ -23,7 +24,7 @@ const config = {
     loaders: [{
       test: /\.tsx?$/,
       include: clientDirectories,
-      loader: 'ts-loader'
+      loader: 'ts-loader?configFileName=config/tsconfig.client.json'
     }, {
       test: /\.(less|css)$/,
       loaders: ["style", "css", "less"]
@@ -55,7 +56,7 @@ const config = {
   ],
   tslint: {
     formatter: 'stylish',
-    configFile: 'tslint.json'
+    configFile: 'config/tslint.json'
   }
 };
 

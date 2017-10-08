@@ -1,27 +1,23 @@
 {
+  "extends": "../tsconfig",
   "compilerOptions": {
-    "allowJs": true,
-    "alwaysStrict": true,
-    "baseUrl": ".",
-    "module": "commonjs",
+    "jsx": "Preserve",
     "moduleResolution": "node",
-    "noImplicitAny": false,
     "outDir": "./dist",
-    "sourceMap": true,
     "target": "ES2016",
     "types": [
       "express",
-      "lodash",
       "mongoose",
       "node",
       "passport",
       "passport-local",
       "passport-local-mongoose"
+    ],
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2016",
+      "ScriptHost"
     ]
-  },
-  "include": [
-    "lib/server",
-    "lib/common",
-    "src/server"
-  ]
+  }
 }

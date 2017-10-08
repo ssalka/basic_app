@@ -1,31 +1,11 @@
 {
   "compilerOptions": {
-    "allowJs": true,
     "alwaysStrict": true,
     "baseUrl": ".",
-    "experimentalDecorators": true,
     "jsx": "react",
     "module": "commonjs",
     "noImplicitAny": false,
     "sourceMap": true,
-    "target": "es5",
-    "types": [
-      "lodash",
-      "react",
-      "react-dom",
-      "react-router",
-      "react-select"
-    ],
-    "lib": [
-      "DOM",
-      "DOM.Iterable",
-      "ES2016",
-      "ScriptHost"
-    ]
-  },
-  "include": [
-    "lib/client",
-    "lib/common",
-    "src/client"
-  ]
+    "target": "es5"
+  }
 }
