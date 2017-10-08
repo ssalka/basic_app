@@ -24,7 +24,7 @@ const config = {
     loaders: [{
       test: /\.tsx?$/,
       include: clientDirectories,
-      loader: 'ts-loader?configFileName=tsconfig.client.json'
+      loader: 'ts-loader?configFileName=config/tsconfig.client.json'
     }, {
       test: /\.(less|css)$/,
       loaders: ["style", "css", "less"]
@@ -56,7 +56,7 @@ const config = {
   ],
   tslint: {
     formatter: 'stylish',
-    configFile: 'tslint.json'
+    configFile: 'config/tslint.json'
   }
 };
 

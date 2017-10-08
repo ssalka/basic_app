@@ -1,5 +1,5 @@
 {
-  "extends": "./tsconfig",
+  "extends": "../tsconfig",
   "compilerOptions": {
     "jsx": "react",
     "experimentalDecorators": true,
@@ -18,8 +18,8 @@
     ]
   },
   "include": [
-    "lib/client",
-    "lib/common",
-    "src/client"
+    "../lib/client",
+    "../lib/common",
+    "../src/client"
   ]
 }
