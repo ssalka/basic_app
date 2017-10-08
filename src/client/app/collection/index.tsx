@@ -1,7 +1,7 @@
 declare const _;
 declare const React;
 
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { NonIdealState } from '@blueprintjs/core';
 import { ViewComponent, Table, FlexColumn } from 'lib/client/components';
 import { Collection, IRouteProps, IComponentModule } from 'lib/common/interfaces';

@@ -1,5 +1,5 @@
 declare const React;
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { BaseComponent, Icon } from '../';
 import { ILink, ReactElement } from 'lib/common/interfaces';
 import '../../styles/SideBar.less';

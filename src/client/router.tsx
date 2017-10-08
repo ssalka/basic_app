@@ -1,6 +1,6 @@
 declare const _;
 declare const React;
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router-dom';
 import axios from 'axios';
 import api from 'lib/client/api';
 import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';

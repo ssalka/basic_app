@@ -1,7 +1,7 @@
 declare const _;
 declare const React;
 import { NonIdealState } from '@blueprintjs/core';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { User } from 'lib/client/api';
 import { connect, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';

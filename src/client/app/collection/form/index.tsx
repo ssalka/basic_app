@@ -2,7 +2,7 @@ declare const _;
 declare const React;
 
 import axios from 'axios';
-import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router-dom';
 import api from 'lib/client/api';
 import { connect, CollectionStore } from 'lib/client/api/stores';
 import { ViewComponent, Button, FlexRow } from 'lib/client/components';

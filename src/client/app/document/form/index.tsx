@@ -2,7 +2,7 @@ declare const _;
 declare const React;
 import axios from 'axios';
 import { EditableText } from '@blueprintjs/core';
-import { browserHistory } from 'react-router';
+import { browserHistory } from 'react-router-dom';
 import api from 'lib/client/api';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { findDocumentById } from 'lib/common/helpers';

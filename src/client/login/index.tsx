@@ -1,7 +1,7 @@
 declare const _;
 declare const React;
 import { InputGroup, IInputGroupProps } from '@blueprintjs/core';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import api from 'lib/client/api';
 import { connect, CollectionStore, UserStore } from 'lib/client/api/stores';

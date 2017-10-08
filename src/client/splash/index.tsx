@@ -1,6 +1,6 @@
 declare const _;
 declare const React;
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { ViewComponent } from 'lib/client/components';
 import { IContext } from 'lib/common/interfaces';
 

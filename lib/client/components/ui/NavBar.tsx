@@ -1,5 +1,5 @@
 declare const React;
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { InputGroup } from '@blueprintjs/core';
 import { IContext, ReactElement } from 'lib/common/interfaces';
 import { BaseComponent, Button, Icon } from '../';

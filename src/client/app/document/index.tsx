@@ -3,7 +3,7 @@ declare const React;
 
 import { ViewComponent } from 'lib/client/components';
 import { RENDER_METHODS } from 'lib/common/constants';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import { RenderingService } from 'lib/client/services';
 import {
   Collection,
