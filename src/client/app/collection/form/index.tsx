@@ -1,19 +1,20 @@
 declare const _;
 declare const React;
-
 import axios from 'axios';
-import { browserHistory } from 'react-router';
+import { RouteComponentProps } from 'react-router-dom';
+
 import api from 'lib/client/api';
 import { connect, CollectionStore } from 'lib/client/api/stores';
 import { ViewComponent, Button, FlexRow } from 'lib/client/components';
 import { Field, Collection } from 'lib/common/interfaces';
-import { ReactProps, IRouteProps, IFunctionModule } from 'lib/common/interfaces/react';
+import { ReactProps, IFunctionModule } from 'lib/common/interfaces/react';
 import { READONLY_FIELDS } from 'lib/common/constants';
+
 import CollectionFormHeader from './header';
 import CollectionFormSchema from './schema';
 import './styles.less';
 
-interface IProps extends ReactProps, IRouteProps {
+interface IProps extends ReactProps, RouteComponentProps<any> {
   // initial state of collection
   collection: Partial<Collection>;
 
@@ -103,7 +104,7 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
 
             <FlexRow className="action-buttons fill-width">
               <Button text="Save" type="submit" color="success" onClick={this.submitForm} />
-              <Button text="Cancel" color="danger" onClick={browserHistory.goBack} />
+              <Button text="Cancel" color="danger" onClick={this.props.history.goBack} />
             </FlexRow>
           </form>
         </div>

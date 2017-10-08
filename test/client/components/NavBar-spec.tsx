@@ -2,25 +2,35 @@ import { mount } from 'enzyme';
 import { NavBar } from 'lib/client/components';
 
 describe('NavBar', () => {
-  function getNavBar(context) {
-    return mount(<NavBar />, { context });
+  let user;
+
+  function getNavBar() {
+    return mount(<NavBar user={user} />);
   }
 
-  it('shows the sign-in button if there is no user', () => {
-    const navbar: string = getNavBar();
-    const button = navbar.find('button');
-    expect(button.text()).toBe('Sign In');
+  describe('when no user is signed in', () => {
+    beforeEach(() => user = null);
+
+    it('shows the sign-in button', () => {
+      const navbar: string = getNavBar();
+      const button = navbar.find('button');
+      expect(button.text()).toBe('Sign In');
+    });
   });
 
-  it('shows the logout button if there is a user', () => {
-    const navbar = getNavBar({ user: { username: 'ssalka' } });
-    const button = navbar.find('button').last();
-    expect(button.text()).toBe('');
-  });
+  describe('when a user is signed in', () => {
+    beforeEach(() => user = { username: 'ssalka' });
 
-  it('shows a search input if there is a user', () => {
-    const navbar = getNavBar({ user: { username: 'ssalka' } });
-    const search = navbar.find('input');
-    expect(search.prop('placeholder')).toBe('Search');
+    it('shows the logout button', () => {
+      const navbar = getNavBar();
+      const button = navbar.find('button').last();
+      expect(button.text()).toBe('');
+    });
+
+    it('shows a search input', () => {
+      const navbar = getNavBar();
+      const search = navbar.find('input');
+      expect(search.prop('placeholder')).toBe('Search');
+    });
   });
 });
