@@ -1,11 +1,11 @@
 import * as _ from 'lodash';
 import { collectionsDbName } from 'lib/server/db';
-import { Collection, User, View } from '../';
+import { Collection as CollectionModel, User, View } from '../';
 import { ObjectId } from 'lib/server/utils/types';
-import { Collection as ICollection } from 'lib/common/interfaces';
+import { Collection, Field } from 'lib/common/interfaces';
 
 export default class MockCollection {
-  constructor(defaults: ICollection = {}) {
+  constructor(defaults: Partial<Collection> = {}) {
     const user = new User({ username: 'test_user' });
     const view = new View();
 
@@ -67,17 +67,19 @@ export default class MockCollection {
       views: [view._id]
     });
 
-    const collection = new Collection(collectionWithDefaults).toObject();
+    const collection: Collection = new CollectionModel(collectionWithDefaults).toObject();
 
     if (!defaults.fields) {
-      collection.fields.push({
+      const collectionField: Field = {
         name: 'Collection Ref',
         type: 'COLLECTION',
+        required: false,
+        isArray: false,
         _collection: collection._id,
         view: collection.defaultView,
-        required: false,
-        isArray: false
-      });
+        renderMethod: 'PLAIN_TEXT'
+      };
+      collection.fields.push(collectionField);
     }
 
     return collection;

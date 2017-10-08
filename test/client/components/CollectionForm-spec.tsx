@@ -6,15 +6,28 @@ import { MockCollection } from 'lib/server/models/mocks';
 import { CollectionForm } from 'src/client/app/collection/form';
 
 describe('CollectionForm', () => {
-  const testCollection = new MockCollection();
+  const testCollection: Collection = new MockCollection();
   let collectionForm;
   const elements: Record<string, any> = {};
+
+  const routeComponentProps = {
+    match: {
+      params: { collection: testCollection._id }
+    },
+    location: {
+      pathname: testCollection.path
+    },
+    history: {
+      goBack: _.noop
+    }
+  };
 
   function getCollectionForm() {
     return mount(
       <CollectionForm
         collection={testCollection}
         collections={[testCollection]}
+        {...routeComponentProps}
       />
     );
   }
@@ -25,6 +38,7 @@ describe('CollectionForm', () => {
     elements.schema = collectionForm.find('.form-main');
     elements.addFieldRow = collectionForm.find('.minimal-row');
     elements.actionButtons = collectionForm.find('.action-buttons');
+    routeComponentProps.history.goBack = jest.fn();
   });
 
   it('loads with the right initial state', () => {

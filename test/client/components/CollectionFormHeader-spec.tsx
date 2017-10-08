@@ -1,3 +1,4 @@
+import * as React from 'react';
 import * as assert from 'assert';
 import { mount } from 'enzyme';
 import { FIELD_TYPES } from 'lib/common/constants';
@@ -5,17 +6,16 @@ import { MockCollection } from 'lib/server/models/mocks';
 import CollectionFormHeader from 'src/client/app/collection/form/header';
 
 describe('CollectionFormHeader', () => {
-  const testCollection = new MockCollection({ _id: true });
+  const testCollection = new MockCollection();
   let formHeader;
   let handleChange;
 
-  function getCollectionFormHeader(context) {
+  function getCollectionFormHeader() {
     return mount(
       <CollectionFormHeader
         collection={testCollection}
         handleChange={handleChange}
-      />,
-      { context }
+      />
     );
   }
 

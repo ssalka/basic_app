@@ -43,7 +43,7 @@ describe('Button', () => {
 
   it('handles an onClick when triggered', done => {
     const button = getButton({
-      onClick: done
+      onClick: () => done()
     });
 
     button.simulate('click');
