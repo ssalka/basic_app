@@ -19,8 +19,12 @@
     "format:all": "npm run format -- 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}'",
     "lint": "tslint -c config/tslint.json -t stylish",
     "lint:all": "npm run lint -- 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}'",
+    "precommit": "lint-staged",
     "start": "NODE_PATH=. ts-node -F -P config/tsconfig.server.json index",
     "test": "NODE_ENV=test NODE_PATH=. jest --config config/jest.json --noStackTrace"
+  },
+  "lint-staged": {
+    "*.ts{,x}": ["format", "lint", "git add"]
   },
   "dependencies": {
     "@blueprintjs/core": "^1.29.0",
@@ -70,11 +74,13 @@
     "copy-webpack-plugin": "4.0.1",
     "css-loader": "0.25.0",
     "enzyme": "2.9.1",
+    "husky": "^0.14.3",
     "jest": "^21.2.1",
     "jest-css-modules": "^1.1.0",
     "json-loader": "0.5.4",
     "less": "2.7.1",
     "less-loader": "2.2.3",
+    "lint-staged": "^4.2.3",
     "prettier": "^1.7.4",
     "react-addons-test-utils": "15.4.1",
     "source-map-loader": "0.1.6",
