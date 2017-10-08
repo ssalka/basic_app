@@ -1,5 +1,6 @@
-import * as React from 'react';
 import * as assert from 'assert';
+import * as _ from 'lodash';
+import * as React from 'react';
 import { mount } from 'enzyme';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { Collection } from 'lib/common/interfaces';

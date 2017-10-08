@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { mount } from 'enzyme';
 import { NavBar } from 'lib/client/components';
 

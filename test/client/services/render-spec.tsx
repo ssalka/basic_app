@@ -1,4 +1,6 @@
 import * as assert from 'assert';
+import * as _ from 'lodash';
+import * as React from 'react';
 import { RenderingService } from 'lib/client/services';
 import { Field } from 'lib/common/interfaces';
 import { BaseComponent } from 'lib/client/components';

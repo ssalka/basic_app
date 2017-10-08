@@ -14,13 +14,11 @@
     "."
   ],
   "testPathIgnorePatterns": [
-    "/node_modules/",
-    "/test/index/"
+    "/node_modules/"
   ],
   "testRegex": "(/test/.*\\-spec)\\.(j|t)sx?$",
   "transform": {
     ".tsx?": "<rootDir>/node_modules/ts-jest/preprocessor.js"
   },
-  "setupTestFrameworkScriptFile": "./test/index.js",
   "verbose": true
 }
