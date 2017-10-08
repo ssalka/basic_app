@@ -141,16 +141,22 @@ class App extends ViewComponent<RouteComponentProps<any>, IState> {
       <FlexRow id="app">
         <SideBar links={links} currentPath={pathname} />
         <div id="content">
-          <Switch>
-            <Route path="/home" component={Home} />
-            <Route path="/collections" exact={true} component={Collections} />
-            <Route path="/collections/add" exact={true} component={CollectionForm} />
-            <Route path="/collections/:collection" exact={true} render={this.getCollectionView} />
-            <Route path="/collections/:collection/edit" exact={true} render={this.getCollectionForm} />
-            <Route path="/collections/:collection/add" exact={true} render={this.getDocumentForm} />
-            <Route path="/collections/:collection/:_id" exact={true} render={this.getDocumentView} />
-            <Route path="/collections/:collection/:_id/edit" exact={true} render={this.getDocumentForm} />
-          </Switch>
+          {user && user.library ? (
+            <Switch>
+              <Route path="/home" component={Home} />
+              <Route path="/collections" exact={true} component={Collections} />
+              <Route path="/collections/add" exact={true} component={CollectionForm} />
+              <Route path="/collections/:collection" exact={true} render={this.getCollectionView} />
+              <Route path="/collections/:collection/edit" exact={true} render={this.getCollectionForm} />
+              <Route path="/collections/:collection/add" exact={true} render={this.getDocumentForm} />
+              <Route path="/collections/:collection/:_id" exact={true} render={this.getDocumentView} />
+              <Route path="/collections/:collection/:_id/edit" exact={true} render={this.getDocumentForm} />
+            </Switch>
+          ) : (
+            <div>
+              Loading your library...
+            </div>
+          )}
         </div>
       </FlexRow>
     );
