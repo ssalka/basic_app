@@ -3,7 +3,12 @@ declare const React;
 import { NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { connect, UserStore } from 'lib/client/api/stores';
-import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
+import {
+  ViewComponent,
+  FlexRow,
+  FlexColumn,
+  Button
+} from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
 
 @connect(UserStore)
@@ -27,7 +32,9 @@ class Collections extends ViewComponent<any, any> {
       <div className="pt-callout pt-elevation-1">
         {collections.length ? (
           <div>
-            <FlexRow><AddCollectionButton /></FlexRow>
+            <FlexRow>
+              <AddCollectionButton />
+            </FlexRow>
             <div className="scroll-y container">
               {collections.map((collection: Collection, key: number) => (
                 <p key={key}>{collection.name}</p>
@@ -38,18 +45,15 @@ class Collections extends ViewComponent<any, any> {
           <NonIdealState
             visual="graph"
             title="You don't have any Collections"
-            description={(
+            description={
               <span>
-                Use Collections to describe and organize your data.
-                Import or sync with any source.
+                Use Collections to describe and organize your data. Import or
+                sync with any source.
               </span>
-            )}
-            action={(
-              <AddCollectionButton
-                text="Add Collection"
-                color="primary"
-              />
-            )}
+            }
+            action={
+              <AddCollectionButton text="Add Collection" color="primary" />
+            }
           />
         )}
       </div>
@@ -62,9 +66,7 @@ class Collections extends ViewComponent<any, any> {
     return (
       <section id="collections" className="container list-view">
         <FlexRow>
-          <h2 className="view-title">
-            Collections
-          </h2>
+          <h2 className="view-title">Collections</h2>
         </FlexRow>
         <FlexColumn>
           <CollectionList />

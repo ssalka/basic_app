@@ -24,12 +24,7 @@ describe('Rendering Service', () => {
     it('returns false for falsy values and empty arrays', () => {
       const isEmptyField = _.negate(isNonemptyField);
 
-      const emptyValues = [
-        null,
-        undefined,
-        [],
-        [null]
-      ];
+      const emptyValues = [null, undefined, [], [null]];
 
       assert(_.every(emptyValues, isEmptyField));
     });
@@ -41,7 +36,7 @@ describe('Rendering Service', () => {
     it('returns an object containing the prop and value to set on a React element', () => {
       const testCases = [
         [{ key: 'value' }, { name: 'key', renderMethod: 'PLAIN_TEXT' }],
-        [{ rating: 4.5 }, { name: 'rating', renderMethod: 'RATING' }],
+        [{ rating: 4.5 }, { name: 'rating', renderMethod: 'RATING' }]
       ];
 
       expect(testCases.map(_.spread(getProps))).toEqual([
@@ -60,7 +55,8 @@ describe('Rendering Service', () => {
         children: document.target
       });
 
-      const Component: SFC = () => RenderingService.renderField(document, field, props);
+      const Component: SFC = () =>
+        RenderingService.renderField(document, field, props);
       const renderedField = shallow(<Component />);
 
       expect(_.first(renderedField.nodes).props).toEqual(expectedProps);

@@ -3,7 +3,10 @@ import * as middleware from 'src/server/routes/middleware';
 import * as models from 'lib/server/models';
 import { MockCollection, MockUser } from 'lib/server/models/mocks';
 import { generateToken } from 'lib/server/utils';
-import { Collection as ICollection, User as IUser } from 'lib/common/interfaces';
+import {
+  Collection as ICollection,
+  User as IUser
+} from 'lib/common/interfaces';
 
 describe('middleware', () => {
   let req: Record<string, any>;
@@ -14,11 +17,11 @@ describe('middleware', () => {
   let populatedUser;
 
   beforeEach(() => {
-    req = {}; res = {};
+    req = {};
+    res = {};
   });
 
   describe('#findUserByToken', () => {
-
     const user: Partial<IUser> = { username: 'test_user' };
     const session = { user, token: generateToken() };
 
@@ -89,11 +92,9 @@ describe('middleware', () => {
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.send).toHaveBeenCalledWith(err);
     });
-
   });
 
   describe('#registerUser', () => {
-
     beforeEach(() => {
       const json = jest.fn();
       const body = {
@@ -123,11 +124,9 @@ describe('middleware', () => {
 
       expect(res.json).toHaveBeenCalledWith({ err });
     });
-
   });
 
   describe('#startSession', () => {
-
     let session;
     const user: Partial<IUser> = {
       _id: 'userId',
@@ -157,11 +156,9 @@ describe('middleware', () => {
 
       expect(req.session).toEqual(session);
     });
-
   });
 
   describe('#loginSuccess', () => {
-
     const session = {
       token: generateToken()
     };
@@ -185,10 +182,7 @@ describe('middleware', () => {
 
     it('sends the user and session token to the client', () => {
       User.findByIdAndPopulate = jest.fn(() => ({
-        then: cb => (
-          cb(populatedUser),
-          { catch: _.noop }
-        )
+        then: cb => (cb(populatedUser), { catch: _.noop })
       }));
 
       middleware.loginSuccess(req, res);
@@ -199,11 +193,9 @@ describe('middleware', () => {
         user: populatedUser.toObject()
       });
     });
-
   });
 
   describe('#closeSession', () => {
-
     const session = {};
 
     beforeEach(() => {
@@ -255,7 +247,9 @@ describe('middleware', () => {
     it('sends caught errors to the client', () => {
       const err = 'could not close session';
       Session.findByToken = jest.fn(() => ({
-        then() { return this; },
+        then() {
+          return this;
+        },
         catch: cb => cb(err)
       }));
 
@@ -269,15 +263,15 @@ describe('middleware', () => {
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({ err });
     });
-
   });
 
   describe('#logout', () => {
-
     beforeEach(() => {
       _.assign(req, {
         user: { username: 'test_user' },
-        logout() { delete req.user; }
+        logout() {
+          delete req.user;
+        }
       });
 
       res.json = jest.fn();
@@ -296,7 +290,5 @@ describe('middleware', () => {
 
       expect(res.json.mock.calls[0][0]).toEqual({ username });
     });
-
   });
-
 });

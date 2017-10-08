@@ -1,5 +1,3 @@
 import RenderingService from './render';
 
-export {
-  RenderingService
-};
+export { RenderingService };

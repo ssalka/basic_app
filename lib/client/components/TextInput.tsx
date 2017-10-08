@@ -26,12 +26,5 @@ export default ({ intent, rounded, size, ...props }: IProps): ReactElement => {
 
   const className = classNameList.join(' ');
 
-  return (
-    <input
-      type="text"
-      dir="auto"
-      className={className}
-      {...props}
-    />
-  );
+  return <input type="text" dir="auto" className={className} {...props} />;
 };

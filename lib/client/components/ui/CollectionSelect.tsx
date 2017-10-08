@@ -19,7 +19,9 @@ interface ICollectionSelectProps extends ReactSelectProps {
   labelKey: string;
 }
 
-export default class CollectionSelect extends ViewComponent<ICollectionSelectProps> {
+export default class CollectionSelect extends ViewComponent<
+  ICollectionSelectProps
+> {
   static defaultProps = {
     documents: [],
     value: []
@@ -30,10 +32,7 @@ export default class CollectionSelect extends ViewComponent<ICollectionSelectPro
   }
 
   render() {
-    const {
-      documents,
-      ...props
-    } = this.props;
+    const { documents, ...props } = this.props;
 
     const filterOptions = createFilterOptions({
       valueKey: this.props.labelKey

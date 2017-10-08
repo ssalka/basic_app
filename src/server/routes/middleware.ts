@@ -23,22 +23,28 @@ export function findUserByToken(req, res) {
     return res.status(403).send('No session token was provided');
   }
 
-  async.waterfall([
-    cb => Session.findByToken(token).exec(cb),
-    (session, cb) => _.isEmpty(session)
-      ? cb({ message: 'No matching document', statusCode: 404 })
-      : User.findByIdAndPopulate(session.user).exec(cb),
-  ], (err, user) => err
-    ? res.status(err.statusCode || 500).send(err.message || err)
-    : res.json({ user: user.toObject() })
+  async.waterfall(
+    [
+      cb => Session.findByToken(token).exec(cb),
+      (session, cb) =>
+        _.isEmpty(session)
+          ? cb({ message: 'No matching document', statusCode: 404 })
+          : User.findByIdAndPopulate(session.user).exec(cb)
+    ],
+    (err, user) =>
+      err
+        ? res.status(err.statusCode || 500).send(err.message || err)
+        : res.json({ user: user.toObject() })
   );
 }
 
 export function registerUser(req, res, next) {
   const { username, password } = req.body;
   const user = new User({ username });
-  User.register(user, password,
-    err => err ? res.status(500).json({ err }) : next()
+  User.register(
+    user,
+    password,
+    err => (err ? res.status(500).json({ err }) : next())
   );
 }
 
@@ -47,30 +53,32 @@ export function loginUser(req, res, next) {
 }
 
 export function startSession(req, res, next) {
-  Session.create({
-    user: _.pick(req.user, ['_id', 'username']),
-    token: generateToken()
-  }, (err, sess) => {
-    if (err) {
-      return next(err);
-    }
+  Session.create(
+    {
+      user: _.pick(req.user, ['_id', 'username']),
+      token: generateToken()
+    },
+    (err, sess) => {
+      if (err) {
+        return next(err);
+      }
 
-    _.assign(
-      req.session,
-      _.pick(sess, ['user', 'token'])
-    );
-    next();
-  });
+      _.assign(req.session, _.pick(sess, ['user', 'token']));
+      next();
+    }
+  );
 }
 
 export function loginSuccess(req, res, next) {
   const { token } = req.session;
 
   User.findByIdAndPopulate(req.user._id)
-    .then(user => res.json({
-      token,
-      user: user.toObject()
-    }))
+    .then(user =>
+      res.json({
+        token,
+        user: user.toObject()
+      })
+    )
     .catch(next);
 }
 
@@ -85,10 +93,10 @@ export function closeSession(req, res, next) {
         return next(err || 'Session not found');
       }
 
-      async.parallel([
-        cb => session.remove(cb),
-        cb => req.session.destroy(cb)
-      ], err => err ? next(err) : next());
+      async.parallel(
+        [cb => session.remove(cb), cb => req.session.destroy(cb)],
+        err => (err ? next(err) : next())
+      );
     })
     .catch(err => {
       res.status(500).json({ err });
@@ -182,9 +190,10 @@ export function upsertDocumentInCollection(req, res, next) {
       // TODO: investigate whether this is still necessary
       // undefined values come out of GraphQL as null
       // don't want to set these on documents
-      const denullify = val => _.isArray(val)
-        ? _.reject(val, _.isNull)
-        : _.isNull(val) ? undefined : val;
+      const denullify = val =>
+        _.isArray(val)
+          ? _.reject(val, _.isNull)
+          : _.isNull(val) ? undefined : val;
 
       // TODO: diffing algorithm
       const updates = _(newDocument)
@@ -194,9 +203,9 @@ export function upsertDocumentInCollection(req, res, next) {
 
       _.assign(document, updates);
 
-      return new Promise((resolve, reject) => document.save(
-        (err, doc) => err ? reject(err) : resolve(doc)
-      ));
+      return new Promise((resolve, reject) =>
+        document.save((err, doc) => (err ? reject(err) : resolve(doc)))
+      );
     })
     .then(invoke('toObject'))
     .then(document => res.json(document))

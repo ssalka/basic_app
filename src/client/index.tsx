@@ -5,7 +5,4 @@ import * as ReactDOM from 'react-dom';
 import AppRouter from './router';
 _.mixin(inflection);
 
-ReactDOM.render(
-  <AppRouter />,
-  document.getElementById('root')
-);
+ReactDOM.render(<AppRouter />, document.getElementById('root'));

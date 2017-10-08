@@ -16,7 +16,8 @@ const defaultConfig = {
 export default (config, methods) => {
   const { name, initialState, logUpdates } = _.defaults(config, defaultConfig);
   const storeConfig: IStoreConfig = {
-    api, name,
+    api,
+    name,
     actions: _.keys(methods)
   };
 
@@ -28,7 +29,8 @@ export default (config, methods) => {
     storeDidUpdate(prevState) {
       if (logUpdates) {
         const updates = _.pickBy(
-          this.state, (val, key) => !_.isEqual(val, prevState[key])
+          this.state,
+          (val, key) => !_.isEqual(val, prevState[key])
         );
 
         if (!_.isEmpty(updates)) {

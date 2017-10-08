@@ -39,23 +39,19 @@ const statics = {
 
     if (_id) {
       query = this.findById(_id);
-    }
-    else if (ids) {
+    } else if (ids) {
       query = this.find({
         _id: { $in: ids }
       });
-    }
-    else if (username || email) {
+    } else if (username || email) {
       query = this.find({
         $or: mapToKeyValueArray({
-          username, email
+          username,
+          email
         })
       }).limit(limit);
-    }
-    else {
-      query = limit === 1
-        ? this.findOne()
-        : this.find().limit(limit);
+    } else {
+      query = limit === 1 ? this.findOne() : this.find().limit(limit);
     }
 
     return query;
@@ -67,10 +63,8 @@ const statics = {
   }
 };
 
-const User = ModelGen.generateModel(
-  'User', UserSchema, {
-    props: { plugins, statics }
-  }
-);
+const User = ModelGen.generateModel('User', UserSchema, {
+  props: { plugins, statics }
+});
 
 export default User;

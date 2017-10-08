@@ -7,10 +7,4 @@ import getCollectionStore from './getCollectionStore';
 
 const connect = createConnector(React);
 
-export {
-  connect,
-  createStore,
-  getCollectionStore,
-  CollectionStore,
-  UserStore
-};
+export { connect, createStore, getCollectionStore, CollectionStore, UserStore };

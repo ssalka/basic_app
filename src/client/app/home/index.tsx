@@ -4,12 +4,17 @@ import { NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { User } from 'lib/client/api';
 import { connect, UserStore } from 'lib/client/api/stores';
-import { ViewComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
+import {
+  ViewComponent,
+  FlexRow,
+  FlexColumn,
+  Button
+} from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
 
-const AddButton = ({ href = '', ...props }) =>  (
+const AddButton = ({ href = '', ...props }) => (
   <Link to={href}>
     <Button icon="add" minimal={true} rounded={true} {...props} />
   </Link>
@@ -23,19 +28,27 @@ class Home extends ViewComponent<any, any> {
   }
 
   renderCollections(collections: Collection[] = []) {
-    const description: string = 'Use Collections to describe and organize your data. Import or sync with any source.';
+    const description: string =
+      'Use Collections to describe and organize your data. Import or sync with any source.';
 
     return (
       <div className="pt-callout pt-elevation-1">
         {collections.length ? (
           <div>
             <FlexRow>
-              <h4>Collections <span className="muted">({collections.length})</span></h4>
+              <h4>
+                Collections{' '}
+                <span className="muted">({collections.length})</span>
+              </h4>
               <AddButton href="collections/add" />
             </FlexRow>
             <div className="scroll-y container">
               {collections.map((collection: Collection, key: number) => (
-                <p><Link to={collection.path} key={key}>{collection.name}</Link></p>
+                <p>
+                  <Link to={collection.path} key={key}>
+                    {collection.name}
+                  </Link>
+                </p>
               ))}
             </div>
           </div>
@@ -44,13 +57,13 @@ class Home extends ViewComponent<any, any> {
             visual="graph"
             title="You don't have any Collections"
             description={<span>{description}</span>}
-            action={(
+            action={
               <AddButton
                 text="Add Collection"
                 href="collections/add"
                 color="primary"
               />
-            )}
+            }
           />
         )}
       </div>
@@ -58,20 +71,21 @@ class Home extends ViewComponent<any, any> {
   }
 
   renderViews(views = []) {
-    const description = 'Views allows you to define new visual representations of your data.';
+    const description =
+      'Views allows you to define new visual representations of your data.';
 
     return (
       <div className="pt-callout pt-elevation-1">
         {views.length ? (
           <div>
             <FlexRow>
-              <h4>Views <span className="muted">({views.length})</span></h4>
+              <h4>
+                Views <span className="muted">({views.length})</span>
+              </h4>
               <AddButton onClick={this.addView} />
             </FlexRow>
             <div className="scroll-y container">
-              {views.map((view, key: number) => (
-                <p key={key}>{view.name}</p>
-              ))}
+              {views.map((view, key: number) => <p key={key}>{view.name}</p>)}
             </div>
           </div>
         ) : (
@@ -79,13 +93,13 @@ class Home extends ViewComponent<any, any> {
             visual="page-layout"
             title="You don't have any Views"
             description={<span>{description}</span>}
-            action={(
+            action={
               <AddButton
                 text="Add View"
                 onClick={this.addView}
                 color="primary"
               />
-            )}
+            }
           />
         )}
       </div>

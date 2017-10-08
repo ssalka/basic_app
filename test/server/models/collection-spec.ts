@@ -15,17 +15,22 @@ describe('Collection', () => {
     name: 'Test Collection'
   });
 
-  beforeAll(done => setup({
-    mocks: {
-      Collection: [testCollection]
-    }
-  }, (err, results) => {
-    if (err) {
-      return done(err);
-    }
-    collections = results.Collection;
-    done();
-  }));
+  beforeAll(done =>
+    setup(
+      {
+        mocks: {
+          Collection: [testCollection]
+        }
+      },
+      (err, results) => {
+        if (err) {
+          return done(err);
+        }
+        collections = results.Collection;
+        done();
+      }
+    )
+  );
 
   afterAll(cleanup);
 
@@ -42,13 +47,16 @@ describe('Collection', () => {
       });
       assert(
         // TODO: add separate assertion for collection fields
-        _.every(primitiveFields, _.conforms({
-          name: _.isString,
-          type: type => _.includes(fieldTypes, type),
-          required: _.isBoolean,
-          isArray: _.isBoolean,
-          renderMethod: method => _.includes(renderMethods, method)
-        })),
+        _.every(
+          primitiveFields,
+          _.conforms({
+            name: _.isString,
+            type: type => _.includes(fieldTypes, type),
+            required: _.isBoolean,
+            isArray: _.isBoolean,
+            renderMethod: method => _.includes(renderMethods, method)
+          })
+        ),
         "A primitive field doesn't match the Field schema"
       );
       done();

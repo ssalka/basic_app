@@ -2,15 +2,13 @@ import * as _ from 'lodash';
 import * as popsicle from 'popsicle';
 
 function generateRequest(baseUrl = '') {
-  const get = url => popsicle
-    .get(baseUrl + url)
-    .use(popsicle.plugins.parse('json'));
+  const get = url =>
+    popsicle.get(baseUrl + url).use(popsicle.plugins.parse('json'));
 
   const post = (url, body, params: any = {}) => {
     if (!url) {
       return console.error('No URL was specified for POST request');
-    }
-    else if (_.isEmpty(body)) {
+    } else if (_.isEmpty(body)) {
       return console.error('No body was given for POST request');
     }
 

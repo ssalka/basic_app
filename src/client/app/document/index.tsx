@@ -32,19 +32,18 @@ export default class DocumentView extends ViewComponent<IProps, any> {
   componentDidMount() {
     const { collection, document: _document } = this.props;
     console.info(
-      _.singularize(collection.name), _document._id,
+      _.singularize(collection.name),
+      _document._id,
       _.omit(_document, '_id')
     );
   }
 
   renderField: SFC = (field: Field): ReactElement => (
     <p>
-      <strong className="field-name">
-        {field.name}
-      </strong>
+      <strong className="field-name">{field.name}</strong>
       {RenderingService.renderField(this.props.document, field)}
     </p>
-  )
+  );
 
   render() {
     const { collection, document: _document } = this.props;
@@ -52,14 +51,15 @@ export default class DocumentView extends ViewComponent<IProps, any> {
 
     return (
       <ViewComponent className="document-view">
-        <Link to={{ pathname: `${location.pathname}/edit`, state }}>Edit Document</Link>
-        <br /><br />
+        <Link to={{ pathname: `${location.pathname}/edit`, state }}>
+          Edit Document
+        </Link>
+        <br />
+        <br />
         {collection.fields
-          .filter((field: Field) => (
-            RenderingService.isNonemptyField(
-              _document[_.camelCase(field.name)]
-            )
-          ))
+          .filter((field: Field) =>
+            RenderingService.isNonemptyField(_document[_.camelCase(field.name)])
+          )
           .map(this.renderField)}
       </ViewComponent>
     );

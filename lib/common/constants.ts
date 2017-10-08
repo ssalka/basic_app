@@ -72,9 +72,4 @@ export const RENDER_METHODS = [
   }
 ];
 
-export const VIEW_TYPES = [
-  'DESKTOP',
-  'DASHBOARD',
-  'GRAPH',
-  'TABLE'
-];
+export const VIEW_TYPES = ['DESKTOP', 'DASHBOARD', 'GRAPH', 'TABLE'];

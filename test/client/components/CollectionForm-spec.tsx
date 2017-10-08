@@ -67,22 +67,32 @@ describe('CollectionForm', () => {
   describe('#updateFieldInCollection', () => {
     let fields: Field[];
 
-    beforeEach(() => fields = collectionForm.state('collection').fields.slice());
+    beforeEach(
+      () => (fields = collectionForm.state('collection').fields.slice())
+    );
 
     it('updates an existing field in the schema', () => {
-      collectionForm.instance().updateFieldInCollection(0, { name: 'Updated Name' });
-      expect(collectionForm.state('collection').fields[0].name).toBe('Updated Name');
+      collectionForm
+        .instance()
+        .updateFieldInCollection(0, { name: 'Updated Name' });
+      expect(collectionForm.state('collection').fields[0].name).toBe(
+        'Updated Name'
+      );
     });
 
     it('adds a new field to the schema', () => {
       collectionForm.instance().updateFieldInCollection(fields.length);
-      expect(collectionForm.state('collection').fields.length).toBe(fields.length + 1);
+      expect(collectionForm.state('collection').fields.length).toBe(
+        fields.length + 1
+      );
     });
 
     it('removes a field from the schema', () => {
       collectionForm.instance().updateFieldInCollection(2, null);
       expect(collectionForm.state('collection').fields[2]).toEqual(fields[3]);
-      expect(_.map(collectionForm.state('collection').fields, 'name')).not.toContain(fields[2].name);
+      expect(
+        _.map(collectionForm.state('collection').fields, 'name')
+      ).not.toContain(fields[2].name);
     });
   });
 });

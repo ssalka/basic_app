@@ -75,13 +75,14 @@ class Login extends ViewComponent<RouteComponentProps<any>, IState> {
     this.props.history.push('/home');
   }
 
-  private getInput({name, icon}) {
+  private getInput({ name, icon }) {
     const value = this.state.formData[name];
     const props: IInputGroupProps = {
       value,
       placeholder: _.capitalize(name),
       leftIconName: icon,
-      onChange: (event: React.FormEvent<any>) => this.handleChange(name, event.currentTarget.value)
+      onChange: (event: React.FormEvent<any>) =>
+        this.handleChange(name, event.currentTarget.value)
     };
 
     if (name === 'password') {
@@ -107,7 +108,8 @@ class Login extends ViewComponent<RouteComponentProps<any>, IState> {
 
     if (this.state.register) {
       inputFields.push({
-        name: 'email', icon: 'envelope'
+        name: 'email',
+        icon: 'envelope'
       });
     }
 
@@ -132,7 +134,10 @@ class Login extends ViewComponent<RouteComponentProps<any>, IState> {
           <div className="login-form">
             <h2>{text.header}</h2>
 
-            <form className="pt-control-group pt-vertical" onSubmit={this.handleSubmit}>
+            <form
+              className="pt-control-group pt-vertical"
+              onSubmit={this.handleSubmit}
+            >
               {this.inputFields.map(this.getInput)}
               <Button type="submit" color="primary" text={text.submit} />
             </form>

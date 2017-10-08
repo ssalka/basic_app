@@ -3,8 +3,22 @@ declare const React;
 
 import { EditableText, Checkbox } from '@blueprintjs/core';
 import { connect, CollectionStore } from 'lib/client/api/stores';
-import { Button, FlexRow, FlexColumn, Popover, TypeSelect, ViewSelect } from 'lib/client/components';
-import { Collection, Field, IRenderMethod, IType, ReactElement, SFC } from 'lib/common/interfaces';
+import {
+  Button,
+  FlexRow,
+  FlexColumn,
+  Popover,
+  TypeSelect,
+  ViewSelect
+} from 'lib/client/components';
+import {
+  Collection,
+  Field,
+  IRenderMethod,
+  IType,
+  ReactElement,
+  SFC
+} from 'lib/common/interfaces';
 import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
 
 export const CollectionNameInput: SFC = ({ name, handleChange }) => (
@@ -34,21 +48,11 @@ export const ToggleEditButton: SFC = ({ editingFields, onClick }) => {
     ? { icon: 'tick', color: 'success' }
     : { icon: 'edit', color: 'warning' };
 
-  return (
-    <Button
-      minimal={true}
-      onClick={onClick}
-      {...props}
-    />
-  );
+  return <Button minimal={true} onClick={onClick} {...props} />;
 };
 
 export const FieldNameInput: SFC = ({ name, onChange }) => (
-  <EditableText
-    placeholder="New Field"
-    value={name}
-    onChange={onChange}
-  />
+  <EditableText placeholder="New Field" value={name} onChange={onChange} />
 );
 
 export interface ITypeSelectPopoverProps {
@@ -57,7 +61,12 @@ export interface ITypeSelectPopoverProps {
   onChange(value: Partial<Field>): void;
 }
 
-export const TypeSelectPopover: SFC = ({ collections, onChange, selectedType, ...props }: ITypeSelectPopoverProps) => {
+export const TypeSelectPopover: SFC = ({
+  collections,
+  onChange,
+  selectedType,
+  ...props
+}: ITypeSelectPopoverProps) => {
   const buttonText = selectedType.name || 'Select Type';
 
   return (
@@ -76,12 +85,7 @@ export const TypeSelectPopover: SFC = ({ collections, onChange, selectedType, ..
 };
 
 export const DetailsButton: SFC = ({ onClick }) => (
-  <Button
-    icon="more"
-    size="small"
-    color="primary"
-    onClick={onClick}
-  />
+  <Button icon="more" size="small" color="primary" onClick={onClick} />
 );
 
 export const RemoveFieldButton: SFC = ({ disabled, onClick }) => (
@@ -94,11 +98,17 @@ export const RemoveFieldButton: SFC = ({ disabled, onClick }) => (
   />
 );
 
-export const FieldOptions: SFC = ({ field, onChange, onTogglePopover }: any) => {
+export const FieldOptions: SFC = ({
+  field,
+  onChange,
+  onTogglePopover
+}: any) => {
   const handleCheckRequired = () => onChange({ required: !field.required });
   const handleCheckIsArray = () => onChange({ isArray: !field.isArray });
-  const handleSelectView = (renderMethod: IRenderMethod) => onChange({ renderMethod: renderMethod.key });
-  const renderMethod: IRenderMethod = _.find(RENDER_METHODS, { key: field.renderMethod }) || RENDER_METHODS[0];
+  const handleSelectView = (renderMethod: IRenderMethod) =>
+    onChange({ renderMethod: renderMethod.key });
+  const renderMethod: IRenderMethod =
+    _.find(RENDER_METHODS, { key: field.renderMethod }) || RENDER_METHODS[0];
 
   return (
     <FlexColumn className="field-options drawer bg-light">
@@ -124,11 +134,16 @@ export const FieldOptions: SFC = ({ field, onChange, onTogglePopover }: any) => 
   );
 };
 
-const ViewSelectPopover: SFC = ({ field, handleSelectView, handleTogglePopover }) => {
-  const selectedView: IRenderMethod | undefined = _.find(RENDER_METHODS, { key: field.renderMethod });
-  const isValidRenderMethod = (renderMethod: IRenderMethod): boolean => (
-    _.includes([field.type, 'MIXED'], renderMethod.inputType)
-  );
+const ViewSelectPopover: SFC = ({
+  field,
+  handleSelectView,
+  handleTogglePopover
+}) => {
+  const selectedView: IRenderMethod | undefined = _.find(RENDER_METHODS, {
+    key: field.renderMethod
+  });
+  const isValidRenderMethod = (renderMethod: IRenderMethod): boolean =>
+    _.includes([field.type, 'MIXED'], renderMethod.inputType);
   const SelectViewButton: ReactElement = (
     <Button
       text={_.get(selectedView, 'name', 'Select View')}
@@ -137,10 +152,7 @@ const ViewSelectPopover: SFC = ({ field, handleSelectView, handleTogglePopover }
   );
 
   return (
-    <Popover
-      className="popover-view-select"
-      target={SelectViewButton}
-    >
+    <Popover className="popover-view-select" target={SelectViewButton}>
       <ViewSelect
         renderMethods={RENDER_METHODS.filter(isValidRenderMethod)}
         selectedView={selectedView}

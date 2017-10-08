@@ -18,12 +18,12 @@ export class User implements IUser {
     public username: string,
     public email: string,
     public name: {
-      first: string,
-      last: string,
+      first: string;
+      last: string;
     },
     public library: {
-      views: any[],
-      collections: Collection[],
+      views: any[];
+      collections: Collection[];
     }
   ) {}
 }

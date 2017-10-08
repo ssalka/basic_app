@@ -10,26 +10,23 @@ const router = express.Router();
 
 router.use('/api', api);
 
-router.get('/*',
-  middleware.sendIndex
-);
+router.get('/*', middleware.sendIndex);
 
-router.post('/register',
+router.post(
+  '/register',
   middleware.registerUser,
   middleware.loginUser,
   middleware.startSession,
   middleware.loginSuccess
 );
 
-router.post('/login',
+router.post(
+  '/login',
   middleware.loginUser,
   middleware.startSession,
   middleware.loginSuccess
 );
 
-router.post('/logout',
-  middleware.closeSession,
-  middleware.logout
-);
+router.post('/logout', middleware.closeSession, middleware.logout);
 
 export default router;

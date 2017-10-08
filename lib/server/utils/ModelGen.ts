@@ -23,14 +23,9 @@ const _defaults = {
   },
   // ModelGen configuration
   settings: {
-    BaseSchema: new Schema(
-      {}, { timestamps: true }
-    ),
+    BaseSchema: new Schema({}, { timestamps: true }),
     dbName: systemDbName,
-    propTypes: [
-      'methods',
-      'statics'
-    ]
+    propTypes: ['methods', 'statics']
   }
 };
 
@@ -67,10 +62,13 @@ class ModelGen {
     const { name, fields, creator, _collection } = collection;
     const schema = this.getSchema(fields);
 
-    return this.getModel(collectionsDbName, _collection) || (
-      this.generateModel(name, schema,
+    return (
+      this.getModel(collectionsDbName, _collection) ||
+      this.generateModel(
+        name,
+        schema,
         { options: { collection: _collection } },
-        { dbName: collectionsDbName  }
+        { dbName: collectionsDbName }
       )
     );
   }
@@ -82,25 +80,28 @@ class ModelGen {
    * @returns {Object}
    */
   getSchema(fields) {
-    return _.reduce(fields, (schema, field: any) => {
-      const fieldName = _.camelCase(field.name);
-      let fieldProps;
+    return _.reduce(
+      fields,
+      (schema, field: any) => {
+        const fieldName = _.camelCase(field.name);
+        let fieldProps;
 
-      if (field.type === FIELD_TYPES.COLLECTION) {
-        const modelName = _.startCase(field.name).replace(/ /g, '');
-        const modelRef = ref(modelName, field.required);
-        fieldProps = field.isArray ? [modelRef] : modelRef;
-      }
-      else {
-        const type = types[field.type] || Mixed;
-        fieldProps = {
-          type: field.isArray ? [type] : type,
-          required: field.required
-        };
-      }
+        if (field.type === FIELD_TYPES.COLLECTION) {
+          const modelName = _.startCase(field.name).replace(/ /g, '');
+          const modelRef = ref(modelName, field.required);
+          fieldProps = field.isArray ? [modelRef] : modelRef;
+        } else {
+          const type = types[field.type] || Mixed;
+          fieldProps = {
+            type: field.isArray ? [type] : type,
+            required: field.required
+          };
+        }
 
-      return _.extend(schema, { [fieldName]: fieldProps });
-    }, {});
+        return _.extend(schema, { [fieldName]: fieldProps });
+      },
+      {}
+    );
   }
 
   /**
@@ -113,7 +114,8 @@ class ModelGen {
    * @returns {Object}
    */
   generateModel(name = 'Model', schema = {}, extensions = {}, settings = {}) {
-    const { // Unpack extensions & settings, filling in any missing defaults
+    const {
+      // Unpack extensions & settings, filling in any missing defaults
       extensions: { props, options },
       settings: { BaseSchema, dbName, propTypes }
     }: any = _.merge({}, this.defaults, { extensions, settings });
@@ -129,27 +131,32 @@ class ModelGen {
       props.plugins.forEach(plugin => ModelSchema.plugin(plugin));
     }
     if (props.virtuals) {
-      _.forEach(props.virtuals,
-        ({getter, setter}, name) => {
-          const virtual = ModelSchema.virtual(name);
-          if (getter) virtual.get(getter);
-          if (setter) virtual.set(setter);
-        }
-      );
+      _.forEach(props.virtuals, ({ getter, setter }, name) => {
+        const virtual = ModelSchema.virtual(name);
+        if (getter) virtual.get(getter);
+        if (setter) virtual.set(setter);
+      });
     }
 
     // Set properties
-    _(props).pick(propTypes).forEach((propSet, type) => {
-      _.forEach(propSet, (prop, name) => {
-        if (ModelSchema[type][name]) {
-          return console.warn(`${_.singularize(type)} '${name}' already exists on ModelSchema.${type}`);
-        }
+    _(props)
+      .pick(propTypes)
+      .forEach((propSet, type) => {
+        _.forEach(propSet, (prop, name) => {
+          if (ModelSchema[type][name]) {
+            return console.warn(
+              `${_.singularize(
+                type
+              )} '${name}' already exists on ModelSchema.${type}`
+            );
+          }
 
-        ModelSchema[type][name] = prop;
+          ModelSchema[type][name] = prop;
+        });
       });
-    });
 
-    const conn = dbName === systemDbName ? connections.app : connections.collections;
+    const conn =
+      dbName === systemDbName ? connections.app : connections.collections;
     const Model = conn.model(name, ModelSchema);
 
     this.trackCollection(dbName, name, Model);
@@ -168,10 +175,12 @@ class ModelGen {
     const modelExists = _.keys(this.dbs[dbName]).includes(modelName);
 
     if (modelExists) {
-      console.info([
-        `Model \`${modelName}\` already has a collection in database ${dbName}.`,
-        'Returning model for registered collection'
-      ].join(' '));
+      console.info(
+        [
+          `Model \`${modelName}\` already has a collection in database ${dbName}.`,
+          'Returning model for registered collection'
+        ].join(' ')
+      );
     }
 
     return modelExists;

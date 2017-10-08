@@ -23,8 +23,8 @@ export default class BaseComponent<P, S> extends Component<P, S> {
       return;
     }
 
-    keys.forEach((key: string) => this.setStateByPath(
-      key, !_.get(this.state, key)
-    ));
+    keys.forEach((key: string) =>
+      this.setStateByPath(key, !_.get(this.state, key))
+    );
   }
 }

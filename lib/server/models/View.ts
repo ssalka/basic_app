@@ -22,7 +22,7 @@ const ViewSchema = {
     type: Boolean,
     required: true,
     default: false
-  },
+  }
 };
 
 const statics = {
@@ -35,10 +35,8 @@ const statics = {
   }
 };
 
-const View = ModelGen.generateModel(
-  'View', ViewSchema, {
-    props: { statics }
-  }
-);
+const View = ModelGen.generateModel('View', ViewSchema, {
+  props: { statics }
+});
 
 export default View;

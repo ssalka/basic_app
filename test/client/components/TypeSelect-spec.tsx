@@ -39,11 +39,15 @@ describe('TypeSelect', () => {
 
     const [standardTypesNode, collectionsNode] = typeSelect.state('nodes');
 
-    expect(_.map(standardTypesNode.childNodes, 'label')).toEqual(expectedTree.standard);
+    expect(_.map(standardTypesNode.childNodes, 'label')).toEqual(
+      expectedTree.standard
+    );
 
     typeSelect.instance().handleNodeClick({ id: 'category-collections' });
 
-    expect(_.map(collectionsNode.childNodes, 'label')).toEqual(expectedTree.collection);
+    expect(_.map(collectionsNode.childNodes, 'label')).toEqual(
+      expectedTree.collection
+    );
   });
 
   describe('#getNodes', () => {
@@ -95,14 +99,26 @@ describe('TypeSelect', () => {
 
       const getNewType = () => typeSelect.state.nodes[0].childNodes[2];
 
-      assert(typeSelect.state.nodes[0].childNodes[1].isSelected, 'node 1 is not selected');
+      assert(
+        typeSelect.state.nodes[0].childNodes[1].isSelected,
+        'node 1 is not selected'
+      );
 
       typeSelect.handleNodeClick(getNewType());
-      assert(!typeSelect.state.nodes[0].childNodes[1].isSelected, 'node 1 was not deselected');
-      assert(typeSelect.state.nodes[0].childNodes[2].isSelected, 'node 2 was not selected');
+      assert(
+        !typeSelect.state.nodes[0].childNodes[1].isSelected,
+        'node 1 was not deselected'
+      );
+      assert(
+        typeSelect.state.nodes[0].childNodes[2].isSelected,
+        'node 2 was not selected'
+      );
 
       typeSelect.handleNodeClick(getNewType());
-      assert(!typeSelect.state.nodes[0].childNodes[2].isSelected, 'node 2 was not deselected');
+      assert(
+        !typeSelect.state.nodes[0].childNodes[2].isSelected,
+        'node 2 was not deselected'
+      );
     });
   });
 });

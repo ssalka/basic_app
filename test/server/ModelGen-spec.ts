@@ -32,7 +32,10 @@ describe('ModelGen', () => {
   };
 
   const ExpectedModel = ModelGen.generateModel(
-    name, schema, extensions, settings
+    name,
+    schema,
+    extensions,
+    settings
   );
 
   beforeEach(() => ModelGen.reset());

@@ -6,7 +6,12 @@ import { Flex } from 'grid-styled';
 
 import api from 'lib/client/api';
 import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
-import { BaseComponent, ViewComponent, FlexColumn, NavBar } from 'lib/client/components';
+import {
+  BaseComponent,
+  ViewComponent,
+  FlexColumn,
+  NavBar
+} from 'lib/client/components';
 import { request, logger } from 'lib/common';
 import Splash from './splash';
 import Login from './login';
@@ -33,12 +38,13 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
       return;
     }
 
-    axios.get('/api/me')
+    axios
+      .get('/api/me')
       .then(({ data: { user } }) => {
         User.set(user);
 
-        user.library.collections.forEach(
-          collection => getCollectionStore({ collection })
+        user.library.collections.forEach(collection =>
+          getCollectionStore({ collection })
         );
 
         Collection.add(user.library.collections);
@@ -50,12 +56,14 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
       });
   }
 
-  renderIfAuthenticated = props => this.state.user ? <App {...props} /> : <div />;
+  renderIfAuthenticated = props =>
+    this.state.user ? <App {...props} /> : <div />;
 
   logout({ history }) {
     const { token } = localStorage;
     if (token) {
-      request.post('/logout', { token })
+      request
+        .post('/logout', { token })
         .then(() => {
           User.unset();
           history.push('/');
@@ -63,11 +71,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
         .catch(console.error);
     }
 
-    return (
-      <div>
-        Logging out...
-      </div>
-    );
+    return <div>Logging out...</div>;
   }
 
   render() {

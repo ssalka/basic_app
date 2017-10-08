@@ -14,7 +14,10 @@ interface IState {
   selectingIcon: boolean;
 }
 
-export default class CollectionFormHeader extends ViewComponent<IProps, IState> {
+export default class CollectionFormHeader extends ViewComponent<
+  IProps,
+  IState
+> {
   public static defaultProps: Partial<IProps> = {
     collection: new Collection({
       name: '',

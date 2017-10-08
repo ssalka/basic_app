@@ -25,25 +25,27 @@ const CollectionSchema = {
     required: true,
     unique: true
   },
-  fields: [{
-    _id: false,
-    name: {
-      type: String,
-      required: true
-    },
-    type: {
-      type: String,
-      enum: _.map(FIELD_TYPES.STANDARD, 'key').concat(FIELD_TYPES.COLLECTION)
-    },
-    _collection: ref('Collection'),
-    required: Boolean,
-    isArray: Boolean,
-    renderMethod: {
-      type: String,
-      enum: _.flatMap([RENDER_METHODS, VIEW_TYPES], 'key')
-    },
-    view: ref('View')
-  }],
+  fields: [
+    {
+      _id: false,
+      name: {
+        type: String,
+        required: true
+      },
+      type: {
+        type: String,
+        enum: _.map(FIELD_TYPES.STANDARD, 'key').concat(FIELD_TYPES.COLLECTION)
+      },
+      _collection: ref('Collection'),
+      required: Boolean,
+      isArray: Boolean,
+      renderMethod: {
+        type: String,
+        enum: _.flatMap([RENDER_METHODS, VIEW_TYPES], 'key')
+      },
+      view: ref('View')
+    }
+  ],
 
   // Metadata
   creator: ref('User', true),
@@ -83,9 +85,13 @@ const statics = {
     return this.findOne({ _collection });
   },
   upsert({ _id, name, description, fields, icon }) {
-    return this.findByIdAndUpdate(_id, {
-      $set: { name, description, fields, icon }
-    }, { new: true });
+    return this.findByIdAndUpdate(
+      _id,
+      {
+        $set: { name, description, fields, icon }
+      },
+      { new: true }
+    );
   },
   findByCreator({ _id }) {
     return this.find({ creator: _id });
@@ -101,40 +107,38 @@ const statics = {
     const Collection = this;
 
     return new Promise((resolve, reject) => {
-      async.waterfall([
-        // Create the collection
-        cb => new Collection(collection).save(
-          (err, coll) => cb(err, coll)
-        ),
-        // Create a view for the collection
-        (coll, cb) => {
-          view.collections = [coll._id];
-          View.create(view, (err, _view) => cb(err, _view, coll));
-        },
-        // Save a reference to the view in the collection
-        (view, coll, cb) => {
-          coll.defaultView = view._id;
-          coll.views = [view._id];
-          coll.save((err, _coll) => cb(err, _coll));
-        },
-        // Find the collection's creator
-        (coll, cb) => User.findById(coll.creator,
-          (err, user) => cb(err, user, coll)
-        ),
-        // Add the collection to the creator's library
-        (user, coll, cb) => {
-          user.library.collections.push(coll);
-          user.save(err => cb(err, coll));
-        }
-      ], (err, coll) => err ? reject(err) : resolve(coll));
+      async.waterfall(
+        [
+          // Create the collection
+          cb => new Collection(collection).save((err, coll) => cb(err, coll)),
+          // Create a view for the collection
+          (coll, cb) => {
+            view.collections = [coll._id];
+            View.create(view, (err, _view) => cb(err, _view, coll));
+          },
+          // Save a reference to the view in the collection
+          (view, coll, cb) => {
+            coll.defaultView = view._id;
+            coll.views = [view._id];
+            coll.save((err, _coll) => cb(err, _coll));
+          },
+          // Find the collection's creator
+          (coll, cb) =>
+            User.findById(coll.creator, (err, user) => cb(err, user, coll)),
+          // Add the collection to the creator's library
+          (user, coll, cb) => {
+            user.library.collections.push(coll);
+            user.save(err => cb(err, coll));
+          }
+        ],
+        (err, coll) => (err ? reject(err) : resolve(coll))
+      );
     });
   }
 };
 
-const Collection = ModelGen.generateModel(
-  'Collection', CollectionSchema, {
-    props: { virtuals, statics }
-  }
-);
+const Collection = ModelGen.generateModel('Collection', CollectionSchema, {
+  props: { virtuals, statics }
+});
 
 export default Collection;

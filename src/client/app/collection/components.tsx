@@ -12,7 +12,8 @@ export default function getComponents(
 ): IComponentModule {
   const { name, description, icon, path } = collection;
   const linkWithState = (pathname: string) => ({
-    pathname, state: { collection }
+    pathname,
+    state: { collection }
   });
 
   const SettingsButton = () => (
@@ -38,19 +39,24 @@ export default function getComponents(
     CollectionHeader: () => (
       <FlexRow alignItems="top">
         <div className="collection-info">
-          <p><h3>{name}</h3> <h3 className="muted">({_.get(documents, 'length', 0)})</h3></p>
+          <p>
+            <h3>{name}</h3>{' '}
+            <h3 className="muted">({_.get(documents, 'length', 0)})</h3>
+          </p>
           {description && <p>{description}</p>}
           <AddDocumentButton size="small" />
           <SettingsButton />
         </div>
-      <Icon className="faded" name={icon} size={60} />
+        <Icon className="faded" name={icon} size={60} />
       </FlexRow>
     ),
     Placeholder: () => (
       <NonIdealState
         visual={(icon || 'document') as IconName}
         title={`You don't have any ${name}`}
-        description={<span>All {name.toLowerCase()} you add will be visible here</span>}
+        description={
+          <span>All {name.toLowerCase()} you add will be visible here</span>
+        }
         action={<AddDocumentButton />}
       />
     ),

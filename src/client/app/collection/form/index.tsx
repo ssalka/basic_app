@@ -58,8 +58,7 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
       // add new field
       fields.push(new Field());
       this.updateCollection({ fields });
-    }
-    else if (_.isNull(updates)) {
+    } else if (_.isNull(updates)) {
       // remove a field
       fields.splice(index, 1);
       this.updateCollection({ fields });
@@ -75,11 +74,13 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
     const { collection } = this.state;
     event.preventDefault();
 
-    axios.post(`/api/collections/${collection._id}`, collection)
-      .then(({ data: coll }) => (
-        api.User.updateLibrary(coll),
-        this.props.history.push(coll.path)
-      ))
+    axios
+      .post(`/api/collections/${collection._id}`, collection)
+      .then(
+        ({ data: coll }) => (
+          api.User.updateLibrary(coll), this.props.history.push(coll.path)
+        )
+      )
       .catch(console.error);
   }
 
@@ -103,8 +104,17 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
             />
 
             <FlexRow className="action-buttons fill-width">
-              <Button text="Save" type="submit" color="success" onClick={this.submitForm} />
-              <Button text="Cancel" color="danger" onClick={this.props.history.goBack} />
+              <Button
+                text="Save"
+                type="submit"
+                color="success"
+                onClick={this.submitForm}
+              />
+              <Button
+                text="Cancel"
+                color="danger"
+                onClick={this.props.history.goBack}
+              />
             </FlexRow>
           </form>
         </div>

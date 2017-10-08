@@ -45,7 +45,9 @@ describe('CollectionFormSchema', () => {
 
     it("displays 'Schema' and an edit button", () => {
       expect(subheaderRow.find('h5').text()).toBe('Schema');
-      expect(subheaderRow.find('button').prop('className')).toContain('pt-icon-edit');
+      expect(subheaderRow.find('button').prop('className')).toContain(
+        'pt-icon-edit'
+      );
     });
 
     it('toggles the `editingFields` state and updates the button', () => {
@@ -55,7 +57,9 @@ describe('CollectionFormSchema', () => {
       button.simulate('click');
       assert(formSchema.state('editingFields'));
       expect(button.prop('className')).toContain('pt-icon-tick');
-      expect(formSchema.state('showFieldOptions')).toEqual(showFieldOptions.map(_.stubFalse));
+      expect(formSchema.state('showFieldOptions')).toEqual(
+        showFieldOptions.map(_.stubFalse)
+      );
 
       button.simulate('click');
       assert(!formSchema.state('editingFields'));
@@ -78,11 +82,23 @@ describe('CollectionFormSchema', () => {
     it("displays each field's name and type", () => {
       testCollection.fields.forEach(({ name, type, _collection }, i) => {
         const element = fields.at(i);
-        const matchedField = _.find(FIELD_TYPES.STANDARD, { key: type }) || _.find(collections, { _id: _collection });
+        const matchedField =
+          _.find(FIELD_TYPES.STANDARD, { key: type }) ||
+          _.find(collections, { _id: _collection });
 
         assert(matchedField);
-        expect(element.find('.pt-editable-text').first().text()).toBe(name);
-        expect(element.find('.pt-popover-target .pt-button').first().text()).toBe(matchedField.name);
+        expect(
+          element
+            .find('.pt-editable-text')
+            .first()
+            .text()
+        ).toBe(name);
+        expect(
+          element
+            .find('.pt-popover-target .pt-button')
+            .first()
+            .text()
+        ).toBe(matchedField.name);
       });
     });
 
@@ -102,10 +118,20 @@ describe('CollectionFormSchema', () => {
           expect(checkboxes.length).toBe(2);
 
           expect(checkboxes.first().text()).toBe('Required');
-          expect(checkboxes.first().find('input').get(0).checked).toBe(field.required);
+          expect(
+            checkboxes
+              .first()
+              .find('input')
+              .get(0).checked
+          ).toBe(field.required);
 
           expect(checkboxes.last().text()).toBe('Is Array');
-          expect(checkboxes.last().find('input').get(0).checked).toBe(field.isArray);
+          expect(
+            checkboxes
+              .last()
+              .find('input')
+              .get(0).checked
+          ).toBe(field.isArray);
         });
       });
 
@@ -121,7 +147,9 @@ describe('CollectionFormSchema', () => {
           const showFieldOptions = testCollection.fields.map(_.stubFalse);
           showFieldOptions[i] = true;
 
-          expect(formSchema.state('showFieldOptions')).toEqual(showFieldOptions);
+          expect(formSchema.state('showFieldOptions')).toEqual(
+            showFieldOptions
+          );
         });
       });
     });
@@ -137,7 +165,9 @@ describe('CollectionFormSchema', () => {
     it('adds an empty field to the schema when clicked', () => {
       const { fields } = formSchema.prop('collection');
       addFieldRow.find('button').simulate('click');
-      expect(formSchema.prop('handleChange')).toHaveBeenCalledWith(fields.length);
+      expect(formSchema.prop('handleChange')).toHaveBeenCalledWith(
+        fields.length
+      );
     });
   });
 });

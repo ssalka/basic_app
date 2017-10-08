@@ -26,16 +26,11 @@ interface IState {
 class App extends ViewComponent<RouteComponentProps<any>, IState> {
   state: IState = {
     user: {} as IUser,
-    navLinks: [
-      { name: 'Home', path: '/home', icon: 'home' }
-    ]
+    navLinks: [{ name: 'Home', path: '/home', icon: 'home' }]
   };
 
-  getCollections = (): Collection[] => _.get(
-    this.state.user,
-    'library.collections',
-    []
-  )
+  getCollections = (): Collection[] =>
+    _.get(this.state.user, 'library.collections', []);
 
   getCollectionBySlug(slug: string) {
     const collections = this.getCollections();
@@ -63,7 +58,8 @@ class App extends ViewComponent<RouteComponentProps<any>, IState> {
         super.componentDidMount();
 
         if (!this.state.documents.length) {
-          axios.get(`/api/collections/${collection._id}/documents`)
+          axios
+            .get(`/api/collections/${collection._id}/documents`)
             .then(({ data: documents }) => documents)
             .then(store.loadDocumentsSuccess)
             .catch(console.error);
@@ -95,8 +91,13 @@ class App extends ViewComponent<RouteComponentProps<any>, IState> {
     const collectionField = _.find(collection.fields, '_collection');
 
     if (collectionField) {
-      const linkedCollection = findDocumentById(collections, collectionField._collection) as Collection;
-      const collectionStore = getCollectionStore({ collection: linkedCollection });
+      const linkedCollection = findDocumentById(
+        collections,
+        collectionField._collection
+      ) as Collection;
+      const collectionStore = getCollectionStore({
+        collection: linkedCollection
+      });
 
       api[linkedCollection.typeFormats.pascalCase].loadDocuments();
 
@@ -104,11 +105,7 @@ class App extends ViewComponent<RouteComponentProps<any>, IState> {
     }
 
     return (
-      <Form
-        collection={collection}
-        collections={collections}
-        {...props}
-      />
+      <Form collection={collection} collections={collections} {...props} />
     );
   }
 
@@ -132,9 +129,9 @@ class App extends ViewComponent<RouteComponentProps<any>, IState> {
     const viewLinks: ILink[] = _(user)
       .get('library.collections', [])
       .slice(0, 5)
-      .map((collection: Collection) => _.pick(
-        collection, ['name', 'path', 'icon']
-      ));
+      .map((collection: Collection) =>
+        _.pick(collection, ['name', 'path', 'icon'])
+      );
     const links: ILink[] = navLinks.concat(viewLinks);
 
     return (
@@ -145,17 +142,39 @@ class App extends ViewComponent<RouteComponentProps<any>, IState> {
             <Switch>
               <Route path="/home" component={Home} />
               <Route path="/collections" exact={true} component={Collections} />
-              <Route path="/collections/add" exact={true} component={CollectionForm} />
-              <Route path="/collections/:collection" exact={true} render={this.getCollectionView} />
-              <Route path="/collections/:collection/edit" exact={true} render={this.getCollectionForm} />
-              <Route path="/collections/:collection/add" exact={true} render={this.getDocumentForm} />
-              <Route path="/collections/:collection/:_id" exact={true} render={this.getDocumentView} />
-              <Route path="/collections/:collection/:_id/edit" exact={true} render={this.getDocumentForm} />
+              <Route
+                path="/collections/add"
+                exact={true}
+                component={CollectionForm}
+              />
+              <Route
+                path="/collections/:collection"
+                exact={true}
+                render={this.getCollectionView}
+              />
+              <Route
+                path="/collections/:collection/edit"
+                exact={true}
+                render={this.getCollectionForm}
+              />
+              <Route
+                path="/collections/:collection/add"
+                exact={true}
+                render={this.getDocumentForm}
+              />
+              <Route
+                path="/collections/:collection/:_id"
+                exact={true}
+                render={this.getDocumentView}
+              />
+              <Route
+                path="/collections/:collection/:_id/edit"
+                exact={true}
+                render={this.getDocumentForm}
+              />
             </Switch>
           ) : (
-            <div>
-              Loading your library...
-            </div>
+            <div>Loading your library...</div>
           )}
         </div>
       </FlexRow>

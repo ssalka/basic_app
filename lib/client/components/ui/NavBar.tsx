@@ -27,14 +27,14 @@ export default ({ title, user }: INavBarProps) => (
             rightElement={<Button minimal={true} icon="cross" />}
           />
         )}
-          <Link to={user ? '/logout' : '/login'}>
-            <Button
-              text={!user && 'Sign In'}
-              icon="user"
-              minimal={true}
-              rounded={true}
-            />
-          </Link>
+        <Link to={user ? '/logout' : '/login'}>
+          <Button
+            text={!user && 'Sign In'}
+            icon="user"
+            minimal={true}
+            rounded={true}
+          />
+        </Link>
       </div>
     </nav>
   </Router>

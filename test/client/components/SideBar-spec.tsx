@@ -3,7 +3,6 @@ import { SideBar } from 'lib/client/components';
 import { ILink } from 'lib/common/interfaces';
 
 describe('SideBar', () => {
-
   let $;
   let sidebar;
   const links: ILink[] = [
@@ -12,9 +11,7 @@ describe('SideBar', () => {
   ];
 
   beforeEach(() => {
-    sidebar = mount(
-      <SideBar links={links} currentPath="home" />
-    );
+    sidebar = mount(<SideBar links={links} currentPath="home" />);
 
     $ = (...args) => sidebar.find(...args);
   });
@@ -54,7 +51,9 @@ describe('SideBar', () => {
   });
 
   it("doesn't expand/close on double-clicks within the ul", () => {
-    $('ul').simulate('click').simulate('click');
+    $('ul')
+      .simulate('click')
+      .simulate('click');
     expect(sidebar.state('expanded')).toBe(false);
   });
 
@@ -68,6 +67,10 @@ describe('SideBar', () => {
   });
 
   it('sets class `active` on the active list item', () => {
-    expect($('li').first().prop('className')).toContain('active');
+    expect(
+      $('li')
+        .first()
+        .prop('className')
+    ).toContain('active');
   });
 });
