@@ -1,4 +1,4 @@
-declare const _;
+import * as _ from 'lodash';
 
 import { User } from './user';
 
@@ -38,6 +38,7 @@ export class Collection {
   public description?: string;
   public icon?: string;
   public path: string;
+  public slug?: string;
   public defaultView?: any;
   public views: any[];
   public typeFormats: {

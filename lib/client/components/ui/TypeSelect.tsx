@@ -1,6 +1,6 @@
-declare const _;
-declare const React;
-import { Tree, ITreeNode, IconName } from '@blueprintjs/core';
+import * as _ from 'lodash';
+import * as React from 'react';
+import { Tree, ITreeNode as TreeNode, IconName } from '@blueprintjs/core';
 import { ViewComponent } from 'lib/client/components';
 import { Collection, Field, IType } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
@@ -10,6 +10,10 @@ export interface IProps {
   collections?: Collection[];
   selectedType: IType | Collection;
   onSelectType(udpatedTypeInfo: Partial<Field>): void;
+}
+
+interface ITreeNode extends TreeNode {
+  id: string;
 }
 
 export interface IState {
@@ -56,7 +60,7 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
   }
 
   handleNodeClick(nodeData: ITreeNode) {
-    if (_.includes(nodeData.id, 'category')) {
+    if (nodeData.id.includes('category')) {
       return this.toggleNode(nodeData);
     }
 

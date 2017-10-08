@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import axios from 'axios';
 import { RouteComponentProps } from 'react-router-dom';
 

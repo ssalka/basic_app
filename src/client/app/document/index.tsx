@@ -1,5 +1,7 @@
-declare const _;
-declare const React;
+import * as lodash from 'lodash';
+import * as inflection from 'lodash-inflection';
+import * as React from 'react';
+const _: any = lodash.mixin(inflection);
 
 import { ViewComponent } from 'lib/client/components';
 import { RENDER_METHODS } from 'lib/common/constants';

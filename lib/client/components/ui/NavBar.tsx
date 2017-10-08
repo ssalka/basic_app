@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { InputGroup } from '@blueprintjs/core';
 import { IUser } from 'lib/common/interfaces';

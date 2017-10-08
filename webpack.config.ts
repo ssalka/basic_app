@@ -16,35 +16,37 @@ const config = {
     filename: 'client.js'
   },
   module: {
-    preLoaders: [{
-      test: /\.tsx?$/,
-      include: clientDirectories,
-      loader: 'tslint-loader'
-    }],
-    loaders: [{
-      test: /\.tsx?$/,
-      include: clientDirectories,
-      loader: 'ts-loader?configFileName=config/tsconfig.client.json'
-    }, {
-      test: /\.(less|css)$/,
-      loaders: ["style", "css", "less"]
-    }, {
-      test: /\.json$/,
-      loader: 'json'
-    }]
+    preLoaders: [
+      {
+        test: /\.tsx?$/,
+        include: clientDirectories,
+        loader: 'tslint-loader'
+      }
+    ],
+    loaders: [
+      {
+        test: /\.tsx?$/,
+        include: clientDirectories,
+        loader: 'ts-loader?configFileName=config/tsconfig.client.json'
+      },
+      {
+        test: /\.(less|css)$/,
+        loaders: ['style', 'css', 'less']
+      },
+      {
+        test: /\.json$/,
+        loader: 'json'
+      }
+    ]
   },
   resolve: {
     root: path.resolve(__dirname),
     extensions: ['', '.ts', '.tsx', '.js']
   },
   plugins: [
-    new webpack.ProvidePlugin({
-      _: 'lodash',
-      React: 'react'
-    }),
     new webpack.DefinePlugin({
       // So react doesn't complain about being minified
-      'process.env': { 'NODE_ENV': '"production"' }
+      'process.env': { NODE_ENV: '"production"' }
     }),
     new webpack.HotModuleReplacementPlugin(),
     new CopyWebpackPlugin([
@@ -66,8 +68,7 @@ if (process.env.NODE_ENV === 'production') {
       compress: { warnings: false }
     })
   );
-}
-else if (process.env.NODE_ENV === 'development') {
+} else if (process.env.NODE_ENV === 'development') {
   config.entry.unshift(
     'webpack-dev-server/client?http://localhost:8080/',
     'webpack/hot/dev-server'

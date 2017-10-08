@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 import { Flex } from 'grid-styled';
 
 interface IViewProps {

@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 
 import { EditableText, Checkbox } from '@blueprintjs/core';
 import { connect, CollectionStore } from 'lib/client/api/stores';

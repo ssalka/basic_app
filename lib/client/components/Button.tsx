@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import { Button, IButtonProps } from '@blueprintjs/core';
 import { ReactElement } from 'lib/common/interfaces';
 import '../styles/Button.less';

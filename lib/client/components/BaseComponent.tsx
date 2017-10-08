@@ -1,4 +1,4 @@
-declare const _;
+import * as _ from 'lodash';
 import { Component } from 'react';
 import * as autoBind from 'react-autobind';
 

@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 import { NumericInput, INumericInputProps } from '@blueprintjs/core';
 import { ReactElement } from 'lib/common/interfaces';
 

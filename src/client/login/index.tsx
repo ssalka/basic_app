@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import { InputGroup, IInputGroupProps } from '@blueprintjs/core';
 import { RouteComponentProps, Link } from 'react-router-dom';
 
@@ -56,7 +56,10 @@ class Login extends ViewComponent<RouteComponentProps<any>, IState> {
   private handleSubmit(event) {
     event.preventDefault();
     const { formData, register } = this.state;
-    const body = _.pick(formData, ['username', 'password']);
+    const body: Record<keyof IState['formData'], string> = _.pick(formData, [
+      'username',
+      'password'
+    ]);
     if (register && !!formData.email) {
       body.email = formData.email;
     }

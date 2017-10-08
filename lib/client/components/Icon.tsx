@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 import { ReactElement } from 'lib/common/interfaces';
 
 interface IProps extends React.Props<any> {

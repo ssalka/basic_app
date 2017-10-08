@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import axios from 'axios';
 import { EditableText } from '@blueprintjs/core';
 import { RouteComponentProps } from 'react-router-dom';
@@ -43,7 +43,7 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
   constructor(props) {
     super(props);
     this.state = {
-      document: _.get(props, 'location.state.document', {})
+      document: _.get(props, 'location.state.document', {} as IDocument)
     };
   }
 
@@ -52,19 +52,19 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
   };
 
   updateField = _.curry(
-    (field: Field, value: string & React.FormEvent<any>) => {
-      if (value.currentTarget) {
+    (field: Field, value: string | React.FormEvent<any>) => {
+      if ((value as React.FormEvent<any>).currentTarget) {
         // TODO: transform TextInput onChange cb to pass a value instead of event
-        value = value.currentTarget.value;
+        value = (value as React.FormEvent<any>).currentTarget.value;
       }
 
-      const nullableValue = value === '' ? null : value;
+      const nullableValue: string = value === '' ? null : value as string;
       const newValue =
         field.type === 'NUMBER' && !_.isNull(nullableValue)
           ? parseInt(nullableValue, 10)
           : nullableValue;
 
-      const valueAsArray = _(newValue || '')
+      const valueAsArray = _((newValue as string) || '')
         .split('; ')
         .compact();
 
@@ -95,14 +95,16 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
 
       this.setStateByPath(
         `document.${_.camelCase(field.name)}`,
-        field.isArray ? _.map(newFieldValue, '_id') : collectionId
+        field.isArray
+          ? _.map(newFieldValue as Collection[], '_id')
+          : collectionId
       );
     }
   );
 
   getLinkedDocuments(field: Field): IDocument | IDocument[] {
     const { document: doc, documents } = this.state;
-    const _id = _.get(doc, _.camelCase(field.name));
+    const _id: string = _.get(doc, _.camelCase(field.name));
 
     if (!(documents && _id)) {
       return [];

@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 import { createConnector } from 'cartiv';
 import CollectionStore from './CollectionStore';
 import UserStore from './UserStore';

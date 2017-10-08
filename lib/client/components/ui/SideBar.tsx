@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 import { BrowserRouter as Router, Link } from 'react-router-dom';
 import { BaseComponent, Icon } from '../';
 import { ILink, ReactElement } from 'lib/common/interfaces';

@@ -1,12 +1,18 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import axios from 'axios';
 import { RouteComponentProps, Switch, Route } from 'react-router-dom';
 
 import api from 'lib/client/api';
 import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
 import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
-import { ILink, IUser, ReactElement, Collection } from 'lib/common/interfaces';
+import {
+  ILink,
+  IUser,
+  ReactElement,
+  Collection,
+  Field
+} from 'lib/common/interfaces';
 import { findDocumentById } from 'lib/common/helpers';
 
 import Home from './home';
@@ -88,7 +94,7 @@ class App extends ViewComponent<RouteComponentProps<any>, IState> {
     const collections = this.getCollections();
 
     let Form = DocumentForm;
-    const collectionField = _.find(collection.fields, '_collection');
+    const collectionField: Field = _.find(collection.fields, '_collection');
 
     if (collectionField) {
       const linkedCollection = findDocumentById(

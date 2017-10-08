@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import * as Rating from 'react-rating';
 import { RENDER_METHODS } from 'lib/common/constants';
 import {

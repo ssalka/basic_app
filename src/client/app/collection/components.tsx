@@ -1,10 +1,12 @@
-declare const _;
-declare const React;
+import * as lodash from 'lodash';
+import * as inflection from 'lodash-inflection';
+import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { NonIdealState, IconName } from '@blueprintjs/core';
 import { Icon, FlexRow, Button } from 'lib/client/components';
 import { IComponentModule } from 'lib/common/interfaces';
 import { IProps, IState } from './';
+const _: any = lodash.mixin(inflection);
 
 export default function getComponents(
   { collection, location: _location }: IProps,

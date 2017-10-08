@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import { ReactElement } from 'lib/common/interfaces';
 
 interface IProps extends React.Props<any> {

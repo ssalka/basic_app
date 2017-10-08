@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import { NonIdealState, IconName } from '@blueprintjs/core';
 import * as FilterableTable from 'react-filterable-table';
 import {

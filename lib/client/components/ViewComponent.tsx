@@ -1,4 +1,4 @@
-declare const React;
+import * as React from 'react';
 import BaseComponent from './BaseComponent';
 import { ReactProps } from 'lib/common/interfaces';
 import request from 'lib/common/request';

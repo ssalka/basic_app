@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 
 interface IProps extends React.Props<any>, React.HTMLAttributes<any> {
   className?: string;

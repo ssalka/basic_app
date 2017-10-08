@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 
 import { ViewComponent, FlexRow, IconSelector } from 'lib/client/components';
 import { Collection } from 'lib/common/interfaces';

@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import { User } from 'lib/client/api';
@@ -107,7 +107,10 @@ class Home extends ViewComponent<any, any> {
   }
 
   render() {
-    const { collections, views } = _.get(this.state, 'user.library', {});
+    const { collections, views } = _.get(this.state, 'user.library', {
+      collections: [],
+      views: []
+    });
 
     return (
       <section id="home" className="container list-view">

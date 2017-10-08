@@ -1,4 +1,4 @@
-declare const _;
+import * as _ from 'lodash';
 import axios from 'axios';
 import { createStore } from 'lib/client/api/stores';
 import { IDocument } from 'lib/common/interfaces';

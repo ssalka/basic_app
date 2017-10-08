@@ -1,4 +1,4 @@
-declare const _;
+import * as _ from 'lodash';
 import createStore from './createStore';
 import { Collection } from 'lib/common/interfaces';
 

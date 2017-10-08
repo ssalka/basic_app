@@ -1,5 +1,5 @@
-declare const _;
-declare const React;
+import * as _ from 'lodash';
+import * as React from 'react';
 import { Classes, MenuItem } from '@blueprintjs/core';
 import { ReactSelectProps } from 'react-select';
 import Select from 'react-virtualized-select';

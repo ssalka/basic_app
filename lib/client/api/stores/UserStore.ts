@@ -1,4 +1,4 @@
-declare const _;
+import * as _ from 'lodash';
 import { createStore } from 'cartiv';
 import api from '../';
 
