@@ -76,9 +76,9 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
 
   render() {
     return (
-      <Flex column={true} align="stretch">
-        <NavBar title="App Name" user={this.state.user} />
-        <Router>
+      <Router>
+        <Flex column={true} align="stretch">
+          <NavBar title="App Name" user={this.state.user} />
           <Switch>
             <Route path="/" exact={true} component={Splash} />
             <Route path="/login" exact={true} component={Login} />
@@ -86,8 +86,8 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
             <Route render={this.renderIfAuthenticated} />
             <Route path="/:param" render={NotFound} />
           </Switch>
-        </Router>
-      </Flex>
+        </Flex>
+      </Router>
     );
   }
 }
