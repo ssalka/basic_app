@@ -1,11 +1,15 @@
-import * as _ from 'lodash';
-import * as React from 'react';
 import axios from 'axios';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { Flex } from 'grid-styled';
+import * as React from 'react';
+import { Route, Switch } from 'react-router';
 
 import api from 'lib/client/api';
-import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
+import {
+  connect as cartivConnect,
+  getCollectionStore,
+  UserStore
+} from 'lib/client/api/stores';
+import { connect } from 'lib/client/api/stores/redux';
 import {
   BaseComponent,
   ViewComponent,
@@ -31,7 +35,8 @@ interface IAppRouterState {
   user?: IUser;
 }
 
-@connect(UserStore)
+@connect
+@cartivConnect(UserStore)
 class AppRouter extends BaseComponent<{}, IAppRouterState> {
   componentDidMount() {
     if (!localStorage.token) {
@@ -76,18 +81,16 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
 
   render() {
     return (
-      <Router>
-        <Flex column={true} align="stretch">
-          <NavBar title="App Name" user={this.state.user} />
-          <Switch>
-            <Route path="/" exact={true} component={Splash} />
-            <Route path="/login" exact={true} component={Login} />
-            <Route path="/logout" exact={true} render={this.logout} />
-            <Route render={this.renderIfAuthenticated} />
-            <Route path="/:param" render={NotFound} />
-          </Switch>
-        </Flex>
-      </Router>
+      <Flex column={true} align="stretch">
+        <NavBar title="App Name" user={this.state.user} />
+        <Switch>
+          <Route path="/" exact={true} component={Splash} />
+          <Route path="/login" exact={true} component={Login} />
+          <Route path="/logout" exact={true} render={this.logout} />
+          <Route render={this.renderIfAuthenticated} />
+          <Route path="/:param" render={NotFound} />
+        </Switch>
+      </Flex>
     );
   }
 }

@@ -1,8 +1,15 @@
-import * as _ from 'lodash';
 import * as React from 'react';
-import * as inflection from 'lodash-inflection';
-import * as ReactDOM from 'react-dom';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'react-router-redux';
+import store, { browserHistory } from 'lib/client/api/stores/redux';
 import AppRouter from './router';
-_.mixin(inflection);
 
-ReactDOM.render(<AppRouter />, document.getElementById('root'));
+render(
+  <Provider store={store}>
+    <ConnectedRouter history={browserHistory}>
+      <AppRouter />
+    </ConnectedRouter>
+  </Provider>,
+  document.getElementById('root')
+);
