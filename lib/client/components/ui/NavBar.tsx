@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'react-router-redux-dom-link';
 import { InputGroup } from '@blueprintjs/core';
 import { IUser } from 'lib/common/interfaces';
 import { Button } from '../';

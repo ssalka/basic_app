@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import axios from 'axios';
-import { RouteComponentProps, Switch, Route } from 'react-router-dom';
+import { RouteComponentProps, Switch, Route } from 'react-router';
 
 import api from 'lib/client/api';
 import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';

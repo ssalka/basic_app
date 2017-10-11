@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'react-router-redux-dom-link';
 import { BaseComponent, Icon } from '../';
 import { ILink, ReactElement } from 'lib/common/interfaces';
 import '../../styles/SideBar.less';

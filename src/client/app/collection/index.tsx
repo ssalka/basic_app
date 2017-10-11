@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 import { NonIdealState } from '@blueprintjs/core';
 import { ViewComponent, Table, FlexColumn } from 'lib/client/components';
 import { Collection, IComponentModule } from 'lib/common/interfaces';

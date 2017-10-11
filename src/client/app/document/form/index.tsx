@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import axios from 'axios';
 import { EditableText } from '@blueprintjs/core';
-import { RouteComponentProps } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
 import api from 'lib/client/api';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { findDocumentById } from 'lib/common/helpers';

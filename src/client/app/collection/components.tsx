@@ -1,7 +1,7 @@
 import * as lodash from 'lodash';
 import * as inflection from 'lodash-inflection';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import Link from 'react-router-redux-dom-link';
 import { NonIdealState, IconName } from '@blueprintjs/core';
 import { Icon, FlexRow, Button } from 'lib/client/components';
 import { IComponentModule } from 'lib/common/interfaces';
