@@ -62,6 +62,7 @@
     "react-select-fast-filter-options": "^0.2.3",
     "react-virtualized-select": "^3.1.0",
     "redux": "^3.7.2",
+    "redux-saga": "^0.15.6",
     "styled-components": "2.1.0",
     "ts-node": "^3.3.0"
   },
