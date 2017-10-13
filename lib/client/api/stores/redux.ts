@@ -8,24 +8,19 @@ import {
 } from 'redux';
 import { connect as reduxConnect } from 'react-redux';
 import { push } from 'react-router-redux';
+import actions from '../actions';
+import reducers from '../reducers';
 
 export const browserHistory = createHistory();
 
 export default createStore(
-  combineReducers({
-    router: routerReducer
-  }),
+  combineReducers(reducers),
   applyMiddleware(routerMiddleware(browserHistory))
 );
 
 export const connect = reduxConnect(
   state => ({ store: state }),
   dispatch => ({
-    actions: bindActionCreators(
-      {
-        changePage: () => push('/collections')
-      },
-      dispatch
-    )
+    actions: bindActionCreators(actions, dispatch)
   })
 );

@@ -17,9 +17,6 @@ import {
   NavBar
 } from 'lib/client/components';
 import { request, logger } from 'lib/common';
-import Splash from './splash';
-import Login from './login';
-import App from './app';
 import {
   Collection as ICollection,
   Field,
@@ -27,6 +24,9 @@ import {
   IUser,
   ReactElement
 } from 'lib/common/interfaces';
+import Splash from './splash';
+import Login from './login';
+import App from './app';
 import './styles.less';
 
 const { User, Collection } = api;
@@ -55,6 +55,7 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
         Collection.add(user.library.collections);
       })
       .catch(err => {
+        console.log(this.props);
         if (err.response.status === 403 && location.pathname !== '/login') {
           console.log('redirect to login');
         }
