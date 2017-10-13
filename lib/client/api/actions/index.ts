@@ -1,6 +1,6 @@
-import { UserAction, userActions } from './userActions';
+import userActions from './userActions';
 
-export { UserAction };
+export * from './userActions';
 
 export default {
   ...userActions

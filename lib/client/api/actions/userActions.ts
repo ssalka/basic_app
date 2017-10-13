@@ -1,7 +1,13 @@
-import { IAction } from 'lib/common/interfaces';
+import { ActionCreator } from 'redux';
+import { IAction, IUser } from 'lib/common/interfaces';
 
-type IUserAction = IAction<{
-  userId: string;
+export type IUserAction = IAction<{
+  error?: {
+    status: number;
+    message: string;
+  };
+  userId?: string;
+  user?: IUser;
 }>;
 
 export const enum UserAction {
@@ -10,11 +16,11 @@ export const enum UserAction {
   FetchFailed = 'USER_FETCH_FAILED'
 }
 
-export const userActions = {
-  loadUser(userId: string): IUserAction {
-    return {
-      type: UserAction.FetchRequested,
-      payload: { userId }
-    };
-  }
+export const fetchUser: ActionCreator<IUserAction> = (userId?: string) => ({
+  type: UserAction.FetchRequested,
+  payload: { userId }
+});
+
+export default {
+  fetchUser
 };

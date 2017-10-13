@@ -1,7 +1,6 @@
 import axios from 'axios';
-import { Action, ActionCreator } from 'redux';
 import { IUser } from 'lib/common/interfaces';
-import { UserAction } from '../actions';
+import { IUserAction, UserAction } from '../actions';
 
 interface IUserState {
   user?: IUser;
@@ -9,9 +8,11 @@ interface IUserState {
 
 export default function userReducer(
   state: IUserState = {},
-  action: Action
+  { type, payload = {} }: IUserAction
 ): IUserState {
-  switch (action.type) {
+  switch (type) {
+    case UserAction.FetchSucceeded:
+      return { ...state, user: payload.user };
     default:
       return state;
   }

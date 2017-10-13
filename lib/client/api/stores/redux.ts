@@ -8,15 +8,21 @@ import {
 } from 'redux';
 import { connect as reduxConnect } from 'react-redux';
 import { push } from 'react-router-redux';
+import createSagaMiddleware from 'redux-saga';
 import actions from '../actions';
 import reducers from '../reducers';
+import rootSaga from '../sagas';
 
 export const browserHistory = createHistory();
 
+const sagaMiddleware = createSagaMiddleware();
+
 export default createStore(
   combineReducers(reducers),
-  applyMiddleware(routerMiddleware(browserHistory))
+  applyMiddleware(routerMiddleware(browserHistory), sagaMiddleware)
 );
+
+sagaMiddleware.run(rootSaga);
 
 export const connect = reduxConnect(
   state => ({ store: state }),
