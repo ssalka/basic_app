@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { Component } from 'react';
 import * as autoBind from 'react-autobind';
 
-export default class BaseComponent<P, S> extends Component<P, S> {
+export default class BaseComponent<P = {}, S = {}> extends Component<P, S> {
   constructor(props) {
     super(props);
     autoBind(this);

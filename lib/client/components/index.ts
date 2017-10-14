@@ -1,4 +1,5 @@
 import BaseComponent from './BaseComponent';
+import { ReduxComponent } from './ReduxComponent';
 import ViewComponent from './ViewComponent';
 import Button from './Button';
 import Icon from './Icon';
@@ -11,6 +12,7 @@ export * from './ui';
 export * from './views';
 export {
   BaseComponent,
+  ReduxComponent,
   ViewComponent,
   Button,
   Icon,

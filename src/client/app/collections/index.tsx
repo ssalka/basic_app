@@ -3,14 +3,14 @@ import * as React from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 import Link from 'react-router-redux-dom-link';
 import {
-  ViewComponent,
+  ReduxComponent,
   FlexRow,
   FlexColumn,
   Button
 } from 'lib/client/components';
-import { Collection, ReactElement, IReduxProps } from 'lib/common/interfaces';
+import { Collection, ReactElement } from 'lib/common/interfaces';
 
-export default class Collections extends ViewComponent<IReduxProps> {
+export default class Collections extends ReduxComponent {
   get collections(): Collection[] {
     return _.get(this.props.store.user, 'user.library.collections', []);
   }

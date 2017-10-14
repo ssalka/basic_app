@@ -5,14 +5,18 @@ import { RouteComponentProps, Switch, Route } from 'react-router';
 
 import api from 'lib/client/api';
 import { connect, getCollectionStore } from 'lib/client/api/stores';
-import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
+import {
+  ReduxComponent,
+  FlexRow,
+  NavBar,
+  SideBar
+} from 'lib/client/components';
 import {
   ILink,
   IUser,
   ReactElement,
   Collection,
-  Field,
-  IReduxProps
+  Field
 } from 'lib/common/interfaces';
 import { findDocumentById } from 'lib/common/helpers';
 
@@ -28,8 +32,8 @@ interface IState {
   navLinks: ILink[];
 }
 
-export default class App extends ViewComponent<
-  IReduxProps & RouteComponentProps<any>,
+export default class App extends ReduxComponent<
+  RouteComponentProps<any>,
   IState
 > {
   state: IState = {

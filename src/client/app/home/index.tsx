@@ -5,12 +5,12 @@ import Link from 'react-router-redux-dom-link';
 import { NonIdealState } from '@blueprintjs/core';
 import { User } from 'lib/client/api';
 import {
-  ViewComponent,
+  ReduxComponent,
   FlexRow,
   FlexColumn,
   Button
 } from 'lib/client/components';
-import { Collection, ReactElement, IReduxProps } from 'lib/common/interfaces';
+import { Collection, ReactElement } from 'lib/common/interfaces';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
 
@@ -20,10 +20,7 @@ const AddButton = ({ href = '', ...props }) => (
   </Link>
 );
 
-export default class Home extends ViewComponent<
-  IReduxProps & RouteComponentProps<any>,
-  any
-> {
+export default class Home extends ReduxComponent<RouteComponentProps<any>> {
   addView() {
     // TODO
     console.log('open a new view');

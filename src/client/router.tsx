@@ -29,12 +29,8 @@ import './styles.less';
 
 const { User, Collection } = api;
 
-interface IAppRouterState {
-  user?: IUser;
-}
-
 @connect
-class AppRouter extends BaseComponent<Partial<IReduxProps>, IAppRouterState> {
+class AppRouter extends BaseComponent<Partial<IReduxProps>> {
   componentDidMount() {
     if (!localStorage.token) {
       return;
@@ -91,11 +87,7 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>, IAppRouterState> {
       <Flex column={true} align="stretch">
         <NavBar title="App Name" user={this.props.store.user.user} />
         <Switch>
-          <Route
-            path="/"
-            exact={true}
-            component={this.renderWithStore(Splash)}
-          />
+          <Route path="/" exact={true} component={Splash} />
           <Route path="/login" exact={true} component={Login} />
           <Route path="/logout" exact={true} render={this.logout} />
           <Route render={this.renderIfAuthenticated} />
