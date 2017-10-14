@@ -21,13 +21,7 @@ interface IState {
 }
 
 @connect(CollectionStore)
-@connect(UserStore)
 class Login extends ViewComponent<RouteComponentProps<any>, IState> {
-  public static contextTypes = {
-    appName: React.PropTypes.string,
-    user: React.PropTypes.object
-  };
-
   public state: IState = {
     register: false,
     formData: {
@@ -98,7 +92,7 @@ class Login extends ViewComponent<RouteComponentProps<any>, IState> {
 
   get text() {
     return {
-      header: `Log in to ${this.context.appName}`,
+      header: `Log in to ${document.title}`,
       register: 'Need to register?',
       submit: this.state.register ? 'Register' : 'Log In'
     };
@@ -123,15 +117,6 @@ class Login extends ViewComponent<RouteComponentProps<any>, IState> {
   public render() {
     const { state, text } = this;
 
-    const RegisterLink = () => (
-      <Button
-        text={text.register}
-        onClick={this.registerOnSubmit}
-        minimal={true}
-        rounded={true}
-      />
-    );
-
     return (
       <div id="login" className="view">
         <div className="pt-callout">
@@ -145,7 +130,16 @@ class Login extends ViewComponent<RouteComponentProps<any>, IState> {
               {this.inputFields.map(this.getInput)}
               <Button type="submit" color="primary" text={text.submit} />
             </form>
-            <p>{!state.register ? <RegisterLink /> : null}</p>
+            <p>
+              {!state.register && (
+                <Button
+                  text={text.register}
+                  onClick={this.registerOnSubmit}
+                  minimal={true}
+                  rounded={true}
+                />
+              )}
+            </p>
           </div>
         </div>
       </div>
