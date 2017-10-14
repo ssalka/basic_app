@@ -5,7 +5,7 @@ import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
 
 import api from 'lib/client/api';
-import { connect, CollectionStore, UserStore } from 'lib/client/api/stores';
+import { connect, CollectionStore } from 'lib/client/api/stores';
 import { ViewComponent, Button } from 'lib/client/components';
 import './styles.less';
 

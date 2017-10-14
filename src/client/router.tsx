@@ -96,11 +96,7 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>, IAppRouterState> {
             exact={true}
             component={this.renderWithStore(Splash)}
           />
-          <Route
-            path="/login"
-            exact={true}
-            render={this.renderWithStore(Login)}
-          />
+          <Route path="/login" exact={true} component={Login} />
           <Route path="/logout" exact={true} render={this.logout} />
           <Route render={this.renderIfAuthenticated} />
           <Route path="/:param" render={NotFound} />

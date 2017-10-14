@@ -4,14 +4,15 @@ import axios from 'axios';
 import { RouteComponentProps, Switch, Route } from 'react-router';
 
 import api from 'lib/client/api';
-import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
+import { connect, getCollectionStore } from 'lib/client/api/stores';
 import { ViewComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
 import {
   ILink,
   IUser,
   ReactElement,
   Collection,
-  Field
+  Field,
+  IReduxProps
 } from 'lib/common/interfaces';
 import { findDocumentById } from 'lib/common/helpers';
 
@@ -24,19 +25,19 @@ import DocumentForm, { IProps as DocumentFormProps } from './document/form';
 import './styles.less';
 
 interface IState {
-  user: IUser;
   navLinks: ILink[];
 }
 
-@connect(UserStore)
-class App extends ViewComponent<RouteComponentProps<any>, IState> {
+export default class App extends ViewComponent<
+  IReduxProps & RouteComponentProps<any>,
+  IState
+> {
   state: IState = {
-    user: {} as IUser,
     navLinks: [{ name: 'Home', path: '/home', icon: 'home' }]
   };
 
   getCollections = (): Collection[] =>
-    _.get(this.state.user, 'library.collections', []);
+    _.get(this.props.store.user.user, 'library.collections', []);
 
   getCollectionBySlug(slug: string) {
     const collections = this.getCollections();
@@ -128,9 +129,16 @@ class App extends ViewComponent<RouteComponentProps<any>, IState> {
     );
   }
 
+  renderWithStore = _.curry(
+    (Component: React.ComponentType, props: RouteComponentProps<any>) => (
+      <Component {..._.pick(this.props, 'store', 'actions')} {...props} />
+    )
+  );
+
   render() {
-    const { user, navLinks } = this.state;
+    const { user } = this.props.store.user;
     const { pathname } = this.props.location;
+    const { navLinks } = this.state;
 
     const viewLinks: ILink[] = _(user)
       .get('library.collections', [])
@@ -146,8 +154,16 @@ class App extends ViewComponent<RouteComponentProps<any>, IState> {
         <div id="content">
           {user && user.library ? (
             <Switch>
-              <Route path="/home" component={Home} />
-              <Route path="/collections" exact={true} component={Collections} />
+              <Route
+                path="/home"
+                exact={true}
+                render={this.renderWithStore(Home)}
+              />
+              <Route
+                path="/collections"
+                exact={true}
+                render={this.renderWithStore(Collections)}
+              />
               <Route
                 path="/collections/add"
                 exact={true}
@@ -187,5 +203,3 @@ class App extends ViewComponent<RouteComponentProps<any>, IState> {
     );
   }
 }
-
-export default App;

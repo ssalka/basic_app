@@ -2,19 +2,17 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 import Link from 'react-router-redux-dom-link';
-import { connect, UserStore } from 'lib/client/api/stores';
 import {
   ViewComponent,
   FlexRow,
   FlexColumn,
   Button
 } from 'lib/client/components';
-import { Collection, ReactElement } from 'lib/common/interfaces';
+import { Collection, ReactElement, IReduxProps } from 'lib/common/interfaces';
 
-@connect(UserStore)
-class Collections extends ViewComponent<any, any> {
+export default class Collections extends ViewComponent<IReduxProps> {
   get collections(): Collection[] {
-    return _.get(this.state, 'user.library.collections', []);
+    return _.get(this.props.store.user, 'user.library.collections', []);
   }
 
   AddCollectionButton(props): ReactElement {
@@ -75,5 +73,3 @@ class Collections extends ViewComponent<any, any> {
     );
   }
 }
-
-export default Collections;

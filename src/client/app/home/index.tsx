@@ -1,16 +1,16 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import { NonIdealState } from '@blueprintjs/core';
+import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
+import { NonIdealState } from '@blueprintjs/core';
 import { User } from 'lib/client/api';
-import { connect, UserStore } from 'lib/client/api/stores';
 import {
   ViewComponent,
   FlexRow,
   FlexColumn,
   Button
 } from 'lib/client/components';
-import { Collection, ReactElement } from 'lib/common/interfaces';
+import { Collection, ReactElement, IReduxProps } from 'lib/common/interfaces';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
 
@@ -20,8 +20,10 @@ const AddButton = ({ href = '', ...props }) => (
   </Link>
 );
 
-@connect(UserStore)
-class Home extends ViewComponent<any, any> {
+export default class Home extends ViewComponent<
+  IReduxProps & RouteComponentProps<any>,
+  any
+> {
   addView() {
     // TODO
     console.log('open a new view');
@@ -107,10 +109,14 @@ class Home extends ViewComponent<any, any> {
   }
 
   render() {
-    const { collections, views } = _.get(this.state, 'user.library', {
-      collections: [],
-      views: []
-    });
+    const { collections, views } = _.get(
+      this.props.store.user,
+      'user.library',
+      {
+        collections: [],
+        views: []
+      }
+    );
 
     return (
       <section id="home" className="container list-view">
@@ -125,5 +131,3 @@ class Home extends ViewComponent<any, any> {
     );
   }
 }
-
-export default Home;
