@@ -1,7 +1,7 @@
 import { Action, ActionCreatorsMapObject } from 'redux';
 
 export interface IAction<P = {}> extends Action {
-  payload: P;
+  payload: Partial<P>;
 }
 
 export interface IReduxProps {

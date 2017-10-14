@@ -1,14 +1,16 @@
 import { ActionCreator } from 'redux';
 import { IAction, IUser } from 'lib/common/interfaces';
 
-export type IUserAction = IAction<{
+export interface IUserActionPayload {
   error?: {
     status: number;
     message: string;
   };
   userId?: string;
   user?: IUser;
-}>;
+}
+
+export type IUserAction = IAction<IUserActionPayload>;
 
 export const enum UserAction {
   FetchRequested = 'USER_FETCH_REQUESTED',
