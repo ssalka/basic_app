@@ -2,14 +2,10 @@ import axios from 'axios';
 import { Flex } from 'grid-styled';
 import * as _ from 'lodash';
 import * as React from 'react';
-import { Route, Switch } from 'react-router';
+import { RouteComponentProps, Route, Switch } from 'react-router';
 
 import api from 'lib/client/api';
-import {
-  connect as cartivConnect,
-  getCollectionStore,
-  UserStore
-} from 'lib/client/api/stores';
+import { getCollectionStore } from 'lib/client/api/stores';
 import { connect } from 'lib/client/api/stores/redux';
 import {
   BaseComponent,
@@ -38,7 +34,6 @@ interface IAppRouterState {
 }
 
 @connect
-@cartivConnect(UserStore)
 class AppRouter extends BaseComponent<Partial<IReduxProps>, IAppRouterState> {
   componentDidMount() {
     if (!localStorage.token) {
@@ -64,8 +59,11 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>, IAppRouterState> {
     }
   }
 
-  renderIfAuthenticated = props =>
-    this.props.store.user.user ? <App {...props} /> : <div />;
+  renderIfAuthenticated = props => {
+    if (!this.props.store.user.user) return <div />;
+
+    return this.renderWithStore(App, props);
+  };
 
   logout({ history }) {
     const { token } = localStorage;
@@ -82,13 +80,27 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>, IAppRouterState> {
     return <div>Logging out...</div>;
   }
 
+  renderWithStore = _.curry(
+    (Component: React.ComponentType, props: RouteComponentProps<any>) => (
+      <Component {...this.props} {...props} />
+    )
+  );
+
   render() {
     return (
       <Flex column={true} align="stretch">
         <NavBar title="App Name" user={this.props.store.user.user} />
         <Switch>
-          <Route path="/" exact={true} component={Splash} />
-          <Route path="/login" exact={true} component={Login} />
+          <Route
+            path="/"
+            exact={true}
+            component={this.renderWithStore(Splash)}
+          />
+          <Route
+            path="/login"
+            exact={true}
+            render={this.renderWithStore(Login)}
+          />
           <Route path="/logout" exact={true} render={this.logout} />
           <Route render={this.renderIfAuthenticated} />
           <Route path="/:param" render={NotFound} />
