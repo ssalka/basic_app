@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Flex } from 'grid-styled';
 import * as _ from 'lodash';
 import * as React from 'react';
-import { RouteComponentProps, Route, Switch } from 'react-router';
+import { RouteComponentProps, Redirect, Route, Switch } from 'react-router';
 
 import api from 'lib/client/api';
 import { getCollectionStore } from 'lib/client/api/stores';
@@ -27,7 +27,7 @@ import Login from './login';
 import App from './app';
 import './styles.less';
 
-const { User, Collection } = api;
+const { Collection } = api;
 
 @connect
 class AppRouter extends BaseComponent<Partial<IReduxProps>> {
@@ -45,8 +45,6 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>> {
 
     // TODO: achieve the following with redux
     if (nextUser && !_.isEqual(currentUser, nextUser)) {
-      User.set(nextUser);
-
       nextUser.library.collections.forEach(collection =>
         // register store for each collection
         getCollectionStore({ collection })
@@ -56,26 +54,10 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>> {
     }
   }
 
-  renderIfAuthenticated = props => {
-    if (!this.props.store.user.user) return <div />;
+  renderIfAuthenticated = props =>
+    this.props.store.user.user ? this.renderWithStore(App, props) : <div />;
 
-    return this.renderWithStore(App, props);
-  };
-
-  logout({ history }) {
-    const { token } = localStorage;
-    if (token) {
-      request
-        .post('/logout', { token })
-        .then(() => {
-          User.unset();
-          history.push('/');
-        })
-        .catch(console.error);
-    }
-
-    return <div>Logging out...</div>;
-  }
+  logout = () => (this.props.actions.userLogout(), <Redirect to="/" />);
 
   renderWithStore = _.curry(
     (Component: React.ComponentType, props: RouteComponentProps<any>) => (
@@ -89,7 +71,11 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>> {
         <NavBar title="App Name" user={this.props.store.user.user} />
         <Switch>
           <Route path="/" exact={true} component={Splash} />
-          <Route path="/login" exact={true} component={Login} />
+          <Route
+            path="/login"
+            exact={true}
+            render={this.renderWithStore(Login)}
+          />
           <Route path="/logout" exact={true} render={this.logout} />
           <Route render={this.renderIfAuthenticated} />
           <Route path="/:param" render={NotFound} />

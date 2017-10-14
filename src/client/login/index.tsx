@@ -6,12 +6,12 @@ import Link from 'react-router-redux-dom-link';
 
 import api from 'lib/client/api';
 import { connect, CollectionStore } from 'lib/client/api/stores';
-import { ViewComponent, Button } from 'lib/client/components';
+import { ReduxComponent, Button } from 'lib/client/components';
 import './styles.less';
 
 const { Collection, User } = api;
 
-interface IState {
+export interface IState {
   register: boolean;
   formData: {
     username: string;
@@ -21,7 +21,7 @@ interface IState {
 }
 
 @connect(CollectionStore)
-class Login extends ViewComponent<RouteComponentProps<any>, IState> {
+class Login extends ReduxComponent<RouteComponentProps<any>, IState> {
   public state: IState = {
     register: false,
     formData: {
@@ -30,6 +30,16 @@ class Login extends ViewComponent<RouteComponentProps<any>, IState> {
       email: ''
     }
   };
+
+  componentWillReceiveProps({ history, store }) {
+    const { user: currentUser } = this.props.store.user;
+    const { user: nextUser } = store.user;
+
+    if (!currentUser && nextUser) {
+      Collection.add(nextUser.library.collections);
+      history.push('/home');
+    }
+  }
 
   private registerOnSubmit() {
     this.setState({
@@ -50,27 +60,18 @@ class Login extends ViewComponent<RouteComponentProps<any>, IState> {
 
   private handleSubmit(event) {
     event.preventDefault();
+
     const { formData, register } = this.state;
-    const body: Record<keyof IState['formData'], string> = _.pick(formData, [
+    const payload: Partial<IState['formData']> = _.pick(formData, [
       'username',
       'password'
     ]);
+
     if (register && !!formData.email) {
-      body.email = formData.email;
+      payload.email = formData.email;
     }
 
-    const path = this.submitRoute;
-    this.post(path, body).then(this.loginCallback);
-  }
-
-  private loginCallback(response) {
-    const { token, user } = response.body;
-
-    localStorage.token = token;
-    User.set(user);
-    Collection.add(user.library.collections);
-
-    this.props.history.push('/home');
+    this.props.actions.userLogin(this.submitRoute, payload);
   }
 
   private getInput({ name, icon }) {
