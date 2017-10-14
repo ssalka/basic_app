@@ -1,11 +1,16 @@
+import axios from 'axios';
+import { Flex } from 'grid-styled';
 import * as _ from 'lodash';
 import * as React from 'react';
-import axios from 'axios';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { Flex } from 'grid-styled';
+import { Route, Switch } from 'react-router';
 
 import api from 'lib/client/api';
-import { connect, getCollectionStore, UserStore } from 'lib/client/api/stores';
+import {
+  connect as cartivConnect,
+  getCollectionStore,
+  UserStore
+} from 'lib/client/api/stores';
+import { connect } from 'lib/client/api/stores/redux';
 import {
   BaseComponent,
   ViewComponent,
@@ -13,16 +18,17 @@ import {
   NavBar
 } from 'lib/client/components';
 import { request, logger } from 'lib/common';
-import Splash from './splash';
-import Login from './login';
-import App from './app';
 import {
   Collection as ICollection,
   Field,
   IComponentModule,
   IUser,
-  ReactElement
+  ReactElement,
+  IReduxProps
 } from 'lib/common/interfaces';
+import Splash from './splash';
+import Login from './login';
+import App from './app';
 import './styles.less';
 
 const { User, Collection } = api;
@@ -31,33 +37,35 @@ interface IAppRouterState {
   user?: IUser;
 }
 
-@connect(UserStore)
-class AppRouter extends BaseComponent<{}, IAppRouterState> {
+@connect
+@cartivConnect(UserStore)
+class AppRouter extends BaseComponent<Partial<IReduxProps>, IAppRouterState> {
   componentDidMount() {
     if (!localStorage.token) {
       return;
     }
 
-    axios
-      .get('/api/me')
-      .then(({ data: { user } }) => {
-        User.set(user);
+    this.props.actions.fetchUser();
+  }
 
-        user.library.collections.forEach(collection =>
-          getCollectionStore({ collection })
-        );
+  componentWillUpdate({ store }) {
+    // TODO: achieve the following with redux
+    if (!_.isEqualWith(this.props.store.user, store.user, 'user')) {
+      // NOTE: usage of `user.user` feels strange here
+      const { user } = store.user;
+      User.set(user);
 
-        Collection.add(user.library.collections);
-      })
-      .catch(err => {
-        if (err.response.status === 403 && location.pathname !== '/login') {
-          console.log('redirect to login');
-        }
-      });
+      user.library.collections.forEach(collection =>
+        // register store for each collection
+        getCollectionStore({ collection })
+      );
+
+      Collection.add(user.library.collections);
+    }
   }
 
   renderIfAuthenticated = props =>
-    this.state.user ? <App {...props} /> : <div />;
+    this.props.store.user.user ? <App {...props} /> : <div />;
 
   logout({ history }) {
     const { token } = localStorage;
@@ -76,18 +84,16 @@ class AppRouter extends BaseComponent<{}, IAppRouterState> {
 
   render() {
     return (
-      <Router>
-        <Flex column={true} align="stretch">
-          <NavBar title="App Name" user={this.state.user} />
-          <Switch>
-            <Route path="/" exact={true} component={Splash} />
-            <Route path="/login" exact={true} component={Login} />
-            <Route path="/logout" exact={true} render={this.logout} />
-            <Route render={this.renderIfAuthenticated} />
-            <Route path="/:param" render={NotFound} />
-          </Switch>
-        </Flex>
-      </Router>
+      <Flex column={true} align="stretch">
+        <NavBar title="App Name" user={this.props.store.user.user} />
+        <Switch>
+          <Route path="/" exact={true} component={Splash} />
+          <Route path="/login" exact={true} component={Login} />
+          <Route path="/logout" exact={true} render={this.logout} />
+          <Route render={this.renderIfAuthenticated} />
+          <Route path="/:param" render={NotFound} />
+        </Switch>
+      </Flex>
     );
   }
 }

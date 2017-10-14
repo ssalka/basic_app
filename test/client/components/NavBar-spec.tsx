@@ -1,12 +1,12 @@
 import * as React from 'react';
-import { mount } from 'enzyme';
 import { NavBar } from 'lib/client/components';
+import { mountWithStore } from 'test/utils';
 
 describe('NavBar', () => {
   let user;
 
   function getNavBar() {
-    return mount(<NavBar user={user} />);
+    return mountWithStore(<NavBar user={user} />);
   }
 
   describe('when no user is signed in', () => {

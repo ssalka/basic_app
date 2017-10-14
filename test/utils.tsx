@@ -1,5 +1,11 @@
-import * as _ from 'lodash';
 import * as async from 'async';
+import { CommonWrapper, mount } from 'enzyme';
+import * as _ from 'lodash';
+import * as React from 'react';
+import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'react-router-redux';
+import configureStore from 'redux-mock-store';
+import { browserHistory } from 'lib/client/api/stores/redux';
 import {
   systemDbName,
   waitForConnection,
@@ -7,6 +13,19 @@ import {
 } from 'lib/server/db';
 import * as models from 'lib/server/models';
 import * as mocks from 'lib/server/models/mocks';
+
+const middleware = [];
+const mockStore = configureStore(middleware);
+
+export function mountWithStore<P = {}, S = {}>(
+  element: JSX.Element
+): CommonWrapper<P, S> {
+  return mount(
+    <Provider store={mockStore()}>
+      <ConnectedRouter history={browserHistory}>{element}</ConnectedRouter>
+    </Provider>
+  );
+}
 
 const setupOptions = {
   mocks: {}

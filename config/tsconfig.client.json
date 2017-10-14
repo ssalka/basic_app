@@ -3,10 +3,10 @@
   "compilerOptions": {
     "jsx": "react",
     "types": [
-      "lodash",
       "react",
       "react-dom",
-      "react-router-dom",
+      "react-router",
+      "react-router-redux",
       "react-select"
     ],
     "lib": [

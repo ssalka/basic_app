@@ -1,7 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { InputGroup, IInputGroupProps } from '@blueprintjs/core';
-import { RouteComponentProps, Link } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router';
+import Link from 'react-router-redux-dom-link';
 
 import api from 'lib/client/api';
 import { connect, CollectionStore, UserStore } from 'lib/client/api/stores';

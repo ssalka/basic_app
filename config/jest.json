@@ -7,7 +7,8 @@
     "tsx"
   ],
   "moduleNameMapper": {
-    "\\.(css|less)$": "<rootDir>/node_modules/jest-css-modules"
+    "\\.(css|less)$": "<rootDir>/node_modules/jest-css-modules",
+    "^redux$": "<rootDir>/node_modules/redux"
   },
   "moduleDirectories": [
     "node_modules",

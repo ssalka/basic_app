@@ -1,7 +1,8 @@
-import * as React from 'react';
 import { mount } from 'enzyme';
+import * as React from 'react';
 import { SideBar } from 'lib/client/components';
 import { ILink } from 'lib/common/interfaces';
+import { mountWithStore } from 'test/utils';
 
 describe('SideBar', () => {
   let $;
@@ -12,41 +13,35 @@ describe('SideBar', () => {
   ];
 
   beforeEach(() => {
-    sidebar = mount(<SideBar links={links} currentPath="home" />);
+    sidebar = mountWithStore(<SideBar links={links} currentPath="home" />);
 
-    $ = (...args) => sidebar.find(...args);
+    $ = (...args) => sidebar.find('.sidebar').find(...args);
   });
 
   it('loads with the proper `className`', () => {
-    expect(sidebar.state('expanded')).toBe(false);
     expect($('aside').prop('className')).not.toContain('expanded');
-  });
-
-  it('applies styling via `className` to expand', () => {
-    sidebar.setState({ expanded: true });
-    expect($('aside').prop('className')).toContain('expanded');
   });
 
   it('expands/closes when the arrow icon is clicked', () => {
     $('#sidebar-expand .icon').simulate('click');
-    expect(sidebar.state('expanded')).toBe(true);
+    expect($('aside').prop('className')).toContain('expanded');
   });
 
   it('expands/closes on double-click', () => {
     sidebar.simulate('click').simulate('click');
-    expect(sidebar.state('expanded')).toBe(true);
+    expect($('aside').prop('className')).toContain('expanded');
   });
 
   it("doesn't expand/close on single clicks", () => {
     sidebar.simulate('click');
-    expect(sidebar.state('expanded')).toBe(false);
+    expect($('aside').prop('className')).not.toContain('expanded');
   });
 
   it("doesn't expand/close on double-clicks more than 0.5s apart", done => {
     sidebar.simulate('click');
     setTimeout(() => {
       sidebar.simulate('click');
-      expect(sidebar.state('expanded')).toBe(false);
+      expect($('aside').prop('className')).not.toContain('expanded');
       done();
     }, 501);
   });
@@ -55,7 +50,7 @@ describe('SideBar', () => {
     $('ul')
       .simulate('click')
       .simulate('click');
-    expect(sidebar.state('expanded')).toBe(false);
+    expect($('aside').prop('className')).not.toContain('expanded');
   });
 
   it('renders a list of collection pages', () => {

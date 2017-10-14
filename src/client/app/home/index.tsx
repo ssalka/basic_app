@@ -1,7 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 import { NonIdealState } from '@blueprintjs/core';
-import { Link } from 'react-router-dom';
+import Link from 'react-router-redux-dom-link';
 import { User } from 'lib/client/api';
 import { connect, UserStore } from 'lib/client/api/stores';
 import {
