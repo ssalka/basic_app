@@ -40,18 +40,19 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>> {
   }
 
   componentWillUpdate({ store }) {
-    // TODO: achieve the following with redux
-    if (!_.isEqualWith(this.props.store.user, store.user, 'user')) {
-      // NOTE: usage of `user.user` feels strange here
-      const { user } = store.user;
-      User.set(user);
+    const { user: currentUser } = this.props.store.user;
+    const { user: nextUser } = store.user;
 
-      user.library.collections.forEach(collection =>
+    // TODO: achieve the following with redux
+    if (nextUser && !_.isEqual(currentUser, nextUser)) {
+      User.set(nextUser);
+
+      nextUser.library.collections.forEach(collection =>
         // register store for each collection
         getCollectionStore({ collection })
       );
 
-      Collection.add(user.library.collections);
+      Collection.add(nextUser.library.collections);
     }
   }
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { call, put, takeLatest as _takeLatest } from 'redux-saga/effects';
-import { UserAction } from '../actions/userActions';
+import { UserAction } from './actions';
 
 // BUG: TS definitions for takeLatest are overloaded - won't accept string as 1st arg
 const takeLatest: any = _takeLatest;

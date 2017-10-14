@@ -1,5 +1,5 @@
 import { routerReducer } from 'react-router-redux';
-import userReducer from './userReducer';
+import { userReducer } from './user';
 
 export default {
   router: routerReducer,

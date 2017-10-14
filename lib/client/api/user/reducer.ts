@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { IUser } from 'lib/common/interfaces';
-import { IUserAction, UserAction } from '../actions';
+import { IUserAction, UserAction } from './actions';
 
 interface IUserState {
   error?: {
