@@ -1,8 +1,9 @@
 import { Action, ActionCreator } from 'redux';
-import { IUser } from 'lib/common/interfaces';
+import { Collection, IUser } from 'lib/common/interfaces';
 import { IState as ILoginState } from 'src/client/login';
 
 export interface IUserAction extends Action {
+  collection?: Collection;
   error?: {
     status: number;
     message: string;
@@ -21,12 +22,20 @@ export const enum UserAction {
   LoginFailed = 'USER_LOGIN_FAILED',
   LogoutRequested = 'USER_LOGOUT_REQUESTED',
   LogoutSucceeded = 'USER_LOGOUT_SUCCEEDED',
-  LogoutFailed = 'USER_LOGOUT_FAILED'
+  LogoutFailed = 'USER_LOGOUT_FAILED',
+  UpdateLibrary = 'UPDATE_LIBRARY'
 }
 
 export const fetchUser: ActionCreator<IUserAction> = (userId?: string) => ({
   type: UserAction.FetchRequested,
   userId
+});
+
+export const updateLibrary: ActionCreator<IUserAction> = (
+  collection: Collection
+) => ({
+  type: UserAction.UpdateLibrary,
+  collection
 });
 
 export const userLogin: ActionCreator<IUserAction> = (path, loginInfo) => ({
@@ -40,6 +49,7 @@ export const userLogout: ActionCreator<IUserAction> = () => ({
 
 export default {
   fetchUser,
+  updateLibrary,
   userLogin,
   userLogout
 };

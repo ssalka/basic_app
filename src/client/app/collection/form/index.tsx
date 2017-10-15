@@ -1,14 +1,13 @@
 import * as _ from 'lodash';
+import { Box } from 'grid-styled';
 import * as React from 'react';
 import axios from 'axios';
 import { RouteComponentProps } from 'react-router';
 
-import api from 'lib/client/api';
-import { connect, CollectionStore } from 'lib/client/api/stores';
-import { ViewComponent, Button, FlexRow } from 'lib/client/components';
+import { connect } from 'lib/client/api/stores/redux';
+import { ReduxComponent, Button, FlexRow } from 'lib/client/components';
 import { Field, Collection } from 'lib/common/interfaces';
-import { ReactProps, IFunctionModule } from 'lib/common/interfaces/react';
-import { READONLY_FIELDS } from 'lib/common/constants';
+import { ReactProps } from 'lib/common/interfaces/react';
 
 import CollectionFormHeader from './header';
 import CollectionFormSchema from './schema';
@@ -17,9 +16,6 @@ import './styles.less';
 interface IProps extends ReactProps, RouteComponentProps<any> {
   // initial state of collection
   collection: Partial<Collection>;
-
-  // user's library of collections
-  collections?: Collection[];
 }
 
 interface IState {
@@ -27,7 +23,7 @@ interface IState {
   collection: Partial<Collection>;
 }
 
-export class CollectionForm extends ViewComponent<IProps, IState> {
+export class CollectionForm extends ReduxComponent<IProps, IState> {
   public static defaultProps: Partial<IProps> = {
     collection: new Collection({
       _id: null,
@@ -47,8 +43,12 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
   }
 
   updateCollection(updates: Partial<Collection>) {
-    const collection = _.assign({}, this.state.collection, updates);
-    this.setState({ collection });
+    this.setState({
+      collection: {
+        ...this.state.collection,
+        ...updates
+      }
+    });
   }
 
   updateFieldInCollection(index: number, updates?: Partial<Field> | null) {
@@ -78,18 +78,19 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
       .post(`/api/collections/${collection._id}`, collection)
       .then(
         ({ data: coll }) => (
-          api.User.updateLibrary(coll), this.props.history.push(coll.path)
+          this.props.actions.updateLibrary(coll),
+          this.props.history.push(coll.path)
         )
       )
       .catch(console.error);
   }
 
   public render() {
-    const { collections } = this.props;
+    const { collections } = this.props.store.user.user.library;
     const { collection } = this.state;
 
     return (
-      <ViewComponent>
+      <Box p={20}>
         <div className="form-popover pt-card pt-elevation-3">
           <form name="schema-form" onSubmit={this.submitForm}>
             <CollectionFormHeader
@@ -118,9 +119,9 @@ export class CollectionForm extends ViewComponent<IProps, IState> {
             </FlexRow>
           </form>
         </div>
-      </ViewComponent>
+      </Box>
     );
   }
 }
 
-export default connect(CollectionStore)(CollectionForm);
+export default connect(CollectionForm);

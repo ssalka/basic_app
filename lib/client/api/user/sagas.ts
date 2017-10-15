@@ -18,7 +18,7 @@ export function* userLogin({ loginArgs: [path, payload] }: IUserAction) {
   } catch (error) {
     yield put({
       type: UserAction.LoginFailed,
-      payload: { error }
+      error
     });
   }
 }
@@ -30,7 +30,7 @@ export function* fetchUser({ userId }: IUserAction) {
 
     yield put({
       type: UserAction.FetchSucceeded,
-      payload: data
+      ...data
     });
   } catch (error) {
     if (error.status === 403 && location.pathname !== '/login') {
@@ -56,13 +56,9 @@ export function* userLogout() {
       type: UserAction.LogoutSucceeded
     });
   } catch (error) {
-    if (error.status === 403 && location.pathname !== '/login') {
-      console.log('redirect to login');
-    }
-
     yield put({
       type: UserAction.LogoutFailed,
-      payload: { error }
+      error
     });
   }
 }
