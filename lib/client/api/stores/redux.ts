@@ -7,7 +7,6 @@ import {
   applyMiddleware
 } from 'redux';
 import { connect as reduxConnect } from 'react-redux';
-import { push } from 'react-router-redux';
 import createSagaMiddleware from 'redux-saga';
 import actions from '../actions';
 import reducers from '../reducers';

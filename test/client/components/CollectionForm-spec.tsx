@@ -24,11 +24,15 @@ describe('CollectionForm', () => {
     }
   };
 
+  const mockStore = _.set({}, 'user.user.library.collections', [
+    testCollection
+  ]);
+
   function getCollectionForm() {
     return mount(
       <CollectionForm
         collection={testCollection}
-        collections={[testCollection]}
+        store={mockStore}
         {...routeComponentProps}
       />
     );

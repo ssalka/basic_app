@@ -1,8 +1,4 @@
-import { Action, ActionCreatorsMapObject } from 'redux';
-
-export interface IAction<P = {}> extends Action {
-  payload: P;
-}
+import { ActionCreatorsMapObject } from 'redux';
 
 export interface IReduxProps {
   actions: ActionCreatorsMapObject;

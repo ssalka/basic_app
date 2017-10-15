@@ -28,7 +28,7 @@ export class Field {
   ) {}
 }
 
-export class Collection {
+export class Collection implements IDocument {
   public _id: string;
   public name: string;
   public _db: string;
@@ -44,6 +44,7 @@ export class Collection {
   public typeFormats: {
     pascalCase: string;
   };
+  public _model: string;
 
   constructor(collection: Partial<Collection> = {}) {
     _.extend(this, collection);
@@ -52,4 +53,5 @@ export class Collection {
 
 export interface IDocument {
   _id: string;
+  _model: string;
 }

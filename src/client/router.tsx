@@ -2,14 +2,10 @@ import axios from 'axios';
 import { Flex } from 'grid-styled';
 import * as _ from 'lodash';
 import * as React from 'react';
-import { Route, Switch } from 'react-router';
+import { RouteComponentProps, Redirect, Route, Switch } from 'react-router';
 
 import api from 'lib/client/api';
-import {
-  connect as cartivConnect,
-  getCollectionStore,
-  UserStore
-} from 'lib/client/api/stores';
+import { getCollectionStore } from 'lib/client/api/stores';
 import { connect } from 'lib/client/api/stores/redux';
 import {
   BaseComponent,
@@ -31,15 +27,10 @@ import Login from './login';
 import App from './app';
 import './styles.less';
 
-const { User, Collection } = api;
-
-interface IAppRouterState {
-  user?: IUser;
-}
+const { Collection } = api;
 
 @connect
-@cartivConnect(UserStore)
-class AppRouter extends BaseComponent<Partial<IReduxProps>, IAppRouterState> {
+class AppRouter extends BaseComponent<Partial<IReduxProps>> {
   componentDidMount() {
     if (!localStorage.token) {
       return;
@@ -49,38 +40,36 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>, IAppRouterState> {
   }
 
   componentWillUpdate({ store }) {
-    // TODO: achieve the following with redux
-    if (!_.isEqualWith(this.props.store.user, store.user, 'user')) {
-      // NOTE: usage of `user.user` feels strange here
-      const { user } = store.user;
-      User.set(user);
+    const { user: currentUser } = this.props.store.user;
+    const { user: nextUser } = store.user;
 
-      user.library.collections.forEach(collection =>
+    // TODO: achieve the following with redux
+    if (nextUser && !_.isEqual(currentUser, nextUser)) {
+      nextUser.library.collections.forEach(collection =>
         // register store for each collection
         getCollectionStore({ collection })
       );
 
-      Collection.add(user.library.collections);
+      Collection.add(nextUser.library.collections);
     }
   }
 
   renderIfAuthenticated = props =>
-    this.props.store.user.user ? <App {...props} /> : <div />;
+    this.props.store.user.user ? this.renderWithStore(App, props) : <div />;
 
-  logout({ history }) {
+  logout = () => {
     const { token } = localStorage;
-    if (token) {
-      request
-        .post('/logout', { token })
-        .then(() => {
-          User.unset();
-          history.push('/');
-        })
-        .catch(console.error);
-    }
 
-    return <div>Logging out...</div>;
-  }
+    if (token) this.props.actions.userLogout(token);
+
+    return <Redirect to="/" />;
+  };
+
+  renderWithStore = _.curry(
+    (Component: React.ComponentType, props: RouteComponentProps<any>) => (
+      <Component {...this.props} {...props} />
+    )
+  );
 
   render() {
     return (
@@ -88,7 +77,11 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>, IAppRouterState> {
         <NavBar title="App Name" user={this.props.store.user.user} />
         <Switch>
           <Route path="/" exact={true} component={Splash} />
-          <Route path="/login" exact={true} component={Login} />
+          <Route
+            path="/login"
+            exact={true}
+            render={this.renderWithStore(Login)}
+          />
           <Route path="/logout" exact={true} render={this.logout} />
           <Route render={this.renderIfAuthenticated} />
           <Route path="/:param" render={NotFound} />
