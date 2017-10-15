@@ -1,33 +1,16 @@
-import axios from 'axios';
 import { Flex } from 'grid-styled';
 import * as _ from 'lodash';
 import * as React from 'react';
 import { RouteComponentProps, Redirect, Route, Switch } from 'react-router';
 
-import api from 'lib/client/api';
 import { getCollectionStore } from 'lib/client/api/stores';
 import { connect } from 'lib/client/api/stores/redux';
-import {
-  BaseComponent,
-  ViewComponent,
-  FlexColumn,
-  NavBar
-} from 'lib/client/components';
-import { request, logger } from 'lib/common';
-import {
-  Collection as ICollection,
-  Field,
-  IComponentModule,
-  IUser,
-  ReactElement,
-  IReduxProps
-} from 'lib/common/interfaces';
+import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
+import { IReduxProps } from 'lib/common/interfaces';
 import Splash from './splash';
 import Login from './login';
 import App from './app';
 import './styles.less';
-
-const { Collection } = api;
 
 @connect
 class AppRouter extends BaseComponent<Partial<IReduxProps>> {
@@ -49,8 +32,6 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>> {
         // register store for each collection
         getCollectionStore({ collection })
       );
-
-      Collection.add(nextUser.library.collections);
     }
   }
 

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { push } from 'react-router-redux';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { action } from 'lib/client/services/utils';
 import { IUserAction, UserAction } from './actions';
@@ -15,6 +16,8 @@ export function* userLogin({ loginArgs: [path, payload] }: IUserAction) {
         user: data.user
       })
     );
+
+    yield put(push('/home'));
 
     yield put(
       action(CollectionAction.AddedMany, {
