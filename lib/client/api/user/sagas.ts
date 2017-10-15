@@ -1,9 +1,6 @@
 import axios from 'axios';
-import { call, put, takeLatest as _takeLatest } from 'redux-saga/effects';
+import { call, put, takeLatest } from 'redux-saga/effects';
 import { IUserAction, UserAction } from './actions';
-
-// BUG: TS definitions for takeLatest are overloaded - won't accept string as 1st arg
-const takeLatest: any = _takeLatest;
 
 export function* userLogin({ loginArgs: [path, payload] }: IUserAction) {
   try {
