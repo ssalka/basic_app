@@ -4,7 +4,7 @@ import { Collection } from 'lib/common/interfaces';
 import { ICollectionAction, CollectionAction } from './actions';
 
 interface ICollectionState {
-  collection?: Collection;
+  collections: Record<string, Collection>;
   error?: {
     status: number;
     message: string;
@@ -12,12 +12,16 @@ interface ICollectionState {
 }
 
 export default function collectionReducer(
-  state: ICollectionState = {},
+  state: ICollectionState = { collections: {} },
   { type, ...payload }: ICollectionAction
 ): ICollectionState {
   switch (type) {
     case CollectionAction.UpsertSucceeded:
-      return { ...state, collection: payload.collection };
+      return _.set(
+        { ...state },
+        `collections['${payload.collection._id}']`,
+        payload.collection
+      );
     case CollectionAction.UpsertFailed:
       return { ...state, error: payload.error };
     default:
