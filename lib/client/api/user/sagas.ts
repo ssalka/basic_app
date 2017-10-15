@@ -44,17 +44,15 @@ export function* fetchUser({ userId }: IUserAction) {
   }
 }
 
-export function* userLogout() {
+export function* userLogout({ token }: IUserAction) {
   try {
-    const { token } = localStorage;
-
-    if (token) {
-      yield call(() => axios.post('/logout', { token }));
-    }
+    yield call(() => axios.post('/logout', { token }));
 
     yield put({
       type: UserAction.LogoutSucceeded
     });
+
+    delete localStorage.token;
   } catch (error) {
     yield put({
       type: UserAction.LogoutFailed,

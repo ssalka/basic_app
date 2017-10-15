@@ -9,6 +9,7 @@ export interface IUserAction extends Action {
     message: string;
   };
   loginArgs?: ['/login' | '/register', ILoginState['formData']];
+  token?: string;
   userId?: string;
   user?: IUser;
 }
@@ -43,8 +44,9 @@ export const userLogin: ActionCreator<IUserAction> = (path, loginInfo) => ({
   loginArgs: [path, loginInfo]
 });
 
-export const userLogout: ActionCreator<IUserAction> = () => ({
-  type: UserAction.LogoutRequested
+export const userLogout: ActionCreator<IUserAction> = (token: string) => ({
+  type: UserAction.LogoutRequested,
+  token
 });
 
 export default {
