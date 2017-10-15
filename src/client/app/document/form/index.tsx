@@ -1,11 +1,7 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import axios from 'axios';
-import { EditableText } from '@blueprintjs/core';
 import { RouteComponentProps } from 'react-router';
-import api from 'lib/client/api';
-import { FIELD_TYPES } from 'lib/common/constants';
-import { findDocumentById } from 'lib/common/helpers';
+import { connect } from 'lib/client/api/stores/redux';
 import {
   Collection,
   Field,
@@ -13,6 +9,7 @@ import {
   IDocument
 } from 'lib/common/interfaces';
 import {
+  ReduxComponent,
   ViewComponent,
   FlexRow,
   FlexColumn,
@@ -25,15 +22,13 @@ import './styles.less';
 
 export interface IProps extends Partial<RouteComponentProps<any>> {
   collection: Collection;
-  collections: Collection[];
 }
 
 interface IState {
   document: IDocument;
-  documents?: IDocument[];
 }
 
-export default class DocumentForm extends ViewComponent<IProps, IState> {
+export class DocumentForm extends ReduxComponent<IProps, IState> {
   static defaultProps = {
     collection: {},
     collections: [],
@@ -103,7 +98,10 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
   );
 
   getLinkedDocuments(field: Field): IDocument | IDocument[] {
-    const { document: doc, documents } = this.state;
+    const documents = this.props.store.documents.byCollection[
+      this.props.collection._id
+    ];
+    const { document: doc } = this.state;
     const _id: string = _.get(doc, _.camelCase(field.name));
 
     if (!(documents && _id)) {
@@ -112,42 +110,32 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
 
     const search = field.isArray ? _.filter : _.find;
 
-    return search(this.state.documents, { _id });
+    return search(documents, { _id });
   }
 
   submitForm(event: React.FormEvent<any>) {
     const { collection, history }: Partial<IProps> = this.props;
-    const { document: _document } = this.state;
+    const { document: doc } = this.state;
     event.preventDefault();
-
-    this.upsertDocumentInCollection(collection, _document)
-      .then(({ data: updatedDocument }) => updatedDocument)
-      .then(doc => this.setState({ document: doc }))
-      .then(() => history.push(collection.path));
+    this.props.actions.upsertDocument(collection._id, doc);
   }
 
-  upsertDocumentInCollection = (collection: Collection, doc: IDocument) =>
-    axios.post(`/api/collections/${collection._id}/documents/${doc._id}`, {
-      document: doc
-    });
-
-  getInput(field: Field): ReactElement {
+  getInput = (field: Field): ReactElement => {
     const documentValue: any = this.state.document[_.camelCase(field.name)];
     const inputValue: any = field.isArray
       ? (documentValue || []).join('; ')
       : documentValue;
 
     if (field._collection) {
-      const collection = findDocumentById(
-        this.props.collections,
-        field._collection
-      ) as Collection;
-
       return (
         <CollectionSelect
           multi={field.isArray}
           labelKey={_.camelCase(this.props.collection.fields[0].name)}
-          documents={this.state.documents || []}
+          documents={
+            this.props.store.documents.byCollection[
+              this.props.collection._id
+            ] || []
+          }
           value={this.getLinkedDocuments(field)}
           onChange={this.updateCollectionField(field)}
         />
@@ -166,9 +154,10 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
           <TextInput value={inputValue} onChange={this.updateField(field)} />
         );
     }
-  }
+  };
 
   render() {
+    console.log(this.props);
     const { collection } = this.props;
 
     return (
@@ -222,3 +211,5 @@ export default class DocumentForm extends ViewComponent<IProps, IState> {
     );
   }
 }
+
+export default connect(DocumentForm);

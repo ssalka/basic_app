@@ -5,7 +5,7 @@ import { userReducer } from './user';
 
 export default {
   collection: collectionReducer,
-  document: documentReducer,
+  documents: documentReducer,
   router: routerReducer,
   user: userReducer
 };

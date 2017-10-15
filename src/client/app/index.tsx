@@ -96,29 +96,8 @@ export default class App extends ReduxComponent<
 
   getDocumentForm({ match, ...props }: RouteComponentProps<any>) {
     const collection = this.getCollectionBySlug(match.params.collection);
-    const collections = this.getCollections();
 
-    let Form = DocumentForm;
-    const collectionField: Field = _.find(collection.fields, '_collection');
-
-    if (collectionField) {
-      const linkedCollection = findDocumentById(
-        collections,
-        collectionField._collection
-      ) as Collection;
-
-      const collectionStore = getCollectionStore({
-        collection: linkedCollection
-      });
-
-      api[linkedCollection.typeFormats.pascalCase].loadDocuments();
-
-      Form = connect(collectionStore)(Form);
-    }
-
-    return (
-      <Form collection={collection} collections={collections} {...props} />
-    );
+    return <DocumentForm collection={collection} {...props} />;
   }
 
   getCollectionForm({ location: { state }, ...props }) {
