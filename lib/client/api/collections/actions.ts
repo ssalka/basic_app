@@ -12,10 +12,10 @@ export interface ICollectionAction extends Action {
 
 export const enum CollectionAction {
   Added = 'COLLECTION_ADDED_TO_STORE',
-  AddedMany = 'MULTIPLE_COLLECTION_ADDED_TO_STORE',
-  UpsertRequested = 'COLLETION_UPSERT_REQUESTED',
-  UpsertSucceeded = 'COLLETION_UPSERT_SUCCEEDED',
-  UpsertFailed = 'COLLETION_UPSERT_FAILED'
+  AddedMany = 'BATCH_COLLECTION_ADDED_TO_STORE',
+  UpsertRequested = 'COLLECTION_UPSERT_REQUESTED',
+  UpsertSucceeded = 'COLLECTION_UPSERT_SUCCEEDED',
+  UpsertFailed = 'COLLECTION_UPSERT_FAILED'
 }
 
 export const addCollection: ActionCreator<ICollectionAction> = (
