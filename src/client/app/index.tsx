@@ -1,31 +1,21 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import axios from 'axios';
 import { RouteComponentProps, Switch, Route } from 'react-router';
 
-import api from 'lib/client/api';
-import { connect, getCollectionStore } from 'lib/client/api/stores';
 import {
   ReduxComponent,
   FlexRow,
   NavBar,
   SideBar
 } from 'lib/client/components';
-import {
-  ILink,
-  IUser,
-  ReactElement,
-  Collection,
-  Field
-} from 'lib/common/interfaces';
-import { findDocumentById } from 'lib/common/helpers';
+import { ILink, Collection } from 'lib/common/interfaces';
 
 import Home from './home';
 import Collections from './collections';
 import CollectionView from './collection';
 import CollectionForm from './collection/form';
 import DocumentView from './document';
-import DocumentForm, { IProps as DocumentFormProps } from './document/form';
+import DocumentForm from './document/form';
 import './styles.less';
 
 interface IState {
