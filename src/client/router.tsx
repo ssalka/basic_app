@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { RouteComponentProps, Redirect, Route, Switch } from 'react-router';
 
-import { connect } from 'lib/client/api/stores/redux';
+import { connect } from 'lib/client/api/store';
 import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
 import { IReduxProps } from 'lib/common/interfaces';
 import Splash from './splash';

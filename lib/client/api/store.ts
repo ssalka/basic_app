@@ -8,9 +8,9 @@ import {
 } from 'redux';
 import { connect as reduxConnect } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
-import actions from '../actions';
-import reducers from '../reducers';
-import rootSaga from '../sagas';
+import actions from './actions';
+import reducers from './reducers';
+import rootSaga from './sagas';
 
 export const browserHistory = createHistory();
 

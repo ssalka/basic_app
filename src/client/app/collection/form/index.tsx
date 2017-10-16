@@ -4,7 +4,7 @@ import * as React from 'react';
 import axios from 'axios';
 import { RouteComponentProps } from 'react-router';
 
-import { connect } from 'lib/client/api/stores/redux';
+import { connect } from 'lib/client/api/store';
 import { ReduxComponent, Button, FlexRow } from 'lib/client/components';
 import { Field, Collection } from 'lib/common/interfaces';
 import { ReactProps } from 'lib/common/interfaces/react';

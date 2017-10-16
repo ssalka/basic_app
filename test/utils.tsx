@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import configureStore from 'redux-mock-store';
-import { browserHistory } from 'lib/client/api/stores/redux';
+import { browserHistory } from 'lib/client/api/store';
 import {
   systemDbName,
   waitForConnection,
