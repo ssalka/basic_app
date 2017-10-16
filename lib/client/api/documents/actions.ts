@@ -13,12 +13,37 @@ export interface IDocumentAction extends Action {
 }
 
 export const enum DocumentAction {
+  BatchFetchRequested = 'DOCUMENT_BATCH_FETCH_REQUESTED',
+  BatchFetchSucceeded = 'DOCUMENT_BATCH_FETCH_SUCCEEDED',
+  BatchFetchFailed = 'DOCUMENT_BATCH_FETCH_FAILED',
   Added = 'DOCUMENT_ADDED_TO_STORE',
-  AddedMany = 'MANY_DOCUMENTS_ADDED_TO_STORE',
   UpsertRequested = 'DOCUMENT_UPSERT_REQUESTED',
   UpsertSucceeded = 'DOCUMENT_UPSERT_SUCCEEDED',
   UpsertFailed = 'DOCUMENT_UPSERT_FAILED'
 }
+
+export const loadDocumentsInCollection: ActionCreator<IDocumentAction> = (
+  collectionId: string
+) =>
+  action(DocumentAction.BatchFetchRequested, {
+    collectionId
+  });
+
+export const batchFetchSucceeded: ActionCreator<IDocumentAction> = (
+  collectionId: string,
+  documents: IDocument[]
+) =>
+  action(DocumentAction.BatchFetchSucceeded, {
+    collectionId,
+    documents
+  });
+
+export const batchFetchFailed: ActionCreator<IDocumentAction> = (
+  error: IDocumentAction['error']
+) =>
+  action(DocumentAction.UpsertSucceeded, {
+    error
+  });
 
 export const addDocument: ActionCreator<IDocumentAction> = (
   collectionId: string,
@@ -27,15 +52,6 @@ export const addDocument: ActionCreator<IDocumentAction> = (
   action(DocumentAction.Added, {
     collectionId,
     document
-  });
-
-export const addDocuments: ActionCreator<IDocumentAction> = (
-  collectionId: string,
-  documents: IDocument[]
-) =>
-  action(DocumentAction.AddedMany, {
-    collectionId,
-    documents
   });
 
 export const upsertDocument: ActionCreator<IDocumentAction> = (
@@ -64,8 +80,8 @@ export const upsertFailed: ActionCreator<IDocumentAction> = (
   });
 
 export default {
+  loadDocumentsInCollection,
   addDocument,
-  addDocuments,
   upsertDocument,
   upsertSucceeded,
   upsertFailed

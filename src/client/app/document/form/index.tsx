@@ -157,7 +157,6 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
   };
 
   render() {
-    console.log(this.props);
     const { collection } = this.props;
 
     return (

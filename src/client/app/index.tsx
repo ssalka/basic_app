@@ -22,7 +22,7 @@ import { findDocumentById } from 'lib/common/helpers';
 
 import Home from './home';
 import Collections from './collections';
-import CollectionView, { IProps as CollectionViewProps } from './collection';
+import CollectionView from './collection';
 import CollectionForm from './collection/form';
 import DocumentView from './document';
 import DocumentForm, { IProps as DocumentFormProps } from './document/form';
@@ -47,38 +47,6 @@ export default class App extends ReduxComponent<
     const collections = this.getCollections();
 
     return _.find(collections, { slug });
-  }
-
-  getCollectionView({ match, ...props }: any) {
-    const collection = this.getCollectionBySlug(match.params.collection);
-    const collectionStore = getCollectionStore({ collection });
-
-    const store = api[collection.typeFormats.pascalCase];
-
-    // Queries for Schema Form
-    const collectionName = collection._collection;
-
-    @connect(collectionStore)
-    class CollectionViewWithQuery extends CollectionView {
-      static defaultProps: Partial<CollectionViewProps> = {
-        collection,
-        store
-      };
-
-      componentDidMount() {
-        super.componentDidMount();
-
-        if (!this.state.documents.length) {
-          axios
-            .get(`/api/collections/${collection._id}/documents`)
-            .then(({ data: documents }) => documents)
-            .then(store.loadDocumentsSuccess)
-            .catch(console.error);
-        }
-      }
-    }
-
-    return <CollectionViewWithQuery {...props} />;
   }
 
   getDocumentView({ match, location: { state, pathname }, ...props }) {
@@ -136,7 +104,7 @@ export default class App extends ReduxComponent<
       <FlexRow id="app">
         <SideBar links={links} currentPath={pathname} />
         <div id="content">
-          {user && user.library ? (
+          {!_.isEmpty(this.props.store.collection.collections) ? (
             <Switch>
               <Route
                 path="/home"
@@ -156,7 +124,7 @@ export default class App extends ReduxComponent<
               <Route
                 path="/collections/:collection"
                 exact={true}
-                render={this.getCollectionView}
+                component={CollectionView}
               />
               <Route
                 path="/collections/:collection/edit"

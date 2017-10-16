@@ -1,33 +1,55 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 
+import { Flex } from 'grid-styled';
 import { RouteComponentProps } from 'react-router';
 import { NonIdealState } from '@blueprintjs/core';
-import { ViewComponent, Table, FlexColumn } from 'lib/client/components';
+import { connect } from 'lib/client/api/stores/redux';
+import { ReduxComponent, Table, FlexColumn } from 'lib/client/components';
 import { Collection, IComponentModule } from 'lib/common/interfaces';
 import getComponents from './components';
 import './styles.less';
 
-export interface IProps extends RouteComponentProps<any> {
-  collection: Collection;
-  store: any;
-}
-
 export interface IState {
+  collection: Collection;
   loading: boolean;
-  documents: any[];
 }
 
-export default class CollectionView extends ViewComponent<IProps, IState> {
-  state = {
-    documents: [],
-    loading: true
-  };
+export class CollectionView extends ReduxComponent<
+  RouteComponentProps<any>,
+  IState
+> {
+  constructor(props) {
+    super(props);
+    const collection = _.find(props.store.collection.collections, {
+      path: props.match.url
+    });
+
+    this.state = {
+      collection,
+      loading: false
+    };
+  }
 
   componentDidMount() {
-    const { collection } = this.props;
+    const { _id: collectionId, ...collection } = this.state.collection;
+    console.info('User Collection', collectionId, collection);
 
-    console.info('User Collection', collection._id, _.omit(collection, '_id'));
+    const notLoading = !this.state.loading;
+    const noDocuments = !this.props.store.documents.byCollection[collectionId];
+
+    if (notLoading && noDocuments) {
+      this.props.actions.loadDocumentsInCollection(collectionId);
+      this.setState({ loading: true });
+    }
+  }
+
+  componentWillReceiveProps({ store }) {
+    const { collection, loading } = this.state;
+
+    if (loading && store.documents.byCollection[collection._id]) {
+      this.setState({ loading: false });
+    }
   }
 
   getView(view) {
@@ -44,22 +66,28 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
   }
 
   openDocument(doc) {
-    const { collection, history }: Partial<IProps> = this.props;
+    const { history } = this.props;
+    const { path } = this.state.collection;
 
     return history.push({
-      pathname: `${collection.path}/${doc._id}`,
+      pathname: `${path}/${doc._id}`,
       state: { document: doc }
     });
   }
 
   render() {
-    const { documents, loading }: IState = this.state;
-    const { collection, location }: Partial<IProps> = this.props;
-    const { CollectionHeader, Loading, Placeholder }: any = getComponents(
-      this.props,
-      this.state
+    const { collection, loading }: IState = this.state;
+
+    if (loading || !collection) {
+      return <Loading />;
+    }
+
+    const { CollectionHeader, Placeholder }: any = getComponents(
+      collection,
+      this.props.store.documents.byCollection[collection._id]
     );
-    const noDocuments: boolean = _.isEmpty(documents);
+
+    const documents = this.props.store.documents.byCollection[collection._id];
     const handleSelectDocument: React.MouseEventHandler<any> = (doc: object) =>
       this.openDocument(doc);
     const { component: View, props: viewProps } = this.getView(
@@ -69,9 +97,7 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
     return (
       <FlexColumn className="collection-view">
         <CollectionHeader />
-        {loading ? (
-          <Loading />
-        ) : noDocuments ? (
+        {_.isEmpty(documents) ? (
           <Placeholder />
         ) : (
           <div {...viewProps}>
@@ -87,3 +113,11 @@ export default class CollectionView extends ViewComponent<IProps, IState> {
     );
   }
 }
+
+const Loading = () => (
+  <Flex className="flex-view" justify="center">
+    <div className="loader" />
+  </Flex>
+);
+
+export default connect(CollectionView);

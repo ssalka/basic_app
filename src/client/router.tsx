@@ -15,11 +15,10 @@ import './styles.less';
 @connect
 class AppRouter extends BaseComponent<Partial<IReduxProps>> {
   componentDidMount() {
-    if (!localStorage.token) {
-      return;
+    if (localStorage.token) {
+      // verify user session with token
+      this.props.actions.fetchUser();
     }
-
-    this.props.actions.fetchUser();
   }
 
   componentWillUpdate({ store }) {

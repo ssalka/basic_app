@@ -1,16 +1,17 @@
 import * as lodash from 'lodash';
 import * as inflection from 'lodash-inflection';
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
 import { NonIdealState, IconName } from '@blueprintjs/core';
 import { Icon, FlexRow, Button } from 'lib/client/components';
-import { IComponentModule } from 'lib/common/interfaces';
-import { IProps, IState } from './';
+import { Collection, IDocument, IComponentModule } from 'lib/common/interfaces';
+import { IState } from './';
 const _: any = lodash.mixin(inflection);
 
 export default function getComponents(
-  { collection, location: _location }: IProps,
-  { documents }: IState
+  collection: Collection,
+  documents: IDocument[] = []
 ): IComponentModule {
   const { name, description, icon, path } = collection;
   const linkWithState = (pathname: string) => ({
@@ -25,7 +26,7 @@ export default function getComponents(
   );
 
   const AddDocumentButton = (overrides: any) => (
-    <Link to={linkWithState(`${_location.pathname}/add`)}>
+    <Link to={linkWithState(`${location.pathname}/add`)}>
       <Button
         icon="add"
         text={`Add ${_.singularize(name)}`}
@@ -42,8 +43,7 @@ export default function getComponents(
       <FlexRow alignItems="top">
         <div className="collection-info">
           <p>
-            <h3>{name}</h3>{' '}
-            <h3 className="muted">({_.get(documents, 'length', 0)})</h3>
+            <h3>{name}</h3> <h3 className="muted">({documents.length})</h3>
           </p>
           {description && <p>{description}</p>}
           <AddDocumentButton size="small" />
@@ -61,11 +61,6 @@ export default function getComponents(
         }
         action={<AddDocumentButton />}
       />
-    ),
-    Loading: () => (
-      <FlexRow className="flex-view" justifyContent="center">
-        <div className="loader" />
-      </FlexRow>
     )
   };
 }

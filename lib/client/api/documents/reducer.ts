@@ -13,6 +13,10 @@ interface IDocumentState {
   };
 }
 
+function setDocuments(state, collectionId, documents) {
+  return _.set({ ...state }, `byCollection['${collectionId}']`, documents);
+}
+
 function updateDocuments(
   state,
   collectionId: string,
@@ -24,7 +28,7 @@ function updateDocuments(
     '_id'
   );
 
-  return _.set({ ...state }, `byCollection['${collectionId}']`, documents);
+  return setDocuments(state, collectionId, documents);
 }
 
 function upsertDocument(state, collectionId: string, doc: IDocument) {
@@ -38,7 +42,7 @@ function upsertDocument(state, collectionId: string, doc: IDocument) {
     documents.push(doc);
   }
 
-  return _.set({ ...state }, `byCollection['${collectionId}']`, documents);
+  return setDocuments(state, collectionId, documents);
 }
 
 export default function documentReducer(
@@ -46,11 +50,12 @@ export default function documentReducer(
   { type, ...payload }: IDocumentAction
 ): IDocumentState {
   switch (type) {
-    case DocumentAction.AddedMany:
+    case DocumentAction.BatchFetchSucceeded:
       return updateDocuments(state, payload.collectionId, payload.documents);
     case DocumentAction.Added:
     case DocumentAction.UpsertSucceeded:
       return upsertDocument(state, payload.collectionId, payload.document);
+    case DocumentAction.BatchFetchFailed:
     case DocumentAction.UpsertFailed:
       return { ...state, error: payload.error };
     default:
