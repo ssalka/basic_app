@@ -106,6 +106,7 @@ export default class App extends ReduxComponent<
         collections,
         collectionField._collection
       ) as Collection;
+
       const collectionStore = getCollectionStore({
         collection: linkedCollection
       });

@@ -1,9 +1,9 @@
 import axios from 'axios';
-import { call, put, takeLatest as _takeLatest } from 'redux-saga/effects';
+import { push } from 'react-router-redux';
+import { call, put, takeLatest } from 'redux-saga/effects';
+import { action } from 'lib/client/services/utils';
 import { IUserAction, UserAction } from './actions';
-
-// BUG: TS definitions for takeLatest are overloaded - won't accept string as 1st arg
-const takeLatest: any = _takeLatest;
+import { addCollection, CollectionAction } from '../collections/actions';
 
 export function* userLogin({ loginArgs: [path, payload] }: IUserAction) {
   try {
@@ -11,36 +11,54 @@ export function* userLogin({ loginArgs: [path, payload] }: IUserAction) {
 
     localStorage.token = data.token;
 
-    yield put({
-      type: UserAction.LoginSucceeded,
-      user: data.user
-    });
+    yield put(
+      action(UserAction.LoginSucceeded, {
+        user: data.user
+      })
+    );
+
+    yield put(push('/home'));
+
+    yield put(
+      action(CollectionAction.AddedMany, {
+        collections: data.user.library.collections
+      })
+    );
   } catch (error) {
-    yield put({
-      type: UserAction.LoginFailed,
-      error
-    });
+    yield put(
+      action(UserAction.LoginFailed, {
+        error
+      })
+    );
   }
 }
 
 export function* fetchUser({ userId }: IUserAction) {
   try {
-    // TODO: call other user route if .userId is provided
+    // TODO: call other user route if userId is provided
     const { data } = yield call(() => axios.get('/api/me'));
 
-    yield put({
-      type: UserAction.FetchSucceeded,
-      ...data
-    });
+    yield put(
+      action(UserAction.FetchSucceeded, {
+        ...data
+      })
+    );
+
+    yield put(
+      action(CollectionAction.AddedMany, {
+        collections: data.user.library.collections
+      })
+    );
   } catch (error) {
     if (error.status === 403 && location.pathname !== '/login') {
       console.log('redirect to login');
     }
 
-    yield put({
-      type: UserAction.FetchFailed,
-      payload: { error }
-    });
+    yield put(
+      action(UserAction.FetchFailed, {
+        error
+      })
+    );
   }
 }
 
@@ -48,16 +66,15 @@ export function* userLogout({ token }: IUserAction) {
   try {
     yield call(() => axios.post('/logout', { token }));
 
-    yield put({
-      type: UserAction.LogoutSucceeded
-    });
+    yield put(action(UserAction.LogoutSucceeded));
 
     delete localStorage.token;
   } catch (error) {
-    yield put({
-      type: UserAction.LogoutFailed,
-      error
-    });
+    yield put(
+      action(UserAction.LogoutFailed, {
+        error
+      })
+    );
   }
 }
 

@@ -74,15 +74,7 @@ export class CollectionForm extends ReduxComponent<IProps, IState> {
     const { collection } = this.state;
     event.preventDefault();
 
-    axios
-      .post(`/api/collections/${collection._id}`, collection)
-      .then(
-        ({ data: coll }) => (
-          this.props.actions.updateLibrary(coll),
-          this.props.history.push(coll.path)
-        )
-      )
-      .catch(console.error);
+    this.props.actions.upsertCollection(collection);
   }
 
   public render() {

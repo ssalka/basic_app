@@ -3,13 +3,8 @@ import * as React from 'react';
 import { InputGroup, IInputGroupProps } from '@blueprintjs/core';
 import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
-
-import api from 'lib/client/api';
-import { connect, CollectionStore } from 'lib/client/api/stores';
 import { ReduxComponent, Button } from 'lib/client/components';
 import './styles.less';
-
-const { Collection, User } = api;
 
 export interface IState {
   register: boolean;
@@ -20,9 +15,11 @@ export interface IState {
   };
 }
 
-@connect(CollectionStore)
-class Login extends ReduxComponent<RouteComponentProps<any>, IState> {
-  public state: IState = {
+export default class Login extends ReduxComponent<
+  RouteComponentProps<any>,
+  IState
+> {
+  state: IState = {
     register: false,
     formData: {
       username: '',
@@ -31,23 +28,13 @@ class Login extends ReduxComponent<RouteComponentProps<any>, IState> {
     }
   };
 
-  componentWillReceiveProps({ history, store }) {
-    const { user: currentUser } = this.props.store.user;
-    const { user: nextUser } = store.user;
-
-    if (!currentUser && nextUser) {
-      Collection.add(nextUser.library.collections);
-      history.push('/home');
-    }
-  }
-
-  private registerOnSubmit() {
+  registerOnSubmit() {
     this.setState({
       register: true
     });
   }
 
-  private handleChange(name: string, value: string) {
+  handleChange(name: string, value: string) {
     // update input values in state
     const { formData } = this.state;
     formData[name] = value;
@@ -58,7 +45,7 @@ class Login extends ReduxComponent<RouteComponentProps<any>, IState> {
     return '/'.concat(this.state.register ? 'register' : 'login');
   }
 
-  private handleSubmit(event) {
+  handleSubmit(event) {
     event.preventDefault();
 
     const { formData, register } = this.state;
@@ -74,7 +61,7 @@ class Login extends ReduxComponent<RouteComponentProps<any>, IState> {
     this.props.actions.userLogin(this.submitRoute, payload);
   }
 
-  private getInput({ name, icon }) {
+  getInput({ name, icon }) {
     const value = this.state.formData[name];
     const props: IInputGroupProps = {
       value,
@@ -115,7 +102,7 @@ class Login extends ReduxComponent<RouteComponentProps<any>, IState> {
     return inputFields;
   }
 
-  public render() {
+  render() {
     const { state, text } = this;
 
     return (
@@ -147,5 +134,3 @@ class Login extends ReduxComponent<RouteComponentProps<any>, IState> {
     );
   }
 }
-
-export default Login;
