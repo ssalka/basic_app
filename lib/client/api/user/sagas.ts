@@ -11,19 +11,20 @@ export function* userLogin({ loginArgs: [path, payload] }: IUserAction) {
 
     localStorage.token = data.token;
 
-    yield put(
-      action(UserAction.LoginSucceeded, {
-        user: data.user
-      })
-    );
+    yield [
+      put(
+        action(UserAction.LoginSucceeded, {
+          user: data.user
+        })
+      ),
+      put(
+        action(CollectionAction.AddedMany, {
+          collections: data.user.library.collections
+        })
+      )
+    ];
 
     yield put(push('/home'));
-
-    yield put(
-      action(CollectionAction.AddedMany, {
-        collections: data.user.library.collections
-      })
-    );
   } catch (error) {
     yield put(
       action(UserAction.LoginFailed, {
@@ -38,17 +39,19 @@ export function* fetchUser({ userId }: IUserAction) {
     // TODO: call other user route if userId is provided
     const { data } = yield call(() => axios.get('/api/me'));
 
-    yield put(
-      action(UserAction.FetchSucceeded, {
-        ...data
-      })
-    );
-
-    yield put(
-      action(CollectionAction.AddedMany, {
-        collections: data.user.library.collections
-      })
-    );
+    yield [
+      put(
+        action(UserAction.FetchSucceeded, {
+          ...data
+        })
+      ),
+      put(
+        action(CollectionAction.AddedMany, {
+          // REVIEW: what data structure is desired here? Record<id, coll> or Array<coll>?
+          collections: data.user.library.collections
+        })
+      )
+    ];
   } catch (error) {
     if (error.status === 403 && location.pathname !== '/login') {
       console.log('redirect to login');

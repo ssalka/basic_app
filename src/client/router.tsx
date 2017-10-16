@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { RouteComponentProps, Redirect, Route, Switch } from 'react-router';
 
-import { getCollectionStore } from 'lib/client/api/stores';
 import { connect } from 'lib/client/api/stores/redux';
 import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
 import { IReduxProps } from 'lib/common/interfaces';
@@ -15,23 +14,9 @@ import './styles.less';
 @connect
 class AppRouter extends BaseComponent<Partial<IReduxProps>> {
   componentDidMount() {
-    if (!localStorage.token) {
-      return;
-    }
-
-    this.props.actions.fetchUser();
-  }
-
-  componentWillUpdate({ store }) {
-    const { user: currentUser } = this.props.store.user;
-    const { user: nextUser } = store.user;
-
-    // TODO: achieve the following with redux
-    if (nextUser && !_.isEqual(currentUser, nextUser)) {
-      nextUser.library.collections.forEach(collection =>
-        // register store for each collection
-        getCollectionStore({ collection })
-      );
+    if (localStorage.token) {
+      // verify user session with token
+      this.props.actions.fetchUser();
     }
   }
 

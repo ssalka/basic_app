@@ -1,31 +1,21 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import axios from 'axios';
 import { RouteComponentProps, Switch, Route } from 'react-router';
 
-import api from 'lib/client/api';
-import { connect, getCollectionStore } from 'lib/client/api/stores';
 import {
   ReduxComponent,
   FlexRow,
   NavBar,
   SideBar
 } from 'lib/client/components';
-import {
-  ILink,
-  IUser,
-  ReactElement,
-  Collection,
-  Field
-} from 'lib/common/interfaces';
-import { findDocumentById } from 'lib/common/helpers';
+import { ILink, Collection } from 'lib/common/interfaces';
 
 import Home from './home';
 import Collections from './collections';
-import CollectionView, { IProps as CollectionViewProps } from './collection';
+import CollectionView from './collection';
 import CollectionForm from './collection/form';
 import DocumentView from './document';
-import DocumentForm, { IProps as DocumentFormProps } from './document/form';
+import DocumentForm from './document/form';
 import './styles.less';
 
 interface IState {
@@ -49,38 +39,6 @@ export default class App extends ReduxComponent<
     return _.find(collections, { slug });
   }
 
-  getCollectionView({ match, ...props }: any) {
-    const collection = this.getCollectionBySlug(match.params.collection);
-    const collectionStore = getCollectionStore({ collection });
-
-    const store = api[collection.typeFormats.pascalCase];
-
-    // Queries for Schema Form
-    const collectionName = collection._collection;
-
-    @connect(collectionStore)
-    class CollectionViewWithQuery extends CollectionView {
-      static defaultProps: Partial<CollectionViewProps> = {
-        collection,
-        store
-      };
-
-      componentDidMount() {
-        super.componentDidMount();
-
-        if (!this.state.documents.length) {
-          axios
-            .get(`/api/collections/${collection._id}/documents`)
-            .then(({ data: documents }) => documents)
-            .then(store.loadDocumentsSuccess)
-            .catch(console.error);
-        }
-      }
-    }
-
-    return <CollectionViewWithQuery {...props} />;
-  }
-
   getDocumentView({ match, location: { state, pathname }, ...props }) {
     const collection = this.getCollectionBySlug(match.params.collection);
     const _document = state.document || _.pick(match.params, '_id');
@@ -96,29 +54,8 @@ export default class App extends ReduxComponent<
 
   getDocumentForm({ match, ...props }: RouteComponentProps<any>) {
     const collection = this.getCollectionBySlug(match.params.collection);
-    const collections = this.getCollections();
 
-    let Form = DocumentForm;
-    const collectionField: Field = _.find(collection.fields, '_collection');
-
-    if (collectionField) {
-      const linkedCollection = findDocumentById(
-        collections,
-        collectionField._collection
-      ) as Collection;
-
-      const collectionStore = getCollectionStore({
-        collection: linkedCollection
-      });
-
-      api[linkedCollection.typeFormats.pascalCase].loadDocuments();
-
-      Form = connect(collectionStore)(Form);
-    }
-
-    return (
-      <Form collection={collection} collections={collections} {...props} />
-    );
+    return <DocumentForm collection={collection} {...props} />;
   }
 
   getCollectionForm({ location: { state }, ...props }) {
@@ -157,7 +94,7 @@ export default class App extends ReduxComponent<
       <FlexRow id="app">
         <SideBar links={links} currentPath={pathname} />
         <div id="content">
-          {user && user.library ? (
+          {!_.isEmpty(this.props.store.collection.collections) ? (
             <Switch>
               <Route
                 path="/home"
@@ -177,7 +114,7 @@ export default class App extends ReduxComponent<
               <Route
                 path="/collections/:collection"
                 exact={true}
-                render={this.getCollectionView}
+                component={CollectionView}
               />
               <Route
                 path="/collections/:collection/edit"
