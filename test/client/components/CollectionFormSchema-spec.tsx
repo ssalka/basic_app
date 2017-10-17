@@ -4,7 +4,7 @@ import * as React from 'react';
 import { mount } from 'enzyme';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
-import CollectionFormSchema from 'src/client/app/collection/form/schema';
+import CollectionFormSchema from 'src/client/app/collectionForm/schema';
 
 describe('CollectionFormSchema', () => {
   const testCollection = new MockCollection();
