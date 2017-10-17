@@ -5,7 +5,7 @@ import { mount } from 'enzyme';
 import { Collection, Field } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
-import { CollectionForm } from 'src/client/app/collection/form';
+import { CollectionForm } from 'src/client/app/collectionForm';
 
 describe('CollectionForm', () => {
   const testCollection: Collection = new MockCollection();

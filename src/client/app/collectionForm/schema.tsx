@@ -1,21 +1,9 @@
 import * as _ from 'lodash';
 import * as React from 'react';
 
-import { EditableText } from '@blueprintjs/core';
-import {
-  ViewComponent,
-  Button,
-  FlexRow,
-  FlexColumn
-} from 'lib/client/components';
+import { ViewComponent, FlexRow, FlexColumn } from 'lib/client/components';
 import { Field, Collection } from 'lib/common/interfaces/collection';
-import {
-  ReactElement,
-  ReactProps,
-  SFC,
-  IComponentModule,
-  IFunctionModule
-} from 'lib/common/interfaces/react';
+import { ReactElement, ReactProps } from 'lib/common/interfaces/react';
 import { findFieldType, findDocumentById } from 'lib/common/helpers';
 import {
   DetailsButton,

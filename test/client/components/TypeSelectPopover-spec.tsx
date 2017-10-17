@@ -8,7 +8,7 @@ import { MockCollection } from 'lib/server/models/mocks';
 import {
   TypeSelectPopover,
   ITypeSelectPopoverProps
-} from 'src/client/app/collection/form/components';
+} from 'src/client/app/collectionForm/components';
 
 describe('TypeSelectPopover', () => {
   const testCollection = new MockCollection();

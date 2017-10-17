@@ -12,10 +12,10 @@ import { ILink, Collection } from 'lib/common/interfaces';
 
 import Home from './home';
 import Collections from './collections';
-import CollectionView from './collection';
-import CollectionForm from './collection/form';
-import DocumentView from './document';
-import DocumentForm from './document/form';
+import CollectionView from './collectionView';
+import CollectionForm from './collectionForm';
+import DocumentView from './documentView';
+import DocumentForm from './documentForm';
 import './styles.less';
 
 interface IState {
