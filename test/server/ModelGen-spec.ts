@@ -31,12 +31,7 @@ describe('ModelGen', () => {
     dbName: 'test'
   };
 
-  const ExpectedModel = ModelGen.generateModel(
-    name,
-    schema,
-    extensions,
-    settings
-  );
+  const ExpectedModel = ModelGen.generateModel(name, schema, extensions, settings);
 
   beforeEach(() => ModelGen.reset());
 

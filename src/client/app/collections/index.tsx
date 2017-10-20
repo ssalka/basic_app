@@ -2,12 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { NonIdealState } from '@blueprintjs/core';
 import Link from 'react-router-redux-dom-link';
-import {
-  ReduxComponent,
-  FlexRow,
-  FlexColumn,
-  Button
-} from 'lib/client/components';
+import { ReduxComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
 
 export default class Collections extends ReduxComponent {
@@ -45,13 +40,11 @@ export default class Collections extends ReduxComponent {
             title="You don't have any Collections"
             description={
               <span>
-                Use Collections to describe and organize your data. Import or
-                sync with any source.
+                Use Collections to describe and organize your data. Import or sync with
+                any source.
               </span>
             }
-            action={
-              <AddCollectionButton text="Add Collection" color="primary" />
-            }
+            action={<AddCollectionButton text="Add Collection" color="primary" />}
           />
         )}
       </div>

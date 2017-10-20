@@ -23,10 +23,7 @@ export function* loadDocumentsInCollection({ collectionId }: IDocumentAction) {
   }
 }
 
-export function* upsertDocument({
-  collectionId,
-  document: doc
-}: IDocumentAction) {
+export function* upsertDocument({ collectionId, document: doc }: IDocumentAction) {
   try {
     const { data: upsertedDoc } = yield call(() =>
       axios.post(`/api/collections/${collectionId}/documents/${doc._id}`, {

@@ -6,11 +6,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 import configureStore from 'redux-mock-store';
 import { browserHistory } from 'lib/client/api/store';
-import {
-  systemDbName,
-  waitForConnection,
-  closeConnection
-} from 'lib/server/db';
+import { systemDbName, waitForConnection, closeConnection } from 'lib/server/db';
 import * as models from 'lib/server/models';
 import * as mocks from 'lib/server/models/mocks';
 

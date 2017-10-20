@@ -46,10 +46,7 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
     );
   }
 
-  getNodes(
-    collections: Collection[],
-    selectedType: IType | Collection
-  ): ITreeNode[] {
+  getNodes(collections: Collection[], selectedType: IType | Collection): ITreeNode[] {
     const childNodes: ITreeNode[] = collections.map(
       collectionToTreeNode(selectedType as Collection)
     );
@@ -64,9 +61,7 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
       return this.toggleNode(nodeData);
     }
 
-    const typeCategory = _.map(this.state.nodes[0].childNodes, 'id').includes(
-      nodeData.id
-    )
+    const typeCategory = _.map(this.state.nodes[0].childNodes, 'id').includes(nodeData.id)
       ? 'type'
       : '_collection';
 
@@ -75,15 +70,13 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
         ? { type: nodeData.id as string, _collection: undefined }
         : { type: FIELD_TYPES.COLLECTION, _collection: nodeData.id as string };
 
-    const nodes: ITreeNode[] = this.state.nodes.map(
-      ({ childNodes, ...node }) => ({
-        ...node,
-        childNodes: childNodes.map(childNode => ({
-          ...childNode,
-          isSelected: !nodeData.isSelected && childNode.id === nodeData.id
-        }))
-      })
-    );
+    const nodes: ITreeNode[] = this.state.nodes.map(({ childNodes, ...node }) => ({
+      ...node,
+      childNodes: childNodes.map(childNode => ({
+        ...childNode,
+        isSelected: !nodeData.isSelected && childNode.id === nodeData.id
+      }))
+    }));
 
     this.props.onSelectType(updatedTypeInfo);
 

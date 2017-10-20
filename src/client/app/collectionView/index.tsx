@@ -15,10 +15,7 @@ export interface IState {
   loading: boolean;
 }
 
-export class CollectionView extends ReduxComponent<
-  RouteComponentProps<any>,
-  IState
-> {
+export class CollectionView extends ReduxComponent<RouteComponentProps<any>, IState> {
   constructor(props) {
     super(props);
     const collection = _.find(props.store.collection.collections, {

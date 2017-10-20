@@ -3,12 +3,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
 import { NonIdealState } from '@blueprintjs/core';
-import {
-  ReduxComponent,
-  FlexRow,
-  FlexColumn,
-  Button
-} from 'lib/client/components';
+import { ReduxComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
@@ -35,8 +30,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
           <div>
             <FlexRow>
               <h4>
-                Collections{' '}
-                <span className="muted">({collections.length})</span>
+                Collections <span className="muted">({collections.length})</span>
               </h4>
               <AddButton href="collections/add" />
             </FlexRow>
@@ -56,11 +50,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
             title="You don't have any Collections"
             description={<span>{description}</span>}
             action={
-              <AddButton
-                text="Add Collection"
-                href="collections/add"
-                color="primary"
-              />
+              <AddButton text="Add Collection" href="collections/add" color="primary" />
             }
           />
         )}
@@ -91,13 +81,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
             visual="page-layout"
             title="You don't have any Views"
             description={<span>{description}</span>}
-            action={
-              <AddButton
-                text="Add View"
-                onClick={this.addView}
-                color="primary"
-              />
-            }
+            action={<AddButton text="Add View" onClick={this.addView} color="primary" />}
           />
         )}
       </div>
@@ -105,14 +89,10 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
   }
 
   render() {
-    const { collections, views } = _.get(
-      this.props.store.user,
-      'user.library',
-      {
-        collections: [],
-        views: []
-      }
-    );
+    const { collections, views } = _.get(this.props.store.user, 'user.library', {
+      collections: [],
+      views: []
+    });
 
     return (
       <section id="home" className="container list-view">

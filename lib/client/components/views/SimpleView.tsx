@@ -6,11 +6,7 @@ interface IViewProps {
   secondary: string | number | Date;
 }
 
-export const SimpleView: React.SFC<IViewProps> = ({
-  primary,
-  secondary,
-  ...props
-}) => (
+export const SimpleView: React.SFC<IViewProps> = ({ primary, secondary, ...props }) => (
   <Flex align="center" justify="space-between" {...props}>
     <span>{primary}</span>
     <span>{secondary}</span>

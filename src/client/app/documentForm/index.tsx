@@ -2,12 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { connect } from 'lib/client/api/store';
-import {
-  Collection,
-  Field,
-  ReactElement,
-  IDocument
-} from 'lib/common/interfaces';
+import { Collection, Field, ReactElement, IDocument } from 'lib/common/interfaces';
 import {
   ReduxComponent,
   ViewComponent,
@@ -46,29 +41,27 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
     this.setStateByPath(`document.${_.camelCase(field.name)}`, undefined);
   };
 
-  updateField = _.curry(
-    (field: Field, value: string | React.FormEvent<any>) => {
-      if ((value as React.FormEvent<any>).currentTarget) {
-        // TODO: transform TextInput onChange cb to pass a value instead of event
-        value = (value as React.FormEvent<any>).currentTarget.value;
-      }
-
-      const nullableValue: string = value === '' ? null : value as string;
-      const newValue =
-        field.type === 'NUMBER' && !_.isNull(nullableValue)
-          ? parseInt(nullableValue, 10)
-          : nullableValue;
-
-      const valueAsArray = _((newValue as string) || '')
-        .split('; ')
-        .compact();
-
-      this.setStateByPath(
-        `document.${_.camelCase(field.name)}`,
-        field.isArray ? valueAsArray.value() : newValue
-      );
+  updateField = _.curry((field: Field, value: string | React.FormEvent<any>) => {
+    if ((value as React.FormEvent<any>).currentTarget) {
+      // TODO: transform TextInput onChange cb to pass a value instead of event
+      value = (value as React.FormEvent<any>).currentTarget.value;
     }
-  );
+
+    const nullableValue: string = value === '' ? null : value as string;
+    const newValue =
+      field.type === 'NUMBER' && !_.isNull(nullableValue)
+        ? parseInt(nullableValue, 10)
+        : nullableValue;
+
+    const valueAsArray = _((newValue as string) || '')
+      .split('; ')
+      .compact();
+
+    this.setStateByPath(
+      `document.${_.camelCase(field.name)}`,
+      field.isArray ? valueAsArray.value() : newValue
+    );
+  });
 
   updateCollectionField = _.curry(
     (field: Field, newFieldValue: Collection | Collection[]): void => {
@@ -90,17 +83,13 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
 
       this.setStateByPath(
         `document.${_.camelCase(field.name)}`,
-        field.isArray
-          ? _.map(newFieldValue as Collection[], '_id')
-          : collectionId
+        field.isArray ? _.map(newFieldValue as Collection[], '_id') : collectionId
       );
     }
   );
 
   getLinkedDocuments(field: Field): IDocument | IDocument[] {
-    const documents = this.props.store.documents.byCollection[
-      this.props.collection._id
-    ];
+    const documents = this.props.store.documents.byCollection[this.props.collection._id];
     const { document: doc } = this.state;
     const _id: string = _.get(doc, _.camelCase(field.name));
 
@@ -132,9 +121,7 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
           multi={field.isArray}
           labelKey={_.camelCase(this.props.collection.fields[0].name)}
           documents={
-            this.props.store.documents.byCollection[
-              this.props.collection._id
-            ] || []
+            this.props.store.documents.byCollection[this.props.collection._id] || []
           }
           value={this.getLinkedDocuments(field)}
           onChange={this.updateCollectionField(field)}
@@ -145,14 +132,10 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
     // TODO: support more input types, eg textarea, date/time picker, ...
     switch (field.type) {
       case 'NUMBER':
-        return (
-          <NumericInput value={inputValue} onChange={this.updateField(field)} />
-        );
+        return <NumericInput value={inputValue} onChange={this.updateField(field)} />;
       case 'STRING':
       default:
-        return (
-          <TextInput value={inputValue} onChange={this.updateField(field)} />
-        );
+        return <TextInput value={inputValue} onChange={this.updateField(field)} />;
     }
   };
 
@@ -198,11 +181,7 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
                 color="success"
                 onClick={this.submitForm}
               />
-              <Button
-                text="Cancel"
-                color="danger"
-                onClick={this.props.history.goBack}
-              />
+              <Button text="Cancel" color="danger" onClick={this.props.history.goBack} />
             </FlexRow>
           </form>
         </div>

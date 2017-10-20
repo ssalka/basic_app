@@ -27,12 +27,7 @@ export default ({ title, user }: INavBarProps) => (
         />
       )}
       <Link to={user ? '/logout' : '/login'}>
-        <Button
-          text={!user && 'Sign In'}
-          icon="user"
-          minimal={true}
-          rounded={true}
-        />
+        <Button text={!user && 'Sign In'} icon="user" minimal={true} rounded={true} />
       </Link>
     </div>
   </nav>

@@ -41,11 +41,7 @@ export function findUserByToken(req, res) {
 export function registerUser(req, res, next) {
   const { username, password } = req.body;
   const user = new User({ username });
-  User.register(
-    user,
-    password,
-    err => (err ? res.status(500).json({ err }) : next())
-  );
+  User.register(user, password, err => (err ? res.status(500).json({ err }) : next()));
 }
 
 export function loginUser(req, res, next) {
@@ -191,9 +187,7 @@ export function upsertDocumentInCollection(req, res, next) {
       // undefined values come out of GraphQL as null
       // don't want to set these on documents
       const denullify = val =>
-        _.isArray(val)
-          ? _.reject(val, _.isNull)
-          : _.isNull(val) ? undefined : val;
+        _.isArray(val) ? _.reject(val, _.isNull) : _.isNull(val) ? undefined : val;
 
       // TODO: diffing algorithm
       const updates = _(newDocument)

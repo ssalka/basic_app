@@ -57,8 +57,7 @@ describe('Rendering Service', () => {
         children: document.target
       });
 
-      const Component: SFC = () =>
-        RenderingService.renderField(document, field, props);
+      const Component: SFC = () => RenderingService.renderField(document, field, props);
       const renderedField = shallow(<Component />);
 
       expect(_.first(renderedField.nodes).props).toEqual(expectedProps);

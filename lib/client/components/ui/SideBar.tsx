@@ -40,9 +40,7 @@ export default class SideBar extends BaseComponent<IProps, IState> {
   }
 
   renderLink(link, key): ReactElement {
-    const linkIsActive = link.path.includes(this.props.currentPath)
-      ? 'active'
-      : null;
+    const linkIsActive = link.path.includes(this.props.currentPath) ? 'active' : null;
 
     return (
       <li key={key} className={linkIsActive}>
@@ -61,8 +59,7 @@ export default class SideBar extends BaseComponent<IProps, IState> {
     }
 
     const className: string = sidebarClasses.join(' ');
-    const toggleIcon: string =
-      'caret-' + (this.state.expanded ? 'left' : 'right');
+    const toggleIcon: string = 'caret-' + (this.state.expanded ? 'left' : 'right');
     const stopPropagation = (e: React.MouseEvent<HTMLUListElement>) =>
       e.stopPropagation();
 

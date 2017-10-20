@@ -39,10 +39,9 @@ export default class Table extends ViewComponent<IProps, any> {
 
   private getFieldProps(field: Field): object {
     const { onSelectDocument } = this.props;
-    const handleClick: (
+    const handleClick: (doc: IDocument) => React.MouseEventHandler<HTMLSpanElement> = (
       doc: IDocument
-    ) => React.MouseEventHandler<HTMLSpanElement> = (doc: IDocument) => () =>
-      onSelectDocument(doc);
+    ) => () => onSelectDocument(doc);
 
     // TODO: optimize performance
     const Component: SFC = ({ record }) =>
@@ -65,9 +64,7 @@ export default class Table extends ViewComponent<IProps, any> {
       name: _tableProps.initialSort,
       visible: false
     };
-    const fieldProps: object[] = fields
-      .map(this.getFieldProps)
-      .concat(initialSortField);
+    const fieldProps: object[] = fields.map(this.getFieldProps).concat(initialSortField);
     const tableProps = {
       ..._tableProps,
       fields: fieldProps,

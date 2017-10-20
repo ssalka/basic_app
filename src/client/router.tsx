@@ -1,13 +1,7 @@
 import { Flex } from 'grid-styled';
 import * as _ from 'lodash';
 import * as React from 'react';
-import {
-  withRouter,
-  RouteComponentProps,
-  Redirect,
-  Route,
-  Switch
-} from 'react-router';
+import { withRouter, RouteComponentProps, Redirect, Route, Switch } from 'react-router';
 
 import { connect } from 'lib/client/api/store';
 import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
@@ -48,11 +42,7 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>> {
         <NavBar title="App Name" user={this.props.store.user.user} />
         <Switch>
           <Route path="/" exact={true} component={Splash} />
-          <Route
-            path="/login"
-            exact={true}
-            render={this.renderWithStore(Login)}
-          />
+          <Route path="/login" exact={true} render={this.renderWithStore(Login)} />
           <Route path="/logout" exact={true} render={this.logout} />
           <Route render={this.renderIfAuthenticated} />
           <Route path="/:param" render={NotFound} />

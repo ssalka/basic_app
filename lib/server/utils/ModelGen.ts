@@ -145,9 +145,7 @@ class ModelGen {
         _.forEach(propSet, (prop, name) => {
           if (ModelSchema[type][name]) {
             return console.warn(
-              `${_.singularize(
-                type
-              )} '${name}' already exists on ModelSchema.${type}`
+              `${_.singularize(type)} '${name}' already exists on ModelSchema.${type}`
             );
           }
 
@@ -155,8 +153,7 @@ class ModelGen {
         });
       });
 
-    const conn =
-      dbName === systemDbName ? connections.app : connections.collections;
+    const conn = dbName === systemDbName ? connections.app : connections.collections;
     const Model = conn.model(name, ModelSchema);
 
     this.trackCollection(dbName, name, Model);

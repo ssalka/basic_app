@@ -19,9 +19,7 @@ interface ICollectionSelectProps extends ReactSelectProps {
   labelKey: string;
 }
 
-export default class CollectionSelect extends ViewComponent<
-  ICollectionSelectProps
-> {
+export default class CollectionSelect extends ViewComponent<ICollectionSelectProps> {
   static defaultProps = {
     documents: [],
     value: []

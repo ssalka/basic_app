@@ -22,11 +22,7 @@ import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
 
 export const CollectionNameInput: SFC = ({ name, handleChange }) => (
   <h3>
-    <EditableText
-      value={name}
-      placeholder="New Collection"
-      onChange={handleChange}
-    />
+    <EditableText value={name} placeholder="New Collection" onChange={handleChange} />
   </h3>
 );
 
@@ -97,11 +93,7 @@ export const RemoveFieldButton: SFC = ({ disabled, onClick }) => (
   />
 );
 
-export const FieldOptions: SFC = ({
-  field,
-  onChange,
-  onTogglePopover
-}: any) => {
+export const FieldOptions: SFC = ({ field, onChange, onTogglePopover }: any) => {
   const handleCheckRequired = () => onChange({ required: !field.required });
   const handleCheckIsArray = () => onChange({ isArray: !field.isArray });
   const handleSelectView = (renderMethod: IRenderMethod) =>
@@ -133,11 +125,7 @@ export const FieldOptions: SFC = ({
   );
 };
 
-const ViewSelectPopover: SFC = ({
-  field,
-  handleSelectView,
-  handleTogglePopover
-}) => {
+const ViewSelectPopover: SFC = ({ field, handleSelectView, handleTogglePopover }) => {
   const selectedView: IRenderMethod | undefined = _.find(RENDER_METHODS, {
     key: field.renderMethod
   });
@@ -163,12 +151,6 @@ const ViewSelectPopover: SFC = ({
 
 export const AddFieldButton: SFC = ({ onClick }) => (
   <FlexRow className="minimal-row">
-    <Button
-      onClick={onClick}
-      text="Add Field"
-      icon="add"
-      minimal={true}
-      size="small"
-    />
+    <Button onClick={onClick} text="Add Field" icon="add" minimal={true} size="small" />
   </FlexRow>
 );

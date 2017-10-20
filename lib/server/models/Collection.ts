@@ -123,8 +123,7 @@ const statics = {
             coll.save((err, _coll) => cb(err, _coll));
           },
           // Find the collection's creator
-          (coll, cb) =>
-            User.findById(coll.creator, (err, user) => cb(err, user, coll)),
+          (coll, cb) => User.findById(coll.creator, (err, user) => cb(err, user, coll)),
           // Add the collection to the creator's library
           (user, coll, cb) => {
             user.library.collections.push(coll);
