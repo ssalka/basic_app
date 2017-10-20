@@ -1,3 +1,4 @@
+import { AnyAction } from 'redux';
 import { routerReducer } from 'react-router-redux';
 import { collectionReducer } from './collections';
 import { documentReducer } from './documents';
@@ -7,5 +8,8 @@ export default {
   collection: collectionReducer,
   documents: documentReducer,
   router: routerReducer,
-  user: userReducer
+  user: userReducer,
+  actionHistory(state: AnyAction[] = [], action: AnyAction): AnyAction[] {
+    return [action, ...state];
+  }
 };
