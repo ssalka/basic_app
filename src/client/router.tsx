@@ -1,7 +1,13 @@
 import { Flex } from 'grid-styled';
 import * as _ from 'lodash';
 import * as React from 'react';
-import { RouteComponentProps, Redirect, Route, Switch } from 'react-router';
+import {
+  withRouter,
+  RouteComponentProps,
+  Redirect,
+  Route,
+  Switch
+} from 'react-router';
 
 import { connect } from 'lib/client/api/store';
 import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
@@ -11,7 +17,6 @@ import Login from './login';
 import App from './app';
 import './styles.less';
 
-@connect
 class AppRouter extends BaseComponent<Partial<IReduxProps>> {
   componentDidMount() {
     if (localStorage.token) {
@@ -63,4 +68,4 @@ const NotFound = ({ match }) => (
   </ViewComponent>
 );
 
-export default AppRouter;
+export default withRouter(connect(AppRouter));
