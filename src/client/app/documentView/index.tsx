@@ -33,11 +33,7 @@ export default class DocumentView extends ViewComponent<IProps, any> {
 
   componentDidMount() {
     const { collection, document: _document } = this.props;
-    console.info(
-      _.singularize(collection.name),
-      _document._id,
-      _.omit(_document, '_id')
-    );
+    console.info(_.singularize(collection.name), _document._id, _.omit(_document, '_id'));
   }
 
   renderField: SFC = (field: Field): ReactElement => (
@@ -53,9 +49,7 @@ export default class DocumentView extends ViewComponent<IProps, any> {
 
     return (
       <ViewComponent className="document-view">
-        <Link to={{ pathname: `${location.pathname}/edit`, state }}>
-          Edit Document
-        </Link>
+        <Link to={{ pathname: `${location.pathname}/edit`, state }}>Edit Document</Link>
         <br />
         <br />
         {collection.fields

@@ -15,10 +15,7 @@ export interface IState {
   };
 }
 
-export default class Login extends ReduxComponent<
-  RouteComponentProps<any>,
-  IState
-> {
+export default class Login extends ReduxComponent<RouteComponentProps<any>, IState> {
   state: IState = {
     register: false,
     formData: {
@@ -111,10 +108,7 @@ export default class Login extends ReduxComponent<
           <div className="login-form">
             <h2>{text.header}</h2>
 
-            <form
-              className="pt-control-group pt-vertical"
-              onSubmit={this.handleSubmit}
-            >
+            <form className="pt-control-group pt-vertical" onSubmit={this.handleSubmit}>
               {this.inputFields.map(this.getInput)}
               <Button type="submit" color="primary" text={text.submit} />
             </form>

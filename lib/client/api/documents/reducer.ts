@@ -22,11 +22,7 @@ function updateDocuments(
   collectionId: string,
   addedDocuments: IDocument[]
 ): IDocumentState {
-  const documents: IDocument[] = _.unionWith(
-    state.documents,
-    addedDocuments,
-    '_id'
-  );
+  const documents: IDocument[] = _.unionWith(state.documents, addedDocuments, '_id');
 
   return setDocuments(state, collectionId, documents);
 }

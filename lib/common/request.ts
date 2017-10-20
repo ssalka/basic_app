@@ -2,8 +2,7 @@ import * as _ from 'lodash';
 import * as popsicle from 'popsicle';
 
 function generateRequest(baseUrl = '') {
-  const get = url =>
-    popsicle.get(baseUrl + url).use(popsicle.plugins.parse('json'));
+  const get = url => popsicle.get(baseUrl + url).use(popsicle.plugins.parse('json'));
 
   const post = (url, body, params: any = {}) => {
     if (!url) {
@@ -22,9 +21,7 @@ function generateRequest(baseUrl = '') {
       _.assign(headers, params.headers);
     }
 
-    return popsicle
-      .post({ headers, url, body })
-      .use(popsicle.plugins.parse('json'));
+    return popsicle.post({ headers, url, body }).use(popsicle.plugins.parse('json'));
   };
 
   return { get, post };

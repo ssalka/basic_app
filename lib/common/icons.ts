@@ -106,15 +106,7 @@ export default [
     name: 'Layout: hierarchy',
     id: 'layout-hierarchy',
     group: 'data',
-    tags: [
-      'layout',
-      'presentation',
-      'arrangement',
-      'hierarchy',
-      'order',
-      'graph',
-      'grid'
-    ]
+    tags: ['layout', 'presentation', 'arrangement', 'hierarchy', 'order', 'graph', 'grid']
   },
   {
     name: 'Layout: grid',
@@ -217,15 +209,7 @@ export default [
     name: 'Clipboard',
     id: 'clipboard',
     group: 'action',
-    tags: [
-      'clipboard',
-      'notepad',
-      'notebook',
-      'copy',
-      'paste',
-      'transfer',
-      'storage'
-    ]
+    tags: ['clipboard', 'notepad', 'notebook', 'copy', 'paste', 'transfer', 'storage']
   },
   {
     name: 'Selection',
@@ -291,15 +275,7 @@ export default [
     name: 'User',
     id: 'user',
     group: 'interface',
-    tags: [
-      'person',
-      'human',
-      'male',
-      'female',
-      'character',
-      'customer',
-      'individual'
-    ]
+    tags: ['person', 'human', 'male', 'female', 'character', 'customer', 'individual']
   },
   {
     name: 'Search template',
@@ -335,15 +311,7 @@ export default [
     name: 'Media',
     id: 'media',
     group: 'media',
-    tags: [
-      'audio',
-      'video',
-      'media',
-      'picture',
-      'image',
-      'drawing',
-      'illustration'
-    ]
+    tags: ['audio', 'video', 'media', 'picture', 'image', 'drawing', 'illustration']
   },
   {
     name: 'Link',
@@ -471,14 +439,7 @@ export default [
     name: 'Confirm',
     id: 'confirm',
     group: 'action',
-    tags: [
-      'circle',
-      'tick',
-      'confirmation',
-      'acceptance',
-      'approval',
-      'authorization'
-    ]
+    tags: ['circle', 'tick', 'confirmation', 'acceptance', 'approval', 'authorization']
   },
   {
     name: 'Fork',
@@ -496,15 +457,7 @@ export default [
     name: 'Person',
     id: 'person',
     group: 'interface',
-    tags: [
-      'person',
-      'human',
-      'male',
-      'female',
-      'character',
-      'customer',
-      'individual'
-    ]
+    tags: ['person', 'human', 'male', 'female', 'character', 'customer', 'individual']
   },
   {
     name: 'People',
@@ -866,16 +819,7 @@ export default [
     name: 'Table: derived',
     id: 'th-derived',
     group: 'table',
-    tags: [
-      'get',
-      'obtain',
-      'take',
-      'acquire',
-      'index',
-      'rows',
-      'columns',
-      'list'
-    ]
+    tags: ['get', 'obtain', 'take', 'acquire', 'index', 'rows', 'columns', 'list']
   },
   {
     name: 'Radial',
@@ -1307,136 +1251,55 @@ export default [
     name: 'Step backward',
     id: 'step-backward',
     group: 'media',
-    tags: [
-      'player',
-      'media',
-      'controls',
-      'digital',
-      'analogue',
-      'film',
-      'audio',
-      'video'
-    ]
+    tags: ['player', 'media', 'controls', 'digital', 'analogue', 'film', 'audio', 'video']
   },
   {
     name: 'Fast backward',
     id: 'fast-backward',
     group: 'media',
-    tags: [
-      'player',
-      'media',
-      'controls',
-      'digital',
-      'analogue',
-      'film',
-      'audio',
-      'video'
-    ]
+    tags: ['player', 'media', 'controls', 'digital', 'analogue', 'film', 'audio', 'video']
   },
   {
     name: 'Pause',
     id: 'pause',
     group: 'media',
-    tags: [
-      'player',
-      'media',
-      'controls',
-      'digital',
-      'analogue',
-      'film',
-      'audio',
-      'video'
-    ]
+    tags: ['player', 'media', 'controls', 'digital', 'analogue', 'film', 'audio', 'video']
   },
   {
     name: 'Stop',
     id: 'stop',
     group: 'media',
-    tags: [
-      'player',
-      'media',
-      'controls',
-      'digital',
-      'analogue',
-      'film',
-      'audio',
-      'video'
-    ]
+    tags: ['player', 'media', 'controls', 'digital', 'analogue', 'film', 'audio', 'video']
   },
   {
     name: 'Play',
     id: 'play',
     group: 'media',
-    tags: [
-      'player',
-      'media',
-      'controls',
-      'digital',
-      'analogue',
-      'film',
-      'audio',
-      'video'
-    ]
+    tags: ['player', 'media', 'controls', 'digital', 'analogue', 'film', 'audio', 'video']
   },
   {
     name: 'Fast forward',
     id: 'fast-forward',
     group: 'media',
-    tags: [
-      'player',
-      'media',
-      'controls',
-      'digital',
-      'analogue',
-      'film',
-      'audio',
-      'video'
-    ]
+    tags: ['player', 'media', 'controls', 'digital', 'analogue', 'film', 'audio', 'video']
   },
   {
     name: 'Step forward',
     id: 'step-forward',
     group: 'media',
-    tags: [
-      'player',
-      'media',
-      'controls',
-      'digital',
-      'analogue',
-      'film',
-      'audio',
-      'video'
-    ]
+    tags: ['player', 'media', 'controls', 'digital', 'analogue', 'film', 'audio', 'video']
   },
   {
     name: 'Eject',
     id: 'eject',
     group: 'media',
-    tags: [
-      'player',
-      'media',
-      'controls',
-      'digital',
-      'analogue',
-      'film',
-      'audio',
-      'video'
-    ]
+    tags: ['player', 'media', 'controls', 'digital', 'analogue', 'film', 'audio', 'video']
   },
   {
     name: 'Record',
     id: 'record',
     group: 'media',
-    tags: [
-      'player',
-      'media',
-      'controls',
-      'digital',
-      'analogue',
-      'film',
-      'audio',
-      'video'
-    ]
+    tags: ['player', 'media', 'controls', 'digital', 'analogue', 'film', 'audio', 'video']
   },
   {
     name: 'Desktop',

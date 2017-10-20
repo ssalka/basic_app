@@ -1,11 +1,6 @@
 import createHistory from 'history/createBrowserHistory';
 import { routerReducer, routerMiddleware } from 'react-router-redux';
-import {
-  bindActionCreators,
-  createStore,
-  combineReducers,
-  applyMiddleware
-} from 'redux';
+import { bindActionCreators, createStore, combineReducers, applyMiddleware } from 'redux';
 import { connect as reduxConnect } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import actions from './actions';

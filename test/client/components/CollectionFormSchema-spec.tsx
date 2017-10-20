@@ -47,9 +47,7 @@ describe('CollectionFormSchema', () => {
 
     it("displays 'Schema' and an edit button", () => {
       expect(subheaderRow.find('h5').text()).toBe('Schema');
-      expect(subheaderRow.find('button').prop('className')).toContain(
-        'pt-icon-edit'
-      );
+      expect(subheaderRow.find('button').prop('className')).toContain('pt-icon-edit');
     });
 
     it('toggles the `editingFields` state and updates the button', () => {
@@ -149,9 +147,7 @@ describe('CollectionFormSchema', () => {
           const showFieldOptions = testCollection.fields.map(_.stubFalse);
           showFieldOptions[i] = true;
 
-          expect(formSchema.state('showFieldOptions')).toEqual(
-            showFieldOptions
-          );
+          expect(formSchema.state('showFieldOptions')).toEqual(showFieldOptions);
         });
       });
     });
@@ -167,9 +163,7 @@ describe('CollectionFormSchema', () => {
     it('adds an empty field to the schema when clicked', () => {
       const { fields } = formSchema.prop('collection');
       addFieldRow.find('button').simulate('click');
-      expect(formSchema.prop('handleChange')).toHaveBeenCalledWith(
-        fields.length
-      );
+      expect(formSchema.prop('handleChange')).toHaveBeenCalledWith(fields.length);
     });
   });
 });

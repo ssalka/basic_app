@@ -32,9 +32,7 @@ export const fetchUser: ActionCreator<IUserAction> = (userId?: string) => ({
   userId
 });
 
-export const updateLibrary: ActionCreator<IUserAction> = (
-  collection: Collection
-) => ({
+export const updateLibrary: ActionCreator<IUserAction> = (collection: Collection) => ({
   type: UserAction.UpdateLibrary,
   collection
 });

@@ -56,9 +56,7 @@ export default function getComponents(
       <NonIdealState
         visual={(icon || 'document') as IconName}
         title={`You don't have any ${name}`}
-        description={
-          <span>All {name.toLowerCase()} you add will be visible here</span>
-        }
+        description={<span>All {name.toLowerCase()} you add will be visible here</span>}
         action={<AddDocumentButton />}
       />
     )

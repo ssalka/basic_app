@@ -2,12 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { RouteComponentProps, Switch, Route } from 'react-router';
 
-import {
-  ReduxComponent,
-  FlexRow,
-  NavBar,
-  SideBar
-} from 'lib/client/components';
+import { ReduxComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
 import { ILink, Collection } from 'lib/common/interfaces';
 
 import Home from './home';
@@ -22,10 +17,7 @@ interface IState {
   navLinks: ILink[];
 }
 
-export default class App extends ReduxComponent<
-  RouteComponentProps<any>,
-  IState
-> {
+export default class App extends ReduxComponent<RouteComponentProps<any>, IState> {
   state: IState = {
     navLinks: [{ name: 'Home', path: '/home', icon: 'home' }]
   };
@@ -44,11 +36,7 @@ export default class App extends ReduxComponent<
     const _document = state.document || _.pick(match.params, '_id');
 
     return (
-      <DocumentView
-        collection={collection}
-        document={_document}
-        pathname={pathname}
-      />
+      <DocumentView collection={collection} document={_document} pathname={pathname} />
     );
   }
 
@@ -63,11 +51,7 @@ export default class App extends ReduxComponent<
     const collections = this.getCollections();
 
     return (
-      <CollectionForm
-        {...props}
-        collection={collection}
-        collections={collections}
-      />
+      <CollectionForm {...props} collection={collection} collections={collections} />
     );
   }
 
@@ -85,9 +69,7 @@ export default class App extends ReduxComponent<
     const viewLinks: ILink[] = _(user)
       .get('library.collections', [])
       .slice(0, 5)
-      .map((collection: Collection) =>
-        _.pick(collection, ['name', 'path', 'icon'])
-      );
+      .map((collection: Collection) => _.pick(collection, ['name', 'path', 'icon']));
     const links: ILink[] = navLinks.concat(viewLinks);
 
     return (
@@ -96,21 +78,13 @@ export default class App extends ReduxComponent<
         <div id="content">
           {!_.isEmpty(this.props.store.collection.collections) ? (
             <Switch>
-              <Route
-                path="/home"
-                exact={true}
-                render={this.renderWithStore(Home)}
-              />
+              <Route path="/home" exact={true} render={this.renderWithStore(Home)} />
               <Route
                 path="/collections"
                 exact={true}
                 render={this.renderWithStore(Collections)}
               />
-              <Route
-                path="/collections/add"
-                exact={true}
-                component={CollectionForm}
-              />
+              <Route path="/collections/add" exact={true} component={CollectionForm} />
               <Route
                 path="/collections/:collection"
                 exact={true}

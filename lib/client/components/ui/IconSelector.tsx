@@ -36,10 +36,9 @@ export default class IconSelector extends ViewComponent<IProps, IState> {
   }
 
   private IconGrid({ name, icons }): ReactElement {
-    const getIconSetter: (
+    const getIconSetter: (icon: IIcon) => React.MouseEventHandler<HTMLSpanElement> = (
       icon: IIcon
-    ) => React.MouseEventHandler<HTMLSpanElement> = (icon: IIcon) => () =>
-      this.setIcon(icon);
+    ) => () => this.setIcon(icon);
 
     return (
       <div key={name} className="icon-grid">
@@ -57,10 +56,7 @@ export default class IconSelector extends ViewComponent<IProps, IState> {
     const { IconGrid } = this;
 
     return (
-      <div
-        className="scroll-y"
-        style={{ maxHeight: '300px', maxWidth: '250px' }}
-      >
+      <div className="scroll-y" style={{ maxHeight: '300px', maxWidth: '250px' }}>
         {_(ICONS)
           .groupBy('group')
           .map((icons: IIcon[], group: string): {} => ({ name: group, icons }))

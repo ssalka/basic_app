@@ -103,11 +103,7 @@ export class CollectionForm extends ReduxComponent<IProps, IState> {
                 color="success"
                 onClick={this.submitForm}
               />
-              <Button
-                text="Cancel"
-                color="danger"
-                onClick={this.props.history.goBack}
-              />
+              <Button text="Cancel" color="danger" onClick={this.props.history.goBack} />
             </FlexRow>
           </form>
         </div>

@@ -41,15 +41,11 @@ describe('TypeSelect', () => {
 
     const [standardTypesNode, collectionsNode] = typeSelect.state('nodes');
 
-    expect(_.map(standardTypesNode.childNodes, 'label')).toEqual(
-      expectedTree.standard
-    );
+    expect(_.map(standardTypesNode.childNodes, 'label')).toEqual(expectedTree.standard);
 
     typeSelect.instance().handleNodeClick({ id: 'category-collections' });
 
-    expect(_.map(collectionsNode.childNodes, 'label')).toEqual(
-      expectedTree.collection
-    );
+    expect(_.map(collectionsNode.childNodes, 'label')).toEqual(expectedTree.collection);
   });
 
   describe('#getNodes', () => {

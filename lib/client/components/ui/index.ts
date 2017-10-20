@@ -5,11 +5,4 @@ import SideBar from './SideBar';
 import TypeSelect from './TypeSelect';
 import ViewSelect from './ViewSelect';
 
-export {
-  CollectionSelect,
-  IconSelector,
-  NavBar,
-  SideBar,
-  TypeSelect,
-  ViewSelect
-};
+export { CollectionSelect, IconSelector, NavBar, SideBar, TypeSelect, ViewSelect };

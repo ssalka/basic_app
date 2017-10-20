@@ -14,10 +14,7 @@ describe('CollectionFormHeader', () => {
 
   function getCollectionFormHeader() {
     return mount(
-      <CollectionFormHeader
-        collection={testCollection}
-        handleChange={handleChange}
-      />
+      <CollectionFormHeader collection={testCollection} handleChange={handleChange} />
     );
   }
 
@@ -43,19 +40,14 @@ describe('CollectionFormHeader', () => {
 
   it('displays the name and description of the collection', () => {
     assert(nameElement.exists(), "Collection name wasn't rendered");
-    assert(
-      descriptionElement.exists(),
-      "Collection description wasn't rendered"
-    );
+    assert(descriptionElement.exists(), "Collection description wasn't rendered");
     expect(nameElement.text()).toBe(testCollection.name);
     expect(descriptionElement.text()).toBe(testCollection.description);
   });
 
   it("displays the collection's icon", () => {
     assert(iconElement.exists());
-    expect(iconElement.prop('className')).toContain(
-      `pt-icon-${testCollection.icon}`
-    );
+    expect(iconElement.prop('className')).toContain(`pt-icon-${testCollection.icon}`);
   });
 
   it('updates the collection name', () => {

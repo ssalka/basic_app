@@ -67,9 +67,7 @@ export default class MockCollection {
       views: [view._id]
     });
 
-    const collection: Collection = new CollectionModel(
-      collectionWithDefaults
-    ).toObject();
+    const collection: Collection = new CollectionModel(collectionWithDefaults).toObject();
 
     if (!defaults.fields) {
       const collectionField: Field = {
