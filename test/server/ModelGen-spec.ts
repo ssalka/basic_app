@@ -67,6 +67,24 @@ describe('ModelGen', () => {
     });
   });
 
+  describe('#extendModel', () => {
+    it('Extends an existing model', () => {
+      const BaseModel = ModelGen.generateModel(name, schema, extensions, settings);
+
+      const ExtendedModel = ModelGen.extendModel(BaseModel).as('ExtendedModel', {
+        otherField: Number
+      });
+
+      const testInstance = new ExtendedModel({
+        field: 'test value',
+        otherField: 123
+      });
+
+      expect(testInstance.field).toBe('test value');
+      expect(testInstance.otherField).toBe(123);
+    });
+  });
+
   describe('#modelExists', () => {
     it('returns true if a collection with the given name already exists in the db', () => {
       let result = ModelGen.modelExists(settings.dbName, name);
