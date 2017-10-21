@@ -1,7 +1,6 @@
 import * as lodash from 'lodash';
 import * as inflection from 'lodash-inflection';
 import { Schema } from 'mongoose';
-import 'mongoose-schema-extend';
 
 import { FIELD_TYPES } from 'lib/common/constants';
 import { connections, systemDbName, collectionsDbName } from '../db';
