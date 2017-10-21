@@ -15,6 +15,7 @@ const _defaults = {
     props: {},
     options: {
       discriminatorKey: '_model',
+      timestamps: true,
       toObject: {
         getters: true,
         virtuals: true
@@ -23,7 +24,6 @@ const _defaults = {
   },
   // ModelGen configuration
   settings: {
-    BaseSchema: new Schema({}, { timestamps: true }),
     dbName: systemDbName,
     propTypes: ['methods', 'statics']
   }
@@ -117,14 +117,14 @@ class ModelGen {
     const {
       // Unpack extensions & settings, filling in any missing defaults
       extensions: { props, options },
-      settings: { BaseSchema, dbName, propTypes }
+      settings: { dbName, propTypes }
     }: any = _.merge({}, this.defaults, { extensions, settings });
 
     // Check for cached model
     if (this.modelExists(dbName, name)) return this.dbs[dbName][name];
 
     // Create the schema
-    const ModelSchema = BaseSchema.extend(schema, options);
+    const ModelSchema = new Schema(schema, options);
 
     // Apply plugins & virtuals
     if (props.plugins) {
