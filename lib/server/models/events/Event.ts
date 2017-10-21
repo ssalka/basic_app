@@ -1,4 +1,4 @@
-import { ModelGen } from '../utils';
+import { ModelGen } from 'lib/server/utils';
 
 const EventSchema = {
   eventType: {
