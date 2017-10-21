@@ -160,6 +160,12 @@ class ModelGen {
     return Model;
   }
 
+  extendModel = Base => ({
+    as(name, schema = {}, options = {}) {
+      return Base.discriminator(name, new Schema(schema, options));
+    }
+  });
+
   /**
    * Checks whether a collection with the given name
    * already exists in the database
