@@ -1,11 +1,13 @@
-import { ModelGen } from '../utils';
+import { ModelGen } from 'lib/server/utils';
 
 const EventSchema = {
   eventType: {
     type: String,
     required: true
   },
-  payload: Object
+  metadata: {
+    /* Implemented by submodels */
+  }
 };
 
 export default ModelGen.generateModel('Event', EventSchema);
