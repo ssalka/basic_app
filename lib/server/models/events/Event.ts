@@ -5,7 +5,9 @@ const EventSchema = {
     type: String,
     required: true
   },
-  payload: Object
+  metadata: {
+    /* Implemented by submodels */
+  }
 };
 
 export default ModelGen.generateModel('Event', EventSchema);

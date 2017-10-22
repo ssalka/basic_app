@@ -3,12 +3,11 @@ import Event from './Event';
 const { ObjectId, Mixed, ref } = types;
 
 const ValueEventSchema = {
-  value: {
-    type: Mixed,
-    required: true
-  },
   metadata: {
-    default: {},
+    value: {
+      type: Mixed,
+      required: true
+    },
     type: {
       collection: ref('Collection'),
       document: ObjectId, // TODO: Document model (for user documents to extend)
