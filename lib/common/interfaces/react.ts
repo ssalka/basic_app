@@ -21,3 +21,21 @@ export interface ILink {
   path: string;
   icon: string;
 }
+
+export interface ICSSProps {
+  p?: string | number;
+  pt?: string | number;
+  pb?: string | number;
+  pl?: string | number;
+  pr?: string | number;
+  px?: string | number;
+  py?: string | number;
+  m?: string | number;
+  mt?: string | number;
+  mb?: string | number;
+  ml?: string | number;
+  mr?: string | number;
+  mx?: string | number;
+  my?: string | number;
+  width?: string | number;
+}
