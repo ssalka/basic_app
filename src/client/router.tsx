@@ -4,7 +4,7 @@ import * as React from 'react';
 import { withRouter, RouteComponentProps, Redirect, Route, Switch } from 'react-router';
 
 import { connect } from 'lib/client/api/store';
-import { BaseComponent, ViewComponent, NavBar } from 'lib/client/components';
+import { BaseComponent, NotFound, ViewComponent, NavBar } from 'lib/client/components';
 import { IReduxProps } from 'lib/common/interfaces';
 import Splash from './splash';
 import Login from './login';
@@ -51,11 +51,5 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>> {
     );
   }
 }
-
-const NotFound = ({ match }) => (
-  <ViewComponent>
-    <h2>Not found: {match.params.param}</h2>
-  </ViewComponent>
-);
 
 export default withRouter(connect(AppRouter));
