@@ -1,12 +1,18 @@
 import * as _ from 'lodash';
+import { Flex } from 'grid-styled';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
 import { NonIdealState } from '@blueprintjs/core';
-import { ReduxComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
+import {
+  ReduxComponent,
+  FlexRow,
+  FlexColumn,
+  Button,
+  ListView
+} from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
 import './styles.less';
-import 'lib/client/styles/list-view-1.less';
 
 const AddButton = ({ href = '', ...props }) => (
   <Link to={href}>
@@ -25,7 +31,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
       'Use Collections to describe and organize your data. Import or sync with any source.';
 
     return (
-      <div className="pt-callout pt-elevation-1">
+      <div className="pt-callout pt-elevation-1" style={{ height: 250 }}>
         {collections.length ? (
           <div>
             <FlexRow>
@@ -34,15 +40,19 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
               </h4>
               <AddButton href="collections/add" />
             </FlexRow>
-            <div className="scroll-y container">
-              {collections.map((collection: Collection, key: number) => (
-                <p>
-                  <Link to={collection.path} key={key}>
-                    {collection.name}
-                  </Link>
-                </p>
-              ))}
-            </div>
+
+            <ListView
+              items={collections}
+              keys={{
+                primary: 'name',
+                link: 'path'
+              }}
+              pl={20}
+              style={{
+                maxHeight: 200,
+                overflow: 'auto'
+              }}
+            />
           </div>
         ) : (
           <NonIdealState
@@ -63,7 +73,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
       'Views allows you to define new visual representations of your data.';
 
     return (
-      <div className="pt-callout pt-elevation-1">
+      <div className="pt-callout pt-elevation-1" style={{ height: 250 }}>
         {views.length ? (
           <div>
             <FlexRow>
@@ -95,15 +105,15 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
     });
 
     return (
-      <section id="home" className="container list-view">
+      <Flex column={true} id="home" className="container list-view">
         <FlexRow>
           <h2 className="view-title">Library</h2>
         </FlexRow>
-        <FlexColumn>
+        <Flex column={true} align="stretch" justify="center">
           {this.renderCollections(collections)}
           {this.renderViews(views)}
-        </FlexColumn>
-      </section>
+        </Flex>
+      </Flex>
     );
   }
 }

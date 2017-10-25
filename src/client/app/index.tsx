@@ -2,7 +2,13 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { RouteComponentProps, Switch, Route } from 'react-router';
 
-import { ReduxComponent, FlexRow, NavBar, SideBar } from 'lib/client/components';
+import {
+  ReduxComponent,
+  FlexRow,
+  NavBar,
+  SideBar,
+  NotFound
+} from 'lib/client/components';
 import { ILink, Collection } from 'lib/common/interfaces';
 
 import Home from './home';
@@ -110,6 +116,7 @@ export default class App extends ReduxComponent<RouteComponentProps<any>, IState
                 exact={true}
                 render={this.getDocumentForm}
               />
+              <Route path="/:param" render={NotFound} />
             </Switch>
           ) : (
             <div>Loading your library...</div>
