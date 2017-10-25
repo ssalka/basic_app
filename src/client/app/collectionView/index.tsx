@@ -36,17 +36,39 @@ export class CollectionView extends ReduxComponent<RouteComponentProps<any>, ISt
     const noDocuments = !this.props.store.documents.byCollection[collectionId];
 
     if (notLoading && noDocuments) {
-      this.props.actions.loadDocumentsInCollection(collectionId);
-      this.setState({ loading: true });
+      this.loadDocuments(collectionId);
     }
   }
 
-  componentWillReceiveProps({ store }) {
+  componentWillReceiveProps({ match, store }) {
     const { collection, loading } = this.state;
+    const finishedLoading = loading && store.documents.byCollection[collection._id];
+    const collectionPathChanged = !_.isEqualWith(match, this.props.match, 'url');
 
-    if (loading && store.documents.byCollection[collection._id]) {
+    if (finishedLoading) {
       this.setState({ loading: false });
+    } else if (collectionPathChanged) {
+      const collection = _.find(store.collection.collections, {
+        path: match.url
+      });
+
+      this.handleCollectionChange(collection);
     }
+  }
+
+  handleCollectionChange(newCollection) {
+    if (!newCollection) return this.props.history.push('/404');
+
+    this.setState({
+      collection: newCollection
+    });
+
+    this.loadDocuments(newCollection._id);
+  }
+
+  loadDocuments(collectionId) {
+    this.props.actions.loadDocumentsInCollection(collectionId);
+    this.setState({ loading: true });
   }
 
   getView(view) {
