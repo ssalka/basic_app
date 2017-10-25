@@ -31,7 +31,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
       'Use Collections to describe and organize your data. Import or sync with any source.';
 
     return (
-      <div className="pt-callout pt-elevation-1">
+      <div className="pt-callout pt-elevation-1" style={{ height: 250 }}>
         {collections.length ? (
           <div>
             <FlexRow>
@@ -47,10 +47,10 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
                 primary: 'name',
                 link: 'path'
               }}
+              pl={20}
               style={{
                 maxHeight: 200,
-                paddingLeft: 20,
-                overflowY: 'auto'
+                overflow: 'auto'
               }}
             />
           </div>
@@ -73,7 +73,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
       'Views allows you to define new visual representations of your data.';
 
     return (
-      <div className="pt-callout pt-elevation-1">
+      <div className="pt-callout pt-elevation-1" style={{ height: 250 }}>
         {views.length ? (
           <div>
             <FlexRow>

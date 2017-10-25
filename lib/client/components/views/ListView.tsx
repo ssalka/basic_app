@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import Link from 'react-router-redux-dom-link';
 import { Flex } from 'grid-styled';
+import { ICSSProps } from 'lib/common/interfaces';
 import { SimpleView, ISimpleViewProps } from './SimpleView';
 
 interface IListItem {
@@ -10,7 +11,7 @@ interface IListItem {
   link?: string;
 }
 
-interface IListViewProps extends React.HTMLAttributes<HTMLDivElement> {
+interface IListViewProps extends React.HTMLAttributes<HTMLDivElement>, ICSSProps {
   items: Record<string, any>[];
   keys: {
     primary: string;
