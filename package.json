@@ -25,8 +25,8 @@
   },
   "lint-staged": {
     "*.ts{,x}": [
-      "format",
       "lint",
+      "format",
       "git add"
     ]
   },
