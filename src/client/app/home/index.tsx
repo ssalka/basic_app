@@ -1,9 +1,16 @@
 import * as _ from 'lodash';
+import { Flex } from 'grid-styled';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
 import { NonIdealState } from '@blueprintjs/core';
-import { ReduxComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
+import {
+  ReduxComponent,
+  FlexRow,
+  FlexColumn,
+  SmartInput,
+  Button
+} from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
@@ -99,10 +106,17 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
         <FlexRow>
           <h2 className="view-title">Library</h2>
         </FlexRow>
-        <FlexColumn>
-          {this.renderCollections(collections)}
-          {this.renderViews(views)}
-        </FlexColumn>
+
+        <Flex justify="space-between">
+          <Flex column={true} style={{ minWidth: 250 }}>
+            <SmartInput />
+          </Flex>
+
+          <FlexColumn style={{ flexGrow: 1 }}>
+            {this.renderCollections(collections)}
+            {this.renderViews(views)}
+          </FlexColumn>
+        </Flex>
       </section>
     );
   }
