@@ -84,16 +84,18 @@ export default class SmartInput extends ViewComponent<
           minHeight: rowHeight
         }}
       >
-        {identifiers.map(({ value, resolved }, i) => (
+        {identifiers.map(({ type, value, resolved }, i) => (
           <div
             key={i}
-            children={resolved ? resolved.name : value}
             style={{
               height: rowHeight,
               lineHeight: `${rowHeight}px`,
               paddingLeft: 10
             }}
-          />
+          >
+            <span className="pt-tag">{_.capitalize(type)}</span>
+            {resolved ? resolved.name : value}
+          </div>
         ))}
 
         <input
@@ -116,7 +118,7 @@ const isTabKeyEvent = (event): boolean => event.keyCode === 9;
 const StyledSmartInput: any = styled(Flex)`
   overflow: hidden;
 
-  * {
+  *:not(span) {
     height: 32px;
     line-height: ${({ style }: any) => style.minHeight}px:
     margin-left: ${({ style }: any) => style.minHeight}px:
@@ -125,7 +127,11 @@ const StyledSmartInput: any = styled(Flex)`
   div {
     background-color: #EEE;
     margin-bottom: 0 !important;
-    border-bottom: 1px solid #CCC;c
+    border-bottom: 1px solid #CCC;
+
+    span {
+      margin-right: 5px;
+    }
   }
 
   input {
