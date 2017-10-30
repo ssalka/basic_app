@@ -23,6 +23,7 @@ interface ISmartInputState {
   inputValue: string;
   identifiers: ISmartInputItem[];
   options: ISmartInputItem[];
+  matchedOptions: ISmartInputItem[];
 }
 
 export default class SmartInput extends ViewComponent<
@@ -42,11 +43,15 @@ export default class SmartInput extends ViewComponent<
       type: 'collection',
       name: collection.name,
       resolved: collection
-    }))
+    })),
+    matchedOptions: []
   };
 
-  handleChange(event) {
-    this.setState({ inputValue: event.target.value });
+  handleChange({ target: { value } }) {
+    this.setState({
+      inputValue: value,
+      matchedOptions: value ? this.state.options.filter(this.matchAgainst(value)) : []
+    });
   }
 
   handleKeyDown(event) {
@@ -69,6 +74,7 @@ export default class SmartInput extends ViewComponent<
 
     this.setState({
       inputValue: '',
+      matchedOptions: [],
       identifiers: this.state.identifiers.concat({
         type,
         name: event.target.value
@@ -76,18 +82,15 @@ export default class SmartInput extends ViewComponent<
     });
   }
 
-  matchAgainstInput = (item: ISmartInputItem): boolean =>
-    !!this.state.inputValue && _.at(item, 'name', 'type').some(this.valueMatchesInput);
-
-  valueMatchesInput = (val: string): boolean =>
-    !!val && val.toLowerCase().includes(this.state.inputValue);
+  matchAgainst = _.curry(
+    (value: string, item: ISmartInputItem): boolean =>
+      !!value && _.at(item, 'name', 'type').some(valuesMatch(value))
+  );
 
   render() {
     const { initialWidth, rowHeight, inputStyle, style, ...props } = this.props;
-    const { identifiers, inputValue, options } = this.state;
+    const { identifiers, inputValue, matchedOptions } = this.state;
     const borderRadius = rowHeight / 2;
-
-    const matchedOptions = options.filter(this.matchAgainstInput);
 
     return (
       <StyledSmartInput rowHeight={rowHeight} style={{ position: 'relative', ...style }}>
@@ -157,6 +160,11 @@ export default class SmartInput extends ViewComponent<
 }
 
 const isTabKeyEvent = (event): boolean => event.keyCode === 9;
+
+const valuesMatch = _.curry(
+  (val1: string = '', val2: string = ''): boolean =>
+    !!val1 && val2.toLowerCase().includes(val1.toLowerCase())
+);
 
 const StyledSmartInput: any = styled.div`
   .row {
