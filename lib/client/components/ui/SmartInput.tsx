@@ -6,20 +6,23 @@ import styled from 'styled-components';
 import { ViewComponent } from 'lib/client/components';
 import { Collection } from 'lib/common/interfaces';
 
-interface IIdentifier {
-  type: 'collection' | 'document';
-  value: string;
+export interface ISmartInputItem {
+  type: string;
+  name: string;
   resolved?: any;
 }
 
-interface ISmartInputProps {
+interface ISmartInputProps extends React.HTMLProps<HTMLDivElement> {
   initialWidth?: number;
   rowHeight?: number;
+  collections: Collection[];
+  inputStyle?: React.CSSProperties;
 }
 
 interface ISmartInputState {
   inputValue: string;
-  identifiers: IIdentifier[];
+  identifiers: ISmartInputItem[];
+  options: ISmartInputItem[];
 }
 
 export default class SmartInput extends ViewComponent<
@@ -28,12 +31,18 @@ export default class SmartInput extends ViewComponent<
 > {
   static defaultProps = {
     initialWidth: 200,
-    rowHeight: 32
+    rowHeight: 32,
+    collections: []
   };
 
   state: ISmartInputState = {
     inputValue: null,
-    identifiers: []
+    identifiers: [],
+    options: this.props.collections.map((collection: Collection): ISmartInputItem => ({
+      type: 'collection',
+      name: collection.name,
+      resolved: collection
+    }))
   };
 
   handleChange(event) {
@@ -62,52 +71,86 @@ export default class SmartInput extends ViewComponent<
       inputValue: '',
       identifiers: this.state.identifiers.concat({
         type,
-        value: event.target.value
+        name: event.target.value
       })
     });
   }
 
+  matchAgainstInput = (item: ISmartInputItem): boolean =>
+    !!this.state.inputValue && _.at(item, 'name', 'type').some(this.valueMatchesInput);
+
+  valueMatchesInput = (val: string): boolean =>
+    !!val && val.toLowerCase().includes(this.state.inputValue);
+
   render() {
-    const { initialWidth, rowHeight, ...props } = this.props;
-    const { identifiers, inputValue } = this.state;
+    const { initialWidth, rowHeight, inputStyle, style, ...props } = this.props;
+    const { identifiers, inputValue, options } = this.state;
+    const borderRadius = rowHeight / 2;
+
+    const matchedOptions = options.filter(this.matchAgainstInput);
 
     return (
-      <StyledSmartInput
-        {...props}
-        align="stretch"
-        className="pt-card pt-elevation-1"
-        column={true}
-        p={0}
-        width={initialWidth}
-        style={{
-          borderRadius: rowHeight / 2,
-          minHeight: rowHeight
-        }}
-      >
-        {identifiers.map(({ type, value, resolved }, i) => (
-          <div
-            key={i}
-            style={{
-              height: rowHeight,
-              lineHeight: `${rowHeight}px`,
-              paddingLeft: 10
-            }}
+      <StyledSmartInput rowHeight={rowHeight} style={{ position: 'relative', ...style }}>
+        {!!matchedOptions.length && (
+          <Flex
+            // TODO: replace with react-virtualized-select (need labelKey)
+            className="options pt-callout pt-elevation-2"
+            align="stretch"
+            column={true}
           >
-            <span className="pt-tag">{_.capitalize(type)}</span>
-            {resolved ? resolved.name : value}
-          </div>
-        ))}
+            {[{ type: inputValue }]
+              .concat(matchedOptions)
+              .map((item: Partial<ISmartInputItem>) => (
+                <div className="option row">{item.name}</div>
+              ))}
+          </Flex>
+        )}
 
-        <input
-          placeholder="Search or Add to Library"
-          value={inputValue}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
-          onKeyUp={this.handleKeyUp}
+        <Flex
+          {...props}
+          align="stretch"
+          className="select pt-card pt-elevation-0"
+          column={true}
+          p={0}
+          width={initialWidth}
           style={{
-            marginLeft: 10
+            borderRadius,
+            minHeight: rowHeight,
+            flexGrow: 1,
+            ...inputStyle
           }}
-        />
+        >
+          {identifiers.map(({ type, name, resolved }, i) => (
+            <Flex
+              className="identifier row"
+              align="center"
+              justify="flex-start"
+              px={10}
+              key={i}
+            >
+              <span className="pt-tag" style={{ marginRight: 5 }}>
+                {_.capitalize(resolved ? resolved._model : type)}
+              </span>
+
+              <span>{resolved ? resolved.name : name}</span>
+            </Flex>
+          ))}
+
+          <input
+            // TODO: replace with react-virtualized-select (need labelKey)
+            placeholder="Search or Add to Library"
+            className="row"
+            value={inputValue}
+            onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
+            onKeyUp={this.handleKeyUp}
+            style={{
+              borderRadius: identifiers.length
+                ? `0 0 ${borderRadius}px ${borderRadius}px`
+                : borderRadius
+            }}
+          />
+        </Flex>
       </StyledSmartInput>
     );
   }
@@ -115,32 +158,58 @@ export default class SmartInput extends ViewComponent<
 
 const isTabKeyEvent = (event): boolean => event.keyCode === 9;
 
-const StyledSmartInput: any = styled(Flex)`
-  overflow: hidden;
-
-  *:not(span) {
-    height: 32px;
-    line-height: ${({ style }: any) => style.minHeight}px:
-    margin-left: ${({ style }: any) => style.minHeight}px:
+const StyledSmartInput: any = styled.div`
+  .row {
+    height: ${({ rowHeight }: any) => rowHeight}px !important;
+    line-height: ${({ rowHeight }: any) => rowHeight}px !important;
+    padding-left: 10px !important;
   }
 
-  div {
-    background-color: #EEE;
-    margin-bottom: 0 !important;
-    border-bottom: 1px solid #CCC;
+  .select {
+    overflow: hidden;
 
-    span {
-      margin-right: 5px;
+    &, & > * {
+      z-index: 1;
+    }
+
+    .identifier {
+      background-color: #EEE;
+      margin-bottom: 0 !important;
+      border-bottom: 1px solid #CCC;
+      line-height: ${({ rowHeight }: any) => rowHeight}px !important:
+    }
+
+    input {
+      vertical-align: middle;
+      border-radius: ${({ rowHeight }: any) => rowHeight / 2}px;
+      line-height: ${({ rowHeight }: any) => rowHeight}px;
+      padding: 0;
+      font-size: 14px;
+      width: 100%;
+      border: 1px solid #DDD;
+
+      &::before {
+        box-shadow: none !important;
+      }
     }
   }
 
-  input {
-    flex-grow: 1;
-    border: 0;
-    font-size: 14px;
+  .options {
+    z-index: 0;
+    position: absolute;
+    top: 0;
+    background-color: white;
+    width: 100%;
+    border-radius: 16px;
+    background-color: #FCFCFC;
 
-    &::before {
-      box-shadow: none !important;
+    .option {
+      line-height: ${({ rowHeight }: any) => rowHeight}px;
+      vertical-align: middle;
+
+      &:not(:last-of-type):not(:first-of-type) {
+        border-bottom: 1px solid #EAEAEA;
+      }
     }
   }
 `;

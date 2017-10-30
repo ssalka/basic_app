@@ -4,14 +4,9 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
 import { NonIdealState } from '@blueprintjs/core';
-import {
-  ReduxComponent,
-  FlexRow,
-  FlexColumn,
-  SmartInput,
-  Button
-} from 'lib/client/components';
+import { ReduxComponent, FlexRow, FlexColumn, Button } from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
+import SmartInput, { ISmartInputItem } from 'lib/client/components/ui/SmartInput';
 import './styles.less';
 import 'lib/client/styles/list-view-1.less';
 
@@ -108,8 +103,12 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
         </FlexRow>
 
         <Flex justify="space-between">
-          <Flex column={true} style={{ minWidth: 250 }}>
-            <SmartInput />
+          <Flex column={true} pr={20}>
+            <SmartInput
+              collections={collections}
+              inputStyle={{ width: 230, marginBottom: 20 }}
+            />
+            AFter
           </Flex>
 
           <FlexColumn style={{ flexGrow: 1 }}>
