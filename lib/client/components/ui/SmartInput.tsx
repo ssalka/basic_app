@@ -24,6 +24,7 @@ interface ISmartInputState {
   identifiers: ISmartInputItem[];
   options: ISmartInputItem[];
   matchedOptions: ISmartInputItem[];
+  selectedOptionIndex: number;
 }
 
 export default class SmartInput extends ViewComponent<
@@ -44,7 +45,8 @@ export default class SmartInput extends ViewComponent<
       name: collection.name,
       resolved: collection
     })),
-    matchedOptions: []
+    matchedOptions: [],
+    selectedOptionIndex: -1
   };
 
   handleChange({ target: { value } }) {
@@ -62,11 +64,13 @@ export default class SmartInput extends ViewComponent<
 
   handleKeyUp(event) {
     if (isTabKeyEvent(event)) {
-      this.handleTab(event);
+      this.handleTabKeyEvent(event);
+    } else if (isUpArrowKeyEvent(event) || isDownArrowKeyEvent(event)) {
+      this.handleArrowKeyEvent(event);
     }
   }
 
-  handleTab(event) {
+  handleTabKeyEvent(event) {
     if (_.isEmpty(this.state.inputValue)) return;
 
     // TODO: need selected search suggestion to get type
@@ -82,6 +86,21 @@ export default class SmartInput extends ViewComponent<
     });
   }
 
+  handleArrowKeyEvent(event) {
+    event.preventDefault();
+    this.setSelectedOptionIndex(this.state, event);
+  }
+
+  setSelectedOptionIndex = (
+    { matchedOptions, selectedOptionIndex }: ISmartInputState,
+    { keyCode }
+  ) =>
+    this.setState({
+      selectedOptionIndex:
+        (matchedOptions.length + selectedOptionIndex + (keyCode - 39)) %
+        matchedOptions.length
+    });
+
   matchAgainst = _.curry(
     (value: string, item: ISmartInputItem): boolean =>
       !!value && _.at(item, 'name', 'type').some(valuesMatch(value))
@@ -89,7 +108,7 @@ export default class SmartInput extends ViewComponent<
 
   render() {
     const { initialWidth, rowHeight, inputStyle, style, ...props } = this.props;
-    const { identifiers, inputValue, matchedOptions } = this.state;
+    const { identifiers, inputValue, matchedOptions, selectedOptionIndex } = this.state;
     const borderRadius = rowHeight / 2;
 
     return (
@@ -104,8 +123,14 @@ export default class SmartInput extends ViewComponent<
           >
             {[{ type: inputValue }]
               .concat(matchedOptions)
-              .map((item: Partial<ISmartInputItem>) => (
-                <div className="option row">{item.name}</div>
+              .map((item: Partial<ISmartInputItem>, i) => (
+                <div
+                  className={`option row ${i && i - 1 === selectedOptionIndex
+                    ? 'selected'
+                    : ''}`}
+                >
+                  {item.name}
+                </div>
               ))}
           </Flex>
         )}
@@ -161,11 +186,12 @@ export default class SmartInput extends ViewComponent<
 }
 
 const isTabKeyEvent = (event): boolean => event.keyCode === 9;
+const isUpArrowKeyEvent = (event): boolean => event.keyCode === 38;
+const isDownArrowKeyEvent = (event): boolean => event.keyCode === 40;
 
 const valuesMatch = _.curry(
   (val1: string = '', val2: string = ''): boolean =>
-    console.log(`checking whether ${val2} contains ${val1}`) ||
-    (!!val1 && val2.toLowerCase().includes(val1.toLowerCase()))
+    !!val1 && val2.toLowerCase().includes(val1.toLowerCase())
 );
 
 const StyledSmartInput: any = styled.div`
@@ -219,6 +245,10 @@ const StyledSmartInput: any = styled.div`
 
       &:not(:last-of-type):not(:first-of-type) {
         border-bottom: 1px solid #EAEAEA;
+      }
+
+      &.selected {
+        background-color: #EBF1F5;
       }
     }
   }
