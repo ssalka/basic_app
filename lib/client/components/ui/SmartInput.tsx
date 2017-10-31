@@ -100,6 +100,7 @@ export default class SmartInput extends ViewComponent<
             className="options pt-callout pt-elevation-2"
             align="stretch"
             column={true}
+            style={{ top: identifiers.length * rowHeight }}
           >
             {[{ type: inputValue }]
               .concat(matchedOptions)
@@ -163,7 +164,8 @@ const isTabKeyEvent = (event): boolean => event.keyCode === 9;
 
 const valuesMatch = _.curry(
   (val1: string = '', val2: string = ''): boolean =>
-    !!val1 && val2.toLowerCase().includes(val1.toLowerCase())
+    console.log(`checking whether ${val2} contains ${val1}`) ||
+    (!!val1 && val2.toLowerCase().includes(val1.toLowerCase()))
 );
 
 const StyledSmartInput: any = styled.div`
