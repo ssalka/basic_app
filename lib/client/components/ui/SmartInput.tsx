@@ -73,16 +73,21 @@ export default class SmartInput extends ViewComponent<
   handleTabKeyEvent(event) {
     if (_.isEmpty(this.state.inputValue)) return;
 
-    // TODO: need selected search suggestion to get type
-    const type = 'document';
+    const newIdentifier: ISmartInputItem = (() => {
+      if (this.state.selectedOptionIndex >= 0) {
+        return this.state.matchedOptions[this.state.selectedOptionIndex];
+      } else if (this.state.matchedOptions.length === 1) {
+        return this.state.matchedOptions[0];
+      } else {
+        return { type: 'document', name: event.target.value };
+      }
+    })();
 
     this.setState({
       inputValue: '',
       matchedOptions: [],
-      identifiers: this.state.identifiers.concat({
-        type,
-        name: event.target.value
-      })
+      identifiers: this.state.identifiers.concat(newIdentifier),
+      selectedOptionIndex: -1
     });
   }
 
