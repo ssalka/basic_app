@@ -67,6 +67,8 @@ export default class SmartInput extends ViewComponent<
       this.handleTabKeyEvent(event);
     } else if (isUpArrowKeyEvent(event) || isDownArrowKeyEvent(event)) {
       this.handleArrowKeyEvent(event);
+    } else if (isEnterKeyEvent(event)) {
+      this.handleSubmit();
     }
   }
 
@@ -110,6 +112,18 @@ export default class SmartInput extends ViewComponent<
     (value: string, item: ISmartInputItem): boolean =>
       !!value && _.at(item, 'name', 'type').some(valuesMatch(value))
   );
+
+  handleSubmit() {
+    // TODO: reduce identifiers to a value; store event
+    console.log('submit value');
+
+    this.setState({
+      inputValue: null,
+      identifiers: [],
+      matchedOptions: [],
+      selectedOptionIndex: -1
+    });
+  }
 
   render() {
     const { initialWidth, rowHeight, inputStyle, style, ...props } = this.props;
@@ -191,6 +205,7 @@ export default class SmartInput extends ViewComponent<
 }
 
 const isTabKeyEvent = (event): boolean => event.keyCode === 9;
+const isEnterKeyEvent = (event): boolean => event.keyCode === 13;
 const isUpArrowKeyEvent = (event): boolean => event.keyCode === 38;
 const isDownArrowKeyEvent = (event): boolean => event.keyCode === 40;
 
