@@ -12,6 +12,7 @@ import {
   ListView
 } from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
+import SmartInput, { ISmartInputItem } from 'lib/client/components/ui/SmartInput';
 import './styles.less';
 
 const AddButton = ({ href = '', ...props }) => (
@@ -109,9 +110,20 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
         <FlexRow>
           <h2 className="view-title">Library</h2>
         </FlexRow>
-        <Flex column={true} align="stretch" justify="center">
-          {this.renderCollections(collections)}
-          {this.renderViews(views)}
+
+        <Flex justify="space-between">
+          <Flex column={true} pr={20}>
+            <SmartInput
+              collections={collections}
+              inputStyle={{ width: 230, marginBottom: 20 }}
+            />
+            AFter
+          </Flex>
+
+          <FlexColumn style={{ flexGrow: 1 }}>
+            {this.renderCollections(collections)}
+            {this.renderViews(views)}
+          </FlexColumn>
         </Flex>
       </Flex>
     );
