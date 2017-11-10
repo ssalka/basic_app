@@ -1,10 +1,12 @@
 import * as _ from 'lodash';
 import * as React from 'react';
+import { ActionCreator } from 'redux';
 import { Flex } from 'grid-styled';
 import { EditableText } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { ViewComponent } from 'lib/client/components';
-import { Collection } from 'lib/common/interfaces';
+import { Collection, Value } from 'lib/common/interfaces';
+import { IValueAction } from 'lib/client/api/values/actions';
 
 export interface ISmartInputItem {
   type: string;
@@ -17,6 +19,7 @@ interface ISmartInputProps extends React.HTMLProps<HTMLDivElement> {
   rowHeight?: number;
   collections: Collection[];
   inputStyle?: React.CSSProperties;
+  actions: Record<string, ActionCreator<IValueAction>>;
 }
 
 interface ISmartInputState {
@@ -40,6 +43,7 @@ export default class SmartInput extends ViewComponent<
   state: ISmartInputState = {
     inputValue: null,
     identifiers: [],
+    // TODO: start out also with domain objects as options - if selected, narrow options to items of that type
     options: this.props.collections.map((collection: Collection): ISmartInputItem => ({
       type: 'collection',
       name: collection.name,
@@ -63,7 +67,7 @@ export default class SmartInput extends ViewComponent<
       return this.state.matchedOptions[0];
     } else {
       return {
-        type: 'document',
+        type: 'value',
         name: event.target.value
       };
     }
@@ -81,19 +85,28 @@ export default class SmartInput extends ViewComponent<
     } else if (isUpArrowKeyEvent(event) || isDownArrowKeyEvent(event)) {
       this.handleArrowKeyEvent(event);
     } else if (isEnterKeyEvent(event)) {
-      this.handleSubmit();
+      if (this.state.inputValue) {
+        this.handleTabKeyEvent(event, this.handleSubmit);
+      } else {
+        this.handleSubmit();
+      }
     }
   }
 
-  handleTabKeyEvent(event) {
+  handleTabKeyEvent(event, cb = _.noop) {
     if (!this.state.inputValue) return;
 
-    this.setState({
-      inputValue: '',
-      matchedOptions: [],
-      identifiers: this.state.identifiers.concat(this.getNewIdentifier(event)),
-      selectedOptionIndex: -1
-    });
+    const newIdentifier = this.getNewIdentifier(event);
+
+    this.setState(
+      {
+        inputValue: '',
+        matchedOptions: [],
+        identifiers: this.state.identifiers.concat(newIdentifier),
+        selectedOptionIndex: -1
+      },
+      cb
+    );
   }
 
   handleArrowKeyEvent(event) {
@@ -117,8 +130,39 @@ export default class SmartInput extends ViewComponent<
   );
 
   handleSubmit() {
-    // TODO: reduce identifiers to a value; store event
-    console.log('submit value');
+    // TODO: put more constraints on which combinations of identifiers are valid
+    // (this will have mostly to do with how the selection, filtering of matchedOptions occurs,
+    // eg switching from collections to documents if a collection is added as an identifier)
+
+    const [
+      { resolved, ...firstIdentifier },
+      ...otherIdentifiers
+    ] = this.state.identifiers;
+
+    if (!otherIdentifiers.length) {
+      if (resolved) {
+        // TODO: navigate to resolved item
+      } else {
+        this.props.actions.createValue(firstIdentifier);
+      }
+    } else if (_.every(otherIdentifiers, 'resolved')) {
+      this.props.actions.createValue({
+        ...firstIdentifier,
+        references: otherIdentifiers.reduce(
+          (references, { resolved, type }: ISmartInputItem) => ({
+            ...references,
+            [type]: resolved._id
+          }),
+          {}
+        )
+      });
+    } else {
+      // TODO: what if some identifiers are unresolved?
+      // IDEA: assume it's a subset of last identifier
+      //   - eg add collection -> next identifier is a document)
+      //   - eg add document -> next identifier is a field)
+      console.log('unresolved identifiers:', _.reject(otherIdentifiers, 'resolved'));
+    }
 
     this.setState({
       inputValue: null,

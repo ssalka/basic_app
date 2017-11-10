@@ -7,7 +7,7 @@ import { IValueAction, ValueAction } from './actions';
 
 export function* createValue({ value }: IValueAction) {
   try {
-    const { data: createdValue } = yield call(() => axios.post('/api/values', value));
+    const { data: createdValue } = yield call(() => axios.post('/api/values', { value }));
 
     yield put(action(ValueAction.CreateSucceeded, { value: createdValue }));
   } catch (error) {
