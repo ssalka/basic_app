@@ -6,8 +6,9 @@ import { invoke, invokeMap } from 'lodash/fp';
 import { indexHtml } from '../config';
 import { logger } from 'lib/common';
 import { READONLY_FIELDS } from 'lib/common/constants';
+import { ValueCommand } from 'lib/common/interfaces/events';
 import { collectionsDbName } from 'lib/server/db';
-import { User, Session, Collection } from 'lib/server/models';
+import { User, Session, Collection, ValueEvent } from 'lib/server/models';
 import { generateToken, ModelGen } from 'lib/server/utils';
 
 export const sendIndex = (_, res) => res.sendFile(indexHtml);
@@ -203,5 +204,18 @@ export function upsertDocumentInCollection(req, res, next) {
     })
     .then(invoke('toObject'))
     .then(document => res.json(document))
+    .catch(next);
+}
+
+/**
+ * VALUE ROUTES
+ */
+
+export function createValue(req, res, next) {
+  ValueEvent.create({
+    type: ValueCommand.Create,
+    metadata: req.body
+  })
+    .then(res.json)
     .catch(next);
 }

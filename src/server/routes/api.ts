@@ -1,5 +1,6 @@
 import * as express from 'express';
 import {
+  createValue,
   findUserByToken,
   loadDocumentsInCollection,
   upsertCollection,
@@ -11,4 +12,5 @@ export default express
   .get('/me', findUserByToken)
   .post('/collections/:collectionId', upsertCollection)
   .get('/collections/:collectionId/documents', loadDocumentsInCollection)
-  .post('/collections/:collectionId/documents/:documentId', upsertDocumentInCollection);
+  .post('/collections/:collectionId/documents/:documentId', upsertDocumentInCollection)
+  .post('/values', createValue);
