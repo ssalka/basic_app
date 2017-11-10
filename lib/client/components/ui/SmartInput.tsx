@@ -56,6 +56,19 @@ export default class SmartInput extends ViewComponent<
     });
   }
 
+  getNewIdentifier(event): ISmartInputItem {
+    if (this.state.selectedOptionIndex >= 0) {
+      return this.state.matchedOptions[this.state.selectedOptionIndex];
+    } else if (this.state.matchedOptions.length === 1) {
+      return this.state.matchedOptions[0];
+    } else {
+      return {
+        type: 'document',
+        name: event.target.value
+      };
+    }
+  }
+
   handleKeyDown(event) {
     if (isTabKeyEvent(event)) {
       event.preventDefault();
@@ -73,22 +86,12 @@ export default class SmartInput extends ViewComponent<
   }
 
   handleTabKeyEvent(event) {
-    if (_.isEmpty(this.state.inputValue)) return;
-
-    const newIdentifier: ISmartInputItem = (() => {
-      if (this.state.selectedOptionIndex >= 0) {
-        return this.state.matchedOptions[this.state.selectedOptionIndex];
-      } else if (this.state.matchedOptions.length === 1) {
-        return this.state.matchedOptions[0];
-      } else {
-        return { type: 'document', name: event.target.value };
-      }
-    })();
+    if (!this.state.inputValue) return;
 
     this.setState({
       inputValue: '',
       matchedOptions: [],
-      identifiers: this.state.identifiers.concat(newIdentifier),
+      identifiers: this.state.identifiers.concat(this.getNewIdentifier(event)),
       selectedOptionIndex: -1
     });
   }
