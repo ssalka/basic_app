@@ -1,7 +1,7 @@
 import { ModelGen } from 'lib/server/utils';
 
 const EventSchema = {
-  eventType: {
+  type: {
     type: String,
     required: true
   },

@@ -22,6 +22,8 @@ const AddButton = ({ href = '', ...props }) => (
 );
 
 export default class Home extends ReduxComponent<RouteComponentProps<any>> {
+  actions = _.pick(this.props.actions, ['createValue']);
+
   addView() {
     // TODO
     console.log('open a new view');
@@ -116,6 +118,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
             <SmartInput
               collections={collections}
               inputStyle={{ width: 230, marginBottom: 20 }}
+              actions={this.actions}
             />
             AFter
           </Flex>
