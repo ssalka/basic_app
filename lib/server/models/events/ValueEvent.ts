@@ -1,6 +1,6 @@
 import { ModelGen, types } from 'lib/server/utils';
 import Event from './Event';
-const { ObjectId, Mixed, ref } = types;
+const { Mixed, ref } = types;
 
 const ValueEventSchema = {
   metadata: {
@@ -11,8 +11,8 @@ const ValueEventSchema = {
       },
       references: {
         collection: ref('Collection'),
-        document: ObjectId, // TODO: Document model (for user documents to extend)
-        field: ObjectId // TODO: Field model (to hold type information, names, and values)
+        document: ref('Document'), // TODO: Document model (for user documents to extend)
+        field: ref('Field') // TODO: Field model (to hold type information, names, and values)
       }
     }
   }

@@ -1,7 +1,8 @@
-import * as passport from 'passport';
 import * as async from 'async';
 import * as _ from 'lodash';
 import { invoke, invokeMap } from 'lodash/fp';
+import { ObjectId } from 'mongoose/lib/types';
+import * as passport from 'passport';
 
 import { indexHtml } from '../config';
 import { logger } from 'lib/common';
@@ -9,9 +10,7 @@ import { READONLY_FIELDS } from 'lib/common/constants';
 import { ValueCommand } from 'lib/common/interfaces/events';
 import { collectionsDbName } from 'lib/server/db';
 import { User, Session, Collection, ValueEvent } from 'lib/server/models';
-import { generateToken, ModelGen, types } from 'lib/server/utils';
-
-const { ObjectId } = types;
+import { generateToken, ModelGen } from 'lib/server/utils';
 
 export const sendIndex = (_, res) => res.sendFile(indexHtml);
 
@@ -109,7 +108,7 @@ export function logout(req, res) {
 }
 
 /**
- * COLLECTION & DOCUMENT ROUTES
+ *  COLLECTION & DOCUMENT ROUTES
  */
 
 export function loadDocumentsInCollection(req, res, next) {
@@ -210,7 +209,7 @@ export function upsertDocumentInCollection(req, res, next) {
 }
 
 /**
- * VALUE ROUTES
+ *  VALUE ROUTES
  */
 
 export function createValue(req, res, next) {
