@@ -216,9 +216,11 @@ export function createValue(req, res, next) {
   ValueEvent.create(
     {
       type: ValueCommand.Create,
+      creator: req.user._id,
       metadata: {
+        // TODO: Snapshots
+        //  - add stateful Value model, call create method with req.body
         value: {
-          // IDEA: add stateful Value model, call create method with req.body
           _id: new ObjectId().toString(),
           ...req.body
         }

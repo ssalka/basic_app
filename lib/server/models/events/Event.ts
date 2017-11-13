@@ -1,6 +1,8 @@
-import { ModelGen } from 'lib/server/utils';
+import { ModelGen, types } from 'lib/server/utils';
+const { ref } = types;
 
 const EventSchema = {
+  creator: ref('User', true),
   type: {
     type: String,
     required: true
