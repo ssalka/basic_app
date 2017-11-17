@@ -222,7 +222,7 @@ export function createValue(req, res, next) {
         //  - add stateful Value model, call create method with req.body
         value: {
           _id: new ObjectId().toString(),
-          ...req.body
+          ...req.body.value
         }
       }
     },
