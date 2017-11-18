@@ -1,6 +1,7 @@
 import * as express from 'express';
-import * as middleware from './middleware';
+import { indexHtml } from '../config';
 import api from './api';
+import auth from './auth';
 
 const router = express.Router();
 
@@ -10,23 +11,8 @@ const router = express.Router();
 
 router.use('/api', api);
 
-router.get('/*', middleware.sendIndex);
+router.use(auth);
 
-router.post(
-  '/register',
-  middleware.registerUser,
-  middleware.loginUser,
-  middleware.startSession,
-  middleware.loginSuccess
-);
-
-router.post(
-  '/login',
-  middleware.loginUser,
-  middleware.startSession,
-  middleware.loginSuccess
-);
-
-router.post('/logout', middleware.closeSession, middleware.logout);
+router.get('/*', (_, res) => res.sendFile(indexHtml));
 
 export default router;
