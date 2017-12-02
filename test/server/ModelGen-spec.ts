@@ -71,8 +71,11 @@ describe('ModelGen', () => {
     it('Extends an existing model', () => {
       const BaseModel = ModelGen.generateModel(name, schema, extensions, settings);
 
-      const ExtendedModel = ModelGen.extendModel(BaseModel).as('ExtendedModel', {
-        otherField: Number
+      const ExtendedModel = ModelGen.extendModel(BaseModel, {
+        name: 'ExtendedModel',
+        schema: {
+          otherField: Number
+        }
       });
 
       const testInstance = new ExtendedModel({
