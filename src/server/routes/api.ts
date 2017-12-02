@@ -13,4 +13,5 @@ export default express
     '/collections/:collectionId/documents/:documentId',
     middleware.document.upsertDocumentInCollection
   )
+  .get('/values', middleware.value.getValues)
   .post('/values', middleware.value.createValue);
