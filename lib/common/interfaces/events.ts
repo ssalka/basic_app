@@ -1,3 +1,4 @@
-export const enum ValueCommand {
-  Create = 'CREATE_VALUE'
+export interface IEvent<P extends {} = {}> {
+  type: string;
+  payload: P;
 }

@@ -5,13 +5,21 @@ import { Flex } from 'grid-styled';
 import { EditableText } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { ViewComponent } from 'lib/client/components';
-import { Collection, Value } from 'lib/common/interfaces';
+import { Collection } from 'lib/common/interfaces';
 import { IValueAction } from 'lib/client/api/values/actions';
 
 export interface ISmartInputItem {
   type: string;
   name: string;
   resolved?: any;
+}
+
+interface IMongoDoc {
+  _model: ISmartInputItem['type'];
+  name: string; // if resolved, should be value of document at name key
+  references: {
+    [domainModel: string]: ISmartInputItem['resolved'];
+  };
 }
 
 interface ISmartInputProps extends React.HTMLProps<HTMLDivElement> {
@@ -147,14 +155,14 @@ export default class SmartInput extends ViewComponent<
       }
     } else if (_.every(otherIdentifiers, 'resolved')) {
       this.props.actions.createValue({
-        ...firstIdentifier,
+        /*...firstIdentifier,
         references: otherIdentifiers.reduce(
           (references, { resolved, type }: ISmartInputItem) => ({
             ...references,
             [type]: resolved._id
           }),
           {}
-        )
+        )*/
       });
     } else {
       // TODO: what if some identifiers are unresolved?

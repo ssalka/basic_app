@@ -1,13 +1,13 @@
 import { ObjectId } from 'mongoose/lib/types';
-import { ValueCommand } from 'lib/common/interfaces/events';
+import { ValueEventType } from 'lib/common/interfaces/value';
 import { ValueEvent } from 'lib/server/models';
 
 export function createValue(req, res, next) {
   ValueEvent.create(
     {
-      type: ValueCommand.Create,
+      type: ValueEventType.CreateRequested,
       creator: req.user._id,
-      metadata: {
+      payload: {
         // TODO: Snapshots
         //  - add stateful Value model, call create method with req.body
         value: {

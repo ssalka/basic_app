@@ -1,17 +1,17 @@
 import axios from 'axios';
 import * as _ from 'lodash';
-import { Value } from 'lib/common/interfaces';
-import { IValueAction, ValueAction } from './actions';
+import { IValue, ValueDocument, ValueEventType } from 'lib/common/interfaces';
+import { IValueAction } from './actions';
 
 interface IValueState {
-  values: Record<string, Value>;
+  values: Record<string, ValueDocument>;
   error?: {
     status: number;
     message: string;
   };
 }
 
-function addValueToStore(state, value: Value) {
+function addValueToStore(state, value: ValueDocument) {
   return _.set({ ...state }, `values['${value._id}']`, value);
 }
 
@@ -20,9 +20,9 @@ export default function valueReducer(
   { type, ...payload }: IValueAction
 ): IValueState {
   switch (type) {
-    case ValueAction.CreateSucceeded:
-      return addValueToStore(state, payload.value);
-    case ValueAction.CreateFailed:
+    case ValueEventType.CreateSucceeded:
+      return addValueToStore(state, payload.value as ValueDocument);
+    case ValueEventType.CreateFailed:
       return { ...state, error: payload.error };
     default:
       return state;
