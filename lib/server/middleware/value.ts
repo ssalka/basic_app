@@ -25,5 +25,5 @@ export const getValues: RequestHandler = (req, res, next) =>
     type: ValueEventType.CreateRequested,
     creator: req.user._id.toString()
   })
-    .then(values => res.json({ values }))
+    .then(values => res.json(values))
     .catch(next);

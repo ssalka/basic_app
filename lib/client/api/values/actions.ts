@@ -16,9 +16,9 @@ export interface IValueAction extends Action {
   };
 }
 
-export const createValue: ActionCreator<CreateValueEvent> = payload => ({
+export const createValue: ActionCreator<CreateValueEvent> = (value: IValue) => ({
   type: ValueEventType.CreateRequested,
-  payload
+  payload: { value }
 });
 
 export const getValues: ActionCreator<any> = () => ({

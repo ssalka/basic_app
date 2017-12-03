@@ -14,14 +14,6 @@ export interface ISmartInputItem {
   resolved?: any;
 }
 
-interface IMongoDoc {
-  _model: ISmartInputItem['type'];
-  name: string; // if resolved, should be value of document at name key
-  references: {
-    [domainModel: string]: ISmartInputItem['resolved'];
-  };
-}
-
 interface ISmartInputProps extends React.HTMLProps<HTMLDivElement> {
   initialWidth?: number;
   rowHeight?: number;
@@ -142,16 +134,13 @@ export default class SmartInput extends ViewComponent<
     // (this will have mostly to do with how the selection, filtering of matchedOptions occurs,
     // eg switching from collections to documents if a collection is added as an identifier)
 
-    const [
-      { resolved, ...firstIdentifier },
-      ...otherIdentifiers
-    ] = this.state.identifiers;
+    const [{ resolved, name, type }, ...otherIdentifiers] = this.state.identifiers;
 
     if (!otherIdentifiers.length) {
       if (resolved) {
         // TODO: navigate to resolved item
-      } else {
-        this.props.actions.createValue(firstIdentifier);
+      } else if (type === 'value') {
+        this.props.actions.createValue({ name });
       }
     } else if (_.every(otherIdentifiers, 'resolved')) {
       this.props.actions.createValue({

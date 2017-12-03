@@ -7,9 +7,9 @@ import { IValue, ValueEventType } from 'lib/common/interfaces';
 import { updateLibrary } from '../user/actions';
 import { IValueAction } from './actions';
 
-export function* createValue(value: IValue) {
+export function* createValue({ payload }) {
   try {
-    const { data: createdValue } = yield call(() => axios.post('/api/values', { value }));
+    const { data: createdValue } = yield call(() => axios.post('/api/values', payload));
 
     yield put(action(ValueEventType.CreateSucceeded, { value: createdValue }));
   } catch (error) {
