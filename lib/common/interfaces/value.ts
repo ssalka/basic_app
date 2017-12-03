@@ -10,7 +10,10 @@ export type ValueDocument<T = any> = IValue<T> & IDocument;
 export const enum ValueEventType {
   CreateRequested = 'CREATE_VALUE_REQUESTED',
   CreateSucceeded = 'CREATE_VALUE_SUCCEEDED',
-  CreateFailed = 'CREATE_VALUE_FAILED'
+  CreateFailed = 'CREATE_VALUE_FAILED',
+  BatchFetchRequested = 'FETCH_VALUES_REQUESTED',
+  BatchFetchSucceeded = 'FETCH_VALUES_SUCCEEDED',
+  BatchFetchFailed = 'FETCH_VALUES_FAILED'
 }
 
 export interface IIdentifier {

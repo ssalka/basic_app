@@ -9,6 +9,7 @@ import {
 
 export interface IValueAction extends Action {
   value?: IValue | ValueDocument;
+  values?: ValueDocument[];
   error?: {
     status: number;
     message: string;
@@ -20,6 +21,11 @@ export const createValue: ActionCreator<CreateValueEvent> = payload => ({
   payload
 });
 
+export const getValues: ActionCreator<any> = () => ({
+  type: ValueEventType.BatchFetchRequested
+});
+
 export default {
-  createValue
+  createValue,
+  getValues
 };

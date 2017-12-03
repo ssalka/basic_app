@@ -17,7 +17,20 @@ export function* createValue(value: IValue) {
   }
 }
 
+export function* getValues() {
+  try {
+    const { data: values } = yield call(() => axios.get('/api/values'));
+
+    yield put(action(ValueEventType.BatchFetchSucceeded, { values }));
+  } catch (error) {
+    yield put(action(ValueEventType.BatchFetchFailed, { error }));
+  }
+}
+
 export default function* valuesSaga() {
-  // @ts-ignore
-  yield takeLatest(ValueEventType.CreateRequested, createValue);
+  yield [
+    // @ts-ignore
+    takeLatest(ValueEventType.CreateRequested, createValue),
+    takeLatest(ValueEventType.BatchFetchRequested, getValues)
+  ];
 }

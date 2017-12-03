@@ -11,16 +11,21 @@ interface IValueState {
   };
 }
 
-const addValue: Reducer<IValueState, ValueDocument> = (state, value) => ({
+const addValue: Reducer<IValueState, ValueDocument | ValueDocument[]> = (
+  state,
+  value
+) => ({
   ...state,
   values: state.values.concat(value)
 });
 
 export default function valueReducer(
   state: IValueState = { values: [] },
-  { type, value, error }: IValueAction
+  { type, value, values, error }: IValueAction
 ): IValueState {
   switch (type) {
+    case ValueEventType.BatchFetchSucceeded:
+      return addValue(state, values);
     case ValueEventType.CreateSucceeded:
       return addValue(state, value as ValueDocument);
     case ValueEventType.CreateFailed:

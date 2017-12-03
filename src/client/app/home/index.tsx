@@ -22,7 +22,11 @@ const AddButton = ({ href = '', ...props }) => (
 );
 
 export default class Home extends ReduxComponent<RouteComponentProps<any>> {
-  actions = _.pick(this.props.actions, ['createValue']);
+  actions = _.pick(this.props.actions, ['createValue', 'getValues']);
+
+  componentDidMount() {
+    this.props.actions.getValues();
+  }
 
   addView() {
     // TODO
