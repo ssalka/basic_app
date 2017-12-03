@@ -17,7 +17,9 @@ export const createValue: RequestHandler = (req, res, next) =>
         }
       }
     },
-    (err, value) => (err ? next(err) : res.json(value))
+    // IDEA: create a separate success event here, and return that?
+    (err, createValueEvent) =>
+      err ? next(err) : res.json(createValueEvent.payload.value)
   );
 
 export const getValues: RequestHandler = (req, res, next) =>

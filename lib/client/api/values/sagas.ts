@@ -9,9 +9,9 @@ import { IValueAction } from './actions';
 
 export function* createValue({ payload }) {
   try {
-    const { data: createdValue } = yield call(() => axios.post('/api/values', payload));
+    const { data: value } = yield call(() => axios.post('/api/values', payload));
 
-    yield put(action(ValueEventType.CreateSucceeded, { value: createdValue }));
+    yield put(action(ValueEventType.CreateSucceeded, { value }));
   } catch (error) {
     yield put(action(ValueEventType.CreateFailed, { error }));
   }

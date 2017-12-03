@@ -124,7 +124,12 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
               inputStyle={{ width: 230, marginBottom: 20 }}
               actions={this.actions}
             />
-            AFter
+
+            <div className="pt-card pt-elevation-1">
+              {this.props.store.value.values.map(({ _id, name }) => (
+                <div key={_id}>{name}</div>
+              ))}
+            </div>
           </Flex>
 
           <FlexColumn style={{ flexGrow: 1 }}>
