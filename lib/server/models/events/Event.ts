@@ -7,8 +7,10 @@ const EventSchema = {
     type: String,
     required: true
   },
-  metadata: {
-    /* Implemented by submodels */
+  payload: {
+    type: Mixed,
+    required: true,
+    default: {}
   }
 };
 
