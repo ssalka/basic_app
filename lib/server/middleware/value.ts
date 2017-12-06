@@ -1,31 +1,28 @@
 import { RequestHandler } from 'express';
 import { ObjectId } from 'mongoose/lib/types';
-import { ValueEventType } from 'lib/common/interfaces/value';
-import { ValueEvent } from 'lib/server/models';
+import { IEvent } from 'lib/common/interfaces/events';
+import { IValue, ValueEventType } from 'lib/common/interfaces/value';
+import { Value, ValueEvent } from 'lib/server/models';
 
-export const createValue: RequestHandler = (req, res, next) =>
-  ValueEvent.create(
-    {
-      type: ValueEventType.CreateRequested,
-      creator: req.user._id,
-      payload: {
-        // TODO: Snapshots
-        //  - add stateful Value model, call create method with req.body
-        value: {
-          _id: new ObjectId().toString(),
-          ...req.body.value
-        }
-      }
-    },
-    // IDEA: create a separate success event here, and return that?
-    (err, createValueEvent) =>
-      err ? next(err) : res.json(createValueEvent.payload.value)
-  );
+export const createValue: RequestHandler = (req, res, next) => {
+  const value = new Value(req.body.value);
 
-export const getValues: RequestHandler = (req, res, next) =>
+  ValueEvent.create({
+    type: ValueEventType.CreateRequested,
+    creator: req.user._id,
+    payload: {
+      value: value.toObject()
+    }
+  })
+    .then(value => res.json(value))
+    .catch(next);
+};
+
+export const getValues: RequestHandler = (req, res, next) => {
   ValueEvent.project({
     type: ValueEventType.CreateRequested,
     creator: req.user._id.toString()
   })
     .then(values => res.json(values))
     .catch(next);
+};

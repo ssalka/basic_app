@@ -1,5 +1,5 @@
 import { ModelGen, types } from 'lib/server/utils';
-const { ref } = types;
+const { Mixed, ref } = types;
 
 const EventSchema = {
   creator: ref('User', true),
