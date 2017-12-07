@@ -82,8 +82,8 @@ export default class Table extends ViewComponent<IProps, any> {
     });
 
     return {
-      Table: () => <FilterableTable {...tableProps} />,
-      Placeholder: () => (
+      table: () => <FilterableTable {...tableProps} />,
+      placeholder: () => (
         <NonIdealState
           visual={'table' as IconName}
           title="This table has no records"
@@ -103,8 +103,8 @@ export default class Table extends ViewComponent<IProps, any> {
   }
 
   public render() {
-    const { Table, Placeholder }: IComponentModule = this.components;
-    const View: SFC = this.props.records.length ? Table : Placeholder;
+    const { table, placeholder }: IComponentModule = this.components;
+    const View: SFC = this.props.records.length ? table : placeholder;
 
     return (
       <div className="view">

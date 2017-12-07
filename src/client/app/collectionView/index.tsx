@@ -48,11 +48,11 @@ export class CollectionView extends ReduxComponent<RouteComponentProps<any>, ISt
     if (finishedLoading) {
       this.setState({ loading: false });
     } else if (collectionPathChanged) {
-      const collection = _.find(store.collection.collections, {
+      const newCollection = _.find(store.collection.collections, {
         path: match.url
       });
 
-      this.handleCollectionChange(collection);
+      this.handleCollectionChange(newCollection);
     }
   }
 

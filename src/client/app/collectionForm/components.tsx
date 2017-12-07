@@ -96,8 +96,8 @@ export const RemoveFieldButton: SFC = ({ disabled, onClick }) => (
 export const FieldOptions: SFC = ({ field, onChange, onTogglePopover }: any) => {
   const handleCheckRequired = () => onChange({ required: !field.required });
   const handleCheckIsArray = () => onChange({ isArray: !field.isArray });
-  const handleSelectView = (renderMethod: IRenderMethod) =>
-    onChange({ renderMethod: renderMethod.key });
+  const handleSelectView = (newRenderMethod: IRenderMethod) =>
+    onChange({ renderMethod: newRenderMethod.key });
   const renderMethod: IRenderMethod =
     _.find(RENDER_METHODS, { key: field.renderMethod }) || RENDER_METHODS[0];
 

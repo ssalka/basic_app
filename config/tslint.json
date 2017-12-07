@@ -25,7 +25,6 @@
     "no-angle-bracket-type-assertion": true,
     "no-console": false,
     "no-duplicate-case": true,
-    "no-shadowed-variable": false,
     "no-sparse-arrays": true,
     "no-unused-expression": true,
     "object-curly-spacing": [
