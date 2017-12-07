@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as _ from 'lodash';
+import { success, fail } from 'lib/client/services/utils';
 import { IValue, Reducer, ValueDocument, ValueEventType } from 'lib/common/interfaces';
 import { IValueAction } from './actions';
 
@@ -24,11 +25,11 @@ export default function valueReducer(
   { type, value, values, error }: IValueAction
 ): IValueState {
   switch (type) {
-    case ValueEventType.BatchFetchSucceeded:
+    case ValueEventType.Requested:
       return addValue(state, values);
-    case ValueEventType.CreateSucceeded:
+    case success(ValueEventType.Created):
       return addValue(state, value as ValueDocument);
-    case ValueEventType.CreateFailed:
+    case fail(ValueEventType.Created):
       return { ...state, error };
     default:
       return state;

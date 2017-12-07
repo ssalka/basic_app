@@ -4,6 +4,7 @@ export * from './events';
 export * from './mongo';
 export * from './react';
 export * from './redux';
+export * from './request';
 export * from './user';
 export * from './value';
 export * from './view';

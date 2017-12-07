@@ -17,12 +17,12 @@ export interface IValueAction extends Action {
 }
 
 export const createValue: ActionCreator<CreateValueEvent> = (value: IValue) => ({
-  type: ValueEventType.CreateRequested,
+  type: ValueEventType.Created,
   payload: { value }
 });
 
 export const getValues: ActionCreator<any> = () => ({
-  type: ValueEventType.BatchFetchRequested
+  type: ValueEventType.Requested
 });
 
 export default {
