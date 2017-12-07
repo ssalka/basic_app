@@ -14,7 +14,7 @@
     "npm": "^5.3.0"
   },
   "scripts": {
-    "dev": "NODE_PATH=. ts-node -P config/tsconfig.server.json index",
+    "dev": "NODE_PATH=. nodemon --config config/nodemon.json",
     "format": "prettier --config config/prettier.json --write",
     "format:all": "npm run format -- 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}'",
     "lint": "tslint -c config/tslint.json -t stylish",
