@@ -116,7 +116,7 @@ class ModelGen {
     const {
       // Unpack extensions & settings, filling in any missing defaults
       extensions: { props, options },
-      settings: { dbName, propTypes }
+      settings: { dbName }
     }: any = _.merge({}, this.defaults, { extensions, settings });
 
     // Check for cached model
@@ -137,20 +137,7 @@ class ModelGen {
       });
     }
 
-    // Set properties
-    _(props)
-      .pick(propTypes)
-      .forEach((propSet, type) => {
-        _.forEach(propSet, (prop, name) => {
-          if (ModelSchema[type][name]) {
-            return console.warn(
-              `${_.singularize(type)} '${name}' already exists on ModelSchema.${type}`
-            );
-          }
-
-          ModelSchema[type][name] = prop;
-        });
-      });
+    this.setValidatedSchemaProps(ModelSchema, props);
 
     const conn = dbName === systemDbName ? connections.app : connections.collections;
     const Model = conn.model(name, ModelSchema);
@@ -160,11 +147,30 @@ class ModelGen {
     return Model;
   }
 
-  extendModel = Base => ({
-    as(name, schema = {}, options = {}) {
-      return Base.discriminator(name, new Schema(schema, options));
-    }
-  });
+  extendModel(Base, { name, schema = {}, statics = {}, methods = {}, options = {} }) {
+    const ModelSchema = new Schema(schema, options);
+
+    // TODO: make this a pure function
+    this.setValidatedSchemaProps(ModelSchema, { statics, methods });
+
+    return Base.discriminator(name, ModelSchema);
+  }
+
+  setValidatedSchemaProps(schema, { statics, methods }) {
+    _({ statics, methods })
+      .omitBy(_.isEmpty)
+      .forEach((propSet, type) =>
+        _.forEach(propSet, (prop, name) => {
+          if (schema[type][name]) {
+            return console.warn(
+              `${_.singularize(type)} '${name}' already exists on ModelSchema.${type}`
+            );
+          }
+
+          schema[type][name] = prop;
+        })
+      );
+  }
 
   /**
    * Checks whether a collection with the given name

@@ -1,5 +1,6 @@
 import * as _ from 'lodash';
 
+import { IDocument } from './mongo';
 import { User } from './user';
 
 export interface IRenderMethod {
@@ -28,7 +29,8 @@ export class Field {
   ) {}
 }
 
-export class Collection implements IDocument {
+// TODO: fully implement IDocument interface
+export class Collection implements Pick<IDocument, '_id' | '_model'> {
   public _id: string;
   public name: string;
   public _db: string;
@@ -49,9 +51,4 @@ export class Collection implements IDocument {
   constructor(collection: Partial<Collection> = {}) {
     _.extend(this, collection);
   }
-}
-
-export interface IDocument {
-  _id: string;
-  _model: string;
 }

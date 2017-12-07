@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 
-export const { Mixed, ObjectId } = Schema.Types;
+export const Mixed = {};
 
 export const ref = (collection, required = false) => ({
   type: Schema.Types.ObjectId,

@@ -24,7 +24,7 @@ export default class extends ViewComponent<any, any> {
 
     return (
       <Popover
-        content={children}
+        content={children as JSX.Element}
         isOpen={isOpen}
         interactionKind={PopoverInteractionKind.CLICK}
         popoverClassName={`pt-popover-content-sizing ${className}`.trim()}

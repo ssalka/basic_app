@@ -5,7 +5,7 @@ import { Flex } from 'grid-styled';
 import { EditableText } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { ViewComponent } from 'lib/client/components';
-import { Collection, Value } from 'lib/common/interfaces';
+import { Collection } from 'lib/common/interfaces';
 import { IValueAction } from 'lib/client/api/values/actions';
 
 export interface ISmartInputItem {
@@ -134,27 +134,24 @@ export default class SmartInput extends ViewComponent<
     // (this will have mostly to do with how the selection, filtering of matchedOptions occurs,
     // eg switching from collections to documents if a collection is added as an identifier)
 
-    const [
-      { resolved, ...firstIdentifier },
-      ...otherIdentifiers
-    ] = this.state.identifiers;
+    const [{ resolved, name, type }, ...otherIdentifiers] = this.state.identifiers;
 
     if (!otherIdentifiers.length) {
       if (resolved) {
         // TODO: navigate to resolved item
-      } else {
-        this.props.actions.createValue(firstIdentifier);
+      } else if (type === 'value') {
+        this.props.actions.createValue({ name });
       }
     } else if (_.every(otherIdentifiers, 'resolved')) {
       this.props.actions.createValue({
-        ...firstIdentifier,
+        /*...firstIdentifier,
         references: otherIdentifiers.reduce(
           (references, { resolved, type }: ISmartInputItem) => ({
             ...references,
             [type]: resolved._id
           }),
           {}
-        )
+        )*/
       });
     } else {
       // TODO: what if some identifiers are unresolved?

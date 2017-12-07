@@ -1,12 +1,16 @@
-import { ModelGen } from 'lib/server/utils';
+import { ModelGen, types } from 'lib/server/utils';
+const { Mixed, ref } = types;
 
 const EventSchema = {
+  creator: ref('User', true),
   type: {
     type: String,
     required: true
   },
-  metadata: {
-    /* Implemented by submodels */
+  payload: {
+    type: Mixed,
+    required: true,
+    default: {}
   }
 };
 
