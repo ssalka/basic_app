@@ -25,12 +25,14 @@ export default function valueReducer(
   { type, value, values, error }: IValueAction
 ): IValueState {
   switch (type) {
-    case ValueEventType.Requested:
+    case success(ValueEventType.Requested):
       return addValue(state, values);
+
     case success(ValueEventType.Created):
       return addValue(state, value as ValueDocument);
     case fail(ValueEventType.Created):
       return { ...state, error };
+
     default:
       return state;
   }

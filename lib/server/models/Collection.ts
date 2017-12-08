@@ -104,30 +104,31 @@ const statics = {
     return this.find(query).limit(limit);
   },
   createWithView(collection, view) {
-    const Collection = this;
-
     return new Promise((resolve, reject) => {
       async.waterfall(
         [
           // Create the collection
-          cb => new Collection(collection).save((err, coll) => cb(err, coll)),
+          cb => this.bind(collection).save((err, coll) => cb(err, coll)),
           // Create a view for the collection
           (coll, cb) => {
             view.collections = [coll._id];
-            View.create(view, (err, _view) => cb(err, _view, coll));
+            View.create(view, (err, createdView) => cb(err, createdView, coll));
           },
           // Save a reference to the view in the collection
-          (view, coll, cb) => {
-            coll.defaultView = view._id;
-            coll.views = [view._id];
-            coll.save((err, _coll) => cb(err, _coll));
+          (createdView, coll, cb) => {
+            coll.defaultView = createdView._id;
+            coll.views = [createdView._id];
+            coll.save((err, createdCollection) => cb(err, createdCollection));
           },
           // Find the collection's creator
-          (coll, cb) => User.findById(coll.creator, (err, user) => cb(err, user, coll)),
+          (createdCollection, cb) =>
+            User.findById(createdCollection.creator, (err, user) =>
+              cb(err, user, createdCollection)
+            ),
           // Add the collection to the creator's library
-          (user, coll, cb) => {
-            user.library.collections.push(coll);
-            user.save(err => cb(err, coll));
+          (user, createdCollection, cb) => {
+            user.library.collections.push(createdCollection);
+            user.save(err => cb(err, createdCollection));
           }
         ],
         (err, coll) => (err ? reject(err) : resolve(coll))

@@ -130,8 +130,8 @@ class ModelGen {
       props.plugins.forEach(plugin => ModelSchema.plugin(plugin));
     }
     if (props.virtuals) {
-      _.forEach(props.virtuals, ({ getter, setter }, name) => {
-        const virtual = ModelSchema.virtual(name);
+      _.forEach(props.virtuals, ({ getter, setter }, virtualName) => {
+        const virtual = ModelSchema.virtual(virtualName);
         if (getter) virtual.get(getter);
         if (setter) virtual.set(setter);
       });
