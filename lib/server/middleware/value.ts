@@ -14,7 +14,7 @@ export const createValue: RequestHandler = (req, res, next) => {
       value: value.toObject()
     }
   })
-    .then(value => res.json(value))
+    .then(valueEvent => res.json(valueEvent))
     .catch(next);
 };
 

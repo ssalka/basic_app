@@ -69,9 +69,9 @@ export function loginSuccess(req, res, next) {
 
 export function closeSession(req, res, next) {
   Session.findByToken(req.session.token)
-    .then((session, err) => {
-      if (err || !session) {
-        return next(err || 'Session not found');
+    .then(session => {
+      if (!session) {
+        return next('Session not found');
       }
 
       async.parallel(
