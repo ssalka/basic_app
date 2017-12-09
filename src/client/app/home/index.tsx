@@ -12,7 +12,7 @@ import {
   ListView
 } from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
-import SmartInput, { ISmartInputItem } from 'lib/client/components/ui/SmartInput';
+import SmartInput from 'lib/client/components/ui/SmartInput';
 import './styles.less';
 
 const AddButton = ({ href = '', ...props }) => (

@@ -5,14 +5,8 @@ import { Flex } from 'grid-styled';
 import { EditableText } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { ViewComponent } from 'lib/client/components';
-import { Collection } from 'lib/common/interfaces';
+import { Collection, IDocument, IEntity, IPopulatedEntity } from 'lib/common/interfaces';
 import { IEntityAction } from 'lib/client/api/entities/actions';
-
-export interface ISmartInputItem {
-  type: string;
-  name: string;
-  resolved?: any;
-}
 
 interface ISmartInputProps extends React.HTMLProps<HTMLDivElement> {
   initialWidth?: number;
@@ -24,10 +18,10 @@ interface ISmartInputProps extends React.HTMLProps<HTMLDivElement> {
 
 interface ISmartInputState {
   inputValue: string;
-  identifiers: ISmartInputItem[];
-  options: ISmartInputItem[];
-  matchedOptions: ISmartInputItem[];
-  selectedOptionIndex: number;
+  selectedEntities: (IEntity | IPopulatedEntity)[];
+  entities: IPopulatedEntity[];
+  matchedEntities: IPopulatedEntity[];
+  focusedEntityIndex: number;
 }
 
 export default class SmartInput extends ViewComponent<
@@ -42,33 +36,37 @@ export default class SmartInput extends ViewComponent<
 
   state: ISmartInputState = {
     inputValue: null,
-    identifiers: [],
-    // TODO: start out also with domain objects as options - if selected, narrow options to items of that type
-    options: this.props.collections.map((collection: Collection): ISmartInputItem => ({
-      type: 'collection',
+    selectedEntities: [],
+    // TODO: create entities for each collection, use instead of actual collections; include documents
+    entities: this.props.collections.map((collection: Collection): IPopulatedEntity => ({
       name: collection.name,
-      resolved: collection
+      references: [
+        {
+          type: 'Collection',
+          value: collection as IDocument<'Collection'>
+        }
+      ]
     })),
-    matchedOptions: [],
-    selectedOptionIndex: -1
+    matchedEntities: [],
+    focusedEntityIndex: -1
   };
 
   handleChange({ target: { value } }) {
     this.setState({
       inputValue: value,
-      matchedOptions: value ? this.state.options.filter(this.matchAgainst(value)) : []
+      matchedEntities: value ? this.state.entities.filter(this.matchAgainst(value)) : []
     });
   }
 
-  getNewIdentifier(event): ISmartInputItem {
-    if (this.state.selectedOptionIndex >= 0) {
-      return this.state.matchedOptions[this.state.selectedOptionIndex];
-    } else if (this.state.matchedOptions.length === 1) {
-      return this.state.matchedOptions[0];
+  getNewEntity(event): IEntity | IPopulatedEntity {
+    if (this.state.focusedEntityIndex >= 0) {
+      return this.state.matchedEntities[this.state.focusedEntityIndex];
+    } else if (this.state.matchedEntities.length === 1) {
+      return this.state.matchedEntities[0];
     } else {
       return {
-        type: 'value',
-        name: event.target.value
+        name: event.target.value,
+        references: []
       };
     }
   }
@@ -96,14 +94,14 @@ export default class SmartInput extends ViewComponent<
   handleTabKeyEvent(event, cb = _.noop) {
     if (!this.state.inputValue) return;
 
-    const newIdentifier = this.getNewIdentifier(event);
+    const newEntity = this.getNewEntity(event);
 
     this.setState(
       {
         inputValue: '',
-        matchedOptions: [],
-        identifiers: this.state.identifiers.concat(newIdentifier),
-        selectedOptionIndex: -1
+        matchedEntities: [],
+        selectedEntities: this.state.selectedEntities.concat(newEntity),
+        focusedEntityIndex: -1
       },
       cb
     );
@@ -111,88 +109,84 @@ export default class SmartInput extends ViewComponent<
 
   handleArrowKeyEvent(event) {
     event.preventDefault();
-    this.setSelectedOptionIndex(this.state, event);
+    this.setFocusedEntityIndex(this.state, event);
   }
 
-  setSelectedOptionIndex = (
-    { matchedOptions, selectedOptionIndex }: ISmartInputState,
+  setFocusedEntityIndex = (
+    { matchedEntities, focusedEntityIndex }: ISmartInputState,
     { keyCode }
   ) =>
     this.setState({
-      selectedOptionIndex:
-        (matchedOptions.length + selectedOptionIndex + (keyCode - 39)) %
-        matchedOptions.length
+      focusedEntityIndex:
+        (matchedEntities.length + focusedEntityIndex + (keyCode - 39)) %
+        matchedEntities.length
     });
 
   matchAgainst = _.curry(
-    (value: string, item: ISmartInputItem): boolean =>
-      !!value && _.at(item, 'name', 'type').some(entitiesMatch(value))
+    (value: string, entity: IPopulatedEntity): boolean =>
+      !!value &&
+      _(entity.references)
+        .map('name')
+        .concat(entity.name)
+        .some(entitiesMatch(value))
   );
 
   handleSubmit() {
-    // TODO: put more constraints on which combinations of identifiers are valid
-    // (this will have mostly to do with how the selection, filtering of matchedOptions occurs,
-    // eg switching from collections to documents if a collection is added as an identifier)
+    // TODO: put more constraints on which combinations of entities are valid
+    // (this will have mostly to do with how the selection, filtering of matchedEntities occurs,
+    // eg switching from collections to documents if a collection entity is added)
 
-    const [{ resolved, name, type }, ...otherIdentifiers] = this.state.identifiers;
+    const [firstEntity, ...otherEntities] = this.state.selectedEntities;
 
-    if (!otherIdentifiers.length) {
-      if (resolved) {
-        // TODO: navigate to resolved item
-      } else if (type === 'value') {
-        this.props.actions.createEntity({ name });
-      }
-    } else if (_.every(otherIdentifiers, 'resolved')) {
-      this.props.actions.createEntity({
-        /*...firstIdentifier,
-        references: otherIdentifiers.reduce(
-          (references, { resolved, type }: ISmartInputItem) => ({
-            ...references,
-            [type]: resolved._id
-          }),
-          {}
-        )*/
-      });
+    if (!firstEntity) {
+      return; // TODO: show a tooltip describing how to use SmartInput
+    }
+
+    if (otherEntities.length) {
+      // TODO: create entity in accordance with references of other entities
+    } else if (_.isEmpty(firstEntity.references)) {
+      this.props.actions.createEntity(firstEntity);
     } else {
-      // TODO: what if some identifiers are unresolved?
-      // IDEA: assume it's a subset of last identifier
-      //   - eg add collection -> next identifier is a document)
-      //   - eg add document -> next identifier is a field)
-      console.log('unresolved identifiers:', _.reject(otherIdentifiers, 'resolved'));
+      return; // TODO: select a reference to navigate to
     }
 
     this.setState({
       inputValue: null,
-      identifiers: [],
-      matchedOptions: [],
-      selectedOptionIndex: -1
+      selectedEntities: [],
+      matchedEntities: [],
+      focusedEntityIndex: -1
     });
   }
 
   render() {
     const { initialWidth, rowHeight, inputStyle, style, ...props } = this.props;
-    const { identifiers, inputValue, matchedOptions, selectedOptionIndex } = this.state;
+    const {
+      selectedEntities,
+      inputValue,
+      matchedEntities,
+      focusedEntityIndex
+    } = this.state;
     const borderRadius = rowHeight / 2;
 
     return (
       <StyledSmartInput rowHeight={rowHeight} style={{ position: 'relative', ...style }}>
-        {!!matchedOptions.length && (
+        {!!matchedEntities.length && (
           <Flex
             // TODO: replace with react-virtualized-select (need labelKey)
-            className="options pt-callout pt-elevation-2"
+            className="entities pt-callout pt-elevation-2"
             align="stretch"
             column={true}
-            style={{ top: identifiers.length * rowHeight }}
+            style={{ top: selectedEntities.length * rowHeight }}
           >
-            {[{ type: inputValue }]
-              .concat(matchedOptions)
-              .map((item: Partial<ISmartInputItem>, i) => (
+            {[{ name: inputValue }]
+              .concat(matchedEntities)
+              .map((entity: Partial<IEntity>, i) => (
                 <div
-                  className={`option row ${i && i - 1 === selectedOptionIndex
+                  className={`option row ${i && i - 1 === focusedEntityIndex
                     ? 'selected'
                     : ''}`}
                 >
-                  {item.name}
+                  {entity.name}
                 </div>
               ))}
           </Flex>
@@ -212,7 +206,7 @@ export default class SmartInput extends ViewComponent<
             ...inputStyle
           }}
         >
-          {identifiers.map(({ type, name, resolved }, i) => (
+          {selectedEntities.map(({ name, references }, i) => (
             <Flex
               className="identifier row"
               align="center"
@@ -221,10 +215,10 @@ export default class SmartInput extends ViewComponent<
               key={i}
             >
               <span className="pt-tag" style={{ marginRight: 5 }}>
-                {_.capitalize(resolved ? resolved._model : type)}
+                {_.isEmpty(references) ? 'Entity' : _.capitalize(references[0].type)}
               </span>
 
-              <span>{resolved ? resolved.name : name}</span>
+              <span>{name}</span>
             </Flex>
           ))}
 
@@ -237,7 +231,7 @@ export default class SmartInput extends ViewComponent<
             onKeyDown={this.handleKeyDown}
             onKeyUp={this.handleKeyUp}
             style={{
-              borderRadius: identifiers.length
+              borderRadius: selectedEntities.length
                 ? `0 0 ${borderRadius}px ${borderRadius}px`
                 : borderRadius
             }}
@@ -294,7 +288,7 @@ const StyledSmartInput: any = styled.div`
     }
   }
 
-  .options {
+  .entities {
     z-index: 0;
     position: absolute;
     top: 0;

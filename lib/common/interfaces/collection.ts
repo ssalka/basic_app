@@ -46,7 +46,9 @@ export class Collection implements Pick<IDocument, '_id' | '_model'> {
   public typeFormats: {
     pascalCase: string;
   };
-  public _model: string;
+  public _model: 'Collection';
+  public createdAt?;
+  public updatedAt?;
 
   constructor(collection: Partial<Collection> = {}) {
     _.extend(this, collection);
