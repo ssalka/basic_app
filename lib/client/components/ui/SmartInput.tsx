@@ -6,7 +6,7 @@ import { EditableText } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { ViewComponent } from 'lib/client/components';
 import { Collection } from 'lib/common/interfaces';
-import { IValueAction } from 'lib/client/api/values/actions';
+import { IEntityAction } from 'lib/client/api/entities/actions';
 
 export interface ISmartInputItem {
   type: string;
@@ -19,7 +19,7 @@ interface ISmartInputProps extends React.HTMLProps<HTMLDivElement> {
   rowHeight?: number;
   collections: Collection[];
   inputStyle?: React.CSSProperties;
-  actions: Record<string, ActionCreator<IValueAction>>;
+  actions: Record<string, ActionCreator<IEntityAction>>;
 }
 
 interface ISmartInputState {
@@ -126,7 +126,7 @@ export default class SmartInput extends ViewComponent<
 
   matchAgainst = _.curry(
     (value: string, item: ISmartInputItem): boolean =>
-      !!value && _.at(item, 'name', 'type').some(valuesMatch(value))
+      !!value && _.at(item, 'name', 'type').some(entitiesMatch(value))
   );
 
   handleSubmit() {
@@ -140,10 +140,10 @@ export default class SmartInput extends ViewComponent<
       if (resolved) {
         // TODO: navigate to resolved item
       } else if (type === 'value') {
-        this.props.actions.createValue({ name });
+        this.props.actions.createEntity({ name });
       }
     } else if (_.every(otherIdentifiers, 'resolved')) {
-      this.props.actions.createValue({
+      this.props.actions.createEntity({
         /*...firstIdentifier,
         references: otherIdentifiers.reduce(
           (references, { resolved, type }: ISmartInputItem) => ({
@@ -253,7 +253,7 @@ const isEnterKeyEvent = (event): boolean => event.keyCode === 13;
 const isUpArrowKeyEvent = (event): boolean => event.keyCode === 38;
 const isDownArrowKeyEvent = (event): boolean => event.keyCode === 40;
 
-const valuesMatch = _.curry(
+const entitiesMatch = _.curry(
   (val1: string = '', val2: string = ''): boolean =>
     !!val1 && val2.toLowerCase().includes(val1.toLowerCase())
 );
