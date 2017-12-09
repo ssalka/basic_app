@@ -25,7 +25,9 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
   actions = _.pick(this.props.actions, ['createEntity', 'getEntities']);
 
   componentDidMount() {
-    this.props.actions.getEntities();
+    if (_.isEmpty(this.props.store.entity.entities)) {
+      this.props.actions.getEntities();
+    }
   }
 
   addView() {
