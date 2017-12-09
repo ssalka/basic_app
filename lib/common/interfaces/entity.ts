@@ -1,22 +1,31 @@
 import { IEvent } from './events';
 import { ID, IDocument } from './mongo';
 
-export interface IEntity<T = any> {
-  value: T;
+export interface IReference {
+  type: string;
+  value: ID;
 }
 
-export type EntityDocument<T = any> = IEntity<T> & IDocument;
+export interface IPopulatedReference<Ref extends IReference = IReference> {
+  type: string;
+  value: IDocument<Ref['value']>;
+}
+
+export interface IEntity {
+  name: string;
+  references: IReference[];
+}
+
+export interface IPopulatedEntity {
+  name: string;
+  references: IPopulatedReference[];
+}
+
+export type EntityDocument = IEntity & IDocument<'Entity'>;
 
 export const enum EntityEventType {
   Created = 'ENTITY_CREATED',
   Requested = 'ENTITIES_REQUESTED'
-}
-
-export interface IIdentifier {
-  name: string; // if resolved, should be value of document at name key
-  references: {
-    [domainModel: string]: ID | IDocument;
-  };
 }
 
 export type CreateEntityEvent = IEvent<IEntity>;
