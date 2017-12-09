@@ -18,7 +18,7 @@ export interface IEntityAction extends Action {
 
 export const createEntity: ActionCreator<CreateEntityEvent> = (entity: IEntity) => ({
   type: EntityEventType.Created,
-  payload: { entity }
+  payload: entity
 });
 
 export const getEntities: ActionCreator<any> = () => ({

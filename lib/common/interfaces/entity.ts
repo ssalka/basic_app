@@ -19,6 +19,6 @@ export interface IIdentifier {
   };
 }
 
-export type CreateEntityEvent = IEvent<{ entity: IEntity }>;
+export type CreateEntityEvent = IEvent<IEntity>;
 
 export type EntityEvent = CreateEntityEvent;

@@ -5,7 +5,7 @@ import { IEntity, EntityEventType } from 'lib/common/interfaces/entity';
 import { Entity, EntityEvent } from 'lib/server/models';
 
 export const createEntity: RequestHandler = (req, res, next) => {
-  const entity = new Entity(req.body.entity);
+  const entity = new Entity(req.body);
 
   EntityEvent.create({
     type: EntityEventType.Created,
