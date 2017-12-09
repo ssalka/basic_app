@@ -35,7 +35,7 @@ export default class SmartInput extends ViewComponent<
   };
 
   state: ISmartInputState = {
-    inputValue: null,
+    inputValue: '',
     selectedEntities: [],
     // TODO: create entities for each collection, use instead of actual collections; include documents
     entities: this.props.collections.map((collection: Collection): IPopulatedEntity => ({
@@ -151,7 +151,7 @@ export default class SmartInput extends ViewComponent<
     }
 
     this.setState({
-      inputValue: null,
+      inputValue: '',
       selectedEntities: [],
       matchedEntities: [],
       focusedEntityIndex: -1
@@ -182,6 +182,7 @@ export default class SmartInput extends ViewComponent<
               .concat(matchedEntities)
               .map((entity: Partial<IEntity>, i) => (
                 <div
+                  key={i}
                   className={`option row ${i && i - 1 === focusedEntityIndex
                     ? 'selected'
                     : ''}`}

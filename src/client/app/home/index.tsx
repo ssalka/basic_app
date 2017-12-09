@@ -126,8 +126,8 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
             />
 
             <div className="pt-card pt-elevation-1">
-              {this.props.store.entity.entities.map(({ _id, name }) => (
-                <div key={_id}>{name}</div>
+              {this.props.store.entity.entities.map(({ _id, name }, i) => (
+                <div key={i}>{name}</div>
               ))}
             </div>
           </Flex>

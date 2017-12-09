@@ -72,7 +72,7 @@ export default class Login extends ReduxComponent<RouteComponentProps<any>, ISta
       props.type = name;
     }
 
-    return <InputGroup {...props} />;
+    return <InputGroup key={name} {...props} />;
   }
 
   get text() {

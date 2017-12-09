@@ -33,8 +33,8 @@ export const ListView: React.SFC<IListViewProps> = ({
       .map(
         ({ link, ...listViewProps }: IListViewProps['keys'], i: number): JSX.Element =>
           link ? (
-            <Link to={link} style={{ ...itemStyle, margin: 5 }}>
-              <SimpleView key={i} {...listViewProps} />
+            <Link key={i} to={link} style={{ ...itemStyle, margin: 5 }}>
+              <SimpleView {...listViewProps} />
             </Link>
           ) : (
             <SimpleView key={i} p={5} style={itemStyle} {...listViewProps} />

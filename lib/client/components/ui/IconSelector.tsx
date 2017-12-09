@@ -45,7 +45,7 @@ export default class IconSelector extends ViewComponent<IProps, IState> {
         <h5>{_.capitalize(name)}</h5>
         <FlexRow justifyContent="flex-start" flexWrap={true}>
           {icons.map((icon: IIcon) => (
-            <Icon name={icon.id} onClick={getIconSetter(icon)} />
+            <Icon key={icon.id} name={icon.id} onClick={getIconSetter(icon)} />
           ))}
         </FlexRow>
       </div>
