@@ -14,7 +14,7 @@ export const createEntity: RequestHandler = (req, res, next) => {
       entity: entity.toObject()
     }
   })
-    .then(entityEvent => res.json(entityEvent))
+    .then(entityEvent => res.json(entityEvent.payload.entity))
     .catch(next);
 };
 
