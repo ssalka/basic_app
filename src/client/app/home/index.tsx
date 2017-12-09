@@ -12,7 +12,7 @@ import {
   ListView
 } from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
-import SmartInput, { ISmartInputItem } from 'lib/client/components/ui/SmartInput';
+import SmartInput from 'lib/client/components/ui/SmartInput';
 import './styles.less';
 
 const AddButton = ({ href = '', ...props }) => (
@@ -22,10 +22,10 @@ const AddButton = ({ href = '', ...props }) => (
 );
 
 export default class Home extends ReduxComponent<RouteComponentProps<any>> {
-  actions = _.pick(this.props.actions, ['createValue', 'getValues']);
+  actions = _.pick(this.props.actions, ['createEntity', 'getEntities']);
 
   componentDidMount() {
-    this.props.actions.getValues();
+    this.props.actions.getEntities();
   }
 
   addView() {
@@ -126,7 +126,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
             />
 
             <div className="pt-card pt-elevation-1">
-              {this.props.store.value.values.map(({ _id, name }) => (
+              {this.props.store.entity.entities.map(({ _id, name }) => (
                 <div key={_id}>{name}</div>
               ))}
             </div>

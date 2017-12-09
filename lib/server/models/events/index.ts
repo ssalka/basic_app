@@ -1,4 +1,4 @@
 import Event from './Event';
-import ValueEvent from './ValueEvent';
+import EntityEvent from './EntityEvent';
 
-export { Event, ValueEvent };
+export { Event, EntityEvent };

@@ -1,8 +1,8 @@
 export type ID = string;
 
-export interface IDocument {
+export interface IDocument<ModelName = string> {
   _id: ID;
-  _model: string;
+  _model: ModelName;
   updatedAt: string;
   createdAt: string;
 }
