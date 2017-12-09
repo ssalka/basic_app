@@ -50,28 +50,6 @@ describe('CollectionFormHeader', () => {
     expect(iconElement.prop('className')).toContain(`pt-icon-${testCollection.icon}`);
   });
 
-  it('updates the collection name', () => {
-    const newName = 'New Collection Name';
-
-    nameElement
-      .simulate('focus')
-      .find('input')
-      .simulate('change', targetValue(newName));
-
-    expect(nameElement.text()).toBe(newName);
-  });
-
-  it('updates the collection description', () => {
-    const newDescription = 'Updated collection description';
-
-    descriptionElement
-      .simulate('focus')
-      .find('textarea')
-      .simulate('change', targetValue(newDescription));
-
-    expect(descriptionElement.find('textarea').text()).toBe(newDescription);
-  });
-
   xit('updates the collection icon', () => {
     // TODO - how to access popover content?
     // (rendered in a separate react-root element)
