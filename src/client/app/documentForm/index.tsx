@@ -132,10 +132,22 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
     // TODO: support more input types, eg textarea, date/time picker, ...
     switch (field.type) {
       case 'NUMBER':
-        return <NumericInput value={inputValue} onChange={this.updateField(field)} />;
+        return (
+          <NumericInput
+            key={field.name}
+            value={inputValue}
+            onChange={this.updateField(field)}
+          />
+        );
       case 'STRING':
       default:
-        return <TextInput value={inputValue} onChange={this.updateField(field)} />;
+        return (
+          <TextInput
+            key={field.name}
+            value={inputValue}
+            onChange={this.updateField(field)}
+          />
+        );
     }
   };
 
@@ -153,8 +165,8 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
             </div>
             <div className="form-main">
               <div className="fields">
-                {collection.fields.map((field: Field) => (
-                  <FlexColumn className="document-field" key={field.name}>
+                {collection.fields.map((field: Field, i) => (
+                  <FlexColumn className="document-field" key={i}>
                     <label className="pt-label pt-inline">
                       <strong className="field-name">{field.name}</strong>
 

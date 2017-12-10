@@ -23,8 +23,9 @@ export default class ViewSelect extends ViewComponent<IProps, {}> {
 
     return (
       <Menu>
-        {this.props.renderMethods.map((renderMethod: IRenderMethod) => (
+        {this.props.renderMethods.map((renderMethod: IRenderMethod, i: number) => (
           <MenuItem
+            key={i}
             className={
               _.isEqual(renderMethod, this.props.selectedView) &&
               'pt-active pt-intent-primary'

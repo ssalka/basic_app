@@ -44,10 +44,6 @@ const config = {
     extensions: ['', '.ts', '.tsx', '.js']
   },
   plugins: [
-    new webpack.DefinePlugin({
-      // So react doesn't complain about being minified
-      'process.env': { NODE_ENV: '"production"' }
-    }),
     new webpack.HotModuleReplacementPlugin(),
     new CopyWebpackPlugin([
       { from: 'src/client/index.html' },

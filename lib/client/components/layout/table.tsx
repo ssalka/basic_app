@@ -72,15 +72,6 @@ export default class Table extends ViewComponent<IProps, any> {
       data: records
     };
 
-    // Bug in react-filterable-table: tableClassName prop doesn't get set
-    // NOTE: project ^ appears to be in its infancy...consider alternatives
-    setTimeout(() => {
-      const table: Element = document.querySelector('.table');
-      tableProps.tableClassName
-        .split(' ')
-        .map((className: string) => table.classList.add(className));
-    });
-
     return {
       table: () => <FilterableTable {...tableProps} />,
       placeholder: () => (
