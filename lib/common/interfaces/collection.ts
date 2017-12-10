@@ -41,6 +41,7 @@ export class Collection implements Pick<IDocument, '_id' | '_model'> {
   public icon?: string;
   public path: string;
   public slug?: string;
+  public public?: boolean;
   public defaultView?: any;
   public views: any[];
   public typeFormats: {
