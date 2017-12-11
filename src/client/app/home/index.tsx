@@ -40,7 +40,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
       'Use Collections to describe and organize your data. Import or sync with any source.';
 
     return (
-      <div className="pt-callout pt-elevation-1" style={{ height: 250 }}>
+      <div className="collections pt-callout pt-elevation-1">
         {collections.length ? (
           <div>
             <FlexRow>
@@ -82,7 +82,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
       'Views allows you to define new visual representations of your data.';
 
     return (
-      <div className="pt-callout pt-elevation-1" style={{ height: 250 }}>
+      <div className="views pt-callout pt-elevation-1">
         {views.length ? (
           <div>
             <FlexRow>
@@ -114,32 +114,24 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
     });
 
     return (
-      <Flex column={true} id="home" className="container list-view">
-        <FlexRow>
-          <h2 className="view-title">Library</h2>
-        </FlexRow>
+      <div id="home" className="container">
+        <h2 className="title">Library</h2>
 
-        <Flex justify="space-between">
-          <Flex column={true} pr={20}>
-            <SmartInput
-              collections={collections}
-              inputStyle={{ width: 230, marginBottom: 20 }}
-              actions={this.actions}
-            />
+        <SmartInput
+          collections={collections}
+          inputStyle={{ width: '100%' }}
+          actions={this.actions}
+        />
 
-            <div className="pt-card pt-elevation-1">
-              {this.props.store.entity.entities.map(({ _id, name }, i) => (
-                <div key={i}>{name}</div>
-              ))}
-            </div>
-          </Flex>
+        <div className="entities pt-card pt-elevation-1">
+          {this.props.store.entity.entities.map(({ _id, name }, i) => (
+            <div key={i}>{name}</div>
+          ))}
+        </div>
 
-          <FlexColumn style={{ flexGrow: 1 }}>
-            {this.renderCollections(collections)}
-            {this.renderViews(views)}
-          </FlexColumn>
-        </Flex>
-      </Flex>
+        {this.renderCollections(collections)}
+        {this.renderViews(views)}
+      </div>
     );
   }
 }
