@@ -2,26 +2,30 @@
   display: grid;
   grid-template-areas:
     "title       ."
-    "smart-input collections"
     "entities    collections"
     "entities    views";
-  grid-template-rows: 30px auto fit-content(230px) fit-content(230px);
+  grid-template-rows: 30px repeat(2, minmax(200px, 1fr));
   grid-template-columns: 230px auto;
   grid-gap: 1em;
+  max-height: 100%;
+  max-width: 100%;
 
   .title {
     grid-area: title;
   }
 
-  .smart-input {
-    grid-area: smart-input;
-  }
-
   .entities {
     grid-area: entities;
-    padding: 10px;
 
-    * {
+    .smart-input {
+      margin-bottom: 10px;
+    }
+
+    .pt-callout {
+      overflow-y: auto;
+    }
+
+    .pt-editable-text {
       display: block;
 
       &:not(:last-of-type) {
@@ -32,6 +36,20 @@
 
   .collections {
     grid-area: collections;
+
+    display: grid;
+    align-items: stretch;
+    justify-content: stretch;
+    grid-template-rows: 40px auto;
+    grid-template-columns: auto 50px;
+
+    padding: 0;
+    padding-left: 5px;
+
+    h4 {
+      margin: 0;
+      margin-left: 5px;
+    }
   }
 
   .views {

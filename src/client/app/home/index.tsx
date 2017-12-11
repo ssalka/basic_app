@@ -15,8 +15,8 @@ import { Collection, ReactElement } from 'lib/common/interfaces';
 import SmartInput from 'lib/client/components/ui/SmartInput';
 import './styles.less';
 
-const AddButton = ({ href = '', ...props }) => (
-  <Link to={href}>
+const AddButton = ({ href = '', style = {}, ...props }) => (
+  <Link to={href} style={style}>
     <Button icon="add" minimal={true} rounded={true} {...props} />
   </Link>
 );
@@ -42,13 +42,15 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
     return (
       <div className="collections pt-callout pt-elevation-1">
         {collections.length ? (
-          <div>
-            <FlexRow>
-              <h4>
-                Collections <span className="muted">({collections.length})</span>
-              </h4>
-              <AddButton href="collections/add" />
-            </FlexRow>
+          <React.Fragment>
+            <h4 style={{ alignSelf: 'center' }}>
+              Collections <span className="muted">({collections.length})</span>
+            </h4>
+
+            <AddButton
+              href="collections/add"
+              style={{ alignSelf: 'center', justifySelf: 'center' }}
+            />
 
             <ListView
               items={collections}
@@ -56,13 +58,14 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
                 primary: 'name',
                 link: 'path'
               }}
-              pl={20}
               style={{
                 maxHeight: 200,
-                overflow: 'auto'
+                overflow: 'auto',
+                gridColumn: '1 / 3',
+                gridRow: 2
               }}
             />
-          </div>
+          </React.Fragment>
         ) : (
           <NonIdealState
             visual="graph"
@@ -117,22 +120,24 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
       <div id="home" className="container">
         <h2 className="title">Library</h2>
 
-        <SmartInput
-          collections={collections}
-          inputStyle={{ width: '100%' }}
-          actions={this.actions}
-        />
+        <Flex column={true} align="stretch" justify="space-between" className="entities">
+          <SmartInput
+            collections={collections}
+            inputStyle={{ width: '100%' }}
+            actions={this.actions}
+          />
 
-        <div className="entities pt-callout pt-elevation-1">
-          {this.props.store.entity.entities.map(({ _id, name }, i) => (
-            <EditableText
-              key={i}
-              placeholder="New Entity"
-              value={name}
-              onChange={console.log}
-            />
-          ))}
-        </div>
+          <div className="pt-callout pt-elevation-1">
+            {this.props.store.entity.entities.map(({ _id, name }, i) => (
+              <EditableText
+                key={i}
+                placeholder="New Entity"
+                value={name}
+                onChange={console.log}
+              />
+            ))}
+          </div>
+        </Flex>
 
         {this.renderCollections(collections)}
         {this.renderViews(views)}
