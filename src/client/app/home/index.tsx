@@ -3,7 +3,7 @@ import { Flex } from 'grid-styled';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
-import { NonIdealState } from '@blueprintjs/core';
+import { EditableText, NonIdealState } from '@blueprintjs/core';
 import {
   ReduxComponent,
   FlexRow,
@@ -123,9 +123,14 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
           actions={this.actions}
         />
 
-        <div className="entities pt-card pt-elevation-1">
+        <div className="entities pt-callout pt-elevation-1">
           {this.props.store.entity.entities.map(({ _id, name }, i) => (
-            <div key={i}>{name}</div>
+            <EditableText
+              key={i}
+              placeholder="New Entity"
+              value={name}
+              onChange={console.log}
+            />
           ))}
         </div>
 
