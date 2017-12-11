@@ -1,48 +1,32 @@
-@import "~lib/client/styles/colors";
-
 #home {
-  height: 100%;
+  display: grid;
+  grid-template-areas:
+    "title       ."
+    "smart-input collections"
+    "entities    collections"
+    "entities    views";
+  grid-template-rows: 30px auto fit-content(230px) fit-content(230px);
+  grid-template-columns: 230px auto;
+  grid-gap: 1em;
 
-  .view-title {
-    margin-bottom: 20px;
+  .title {
+    grid-area: title;
   }
 
-  .pt-callout {
-    padding: 0;
-    overflow: hidden;
-
-    &:not(:last-of-type) {
-      margin-bottom: 20px;
-    }
-
-    .flex-row {
-      padding: 10px 10px 10px 20px;
-
-      h4 {
-        display: inline-block;
-        margin: 0;
-        line-height: 30px;
-      }
-    }
-
-    .scroll {
-      max-height: 30vh;
-      width: 100%;
-
-      &.container {
-        padding: 0 20px 20px;
-      }
-    }
-
-    p:last-of-type {
-      margin-bottom: 0;
-    }
+  .smart-input {
+    grid-area: smart-input;
   }
 
-  .pt-non-ideal-state {
-    max-width: 300px;
-    height: 100%;
-    margin-top: 20px;
-    margin-bottom: 20px;
+  .entities {
+    grid-area: entities;
+    padding: 10px;
+  }
+
+  .collections {
+    grid-area: collections;
+  }
+
+  .views {
+    grid-area: views;
   }
 }

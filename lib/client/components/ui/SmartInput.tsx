@@ -159,7 +159,14 @@ export default class SmartInput extends ViewComponent<
   }
 
   render() {
-    const { initialWidth, rowHeight, inputStyle, style, ...props } = this.props;
+    const {
+      className = '',
+      initialWidth,
+      rowHeight,
+      inputStyle,
+      style,
+      ...props
+    } = this.props;
     const {
       selectedEntities,
       inputValue,
@@ -169,7 +176,11 @@ export default class SmartInput extends ViewComponent<
     const borderRadius = rowHeight / 2;
 
     return (
-      <StyledSmartInput rowHeight={rowHeight} style={{ position: 'relative', ...style }}>
+      <StyledSmartInput
+        rowHeight={rowHeight}
+        className={`${className} smart-input`}
+        style={{ position: 'relative', ...style }}
+      >
         {!!matchedEntities.length && (
           <Flex
             // TODO: replace with react-virtualized-select (need labelKey)
