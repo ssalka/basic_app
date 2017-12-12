@@ -7,9 +7,9 @@ import { EditableText, NonIdealState } from '@blueprintjs/core';
 import {
   ReduxComponent,
   FlexRow,
-  FlexColumn,
   Button,
-  ListView
+  ListView,
+  EntityList
 } from 'lib/client/components';
 import { Collection, ReactElement } from 'lib/common/interfaces';
 import SmartInput from 'lib/client/components/ui/SmartInput';
@@ -23,12 +23,6 @@ const AddButton = ({ href = '', style = {}, ...props }) => (
 
 export default class Home extends ReduxComponent<RouteComponentProps<any>> {
   actions = _.pick(this.props.actions, ['createEntity', 'getEntities']);
-
-  componentDidMount() {
-    if (_.isEmpty(this.props.store.entity.entities)) {
-      this.props.actions.getEntities();
-    }
-  }
 
   addView() {
     // TODO
@@ -127,16 +121,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
             actions={this.actions}
           />
 
-          <div className="pt-callout pt-elevation-1">
-            {this.props.store.entity.entities.map(({ _id, name }, i) => (
-              <EditableText
-                key={i}
-                placeholder="New Entity"
-                value={name}
-                onChange={console.log}
-              />
-            ))}
-          </div>
+          <EntityList />
         </Flex>
 
         {this.renderCollections(collections)}

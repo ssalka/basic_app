@@ -21,15 +21,23 @@
       margin-bottom: 10px;
     }
 
-    .pt-callout {
-      overflow-y: auto;
-    }
+    .entity-list {
+      flex-grow: 1;
+      padding: 0;
+      padding-top: 10px;
 
-    .pt-editable-text {
-      display: block;
+      & > * {
+        padding-left: 10px;
+      }
 
-      &:not(:last-of-type) {
-        margin-bottom: 10px;
+      .pt-editable-text {
+        display: block;
+        margin-top: 10px;
+        width: 85%;
+
+        &:last-of-type {
+          margin-bottom: 10px;
+        }
       }
     }
   }

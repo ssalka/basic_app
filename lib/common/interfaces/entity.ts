@@ -23,6 +23,8 @@ export interface IPopulatedEntity {
 
 export type EntityDocument = IEntity & IDocument<'Entity'>;
 
+export type PopulatedEntityDocument = IEntity & IDocument<'Entity'>;
+
 export const enum EntityEventType {
   Created = 'ENTITY_CREATED',
   Requested = 'ENTITIES_REQUESTED'
