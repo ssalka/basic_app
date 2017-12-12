@@ -1,4 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
+import * as _ from 'lodash';
+import { connect as reduxConnect } from 'react-redux';
+import { ActionCreator, AnyAction, bindActionCreators } from 'redux';
 import { call, CallEffect, put, PutEffect } from 'redux-saga/effects';
 
 import { Action } from 'lib/common/interfaces/redux';
@@ -37,3 +40,19 @@ export const saga = {
     return put(action(fail(eventType), payload));
   }
 };
+
+interface IConnectConfig {
+  store?: string;
+  stores?: string[];
+  actions?: Record<string, ActionCreator<AnyAction>>;
+}
+
+// TODO: support passing action string names, option validation
+export const connect = (config: IConnectConfig) =>
+  reduxConnect(
+    state =>
+      config.store
+        ? state[config.store]
+        : config.stores ? _.pick(state, config.stores) : {},
+    dispatch => bindActionCreators(config.actions, dispatch)
+  );
