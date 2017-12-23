@@ -2,13 +2,14 @@ import axios from 'axios';
 import * as _ from 'lodash';
 import { success, fail } from 'lib/client/services/utils';
 import {
+  Action,
   IEntity,
+  IErrorPayload,
   Reducer,
   EntityDocument,
   EntityEventType,
   RequestStatus
 } from 'lib/common/interfaces';
-import { IEntityAction } from './actions';
 
 interface IEntityState {
   entities: EntityDocument[];
@@ -18,14 +19,20 @@ interface IEntityState {
   };
 }
 
-type AddEntityReducer = Reducer<IEntityState, Pick<IEntityAction, 'entity' | 'entities'>>;
+type AddEntityReducer = Reducer<
+  IEntityState,
+  {
+    entity?: EntityDocument;
+    entities?: EntityDocument[];
+  }
+>;
 
 const addEntity: AddEntityReducer = (state, { entity, entities }) => ({
   ...state,
   entities: state.entities.concat(entities || (entity as EntityDocument))
 });
 
-type UpdateEntityReducer = Reducer<IEntityState, Pick<IEntityAction, 'entity'>>;
+type UpdateEntityReducer = Reducer<IEntityState, { entity: EntityDocument }>;
 
 const updateEntity: UpdateEntityReducer = (state, { entity }) => {
   const entityIndex = _.findIndex(state.entities, _.pick(entity, '_id'));
@@ -40,7 +47,7 @@ const updateEntity: UpdateEntityReducer = (state, { entity }) => {
 
 export default function entityReducer(
   state: IEntityState = { entities: [] },
-  { type, error, ...action }: IEntityAction
+  { type, error, ...action }: Action<IErrorPayload | any> // TODO: interfaces for success/fail action payloads
 ): IEntityState {
   switch (type) {
     case success(EntityEventType.Requested):

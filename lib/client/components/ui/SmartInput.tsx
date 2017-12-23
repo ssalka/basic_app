@@ -1,19 +1,18 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import { ActionCreator } from 'redux';
+import { AnyAction, ActionCreator } from 'redux';
 import { Flex } from 'grid-styled';
 import { EditableText } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { ViewComponent } from 'lib/client/components';
 import { Collection, IDocument, IEntity, IPopulatedEntity } from 'lib/common/interfaces';
-import { IEntityAction } from 'lib/client/api/entities/actions';
 
 interface ISmartInputProps extends React.HTMLProps<HTMLDivElement> {
   initialWidth?: number;
   rowHeight?: number;
   collections: Collection[];
   inputStyle?: React.CSSProperties;
-  actions: Record<string, ActionCreator<IEntityAction>>;
+  actions: Record<string, ActionCreator<AnyAction>>; // TODO: connect to entity store w/ only create action
 }
 
 interface ISmartInputState {

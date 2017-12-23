@@ -1,14 +1,15 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { EditableText, NonIdealState } from '@blueprintjs/core';
-import { getEntities } from 'lib/client/api/entities/actions';
-import { PopulatedEntityDocument } from 'lib/common/interfaces';
+import { getEntities, updateEntity } from 'lib/client/api/entities/actions';
+import { connect } from 'lib/client/services/utils';
+import { EntityDocument } from 'lib/common/interfaces';
 
 interface IEntityListProps {
-  entities: PopulatedEntityDocument[];
-  getEntities(): void;
-  updateEntity(index): void;
+  entities: EntityDocument[];
+  // REVIEW: is this the best way to represent action creators? could also do `typeof entityActions`
+  getEntities: typeof getEntities;
+  updateEntity: typeof updateEntity;
 }
 
 class EntityList extends React.Component<
@@ -20,12 +21,12 @@ class EntityList extends React.Component<
     }
   }
 
-  getUpdateHandler(entity: PopulatedEntityDocument) {
-    return () => this.props.updateEntity(entity);
+  getUpdateHandler(entity: EntityDocument) {
+    return (name: string) => this.props.updateEntity(entity._id, { name });
   }
 
   render() {
-    const { entities, updateEntity, style } = this.props;
+    const { entities, style } = this.props;
 
     return entities.length ? (
       <div className="entity-list pt-callout pt-elevation-1" style={style}>
@@ -34,11 +35,11 @@ class EntityList extends React.Component<
         </h4>
 
         <div className="scroll-y">
-          {entities.map((entity: PopulatedEntityDocument) => (
+          {entities.map((entity: EntityDocument, i) => (
             <EditableText
-              key={entity._id}
-              value={entity.name}
-              onChange={this.getUpdateHandler(entity)}
+              key={i}
+              defaultValue={entity.name}
+              onConfirm={this.getUpdateHandler(entity)}
               placeholder="New Entity"
             />
           ))}
@@ -59,10 +60,10 @@ class EntityList extends React.Component<
   }
 }
 
-export default connect(
-  state => state.entity,
-  dispatch => ({
-    getEntities: () => dispatch(getEntities()),
-    updateEntity: _.noop // TODO
-  })
-)(EntityList);
+export default connect({
+  store: 'entity',
+  actions: {
+    getEntities,
+    updateEntity
+  }
+})(EntityList);

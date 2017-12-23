@@ -4,12 +4,8 @@ import { connect as reduxConnect } from 'react-redux';
 import { ActionCreator, AnyAction, bindActionCreators } from 'redux';
 import { call, CallEffect, put, PutEffect } from 'redux-saga/effects';
 
-import { Action } from 'lib/common/interfaces/redux';
+import { Action, IErrorPayload } from 'lib/common/interfaces/redux';
 import { RequestStatus } from 'lib/common/interfaces/request';
-
-interface IErrorPayload {
-  error: string | Error;
-}
 
 // usage of `any` should be fixed after typescript PR#13288 is merged
 export function action<P = {}>(type: string, payload?: P): Action<P> {
