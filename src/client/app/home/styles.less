@@ -1,9 +1,9 @@
 #home {
   display: grid;
   grid-template-areas:
-    "title       ."
-    "entities    collections"
-    "entities    views";
+    "title    ."
+    "entities collections"
+    "entities views";
   grid-template-rows: 30px repeat(2, minmax(200px, 1fr));
   grid-template-columns: 230px auto;
   grid-gap: 1em;
@@ -24,19 +24,43 @@
     .entity-list {
       flex-grow: 1;
       padding: 0;
-      padding-top: 10px;
 
-      & > * {
+      display: grid;
+      grid-template-areas:
+        "title icon"
+        "list  list";
+      align-items: stretch;
+      justify-content: stretch;
+      grid-template-rows: 40px minmax(500px, auto);
+      grid-template-columns: auto 50px;
+
+      & > :not(.icon) {
         padding-left: 10px;
       }
 
-      .pt-editable-text {
-        display: block;
-        margin-top: 10px;
-        width: 85%;
+      .view-title {
+        grid-area: title;
+        align-self: center;
+        margin: 0;
+      }
 
-        &:last-of-type {
-          margin-bottom: 10px;
+      .icon {
+        grid-area: icon;
+        place-self: center;
+      }
+
+      .scroll-y {
+        grid-area: list;
+        max-height: -webkit-fill-available;
+
+        .pt-editable-text {
+          display: block;
+          margin-top: 10px;
+          width: 85%;
+
+          &:last-of-type {
+            margin-bottom: 10px;
+          }
         }
       }
     }

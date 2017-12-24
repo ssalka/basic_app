@@ -3,6 +3,7 @@ import { Flex } from 'grid-styled';
 import * as React from 'react';
 import { EditableText, NonIdealState } from '@blueprintjs/core';
 import { getEntities, updateEntity } from 'lib/client/api/entities/actions';
+import { Button } from 'lib/client/components';
 import { connect } from 'lib/client/services/utils';
 import { EntityDocument } from 'lib/common/interfaces';
 
@@ -34,6 +35,8 @@ class EntityList extends React.Component<
         <h4 className="view-title">
           Entities <span className="muted">({entities.length})</span>
         </h4>
+
+        <Button icon="group-objects" minimal={true} rounded={true} />
 
         <div className="scroll-y" style={{ flexGrow: 1 }}>
           {entities.map((entity: EntityDocument, i) => (
