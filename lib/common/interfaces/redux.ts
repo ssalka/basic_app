@@ -5,8 +5,10 @@ export interface IReduxProps {
   store: Record<string, any>; // TODO: IReduxState
 }
 
-export type Action<P extends {}> = ReduxAction & {
-  payload: P;
-};
+export type Action<A extends {} = {}> = ReduxAction & A;
 
 export type Reducer<S = {}, A = ReduxAction> = (state: S, action: A) => S;
+
+export interface IErrorPayload {
+  error: string | Error;
+}

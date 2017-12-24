@@ -1,31 +1,40 @@
-import { Action, ActionCreator } from 'redux';
 import {
-  CreateEntityEvent,
-  IEntity,
+  Action,
   EntityDocument,
-  EntityEvent,
-  EntityEventType
+  EntityEventType,
+  ID,
+  IEntity
 } from 'lib/common/interfaces';
 
-export interface IEntityAction extends Action {
-  entity?: IEntity | EntityDocument;
-  entities?: EntityDocument[];
-  error?: {
-    status: number;
-    message: string;
-  };
+export interface ICreateEntityPayload {
+  entity: IEntity;
 }
 
-export const createEntity: ActionCreator<CreateEntityEvent> = (entity: IEntity) => ({
+export const createEntity = (entity: IEntity): Action<ICreateEntityPayload> => ({
   type: EntityEventType.Created,
-  payload: entity
+  entity
 });
 
-export const getEntities: ActionCreator<any> = () => ({
+export const getEntities = (): Action => ({
   type: EntityEventType.Requested
+});
+
+export interface IUpdateEntityPayload {
+  entityId: ID;
+  updates: Partial<IEntity>;
+}
+
+export const updateEntity = (
+  entityId: ID,
+  updates: Partial<IEntity>
+): Action<IUpdateEntityPayload> => ({
+  type: EntityEventType.Updated,
+  entityId,
+  updates
 });
 
 export default {
   createEntity,
-  getEntities
+  getEntities,
+  updateEntity
 };

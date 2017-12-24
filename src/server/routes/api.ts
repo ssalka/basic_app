@@ -14,4 +14,5 @@ export default express
     middleware.document.upsertDocumentInCollection
   )
   .get('/entities', middleware.entity.getEntities)
-  .post('/entities', middleware.entity.createEntity);
+  .post('/entities', middleware.entity.createEntity)
+  .post('/entities/:entityId', middleware.entity.updateEntity);

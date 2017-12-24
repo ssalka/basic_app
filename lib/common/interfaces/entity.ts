@@ -1,4 +1,3 @@
-import { IEvent } from './events';
 import { ID, IDocument } from './mongo';
 
 export interface IReference {
@@ -23,11 +22,10 @@ export interface IPopulatedEntity {
 
 export type EntityDocument = IEntity & IDocument<'Entity'>;
 
+export type PopulatedEntityDocument = IEntity & IDocument<'Entity'>;
+
 export const enum EntityEventType {
   Created = 'ENTITY_CREATED',
-  Requested = 'ENTITIES_REQUESTED'
+  Requested = 'ENTITIES_REQUESTED',
+  Updated = 'ENTITY_UPDATED'
 }
-
-export type CreateEntityEvent = IEvent<IEntity>;
-
-export type EntityEvent = CreateEntityEvent;

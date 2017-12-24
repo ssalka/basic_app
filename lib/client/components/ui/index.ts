@@ -1,4 +1,5 @@
 import CollectionSelect from './CollectionSelect';
+import EntityList from './EntityList';
 import IconSelector from './IconSelector';
 import NavBar from './NavBar';
 import SideBar from './SideBar';
@@ -8,6 +9,7 @@ import ViewSelect from './ViewSelect';
 
 export {
   CollectionSelect,
+  EntityList,
   IconSelector,
   NavBar,
   SideBar,

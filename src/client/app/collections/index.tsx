@@ -55,7 +55,7 @@ export default class Collections extends ReduxComponent {
     const { CollectionList } = this;
 
     return (
-      <section id="collections" className="container list-view">
+      <section id="collections" className="container">
         <FlexRow>
           <h2 className="view-title">Collections</h2>
         </FlexRow>
