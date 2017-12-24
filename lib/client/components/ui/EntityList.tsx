@@ -1,4 +1,5 @@
 import * as _ from 'lodash';
+import { Flex } from 'grid-styled';
 import * as React from 'react';
 import { EditableText, NonIdealState } from '@blueprintjs/core';
 import { getEntities, updateEntity } from 'lib/client/api/entities/actions';
@@ -29,12 +30,12 @@ class EntityList extends React.Component<
     const { entities, style } = this.props;
 
     return entities.length ? (
-      <div className="entity-list pt-callout pt-elevation-1" style={style}>
+      <Flex column={true} className="entity-list pt-callout pt-elevation-1" style={style}>
         <h4 className="view-title">
           Entities <span className="muted">({entities.length})</span>
         </h4>
 
-        <div className="scroll-y">
+        <div className="scroll-y" style={{ flexGrow: 1 }}>
           {entities.map((entity: EntityDocument, i) => (
             <EditableText
               key={i}
@@ -44,7 +45,7 @@ class EntityList extends React.Component<
             />
           ))}
         </div>
-      </div>
+      </Flex>
     ) : (
       <NonIdealState
         visual="manually-entered-data"
