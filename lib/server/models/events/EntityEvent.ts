@@ -3,6 +3,8 @@ import { EntityEventType } from 'lib/common/interfaces/entity';
 import { ModelGen } from 'lib/server/utils';
 import Event from './Event';
 
+const logOnce = _.once(console.log);
+
 export default ModelGen.extendModel(Event, {
   name: 'EntityEvent',
   statics: {
@@ -18,7 +20,10 @@ export default ModelGen.extendModel(Event, {
           }
 
           case EntityEventType.Updated: {
-            const matchedEntity = _.find(entities, { _id: payload.entityId });
+            // REVIEW: better way to find by ObjectId?
+            const matchedEntity = entities.find(
+              ({ _id }) => payload.entityId === _id.toString()
+            );
 
             if (matchedEntity) {
               _.assign(matchedEntity, payload.updates);
