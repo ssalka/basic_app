@@ -34,7 +34,11 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
       'Use Collections to describe and organize your data. Import or sync with any source.';
 
     return (
-      <div className="collections pt-callout pt-elevation-1">
+      <div
+        className={`collections pt-callout pt-elevation-1 ${collections.length
+          ? 'grid'
+          : ''}`}
+      >
         {collections.length ? (
           <React.Fragment>
             <h4 style={{ alignSelf: 'center' }}>
