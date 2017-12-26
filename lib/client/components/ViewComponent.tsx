@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import BaseComponent from './BaseComponent';
 import { ReactProps } from 'lib/common/interfaces';
@@ -18,6 +19,6 @@ export default class ViewComponent<
   render() {
     const { children, className } = this.props as any;
 
-    return <section className={`container ${className}`}>{children}</section>;
+    return <section className={classNames('container', className)}>{children}</section>;
   }
 }
