@@ -64,7 +64,7 @@ if (process.env.NODE_ENV === 'production') {
       compress: { warnings: false }
     })
   );
-} else if (process.env.NODE_ENV === 'development') {
+} else if (process.env.NODE_ENV !== 'test') {
   config.entry.unshift(
     'webpack-dev-server/client?http://localhost:8080/',
     'webpack/hot/dev-server'
