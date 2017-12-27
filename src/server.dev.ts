@@ -11,7 +11,7 @@ new WebpackDevServer(webpack(config), {
     '*': 'http://localhost:3000'
   }
 }).listen(8080, 'localhost', err => {
-  console.log(err || 'webpack dev server listening on port 8080');
+  console.log(err || '[WDS] Running locally at: http://localhost:8080\n');
 });
 
 // Start the actual server

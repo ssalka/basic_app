@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as _ from 'lodash';
 import * as React from 'react';
 import { AnyAction, ActionCreator } from 'redux';
@@ -177,7 +178,7 @@ export default class SmartInput extends ViewComponent<
     return (
       <StyledSmartInput
         rowHeight={rowHeight}
-        className={`${className} smart-input`}
+        className={classNames(className, 'smart-input')}
         style={{ position: 'relative', ...style }}
       >
         {!!matchedEntities.length && (
@@ -193,9 +194,11 @@ export default class SmartInput extends ViewComponent<
               .map((entity: Partial<IEntity>, i) => (
                 <div
                   key={i}
-                  className={`option row ${i && i - 1 === focusedEntityIndex
-                    ? 'selected'
-                    : ''}`}
+                  className={classNames(
+                    'option',
+                    'row',
+                    i && i - 1 === focusedEntityIndex && 'selected'
+                  )}
                 >
                   {entity.name}
                 </div>

@@ -9,7 +9,7 @@ import {
   SideBar,
   NotFound
 } from 'lib/client/components';
-import { ILink, Collection } from 'lib/common/interfaces';
+import { ILink, Collection, IUser } from 'lib/common/interfaces';
 
 import Home from './home';
 import Collections from './collections';
@@ -67,60 +67,86 @@ export default class App extends ReduxComponent<RouteComponentProps<any>, IState
     )
   );
 
+  getViewLinks: (user: IUser) => ILink[] = _.memoize(user =>
+    _(user)
+      .get('library.collections', [])
+      .slice(0, 5)
+      .map((collection: Collection): ILink =>
+        _.pick(collection, ['name', 'path', 'icon'])
+      )
+  );
+
   render() {
     const { user } = this.props.store.user;
     const { pathname } = this.props.location;
     const { navLinks } = this.state;
-
-    const viewLinks: ILink[] = _(user)
-      .get('library.collections', [])
-      .slice(0, 5)
-      .map((collection: Collection) => _.pick(collection, ['name', 'path', 'icon']));
-    const links: ILink[] = navLinks.concat(viewLinks);
+    const links = navLinks.concat(this.getViewLinks(user));
 
     return (
       <FlexRow id="app">
         <SideBar links={links} currentPath={pathname} />
+
         <div id="content">
-          {!_.isEmpty(this.props.store.collection.collections) ? (
-            <Switch>
-              <Route path="/home" exact={true} render={this.renderWithStore(Home)} />
-              <Route
-                path="/collections"
-                exact={true}
-                render={this.renderWithStore(Collections)}
-              />
-              <Route path="/collections/add" exact={true} component={CollectionForm} />
-              <Route
-                path="/collections/:collection"
-                exact={true}
-                component={CollectionView}
-              />
-              <Route
-                path="/collections/:collection/edit"
-                exact={true}
-                render={this.getCollectionForm}
-              />
-              <Route
-                path="/collections/:collection/add"
-                exact={true}
-                render={this.getDocumentForm}
-              />
-              <Route
-                path="/collections/:collection/:_id"
-                exact={true}
-                render={this.getDocumentView}
-              />
-              <Route
-                path="/collections/:collection/:_id/edit"
-                exact={true}
-                render={this.getDocumentForm}
-              />
-              <Route path="/:param" render={NotFound} />
-            </Switch>
-          ) : (
-            <div>Loading your library...</div>
-          )}
+          <Switch>
+            <Route path="/home" exact={true} render={this.renderWithStore(Home)} />
+
+            {_.isEmpty(this.props.store.collection.collections) ? (
+              <div>Loading your library...</div>
+            ) : (
+              <Switch>
+                <Route
+                  key="Collections"
+                  path="/collections"
+                  exact={true}
+                  render={this.renderWithStore(Collections)}
+                />
+
+                <Route
+                  key="CollectionForm"
+                  path="/collections/add"
+                  exact={true}
+                  component={CollectionForm}
+                />
+
+                <Route
+                  key="CollectionView"
+                  path="/collections/:collection"
+                  exact={true}
+                  component={CollectionView}
+                />
+
+                <Route
+                  key="CollectionForm-Edit"
+                  path="/collections/:collection/edit"
+                  exact={true}
+                  render={this.getCollectionForm}
+                />
+
+                <Route
+                  key="DocumentView"
+                  path="/collections/:collection/:_id"
+                  exact={true}
+                  render={this.getDocumentView}
+                />
+
+                <Route
+                  key="DocumentForm"
+                  path="/collections/:collection/add"
+                  exact={true}
+                  render={this.getDocumentForm}
+                />
+
+                <Route
+                  key="DocumentForm-Edit"
+                  path="/collections/:collection/:_id/edit"
+                  exact={true}
+                  render={this.getDocumentForm}
+                />
+
+                <Route key="NotFound" path="/:param" render={NotFound} />
+              </Switch>
+            )}
+          </Switch>
         </div>
       </FlexRow>
     );

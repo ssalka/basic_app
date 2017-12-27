@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as _ from 'lodash';
 import { Flex } from 'grid-styled';
 import * as React from 'react';
@@ -33,8 +34,10 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
     const description: string =
       'Use Collections to describe and organize your data. Import or sync with any source.';
 
+    const collectionClassNames = ['collections', 'pt-callout', 'pt-elevation-1'];
+
     return (
-      <div className="collections pt-callout pt-elevation-1">
+      <div className={classNames(collectionClassNames, collections.length && 'grid')}>
         {collections.length ? (
           <React.Fragment>
             <h4 style={{ alignSelf: 'center' }}>

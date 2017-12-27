@@ -1,4 +1,5 @@
 import * as mongoose from 'mongoose';
+import { Connection } from 'mongoose';
 import * as async from 'async';
 import * as _ from 'lodash';
 
@@ -14,21 +15,21 @@ export const collectionsDbName = `${systemDbName}_collections`;
 const appMongoURI = `mongodb://localhost:27017/${systemDbName}`;
 const collectionsMongoURI = `mongodb://localhost:27017/${collectionsDbName}`;
 
-export const connections = {
+export const connections: Record<string, Connection> = {
   app: mongoose.createConnection(appMongoURI),
   collections: mongoose.createConnection(collectionsMongoURI)
 };
 
 const openConnections = {};
 
-_.forEach(connections, (conn, name) => {
+_.forEach(connections, (conn: Connection, name: string) => {
   conn.on('open', () => {
-    console.log(`connected to db ${name}`);
+    console.log(`connected to db ${name}\n`);
     openConnections[name] = true;
   });
 
   conn.on('error', err => {
-    console.error('connection error:', err);
+    console.error('\nconnection error:', err, '\n');
     openConnections[name] = false;
   });
 });
