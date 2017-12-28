@@ -4,7 +4,7 @@ import * as React from 'react';
 import { withRouter, RouteComponentProps, Redirect, Route, Switch } from 'react-router';
 
 import { connect } from 'lib/client/api/store';
-import { BaseComponent, NotFound, ViewComponent, NavBar } from 'lib/client/components';
+import { BaseComponent, NotFound, NavBar } from 'lib/client/components';
 import { IReduxProps } from 'lib/common/interfaces';
 import Splash from './splash';
 import Login from './login';

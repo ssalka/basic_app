@@ -1,6 +1,4 @@
 import * as express from 'express';
-import { RequestHandler } from 'express';
-import * as path from 'path';
 import * as session from 'express-session';
 import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
@@ -16,13 +14,11 @@ if (process.env.NODE_ENV !== 'production') {
   import('src/server.dev');
 }
 
-const app = express();
-
 passport.use(new Strategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app
+express()
   .use([
     bodyParser.json(),
     bodyParser.urlencoded({ extended: false }),
