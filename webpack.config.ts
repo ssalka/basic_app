@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import * as path from 'path';
 import * as webpack from 'webpack';
 import * as CopyWebpackPlugin from 'copy-webpack-plugin';
@@ -52,6 +53,9 @@ const config = {
     extensions: ['.js', '.ts', '.tsx']
   },
   plugins: [
+    new webpack.DefinePlugin({
+      __DEV__: !['production', 'test'].includes(process.env.NODE_ENV)
+    }),
     new CopyWebpackPlugin([
       { from: 'src/client/index.html' },
       { from: 'node_modules/@blueprintjs/core/dist/blueprint.css' },
@@ -75,7 +79,16 @@ if (process.env.NODE_ENV === 'production') {
 
   config.plugins.push(
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin()
+    new webpack.NamedModulesPlugin(),
+    new webpack.DefinePlugin({
+      loginCredentials: _.mapValues(
+        {
+          username: process.env.DEV_LOGIN_USERNAME,
+          password: process.env.DEV_LOGIN_PASSWORD
+        },
+        JSON.stringify
+      )
+    })
   );
 }
 

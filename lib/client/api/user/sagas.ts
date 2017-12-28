@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as _ from 'lodash';
 import { push } from 'react-router-redux';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { action } from 'lib/client/services/utils';
@@ -7,7 +8,9 @@ import { addCollection, CollectionAction } from '../collections/actions';
 
 export function* userLogin({ loginArgs: [path, payload] }: IUserAction) {
   try {
-    const { data } = yield call(() => axios.post(path, payload));
+    const credentials =
+      __DEV__ && _.every(payload, _.isEmpty) ? loginCredentials : payload;
+    const { data } = yield call(() => axios.post(path, credentials));
 
     localStorage.token = data.token;
 
