@@ -13,6 +13,3 @@ new WebpackDevServer(webpack(config), {
 }).listen(8080, 'localhost', err => {
   console.log(err || '[WDS] Running locally at: http://localhost:8080\n');
 });
-
-// Start the actual server
-import './server';

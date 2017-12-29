@@ -19,6 +19,7 @@
   "include": [
     "../lib/client",
     "../lib/common",
-    "../src/client"
+    "../src/client",
+    "../src/index.d.ts"
   ]
 }
