@@ -49,7 +49,6 @@ const config = {
       lib: path.resolve('./lib'),
       src: path.resolve('./src')
     },
-    modules: ['node_modules'],
     extensions: ['.js', '.ts', '.tsx']
   },
   plugins: [
