@@ -18,8 +18,21 @@
   }
 
   .icon {
-    grid-area: icon;
     place-self: center;
+
+    &.pt-icon-group-objects {
+      grid-area: icon;
+    }
+
+    &:not(.pt-icon-group-objects) {
+      &::before {
+        display: none;
+      }
+
+      &.visible::before {
+        display: inline-block;
+      }
+    }
   }
 
   .drawer {
@@ -40,13 +53,25 @@
     }
   }
 
-  .scroll-y {
+  .entity-list-items {
     grid-area: list;
+    flex-grow: 1;
+
+    &.with-icons {
+      display: grid;
+      grid-template-columns: 30px auto;
+      grid-auto-rows: 30px;
+      align-items: center;
+
+      .pt-editable-text {
+        margin: 0;
+      }
+    }
 
     .pt-editable-text {
       display: block;
       margin-top: 10px;
-      width: 85%;
+      margin-left: 10px;
     }
   }
 }

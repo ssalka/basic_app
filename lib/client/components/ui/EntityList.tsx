@@ -18,6 +18,7 @@ interface IEntityListProps {
 
 interface IEntityListState {
   combineEntities: boolean;
+  selectedEntities: EntityDocument[];
 }
 
 class EntityList extends BaseComponent<
@@ -25,7 +26,8 @@ class EntityList extends BaseComponent<
   IEntityListState
 > {
   state: IEntityListState = {
-    combineEntities: false
+    combineEntities: false,
+    selectedEntities: []
   };
 
   componentDidMount() {
@@ -40,9 +42,19 @@ class EntityList extends BaseComponent<
 
   toggleCombineEntities = () => this._toggle('combineEntities');
 
+  getToggleSelectedHandler = (entity: EntityDocument) => () => {
+    const { selectedEntities } = this.state;
+
+    return this.setState({
+      selectedEntities: _.find(selectedEntities, entity)
+        ? _.reject(selectedEntities, entity)
+        : selectedEntities.concat(entity)
+    });
+  };
+
   render() {
     const { entities, style } = this.props;
-    const { combineEntities } = this.state;
+    const { combineEntities, selectedEntities } = this.state;
 
     return entities.length ? (
       <Flex column={true} className="entity-list pt-callout pt-elevation-1" style={style}>
@@ -61,14 +73,36 @@ class EntityList extends BaseComponent<
           <h6>Combine Entities</h6>
         </div>
 
-        <div className="scroll-y" style={{ flexGrow: 1 }}>
+        <div
+          className={classNames(
+            'entity-list-items',
+            'scroll-y',
+            combineEntities && 'with-icons'
+          )}
+        >
           {entities.map((entity: EntityDocument, i) => (
-            <EditableText
-              key={i}
-              defaultValue={entity.name}
-              onConfirm={this.getUpdateHandler(entity)}
-              placeholder="New Entity"
-            />
+            <React.Fragment key={i}>
+              {combineEntities && (
+                <Button
+                  className={classNames(
+                    'select-entity-checkbox',
+                    combineEntities && 'visible'
+                  )}
+                  icon={_.find(selectedEntities, entity) ? 'tick' : 'plus'}
+                  color={_.find(selectedEntities, entity) && 'success'}
+                  minimal={true}
+                  rounded={true}
+                  size="small"
+                  onClick={this.getToggleSelectedHandler(entity)}
+                />
+              )}
+
+              <EditableText
+                defaultValue={entity.name}
+                onConfirm={this.getUpdateHandler(entity)}
+                placeholder="New Entity"
+              />
+            </React.Fragment>
           ))}
         </div>
       </Flex>
