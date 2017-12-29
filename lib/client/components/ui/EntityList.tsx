@@ -1,11 +1,13 @@
+import * as classNames from 'classnames';
 import * as _ from 'lodash';
 import { Flex } from 'grid-styled';
 import * as React from 'react';
 import { EditableText, NonIdealState } from '@blueprintjs/core';
 import { getEntities, updateEntity } from 'lib/client/api/entities/actions';
-import { Button } from 'lib/client/components';
+import { BaseComponent, Button } from 'lib/client/components';
 import { connect } from 'lib/client/services/utils';
 import { EntityDocument } from 'lib/common/interfaces';
+import 'lib/client/styles/EntityList.less';
 
 interface IEntityListProps {
   entities: EntityDocument[];
@@ -14,9 +16,18 @@ interface IEntityListProps {
   updateEntity: typeof updateEntity;
 }
 
-class EntityList extends React.Component<
-  IEntityListProps & React.HTMLProps<HTMLDivElement>
+interface IEntityListState {
+  combineEntities: boolean;
+}
+
+class EntityList extends BaseComponent<
+  IEntityListProps & React.HTMLProps<HTMLDivElement>,
+  IEntityListState
 > {
+  state: IEntityListState = {
+    combineEntities: false
+  };
+
   componentDidMount() {
     if (_.isEmpty(this.props.entities)) {
       this.props.getEntities();
@@ -27,8 +38,11 @@ class EntityList extends React.Component<
     return (name: string) => this.props.updateEntity(entity._id, { name });
   }
 
+  toggleCombineEntities = () => this._toggle('combineEntities');
+
   render() {
     const { entities, style } = this.props;
+    const { combineEntities } = this.state;
 
     return entities.length ? (
       <Flex column={true} className="entity-list pt-callout pt-elevation-1" style={style}>
@@ -36,7 +50,16 @@ class EntityList extends React.Component<
           Entities <span className="muted">({entities.length})</span>
         </h4>
 
-        <Button icon="group-objects" minimal={true} rounded={true} />
+        <Button
+          icon="group-objects"
+          minimal={true}
+          rounded={true}
+          onClick={this.toggleCombineEntities}
+        />
+
+        <div className={classNames('drawer', combineEntities && 'open')}>
+          <h6>Combine Entities</h6>
+        </div>
 
         <div className="scroll-y" style={{ flexGrow: 1 }}>
           {entities.map((entity: EntityDocument, i) => (

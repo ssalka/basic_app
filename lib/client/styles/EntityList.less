@@ -1,0 +1,33 @@
+@import '~lib/client/styles/colors';
+
+.entity-list {
+  display: grid;
+  grid-template-areas:
+    "title  icon"
+    "list   list";
+  align-items: stretch;
+  justify-content: stretch;
+  grid-template-rows: 40px minmax(500px, auto);
+  grid-template-columns: auto 50px;
+
+  .view-title {
+    grid-area: title;
+    align-self: center;
+    margin: 0;
+  }
+
+  .icon {
+    grid-area: icon;
+    place-self: center;
+  }
+
+  .scroll-y {
+    grid-area: list;
+
+    .pt-editable-text {
+      display: block;
+      margin-top: 10px;
+      width: 85%;
+    }
+  }
+}

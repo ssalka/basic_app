@@ -25,42 +25,15 @@
       flex-grow: 1;
       padding: 0;
 
-      display: grid;
-      grid-template-areas:
-        "title icon"
-        "list  list";
-      align-items: stretch;
-      justify-content: stretch;
-      grid-template-rows: 40px minmax(500px, auto);
-      grid-template-columns: auto 50px;
-
       & > :not(.icon) {
         padding-left: 10px;
       }
 
-      .view-title {
-        grid-area: title;
-        align-self: center;
-        margin: 0;
-      }
-
-      .icon {
-        grid-area: icon;
-        place-self: center;
-      }
-
       .scroll-y {
-        grid-area: list;
         max-height: -webkit-fill-available;
 
-        .pt-editable-text {
-          display: block;
-          margin-top: 10px;
-          width: 85%;
-
-          &:last-of-type {
-            margin-bottom: 10px;
-          }
+        .pt-editable-text:last-of-type {
+          margin-bottom: 10px;
         }
       }
     }
