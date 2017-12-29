@@ -71,6 +71,15 @@ class EntityList extends BaseComponent<
 
         <div className={classNames('drawer', combineEntities && 'open')}>
           <h6>Combine Entities</h6>
+          {selectedEntities.map((entity: EntityDocument) => (
+            <span className="pt-tag pt-tag-removable" key={entity._id}>
+              {entity.name}
+              <button
+                className="pt-tag-remove"
+                onClick={this.getToggleSelectedHandler(entity)}
+              />
+            </span>
+          ))}
         </div>
 
         <div
