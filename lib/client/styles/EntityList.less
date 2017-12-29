@@ -4,10 +4,11 @@
   display: grid;
   grid-template-areas:
     "title  icon"
+    "drawer drawer"
     "list   list";
   align-items: stretch;
   justify-content: stretch;
-  grid-template-rows: 40px minmax(500px, auto);
+  grid-template-rows: 40px auto minmax(500px, auto);
   grid-template-columns: auto 50px;
 
   .view-title {
@@ -19,6 +20,24 @@
   .icon {
     grid-area: icon;
     place-self: center;
+  }
+
+  .drawer {
+    grid-area: drawer;
+    height: 0;
+    transition: height .18s ease-in-out;
+    background-color: @light-grey-3;
+    overflow: hidden;
+
+    &.open {
+      height: 120px;
+    }
+
+    h6 {
+      font-weight: 500;
+      font-size: 95%;
+      margin: 10px 0;
+    }
   }
 
   .scroll-y {
