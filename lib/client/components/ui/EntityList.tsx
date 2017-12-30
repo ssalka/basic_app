@@ -2,9 +2,10 @@ import * as classNames from 'classnames';
 import * as _ from 'lodash';
 import { Flex } from 'grid-styled';
 import * as React from 'react';
+import Link from 'react-router-redux-dom-link';
 import { EditableText, NonIdealState } from '@blueprintjs/core';
 import { getEntities, updateEntity } from 'lib/client/api/entities/actions';
-import { BaseComponent, Button } from 'lib/client/components';
+import { BaseComponent, Button, Icon } from 'lib/client/components';
 import { connect } from 'lib/client/services/utils';
 import { EntityDocument } from 'lib/common/interfaces';
 import 'lib/client/styles/EntityList.less';
@@ -56,6 +57,9 @@ class EntityList extends BaseComponent<
     const { entities, style } = this.props;
     const { combineEntities, selectedEntities } = this.state;
 
+    // tslint:disable-next-line
+    let nextPathname; // TODO: entity aggregate route
+
     return entities.length ? (
       <Flex column={true} className="entity-list pt-callout pt-elevation-1" style={style}>
         <h4 className="view-title">
@@ -71,15 +75,26 @@ class EntityList extends BaseComponent<
 
         <div className={classNames('drawer', combineEntities && 'open')}>
           <h6>Combine Entities</h6>
-          {selectedEntities.map((entity: EntityDocument) => (
-            <span className="pt-tag pt-tag-removable" key={entity._id}>
-              {entity.name}
-              <button
-                className="pt-tag-remove"
-                onClick={this.getToggleSelectedHandler(entity)}
-              />
-            </span>
-          ))}
+
+          <Link to={{ state: selectedEntities, pathname: nextPathname }}>
+            <Button icon="arrow-right" size="small" minimal={true} rounded={true} />
+          </Link>
+
+          {_.isEmpty(selectedEntities) ? (
+            <Icon name="plus" size={36} className="muted" />
+          ) : (
+            <Flex wrap="wrap" className="selected-entities">
+              {selectedEntities.map((entity: EntityDocument) => (
+                <span className="pt-tag pt-tag-removable" key={entity._id}>
+                  {entity.name}
+                  <button
+                    className="pt-tag-remove"
+                    onClick={this.getToggleSelectedHandler(entity)}
+                  />
+                </span>
+              ))}
+            </Flex>
+          )}
         </div>
 
         <div

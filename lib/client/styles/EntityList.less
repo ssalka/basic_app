@@ -24,7 +24,7 @@
       grid-area: icon;
     }
 
-    &:not(.pt-icon-group-objects) {
+    &:not(.pt-icon-group-objects, .pt-icon-plus) {
       &::before {
         display: none;
       }
@@ -45,19 +45,42 @@
     height: 0;
     transition: height .18s ease-in-out;
 
+    display: grid;
+    grid-template-areas:
+      "title    icon"
+      "content content";
+    grid-template-rows: 30px auto;
+
     &.open {
       height: 120px;
     }
 
     h6 {
+      grid-area: title;
       font-weight: 500;
       font-size: 95%;
       margin: 10px 0;
     }
 
-    .pt-tag {
-      margin-left: 5px;
-      margin-bottom: 5px;
+    a {
+      grid-area: icon;
+      place-self: flex-end;
+      align-self: center;
+      margin-right: 10px;
+    }
+
+    .pt-icon-plus {
+      grid-area: content;
+    }
+
+    .selected-entities {
+      grid-area: content;
+
+      .pt-tag {
+        margin-left: 5px;
+        margin-bottom: 5px;
+        max-height: fit-content;
+      }
     }
   }
 
