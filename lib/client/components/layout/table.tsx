@@ -4,7 +4,7 @@ import { NonIdealState, IconName } from '@blueprintjs/core';
 import * as FilterableTable from 'react-filterable-table';
 import {
   IDocument,
-  Field,
+  CollectionField,
   IComponentModule,
   ReactElement,
   ReactProps,
@@ -15,7 +15,7 @@ import { ViewComponent, Button } from '../';
 import '../../styles/Table.less';
 
 interface IProps extends ReactProps {
-  fields: Field[];
+  fields: CollectionField[];
   records: any[];
   pathname: string;
   tableProps: {
@@ -37,7 +37,7 @@ export default class Table extends ViewComponent<IProps, any> {
     }
   };
 
-  private getFieldProps(field: Field): object {
+  private getFieldProps(field: CollectionField): object {
     const { onSelectDocument } = this.props;
     const handleClick: (doc: IDocument) => React.MouseEventHandler<HTMLSpanElement> = (
       doc: IDocument

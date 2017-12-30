@@ -3,7 +3,7 @@ import * as React from 'react';
 import * as Rating from 'react-rating';
 import { RENDER_METHODS } from 'lib/common/constants';
 import {
-  Field,
+  CollectionField,
   IComponentModule,
   IDocument,
   IRenderMethod,
@@ -43,7 +43,7 @@ class RenderingService {
     return evaluator(val);
   };
 
-  private getProps(document: IDocument, field: Field): ReactProps {
+  private getProps(document: IDocument, field: CollectionField): ReactProps {
     const { targetProp }: IRenderMethod = _.find(RENDER_METHODS, {
       key: field.renderMethod || 'PLAIN_TEXT'
     });
@@ -57,7 +57,11 @@ class RenderingService {
     return { [targetProp]: displayValue };
   }
 
-  public renderField(document: any, field: Field, props: ReactProps = {}): ReactElement {
+  public renderField(
+    document: any,
+    field: CollectionField,
+    props: ReactProps = {}
+  ): ReactElement {
     const renderMethod: string = field.renderMethod || 'PLAIN_TEXT';
     const Component: SFC = this.componentMap[renderMethod];
 

@@ -6,7 +6,7 @@ import { RouteComponentProps } from 'react-router';
 
 import { connect } from 'lib/client/api/store';
 import { ReduxComponent, Button, FlexRow } from 'lib/client/components';
-import { Field, Collection } from 'lib/common/interfaces';
+import { CollectionField, Collection } from 'lib/common/interfaces';
 import { ReactProps } from 'lib/common/interfaces/react';
 
 import CollectionFormHeader from './header';
@@ -28,7 +28,7 @@ export class CollectionForm extends ReduxComponent<IProps, IState> {
     collection: new Collection({
       _id: null,
       name: '',
-      fields: [new Field()],
+      fields: [new CollectionField()],
       description: '',
       icon: 'graph'
     })
@@ -51,12 +51,12 @@ export class CollectionForm extends ReduxComponent<IProps, IState> {
     });
   }
 
-  updateFieldInCollection(index: number, updates?: Partial<Field> | null) {
+  updateFieldInCollection(index: number, updates?: Partial<CollectionField> | null) {
     const { fields } = this.state.collection;
 
     if (index === fields.length) {
       // add new field
-      fields.push(new Field());
+      fields.push(new CollectionField());
       this.updateCollection({ fields });
     } else if (_.isNull(updates)) {
       // remove a field

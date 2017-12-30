@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import { collectionsDbName } from 'lib/server/db';
 import { Collection as CollectionModel, User, View } from '../';
 import { ObjectId } from 'lib/server/utils/types';
-import { Collection, Field } from 'lib/common/interfaces';
+import { Collection, CollectionField } from 'lib/common/interfaces';
 
 export default class MockCollection {
   _id: string;
@@ -70,7 +70,7 @@ export default class MockCollection {
     const collection: Collection = new CollectionModel(collectionWithDefaults).toObject();
 
     if (!defaults.fields) {
-      const collectionField: Field = {
+      const collectionField: CollectionField = {
         name: 'Collection Ref',
         type: 'COLLECTION',
         required: false,
