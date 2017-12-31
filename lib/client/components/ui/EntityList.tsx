@@ -79,18 +79,20 @@ class EntityList extends BaseComponent<
         <div className={classNames('drawer', combineEntities && 'open')}>
           <h6>Combine Entities</h6>
 
-          <Link to={{ state: selectedEntities, pathname: nextPathname }}>
-            <Button icon="arrow-right" size="small" minimal={true} rounded={true} />
-          </Link>
-
           {_.isEmpty(selectedEntities) ? (
             <Icon name="plus" size={36} className="muted" />
           ) : (
-            <TagList
-              className="selected-entities"
-              tags={_.map(selectedEntities, 'name')}
-              onRemoveIndex={this.toggleEntitySelected}
-            />
+            <React.Fragment>
+              <Link to={{ state: selectedEntities, pathname: nextPathname }}>
+                <Button icon="arrow-right" size="small" minimal={true} rounded={true} />
+              </Link>
+
+              <TagList
+                className="selected-entities"
+                tags={_.map(selectedEntities, 'name')}
+                onRemoveIndex={this.toggleEntitySelected}
+              />
+            </React.Fragment>
           )}
         </div>
 
