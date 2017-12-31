@@ -12,6 +12,7 @@ import {
 import { ILink, Collection, IUser } from 'lib/common/interfaces';
 
 import Home from './home';
+import CombineEntities from './CombineEntities';
 import Collections from './collections';
 import CollectionView from './collectionView';
 import CollectionForm from './collectionForm';
@@ -97,55 +98,50 @@ export default class App extends ReduxComponent<RouteComponentProps<any>, IState
             ) : (
               <Switch>
                 <Route
-                  key="Collections"
                   path="/collections"
                   exact={true}
                   render={this.renderWithStore(Collections)}
                 />
 
-                <Route
-                  key="CollectionForm"
-                  path="/collections/add"
-                  exact={true}
-                  component={CollectionForm}
-                />
+                <Route path="/collections/add" exact={true} component={CollectionForm} />
 
                 <Route
-                  key="CollectionView"
                   path="/collections/:collection"
                   exact={true}
                   component={CollectionView}
                 />
 
                 <Route
-                  key="CollectionForm-Edit"
                   path="/collections/:collection/edit"
                   exact={true}
                   render={this.getCollectionForm}
                 />
 
                 <Route
-                  key="DocumentView"
                   path="/collections/:collection/:_id"
                   exact={true}
                   render={this.getDocumentView}
                 />
 
                 <Route
-                  key="DocumentForm"
                   path="/collections/:collection/add"
                   exact={true}
                   render={this.getDocumentForm}
                 />
 
                 <Route
-                  key="DocumentForm-Edit"
                   path="/collections/:collection/:_id/edit"
                   exact={true}
                   render={this.getDocumentForm}
                 />
 
-                <Route key="NotFound" path="/:param" render={NotFound} />
+                <Route
+                  path="/combine-entities"
+                  exact={true}
+                  component={CombineEntities}
+                />
+
+                <Route path="/:param" render={NotFound} />
               </Switch>
             )}
           </Switch>

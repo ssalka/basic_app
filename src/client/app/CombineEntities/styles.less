@@ -1,0 +1,21 @@
+@import "~lib/client/styles/colors";
+
+.combine-entities {
+  height: 100%;
+
+  .entities {
+    background-color: @light-grey-3;
+    width: 200px;
+    padding: 15px;
+  }
+
+  form {
+    flex-grow: 1;
+
+    .field {
+      .key, .value {
+        background-color: @light-grey-3;
+      }
+    }
+  }
+}
