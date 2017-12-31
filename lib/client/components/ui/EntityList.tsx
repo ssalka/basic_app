@@ -5,7 +5,7 @@ import * as React from 'react';
 import Link from 'react-router-redux-dom-link';
 import { EditableText, NonIdealState } from '@blueprintjs/core';
 import { getEntities, updateEntity } from 'lib/client/api/entities/actions';
-import { BaseComponent, Button, Icon, Tag } from 'lib/client/components';
+import { BaseComponent, Button, Icon, TagList } from 'lib/client/components';
 import { connect } from 'lib/client/services/utils';
 import { EntityDocument } from 'lib/common/interfaces';
 import 'lib/client/styles/EntityList.less';
@@ -43,15 +43,18 @@ class EntityList extends BaseComponent<
 
   toggleCombineEntities = () => this._toggle('combineEntities');
 
-  getToggleSelectedHandler = (entity: EntityDocument) => () => {
+  getToggleEntitySelected = (index: number) => () => this.toggleEntitySelected(index);
+
+  toggleEntitySelected(index: number) {
     const { selectedEntities } = this.state;
+    const matchedEntity = this.props.entities[index];
 
     return this.setState({
-      selectedEntities: _.find(selectedEntities, entity)
-        ? _.reject(selectedEntities, entity)
-        : selectedEntities.concat(entity)
+      selectedEntities: _.find(selectedEntities, matchedEntity)
+        ? _.reject(selectedEntities, matchedEntity)
+        : selectedEntities.concat(matchedEntity)
     });
-  };
+  }
 
   render() {
     const { entities, style } = this.props;
@@ -83,13 +86,11 @@ class EntityList extends BaseComponent<
           {_.isEmpty(selectedEntities) ? (
             <Icon name="plus" size={36} className="muted" />
           ) : (
-            <Flex wrap="wrap" className="selected-entities">
-              {selectedEntities.map((entity: EntityDocument) => (
-                <Tag key={entity._id} onRemove={this.getToggleSelectedHandler(entity)}>
-                  {entity.name}
-                </Tag>
-              ))}
-            </Flex>
+            <TagList
+              className="selected-entities"
+              tags={_.map(selectedEntities, 'name')}
+              onRemoveIndex={this.toggleEntitySelected}
+            />
           )}
         </div>
 
@@ -113,7 +114,7 @@ class EntityList extends BaseComponent<
                   minimal={true}
                   rounded={true}
                   size="small"
-                  onClick={this.getToggleSelectedHandler(entity)}
+                  onClick={this.getToggleEntitySelected(i)}
                 />
               )}
 

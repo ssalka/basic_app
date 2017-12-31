@@ -12,6 +12,7 @@ import NotFound from './NotFound';
 export * from './layout';
 export * from './ui';
 export * from './views';
+export * from './Tag';
 export {
   BaseComponent,
   ReduxComponent,
