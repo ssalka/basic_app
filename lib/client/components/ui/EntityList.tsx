@@ -60,9 +60,6 @@ class EntityList extends BaseComponent<
     const { entities, style } = this.props;
     const { combineEntities, selectedEntities } = this.state;
 
-    // tslint:disable-next-line
-    let nextPathname; // TODO: entity aggregate route
-
     return entities.length ? (
       <Flex column={true} className="entity-list pt-callout pt-elevation-1" style={style}>
         <h4 className="view-title">
@@ -83,7 +80,7 @@ class EntityList extends BaseComponent<
             <Icon name="plus" size={36} className="muted" />
           ) : (
             <React.Fragment>
-              <Link to={{ state: selectedEntities, pathname: nextPathname }}>
+              <Link to={{ state: { selectedEntities }, pathname: '/combine-entities' }}>
                 <Button icon="arrow-right" size="small" minimal={true} rounded={true} />
               </Link>
 
@@ -91,6 +88,7 @@ class EntityList extends BaseComponent<
                 className="selected-entities"
                 tags={_.map(selectedEntities, 'name')}
                 onRemoveIndex={this.toggleEntitySelected}
+                removable={true}
               />
             </React.Fragment>
           )}

@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { Flex } from 'grid-styled';
 import { ICSSProps } from 'lib/common/interfaces';
+import '../styles/Tag.less';
 
 interface ITagProps {
   onRemove?(event): void;
@@ -30,16 +31,28 @@ export default Tag;
 interface ITagListProps extends React.HTMLProps<HTMLDivElement>, ICSSProps {
   onRemoveIndex?(index: number): void;
   tags: string[];
+  removable?: boolean;
 }
 
 export const TagList: React.ComponentType<ITagListProps> = ({
   onRemoveIndex = _.noop,
   tags = [],
+  className = '',
+  removable = false,
   ...props
 }) => (
-  <Flex wrap="wrap" {...props}>
+  <Flex
+    wrap="wrap"
+    align="flex-start"
+    className={classNames('tag-list', className)}
+    {...props}
+  >
     {tags
-      .map((tag, i) => ({ children: tag, onRemove: event => onRemoveIndex(i) }))
+      .map((tag, i) => ({
+        children: tag,
+        removable,
+        onRemove: event => onRemoveIndex(i)
+      }))
       .map((tagProps, i) => <Tag key={i} {...tagProps} />)}
   </Flex>
 );
