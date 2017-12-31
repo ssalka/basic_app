@@ -5,7 +5,7 @@ import * as React from 'react';
 import Link from 'react-router-redux-dom-link';
 import { EditableText, NonIdealState } from '@blueprintjs/core';
 import { getEntities, updateEntity } from 'lib/client/api/entities/actions';
-import { BaseComponent, Button, Icon } from 'lib/client/components';
+import { BaseComponent, Button, Icon, Tag } from 'lib/client/components';
 import { connect } from 'lib/client/services/utils';
 import { EntityDocument } from 'lib/common/interfaces';
 import 'lib/client/styles/EntityList.less';
@@ -85,13 +85,9 @@ class EntityList extends BaseComponent<
           ) : (
             <Flex wrap="wrap" className="selected-entities">
               {selectedEntities.map((entity: EntityDocument) => (
-                <span className="pt-tag pt-tag-removable" key={entity._id}>
+                <Tag key={entity._id} onRemove={this.getToggleSelectedHandler(entity)}>
                   {entity.name}
-                  <button
-                    className="pt-tag-remove"
-                    onClick={this.getToggleSelectedHandler(entity)}
-                  />
-                </span>
+                </Tag>
               ))}
             </Flex>
           )}

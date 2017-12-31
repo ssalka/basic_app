@@ -5,6 +5,7 @@ import Button from './Button';
 import Icon from './Icon';
 import Popover from './Popover';
 import NumericInput from './NumericInput';
+import Tag from './Tag';
 import TextInput from './TextInput';
 import NotFound from './NotFound';
 
@@ -19,6 +20,7 @@ export {
   Icon,
   Popover,
   NumericInput,
+  Tag,
   TextInput,
   NotFound
 };
