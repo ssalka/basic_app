@@ -19,6 +19,8 @@ import DocumentView from './documentView';
 import DocumentForm from './documentForm';
 import './styles.less';
 
+const Loading = () => <div>Loading your library...</div>;
+
 interface IState {
   navLinks: ILink[];
 }
@@ -91,7 +93,7 @@ export default class App extends ReduxComponent<RouteComponentProps<any>, IState
             <Route path="/home" exact={true} render={this.renderWithStore(Home)} />
 
             {_.isEmpty(this.props.store.collection.collections) ? (
-              <div>Loading your library...</div>
+              <Route render={Loading} />
             ) : (
               <Switch>
                 <Route
