@@ -64,13 +64,12 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
 
         <div className="aggregate-title">
           <span className="aggregate-title-key">{_.capitalize(primaryField.key)}</span>
-          <h1>
-            <EditableText
-              defaultValue={primaryField.value}
-              onConfirm={this.handleUpdateAggregateName}
-              placeholder="New Aggregate Entity"
-            />
-          </h1>
+          <EntityDropTarget
+            value={primaryField.value}
+            onConfirm={this.handleUpdateAggregateName}
+            placeholder="New Aggregate Entity"
+            component="h1"
+          />
         </div>
 
         <div className="aggregate-fields">
@@ -113,10 +112,12 @@ const EntityDropTarget = DropTarget(
     connectDropTarget: connect.dropTarget(),
     isReady: monitor.isOver() && monitor.canDrop()
   })
-)(({ className, connectDropTarget, isReady, ...props }) =>
+)(({ className, connectDropTarget, isReady, component = 'div', ...props }) =>
   connectDropTarget(
-    <div className={classNames(className, isReady && 'ready-for-drop')}>
+    React.createElement(
+      component,
+      { className: classNames(className, isReady && 'ready-for-drop') },
       <EditableText placeholder="" {...props} />
-    </div>
+    )
   )
 );
