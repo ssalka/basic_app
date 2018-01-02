@@ -1,6 +1,8 @@
+import * as classNames from 'classnames';
 import * as _ from 'lodash';
 import * as React from 'react';
 import { Flex } from 'grid-styled';
+import { DropTarget } from 'react-dnd';
 import { RouteComponentProps } from 'react-router';
 import { EditableText } from '@blueprintjs/core';
 import { EntityDocument, IAggregate, Field } from 'lib/common/interfaces';
@@ -34,7 +36,15 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
 
   handleUpdateField = _.curry(
     (fieldKey: 'key' | 'value', index: number, newValue: string) => {
-      this.setStateByPath(`fields[${index}].${fieldKey}`, newValue);
+      const isNewField = index === this.state.aggregate.fields.length;
+      if (isNewField && !newValue) return;
+
+      const aggregate = _.cloneDeep(this.state.aggregate);
+
+      if (isNewField) aggregate.fields.push({ [fieldKey]: newValue });
+      else _.set(aggregate.fields[index], fieldKey, newValue);
+
+      this.setState({ aggregate });
     }
   );
 
@@ -49,7 +59,7 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
         <div className="entities pt-elevation-4">
           <h5>Entities</h5>
 
-          <TagList tags={_.map(entities, 'name')} />
+          <TagList tags={_.map(entities, 'name')} draggable={true} />
         </div>
 
         <div className="aggregate-title">
@@ -66,23 +76,20 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
         <div className="aggregate-fields">
           {fields.concat(emptyField).map((field, i) => (
             <Flex className="field" justify="space-around" key={i}>
+              {/* TODO: support typing entity names - create new or update existing? */}
               {/* TODO: add filterable entity selects as drop targets */}
 
-              <div className="key">
-                <EditableText
-                  defaultValue={field.key}
-                  onConfirm={this.handleUpdateField('key', i + 1)}
-                  placeholder=""
-                />
-              </div>
+              <EntityDropTarget
+                className="key"
+                value={field.key}
+                onConfirm={this.handleUpdateField('key', i + 1)}
+              />
 
-              <div className="value">
-                <EditableText
-                  defaultValue={field.value}
-                  onConfirm={this.handleUpdateField('value', i + 1)}
-                  placeholder=""
-                />
-              </div>
+              <EntityDropTarget
+                className="value"
+                value={field.value}
+                onConfirm={this.handleUpdateField('value', i + 1)}
+              />
             </Flex>
           ))}
         </div>
@@ -90,3 +97,26 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
     );
   }
 }
+
+const entityDropTarget = {
+  drop(props, monitor) {
+    const item = monitor.getItem();
+
+    if (props.onConfirm) props.onConfirm(item.name);
+  }
+};
+
+const EntityDropTarget = DropTarget(
+  'DraggableTag',
+  entityDropTarget,
+  (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isReady: monitor.isOver() && monitor.canDrop()
+  })
+)(({ className, connectDropTarget, isReady, ...props }) =>
+  connectDropTarget(
+    <div className={classNames(className, isReady && 'ready-for-drop')}>
+      <EditableText placeholder="" {...props} />
+    </div>
+  )
+);
