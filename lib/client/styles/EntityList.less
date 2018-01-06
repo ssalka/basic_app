@@ -39,11 +39,13 @@
     grid-area: drawer;
     background-color: @light-grey-3;
     overflow-x: hidden;
-    overflow-x: auto;
-    margin-bottom: 10px;
+    overflow-y: auto;
+    margin-bottom: 0;
     padding-left: 5px;
     height: 0;
-    transition: height .18s ease-in-out;
+    transition:
+      height .18s ease-in-out,
+      margin-bottom .18s ease-in-out;
 
     display: grid;
     grid-template-areas:
@@ -53,6 +55,7 @@
 
     &.open {
       height: 120px;
+      margin-bottom: 10px;
     }
 
     h6 {
@@ -81,6 +84,11 @@
   .entity-list-items {
     grid-area: list;
     flex-grow: 1;
+    overflow-x: hidden;
+
+    .pt-editable-text {
+      max-width: 90%;
+    }
 
     &.with-icons {
       display: grid;
