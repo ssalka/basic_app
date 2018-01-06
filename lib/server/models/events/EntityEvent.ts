@@ -3,8 +3,6 @@ import { EntityEventType } from 'lib/common/interfaces/entity';
 import { ModelGen } from 'lib/server/utils';
 import Event from './Event';
 
-const logOnce = _.once(console.log);
-
 export default ModelGen.extendModel(Event, {
   name: 'EntityEvent',
   statics: {

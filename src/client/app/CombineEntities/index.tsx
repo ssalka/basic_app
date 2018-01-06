@@ -5,6 +5,7 @@ import { Flex } from 'grid-styled';
 import { DropTarget } from 'react-dnd';
 import { RouteComponentProps } from 'react-router';
 import { EditableText } from '@blueprintjs/core';
+import { MongoCollection } from 'lib/common/constants';
 import { getName } from 'lib/common/helpers';
 import { EntityDocument, IAggregate, Field } from 'lib/common/interfaces';
 import { BaseComponent, Button, TagList } from 'lib/client/components';
@@ -48,7 +49,7 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
         : value;
 
       if (isNewField) {
-        aggregate.fields.push({ [fieldKey]: fieldValue });
+        aggregate.fields.push(new Field({ [fieldKey]: fieldValue }));
       } else {
         aggregate.fields[index][fieldKey] = fieldValue;
       }
@@ -60,13 +61,35 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
   handleUpdateAggregateName = this.handleUpdateField('value', 0);
 
   handleSubmit() {
-    // TODO
+    /**
+     * TODO: check if resulting entity matches any existing ones
+     *  - IDEA: if a match is found, let the user decide whether the aggregate should
+     *    just be added as a reference to the existing entity, or created as a
+     *    reference to a new entity (the one created here)
+     *    - eg: existing entity "Cabinet" to refer to kitchen cabinets, but new aggregate is
+     *      the executive/governmental type - should it be included? What about filing cabinets?
+     *  - IDEA: user should also have option to create a separate entity by the same name
+     */
+    const { aggregate } = this.state;
+    const [primaryField] = aggregate.fields;
+
+    const entity = {
+      name: getName(primaryField.value),
+      references: [
+        {
+          model: MongoCollection.Uncategorized, // TODO: set up collection in mongoose
+          value: aggregate
+        }
+      ]
+    };
+
+    // TODO: create entity + aggregate
+    console.log(entity);
   }
 
   render() {
     const { aggregate, entities } = this.state;
     const [primaryField, ...fields] = aggregate.fields;
-    console.log(getName(primaryField.value), primaryField);
 
     return (
       <div className="combine-entities">

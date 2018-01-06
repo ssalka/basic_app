@@ -1,14 +1,27 @@
+import { MongoCollection } from 'lib/common/constants';
 import { ModelGen, types } from '../utils';
-const { ref } = types;
+const { dynamicRef } = types;
 
-export default ModelGen.generateModel('Entity', {
+export default ModelGen.generateModel(MongoCollection.Entity, {
   name: String,
+  fields: {
+    type: [
+      {
+        // TODO: Field Model
+        key: String,
+        value: String
+      }
+    ],
+    default: []
+  },
   references: [
     {
-      type: {
-        type: String
+      model: {
+        type: String,
+        required: true,
+        default: MongoCollection.Uncategorized
       },
-      value: ref('references.type')
+      value: dynamicRef('references.model')
     }
   ]
 });

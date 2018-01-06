@@ -7,3 +7,9 @@ export const ref = (collection, required = false) => ({
   ref: collection,
   required
 });
+
+export const dynamicRef = (collection, required = false) => ({
+  type: Schema.Types.ObjectId,
+  refPath: collection,
+  required
+});
