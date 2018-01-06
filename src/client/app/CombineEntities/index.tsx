@@ -5,6 +5,7 @@ import { Flex } from 'grid-styled';
 import { DropTarget } from 'react-dnd';
 import { RouteComponentProps } from 'react-router';
 import { EditableText } from '@blueprintjs/core';
+import { getName } from 'lib/common/helpers';
 import { EntityDocument, IAggregate, Field } from 'lib/common/interfaces';
 import { BaseComponent, Button, TagList } from 'lib/client/components';
 import './styles.less';
@@ -35,14 +36,22 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
   };
 
   handleUpdateField = _.curry(
-    (fieldKey: 'key' | 'value', index: number, newValue: string) => {
+    (fieldKey: 'key' | 'value', index: number, value: string | EntityDocument) => {
       const isNewField = index === this.state.aggregate.fields.length;
-      if (isNewField && !newValue) return;
+
+      if (isNewField && !value) return;
 
       const aggregate = _.cloneDeep(this.state.aggregate);
 
-      if (isNewField) aggregate.fields.push({ [fieldKey]: newValue });
-      else _.set(aggregate.fields[index], fieldKey, newValue);
+      const fieldValue: EntityDocument = _.isString(value)
+        ? _.find(aggregate.fields, { name: value })
+        : value;
+
+      if (isNewField) {
+        aggregate.fields.push({ [fieldKey]: fieldValue });
+      } else {
+        aggregate.fields[index][fieldKey] = fieldValue;
+      }
 
       this.setState({ aggregate });
     }
@@ -57,19 +66,23 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
   render() {
     const { aggregate, entities } = this.state;
     const [primaryField, ...fields] = aggregate.fields;
+    console.log(getName(primaryField.value), primaryField);
 
     return (
       <div className="combine-entities">
         <div className="entities pt-elevation-4">
           <h5>Entities</h5>
 
-          <TagList tags={_.map(entities, 'name')} draggable={true} />
+          <TagList tags={entities} draggable={true} />
         </div>
 
         <div className="aggregate-title">
-          <span className="aggregate-title-key">{_.capitalize(primaryField.key)}</span>
+          <span className="aggregate-title-key">
+            {_.capitalize(getName(primaryField.key))}
+          </span>
+
           <EntityDropTarget
-            value={primaryField.value}
+            value={getName(primaryField.value)}
             onConfirm={this.handleUpdateAggregateName}
             placeholder="New Aggregate Entity"
             component="h1"
@@ -83,13 +96,13 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
 
               <EntityDropTarget
                 className="key"
-                value={field.key}
+                value={getName(field.key)}
                 onConfirm={this.handleUpdateField('key', i + 1)}
               />
 
               <EntityDropTarget
                 className="value"
-                value={field.value}
+                value={getName(field.value)}
                 onConfirm={this.handleUpdateField('value', i + 1)}
               />
             </Flex>
@@ -102,7 +115,7 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
           disabled={!primaryField.value}
           onClick={this.handleSubmit}
         >
-          Create {primaryField.value || 'Entity'}
+          Create {getName(primaryField.value) || 'Entity'}
         </Button>
       </div>
     );
@@ -111,9 +124,9 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
 
 const entityDropTarget = {
   drop(props, monitor) {
-    const item = monitor.getItem();
+    const item: EntityDocument = monitor.getItem();
 
-    if (props.onConfirm) props.onConfirm(item.name);
+    if (props.onConfirm) props.onConfirm(item);
   }
 };
 

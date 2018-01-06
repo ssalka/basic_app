@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { DragSource } from 'react-dnd';
 import { Flex } from 'grid-styled';
+import { getName } from 'lib/common/helpers';
 import { ICSSProps } from 'lib/common/interfaces';
 import '../styles/Tag.less';
 
@@ -22,7 +23,7 @@ const Tag: React.ComponentType<ITagProps & React.HTMLProps<HTMLSpanElement>> = (
     className={classNames('pt-tag', removable && 'pt-tag-removable', className)}
     {...props}
   >
-    {children}
+    {getName(children as any)}
     {removable && <button className="pt-tag-remove" onClick={onRemove} />}
   </span>
 );
@@ -32,7 +33,7 @@ export default Tag;
 const tagSource = {
   isDragging: (props, monitor) => monitor.getItem().id === props.id,
 
-  beginDrag: props => ({ id: props.id, name: props.children }),
+  beginDrag: props => props.children,
 
   endDrag(props, monitor, component) {
     if (!monitor.didDrop()) return;
@@ -55,7 +56,7 @@ const DraggableTag = DragSource('DraggableTag', tagSource, (connect, monitor) =>
 
 interface ITagListProps extends React.HTMLProps<HTMLDivElement>, ICSSProps {
   onRemoveIndex?(index: number): void;
-  tags: string[];
+  tags: any[];
   removable?: boolean;
   draggable?: boolean;
 }
