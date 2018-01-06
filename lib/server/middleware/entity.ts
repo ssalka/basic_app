@@ -9,16 +9,17 @@ export const createEntity: RequestHandler = (req, res, next) => {
   const entity = new Entity(req.body).toObject();
 
   const payload = {
+    // prettier-ignore
     entity: _.isEmpty(req.body.references)
       ? entity
       : {
-          ...entity,
-          // TODO: see if this mapping can be avoided - currently seems necessary to get populated subdocuments
-          references: req.body.references.map(({ model, value }) => ({
-            model,
-            value: new Entity(value).toObject()
-          }))
-        }
+        ...entity,
+        // TODO: see if this mapping can be avoided - currently seems necessary to get populated subdocuments
+        references: req.body.references.map(({ model, value }) => ({
+          model,
+          value: new Entity(value).toObject()
+        }))
+      }
   };
 
   EntityEvent.create({
