@@ -50,6 +50,10 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
 
   handleUpdateAggregateName = this.handleUpdateField('value', 0);
 
+  handleSubmit() {
+    // TODO
+  }
+
   render() {
     const { aggregate, entities } = this.state;
     const [primaryField, ...fields] = aggregate.fields;
@@ -75,7 +79,6 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
         <div className="aggregate-fields">
           {fields.concat(emptyField).map((field, i) => (
             <Flex className="field" justify="space-around" key={i}>
-              {/* TODO: support typing entity names - create new or update existing? */}
               {/* TODO: add filterable entity selects as drop targets */}
 
               <EntityDropTarget
@@ -92,6 +95,15 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
             </Flex>
           ))}
         </div>
+
+        <Button
+          color="success"
+          className="pt-large"
+          disabled={!primaryField.value}
+          onClick={this.handleSubmit}
+        >
+          Create {primaryField.value || 'Entity'}
+        </Button>
       </div>
     );
   }
