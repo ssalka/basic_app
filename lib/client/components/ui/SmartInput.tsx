@@ -42,7 +42,7 @@ export default class SmartInput extends ViewComponent<
       name: collection.name,
       references: [
         {
-          type: 'Collection',
+          model: 'Collection',
           value: collection as IDocument<'Collection'>
         }
       ]
@@ -229,7 +229,7 @@ export default class SmartInput extends ViewComponent<
               key={i}
             >
               <span className="pt-tag" style={{ marginRight: 5 }}>
-                {_.isEmpty(references) ? 'Entity' : _.capitalize(references[0].type)}
+                {_.isEmpty(references) ? 'Entity' : _.capitalize(references[0].model)}
               </span>
 
               <span>{name}</span>

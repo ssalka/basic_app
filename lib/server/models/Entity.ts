@@ -1,6 +1,6 @@
 import { MongoCollection } from 'lib/common/constants';
 import { ModelGen, types } from '../utils';
-const { dynamicRef } = types;
+const { dynamicRef, Mixed } = types;
 
 export default ModelGen.generateModel(MongoCollection.Entity, {
   name: String,
@@ -8,8 +8,8 @@ export default ModelGen.generateModel(MongoCollection.Entity, {
     type: [
       {
         // TODO: Field Model
-        key: String,
-        value: String
+        key: Mixed,
+        value: Mixed
       }
     ],
     default: []
@@ -19,7 +19,7 @@ export default ModelGen.generateModel(MongoCollection.Entity, {
       model: {
         type: String,
         required: true,
-        default: MongoCollection.Uncategorized
+        default: MongoCollection.Entity
       },
       value: dynamicRef('references.model')
     }

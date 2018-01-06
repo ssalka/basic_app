@@ -5,10 +5,19 @@ import { Flex } from 'grid-styled';
 import { DropTarget } from 'react-dnd';
 import { RouteComponentProps } from 'react-router';
 import { EditableText } from '@blueprintjs/core';
+import { createEntity } from 'lib/client/api/entities/actions';
+import { BaseComponent, Button, TagList } from 'lib/client/components';
+import { connect } from 'lib/client/services/utils';
 import { MongoCollection } from 'lib/common/constants';
 import { getName } from 'lib/common/helpers';
-import { EntityDocument, IAggregate, Field } from 'lib/common/interfaces';
-import { BaseComponent, Button, TagList } from 'lib/client/components';
+import {
+  EntityDocument,
+  IAggregate,
+  IDocument,
+  IEntity,
+  IPopulatedEntity,
+  Field
+} from 'lib/common/interfaces';
 import './styles.less';
 
 interface ILocationState {
@@ -19,6 +28,7 @@ interface IProps extends RouteComponentProps<any> {
   location: RouteComponentProps<any>['location'] & {
     state?: ILocationState;
   };
+  createEntity: typeof createEntity;
 }
 
 interface IState {
@@ -28,7 +38,7 @@ interface IState {
 
 const emptyField = new Field();
 
-export default class CombineEntities extends BaseComponent<IProps, IState> {
+class CombineEntities extends BaseComponent<IProps, IState> {
   state: IState = {
     aggregate: {
       fields: [new Field({ key: 'name' })]
@@ -63,28 +73,24 @@ export default class CombineEntities extends BaseComponent<IProps, IState> {
   handleSubmit() {
     /**
      * TODO: check if resulting entity matches any existing ones
-     *  - IDEA: if a match is found, let the user decide whether the aggregate should
-     *    just be added as a reference to the existing entity, or created as a
-     *    reference to a new entity (the one created here)
      *    - eg: existing entity "Cabinet" to refer to kitchen cabinets, but new aggregate is
      *      the executive/governmental type - should it be included? What about filing cabinets?
-     *  - IDEA: user should also have option to create a separate entity by the same name
      */
     const { aggregate } = this.state;
     const [primaryField] = aggregate.fields;
 
-    const entity = {
+    const entity: IPopulatedEntity<IAggregate> = {
       name: getName(primaryField.value),
       references: [
         {
-          model: MongoCollection.Uncategorized, // TODO: set up collection in mongoose
+          model: MongoCollection.Entity,
           value: aggregate
         }
       ]
     };
 
-    // TODO: create entity + aggregate
-    console.log(entity);
+    // TODO: update existing entity if option selected
+    this.props.createEntity(entity);
   }
 
   render() {
@@ -156,12 +162,12 @@ const entityDropTarget = {
 const EntityDropTarget = DropTarget(
   'DraggableTag',
   entityDropTarget,
-  (connect, monitor) => ({
-    connectDropTarget: connect.dropTarget(),
+  (connector, monitor) => ({
+    connectToDropTarget: connector.dropTarget(),
     isReady: monitor.isOver() && monitor.canDrop()
   })
-)(({ className, connectDropTarget, isReady, component = 'div', ...props }) =>
-  connectDropTarget(
+)(({ className, connectToDropTarget, isReady, component = 'div', ...props }) =>
+  connectToDropTarget(
     React.createElement(
       component,
       { className: classNames(className, isReady && 'ready-for-drop') },
@@ -169,3 +175,10 @@ const EntityDropTarget = DropTarget(
     )
   )
 );
+
+export default connect({
+  store: 'entity',
+  actions: {
+    createEntity
+  }
+})(CombineEntities);

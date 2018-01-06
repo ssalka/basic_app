@@ -1,13 +1,13 @@
 import { ID, IDocument } from './mongo';
 
 export interface IReference {
-  type: string;
+  model: string;
   value: ID;
 }
 
-export interface IPopulatedReference<Ref extends IReference = IReference> {
-  type: string;
-  value: IDocument<Ref['value']>;
+export interface IPopulatedReference<T> {
+  model: string;
+  value: T;
 }
 
 export interface IEntity {
@@ -15,9 +15,9 @@ export interface IEntity {
   references: IReference[];
 }
 
-export interface IPopulatedEntity {
+export interface IPopulatedEntity<T = {}> {
   name: string;
-  references: IPopulatedReference[];
+  references: IPopulatedReference<T>[];
 }
 
 export type EntityDocument = IEntity & IDocument<'Entity'>;
