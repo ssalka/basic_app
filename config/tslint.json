@@ -37,6 +37,7 @@
     "ordered-imports": false,
     "one-line": false,
     "prefer-method-signature": true,
+    "prefer-template": [true, "allow-single-concat"],
     "quotemark": [true, "single", "avoid-escape", "avoid-template", "jsx-double"],
     "space-before-function-paren": [true, {
       "anonymous": "always",
