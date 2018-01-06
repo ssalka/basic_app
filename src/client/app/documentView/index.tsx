@@ -39,7 +39,7 @@ export default class DocumentView extends ViewComponent<IProps, any> {
   renderField: SFC = (field: CollectionField): ReactElement => (
     <p key={field.name}>
       <strong className="field-name">{field.name}</strong>
-      {RenderingService.renderField(this.props.document, field)}
+      {RenderingService.renderCollectionField(this.props.document, field)}
     </p>
   );
 

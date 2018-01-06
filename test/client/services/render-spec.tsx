@@ -48,7 +48,7 @@ describe('Rendering Service', () => {
     });
   });
 
-  describe('#renderField', () => {
+  describe('#renderCollectionField', () => {
     it('renders a React element, given document, field to render, and optional props', done => {
       const field = new CollectionField('target');
       const document = { target: 'Display Text' };
@@ -57,7 +57,8 @@ describe('Rendering Service', () => {
         children: document.target
       });
 
-      const Component: SFC = () => RenderingService.renderField(document, field, props);
+      const Component: SFC = () =>
+        RenderingService.renderCollectionField(document, field, props);
       const renderedField = shallow(<Component />);
 
       expect(_.first(renderedField.getElements()).props).toEqual(expectedProps);

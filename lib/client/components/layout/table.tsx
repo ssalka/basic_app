@@ -45,7 +45,7 @@ export default class Table extends ViewComponent<IProps, any> {
 
     // TODO: optimize performance
     const Component: SFC = ({ record }) =>
-      RenderingService.renderField(record, field, {
+      RenderingService.renderCollectionField(record, field, {
         onClick: handleClick(record)
       });
 

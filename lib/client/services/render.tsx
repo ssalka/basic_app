@@ -57,7 +57,7 @@ class RenderingService {
     return { [targetProp]: displayValue };
   }
 
-  public renderField(
+  public renderCollectionField(
     document: any,
     field: CollectionField,
     props: ReactProps = {}
