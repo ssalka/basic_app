@@ -38,22 +38,24 @@ export function setup(options, done) {
         async.eachOf(
           options.mocks,
           (mockInstances, modelName, cb) => {
-            const Model = models[modelName];
-            const MockModel = mocks[`Mock${modelName}`];
-            if (!Model) {
-              return cb(`Model ${modelName} not found`);
-            }
-            if (!MockModel) {
-              return cb(`No mock class found for model ${modelName}`);
-            }
+            const ActualModel = models[modelName];
+            if (!ActualModel) return cb(`Model ${modelName} not found`);
+
+            const MatchedModel = mocks[`Mock${modelName}`];
+            if (!MatchedModel)
+              console.warn(
+                `No mock class found for model ${modelName} - using unmodified input object(s)`
+              );
+
+            const MockModel = MatchedModel || ActualModel;
 
             results[modelName] = [];
             async.each(
               mockInstances,
               (mockInstance, _cb) => {
-                const mock = new MockModel(mockInstance);
+                const mock = MatchedModel ? new MatchedModel(mockInstance) : mockInstance;
                 results[modelName].push(mock);
-                Model.create(mock, _cb);
+                ActualModel.create(mock, _cb);
               },
               cb
             );
