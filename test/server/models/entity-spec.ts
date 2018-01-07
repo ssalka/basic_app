@@ -1,8 +1,6 @@
-import * as assert from 'assert';
 import * as _ from 'lodash';
-import { setup, cleanup } from 'test/utils';
 import { createTestDocs, removeTestDocs } from 'test/utils';
-import { Entity, EntityEvent } from 'lib/server/models';
+import { Entity, EntityEvent, User } from 'lib/server/models';
 import { MockUser } from 'lib/server/models/mocks';
 import { MongoCollection } from 'lib/common/constants';
 import {
@@ -13,11 +11,27 @@ import {
 } from 'lib/common/interfaces';
 
 describe('EntityEvent', () => {
-  const testEntity = new Entity({
-    name: 'Test Entity'
+  const testUser = new MockUser();
+
+  beforeAll(async done => {
+    await User.create(testUser).catch(done.fail);
+    done();
   });
 
-  const testUser = new MockUser();
+  afterAll(async done => {
+    await User.remove(testUser).catch(done.fail);
+    done();
+  });
+
+  const testEntity = new Entity({
+    name: 'Test Entity',
+    references: [
+      {
+        model: MongoCollection.User,
+        value: testUser
+      }
+    ]
+  });
 
   const testEvent: IEvent<ICreateEntityPayload> = {
     type: EntityEventType.Created,
@@ -47,6 +61,15 @@ describe('EntityEvent', () => {
         _.keys
       );
       expect(missingEntityKeys).toHaveLength(0);
+
+      // BUG: subdocs are not populated
+      // expect(payload.entity).toEqual(testEntity);
+
+      expect(payload.entity.references).toHaveLength(1);
+
+      const [{ model, value }] = payload.entity.references;
+      expect(model).toBe(MongoCollection.User);
+      expect(value).toEqual(testUser._id);
     });
   });
 
