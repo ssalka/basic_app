@@ -33,7 +33,7 @@ export function setup(options, done) {
   const results = {};
   async.series(
     [
-      waitForConnection,
+      callback => waitForConnection.then(() => callback(), callback),
       callback =>
         async.eachOf(
           options.mocks,
@@ -42,10 +42,8 @@ export function setup(options, done) {
             if (!ActualModel) return cb(`Model ${modelName} not found`);
 
             const MatchedModel = mocks[`Mock${modelName}`];
-            if (!MatchedModel)
-              console.warn(
-                `No mock class found for model ${modelName} - using unmodified input object(s)`
-              );
+            // prettier-ignore
+            if (!MatchedModel) console.warn(`No mock class found for model ${modelName} - using unmodified input object(s)`);
 
             const MockModel = MatchedModel || ActualModel;
 
