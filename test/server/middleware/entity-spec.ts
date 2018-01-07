@@ -19,14 +19,14 @@ describe('Entity Middleware', () => {
     res = {};
   });
 
-  describe('#createEntity', () => {
-    beforeEach(() => {
-      EntityEvent = EntityEventModel;
-      req.body = testEntity;
-      res.json = jest.fn();
-      next = jest.fn();
-    });
+  beforeEach(() => {
+    EntityEvent = EntityEventModel;
+    req.body = testEntity;
+    res.json = jest.fn();
+    next = jest.fn();
+  });
 
+  describe('#createEntity', () => {
     it('creates an EntityEvent detailing the entity created', async () => {
       EntityEvent.create = jest.fn(() =>
         Promise.resolve({
@@ -35,6 +35,25 @@ describe('Entity Middleware', () => {
       );
 
       await entityMiddleware.createEntity(req, res, next);
+
+      expect(res.json).toHaveBeenCalled();
+      expect(next).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('#updateEntity', () => {
+    beforeEach(() => {
+      req.params = { entityId: 'entityId' };
+    });
+
+    it('creates an EntityEvent detailing the entity updated', async () => {
+      EntityEvent.create = jest.fn(() =>
+        Promise.resolve({
+          payload: { entity: testEntity }
+        })
+      );
+
+      await entityMiddleware.updateEntity(req, res, next);
 
       expect(res.json).toHaveBeenCalled();
       expect(next).not.toHaveBeenCalled();
