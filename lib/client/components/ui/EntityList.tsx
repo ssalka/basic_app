@@ -98,17 +98,14 @@ class EntityList extends BaseComponent<
           className={classNames(
             'entity-list-items',
             'scroll-y',
-            combineEntities && 'with-icons'
+            combineEntities && '.combine-entities'
           )}
         >
           {entities.map((entity: EntityDocument, i) => (
             <React.Fragment key={i}>
               {combineEntities && (
                 <Button
-                  className={classNames(
-                    'select-entity-checkbox',
-                    combineEntities && 'visible'
-                  )}
+                  className={classNames('select-entity-checkbox', 'visible')}
                   icon={_.find(selectedEntities, entity) ? 'tick' : 'plus'}
                   color={_.find(selectedEntities, entity) && 'success'}
                   minimal={true}
@@ -123,6 +120,22 @@ class EntityList extends BaseComponent<
                 onConfirm={this.getUpdateHandler(entity)}
                 placeholder="New Entity"
               />
+
+              {entity.references &&
+                !!entity.references.length && (
+                  // TODO: populate entity references
+                  <Link
+                    className={classNames('go-to-entity-page', 'visible')}
+                    to={{ pathname: `/entity/${entity._id}`, state: { entity } }}
+                  >
+                    <Button
+                      icon="arrow-right"
+                      minimal={true}
+                      rounded={true}
+                      size="small"
+                    />
+                  </Link>
+                )}
             </React.Fragment>
           ))}
         </div>

@@ -14,14 +14,17 @@ export default ModelGen.generateModel(MongoCollection.Entity, {
     ],
     default: []
   },
-  references: [
-    {
-      model: {
-        type: String,
-        required: true,
-        default: MongoCollection.Entity
-      },
-      value: dynamicRef('references.model')
-    }
-  ]
+  references: {
+    type: [
+      {
+        model: {
+          type: String,
+          required: true,
+          default: MongoCollection.Entity
+        },
+        value: dynamicRef('references.model')
+      }
+    ],
+    default: []
+  }
 });

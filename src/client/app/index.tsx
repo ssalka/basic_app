@@ -18,6 +18,7 @@ import CollectionView from './collectionView';
 import CollectionForm from './collectionForm';
 import DocumentView from './documentView';
 import DocumentForm from './documentForm';
+import EntityView from './EntityView';
 import './styles.less';
 
 const Loading = () => <div>Loading your library...</div>;
@@ -62,6 +63,10 @@ export default class App extends ReduxComponent<RouteComponentProps<any>, IState
     return (
       <CollectionForm {...props} collection={collection} collections={collections} />
     );
+  }
+
+  getEntityView({ location: { state } }) {
+    return <EntityView {...state} />;
   }
 
   renderWithStore = _.curry(
@@ -139,6 +144,12 @@ export default class App extends ReduxComponent<RouteComponentProps<any>, IState
                   path="/combine-entities"
                   exact={true}
                   component={CombineEntities}
+                />
+
+                <Route
+                  path="/entity/:entityId"
+                  exact={true}
+                  render={this.getEntityView}
                 />
 
                 <Route path="/:param" render={NotFound} />
