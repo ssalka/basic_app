@@ -3,14 +3,17 @@ import {
   EntityDocument,
   EntityEventType,
   ID,
-  IEntity
+  IEntity,
+  IPopulatedEntity
 } from 'lib/common/interfaces';
 
 export interface ICreateEntityPayload {
-  entity: IEntity;
+  entity: IEntity | IPopulatedEntity;
 }
 
-export const createEntity = (entity: IEntity): Action<ICreateEntityPayload> => ({
+export const createEntity = (
+  entity: IEntity | IPopulatedEntity
+): Action<ICreateEntityPayload> => ({
   type: EntityEventType.Created,
   entity
 });

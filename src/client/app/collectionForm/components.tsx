@@ -12,7 +12,7 @@ import {
 } from 'lib/client/components';
 import {
   Collection,
-  Field,
+  CollectionField,
   IRenderMethod,
   IType,
   ReactElement,
@@ -53,7 +53,7 @@ export const FieldNameInput: SFC = ({ name, onChange }) => (
 export interface ITypeSelectPopoverProps {
   collections: Collection[];
   selectedType: IType | Collection;
-  onChange(value: Partial<Field>): void;
+  onChange(value: Partial<CollectionField>): void;
 }
 
 export const TypeSelectPopover: SFC = ({

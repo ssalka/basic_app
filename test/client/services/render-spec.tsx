@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as _ from 'lodash';
 import * as React from 'react';
 import { RenderingService } from 'lib/client/services';
-import { Field } from 'lib/common/interfaces';
+import { CollectionField } from 'lib/common/interfaces';
 import { BaseComponent } from 'lib/client/components';
 import { shallow } from 'enzyme';
 
@@ -48,16 +48,17 @@ describe('Rendering Service', () => {
     });
   });
 
-  describe('#renderField', () => {
+  describe('#renderCollectionField', () => {
     it('renders a React element, given document, field to render, and optional props', done => {
-      const field = new Field('target');
+      const field = new CollectionField('target');
       const document = { target: 'Display Text' };
       const props = { onClick: done };
       const expectedProps = _.assign({}, props, {
         children: document.target
       });
 
-      const Component: SFC = () => RenderingService.renderField(document, field, props);
+      const Component: SFC = () =>
+        RenderingService.renderCollectionField(document, field, props);
       const renderedField = shallow(<Component />);
 
       expect(_.first(renderedField.getElements()).props).toEqual(expectedProps);

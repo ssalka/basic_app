@@ -9,7 +9,7 @@ import Link from 'react-router-redux-dom-link';
 import { RenderingService } from 'lib/client/services';
 import {
   Collection,
-  Field,
+  CollectionField,
   IDocument,
   IRenderMethod,
   ReactElement,
@@ -36,10 +36,10 @@ export default class DocumentView extends ViewComponent<IProps, any> {
     console.info(_.singularize(collection.name), _document._id, _.omit(_document, '_id'));
   }
 
-  renderField: SFC = (field: Field): ReactElement => (
+  renderField: SFC = (field: CollectionField): ReactElement => (
     <p key={field.name}>
       <strong className="field-name">{field.name}</strong>
-      {RenderingService.renderField(this.props.document, field)}
+      {RenderingService.renderCollectionField(this.props.document, field)}
     </p>
   );
 
@@ -53,7 +53,7 @@ export default class DocumentView extends ViewComponent<IProps, any> {
         <br />
         <br />
         {collection.fields
-          .filter((field: Field) =>
+          .filter((field: CollectionField) =>
             RenderingService.isNonemptyField(_document[_.camelCase(field.name)])
           )
           .map(this.renderField)}

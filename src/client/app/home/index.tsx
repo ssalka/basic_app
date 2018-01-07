@@ -56,7 +56,7 @@ export default class Home extends ReduxComponent<RouteComponentProps<any>> {
                 link: 'path'
               }}
               style={{
-                maxHeight: 200,
+                maxHeight: '-webkit-fill-available',
                 overflow: 'auto',
                 gridColumn: '1 / 3',
                 gridRow: 2

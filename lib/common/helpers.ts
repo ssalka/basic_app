@@ -19,3 +19,7 @@ export function findDocumentById(collection, _id) {
 export function findCollection(collections, _collection) {
   return _.find(collections, { _collection });
 }
+
+export function getName(item: string | Record<string, any> = ''): string {
+  return (item as Record<string, any>).name || item;
+}

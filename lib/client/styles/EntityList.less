@@ -1,0 +1,110 @@
+@import '~lib/client/styles/colors';
+
+.entity-list {
+  display: grid;
+  grid-template-areas:
+    "title  icon"
+    "drawer drawer"
+    "list   list";
+  align-items: stretch;
+  justify-content: stretch;
+  grid-template-rows: 40px auto minmax(500px, auto);
+  grid-template-columns: auto 50px;
+
+  .view-title {
+    grid-area: title;
+    align-self: center;
+    margin: 0;
+  }
+
+  .icon {
+    place-self: center;
+
+    &.pt-icon-group-objects {
+      grid-area: icon;
+    }
+
+    &:not(.pt-icon-group-objects, .pt-icon-plus) {
+      &::before {
+        display: none;
+      }
+
+      &.visible::before {
+        display: inline-block;
+      }
+    }
+  }
+
+  .drawer {
+    grid-area: drawer;
+    background-color: @light-grey-3;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin-bottom: 0;
+    padding-left: 5px;
+    height: 0;
+    transition:
+      height .18s ease-in-out,
+      margin-bottom .18s ease-in-out;
+
+    display: grid;
+    grid-template-areas:
+      "title    icon"
+      "content content";
+    grid-template-rows: 30px auto;
+
+    &.open {
+      height: 120px;
+      margin-bottom: 10px;
+    }
+
+    h6 {
+      grid-area: title;
+      font-weight: 500;
+      font-size: 95%;
+      margin: 10px 0;
+    }
+
+    a {
+      grid-area: icon;
+      place-self: flex-end;
+      align-self: center;
+      margin-right: 10px;
+    }
+
+    .pt-icon-plus {
+      grid-area: content;
+    }
+
+    .selected-entities {
+      grid-area: content;
+    }
+  }
+
+  .entity-list-items {
+    grid-area: list;
+    flex-grow: 1;
+    overflow-x: hidden;
+
+    .pt-editable-text {
+      max-width: 90%;
+    }
+
+    &.with-icons {
+      display: grid;
+      grid-template-columns: 30px auto;
+      grid-auto-rows: 30px;
+      align-items: center;
+
+      .pt-editable-text {
+        margin: 0;
+      }
+    }
+
+    .pt-editable-text {
+      display: block;
+      margin-top: 10px;
+      margin-left: 10px;
+    }
+  }
+}

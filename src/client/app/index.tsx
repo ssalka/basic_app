@@ -12,12 +12,16 @@ import {
 import { ILink, Collection, IUser } from 'lib/common/interfaces';
 
 import Home from './home';
+import CombineEntities from './CombineEntities';
 import Collections from './collections';
 import CollectionView from './collectionView';
 import CollectionForm from './collectionForm';
 import DocumentView from './documentView';
 import DocumentForm from './documentForm';
+import EntityView from './EntityView';
 import './styles.less';
+
+const Loading = () => <div>Loading your library...</div>;
 
 interface IState {
   navLinks: ILink[];
@@ -61,6 +65,10 @@ export default class App extends ReduxComponent<RouteComponentProps<any>, IState
     );
   }
 
+  getEntityView({ location: { state } }) {
+    return <EntityView {...state} />;
+  }
+
   renderWithStore = _.curry(
     (Component: React.ComponentType, props: RouteComponentProps<any>) => (
       <Component {..._.pick(this.props, 'store', 'actions')} {...props} />
@@ -91,59 +99,60 @@ export default class App extends ReduxComponent<RouteComponentProps<any>, IState
             <Route path="/home" exact={true} render={this.renderWithStore(Home)} />
 
             {_.isEmpty(this.props.store.collection.collections) ? (
-              <div>Loading your library...</div>
+              <Route render={Loading} />
             ) : (
               <Switch>
                 <Route
-                  key="Collections"
                   path="/collections"
                   exact={true}
                   render={this.renderWithStore(Collections)}
                 />
 
-                <Route
-                  key="CollectionForm"
-                  path="/collections/add"
-                  exact={true}
-                  component={CollectionForm}
-                />
+                <Route path="/collections/add" exact={true} component={CollectionForm} />
 
                 <Route
-                  key="CollectionView"
                   path="/collections/:collection"
                   exact={true}
                   component={CollectionView}
                 />
 
                 <Route
-                  key="CollectionForm-Edit"
                   path="/collections/:collection/edit"
                   exact={true}
                   render={this.getCollectionForm}
                 />
 
                 <Route
-                  key="DocumentView"
                   path="/collections/:collection/:_id"
                   exact={true}
                   render={this.getDocumentView}
                 />
 
                 <Route
-                  key="DocumentForm"
                   path="/collections/:collection/add"
                   exact={true}
                   render={this.getDocumentForm}
                 />
 
                 <Route
-                  key="DocumentForm-Edit"
                   path="/collections/:collection/:_id/edit"
                   exact={true}
                   render={this.getDocumentForm}
                 />
 
-                <Route key="NotFound" path="/:param" render={NotFound} />
+                <Route
+                  path="/combine-entities"
+                  exact={true}
+                  component={CombineEntities}
+                />
+
+                <Route
+                  path="/entity/:entityId"
+                  exact={true}
+                  render={this.getEntityView}
+                />
+
+                <Route path="/:param" render={NotFound} />
               </Switch>
             )}
           </Switch>

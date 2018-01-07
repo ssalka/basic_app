@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as _ from 'lodash';
 import * as React from 'react';
 import { mount } from 'enzyme';
-import { Collection, Field } from 'lib/common/interfaces';
+import { Collection, CollectionField } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import { MockCollection } from 'lib/server/models/mocks';
 import { CollectionForm } from 'src/client/app/collectionForm';
@@ -69,7 +69,7 @@ describe('CollectionForm', () => {
   });
 
   describe('#updateFieldInCollection', () => {
-    let fields: Field[];
+    let fields: CollectionField[];
 
     beforeEach(() => (fields = collectionForm.state('collection').fields.slice()));
 

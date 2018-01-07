@@ -1,3 +1,9 @@
+export const enum MongoCollection {
+  Collection = 'Collection',
+  Entity = 'Entity',
+  Uncategorized = 'Uncategorized'
+}
+
 export const FIELD_TYPES = {
   STANDARD: [
     {

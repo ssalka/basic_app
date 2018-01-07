@@ -2,7 +2,12 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import { connect } from 'lib/client/api/store';
-import { Collection, Field, ReactElement, IDocument } from 'lib/common/interfaces';
+import {
+  Collection,
+  CollectionField,
+  ReactElement,
+  IDocument
+} from 'lib/common/interfaces';
 import {
   ReduxComponent,
   ViewComponent,
@@ -37,34 +42,36 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
     };
   }
 
-  clearField = (field: Field) => () => {
+  clearField = (field: CollectionField) => () => {
     this.setStateByPath(`document.${_.camelCase(field.name)}`, undefined);
   };
 
-  updateField = _.curry((field: Field, value: string | React.FormEvent<any>) => {
-    if ((value as React.FormEvent<any>).currentTarget) {
-      // TODO: transform TextInput onChange cb to pass a value instead of event
-      value = (value as React.FormEvent<any>).currentTarget.value;
+  updateField = _.curry(
+    (field: CollectionField, value: string | React.FormEvent<any>) => {
+      if ((value as React.FormEvent<any>).currentTarget) {
+        // TODO: transform TextInput onChange cb to pass a value instead of event
+        value = (value as React.FormEvent<any>).currentTarget.value;
+      }
+
+      const nullableValue: string = value === '' ? null : value as string;
+      const newValue =
+        field.type === 'NUMBER' && !_.isNull(nullableValue)
+          ? parseInt(nullableValue, 10)
+          : nullableValue;
+
+      const valueAsArray = _((newValue as string) || '')
+        .split('; ')
+        .compact();
+
+      this.setStateByPath(
+        `document.${_.camelCase(field.name)}`,
+        field.isArray ? valueAsArray.value() : newValue
+      );
     }
-
-    const nullableValue: string = value === '' ? null : value as string;
-    const newValue =
-      field.type === 'NUMBER' && !_.isNull(nullableValue)
-        ? parseInt(nullableValue, 10)
-        : nullableValue;
-
-    const valueAsArray = _((newValue as string) || '')
-      .split('; ')
-      .compact();
-
-    this.setStateByPath(
-      `document.${_.camelCase(field.name)}`,
-      field.isArray ? valueAsArray.value() : newValue
-    );
-  });
+  );
 
   updateCollectionField = _.curry(
-    (field: Field, newFieldValue: Collection | Collection[]): void => {
+    (field: CollectionField, newFieldValue: Collection | Collection[]): void => {
       if (_.isNull(newFieldValue)) {
         // value cleared by form
         return this.setStateByPath(`document.${_.camelCase(field.name)}`, []);
@@ -88,7 +95,7 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
     }
   );
 
-  getLinkedDocuments(field: Field): IDocument | IDocument[] {
+  getLinkedDocuments(field: CollectionField): IDocument | IDocument[] {
     const documents = this.props.store.documents.byCollection[this.props.collection._id];
     const { document: doc } = this.state;
     const _id: string = _.get(doc, _.camelCase(field.name));
@@ -109,7 +116,7 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
     this.props.actions.upsertDocument(collection._id, doc);
   }
 
-  getInput = (field: Field): ReactElement => {
+  getInput = (field: CollectionField): ReactElement => {
     const documentValue: any = this.state.document[_.camelCase(field.name)];
     const inputValue: any = field.isArray
       ? (documentValue || []).join('; ')
@@ -165,7 +172,7 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
             </div>
             <div className="form-main">
               <div className="fields">
-                {collection.fields.map((field: Field, i) => (
+                {collection.fields.map((field: CollectionField, i) => (
                   <FlexColumn className="document-field" key={i}>
                     <label className="pt-label pt-inline">
                       <strong className="field-name">{field.name}</strong>

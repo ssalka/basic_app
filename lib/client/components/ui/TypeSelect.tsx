@@ -2,14 +2,14 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { Tree, ITreeNode as TreeNode, IconName } from '@blueprintjs/core';
 import { ViewComponent } from 'lib/client/components';
-import { Collection, Field, IType } from 'lib/common/interfaces';
+import { Collection, CollectionField, IType } from 'lib/common/interfaces';
 import { FIELD_TYPES } from 'lib/common/constants';
 import 'lib/client/styles/TypeSelect.less';
 
 export interface IProps {
   collections?: Collection[];
   selectedType: IType | Collection;
-  onSelectType(udpatedTypeInfo: Partial<Field>): void;
+  onSelectType(udpatedTypeInfo: Partial<CollectionField>): void;
 }
 
 interface ITreeNode extends TreeNode {
@@ -65,7 +65,7 @@ export default class TypeSelect extends ViewComponent<IProps, IState> {
       ? 'type'
       : '_collection';
 
-    const updatedTypeInfo: Partial<Field> =
+    const updatedTypeInfo: Partial<CollectionField> =
       typeCategory === 'type'
         ? { type: nodeData.id as string, _collection: undefined }
         : { type: FIELD_TYPES.COLLECTION, _collection: nodeData.id as string };

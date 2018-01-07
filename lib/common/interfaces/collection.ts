@@ -17,7 +17,7 @@ export interface IType {
   icon: string;
 }
 
-export class Field {
+export class CollectionField {
   constructor(
     public name: string = '',
     public type: string = 'STRING',
@@ -35,7 +35,7 @@ export class Collection implements Pick<IDocument, '_id' | '_model'> {
   public name: string;
   public _db: string;
   public _collection: string;
-  public fields: Field[];
+  public fields: CollectionField[];
   public creator: User;
   public description?: string;
   public icon?: string;

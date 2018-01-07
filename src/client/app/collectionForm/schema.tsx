@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 
 import { ViewComponent, FlexRow, FlexColumn } from 'lib/client/components';
-import { Field, Collection } from 'lib/common/interfaces/collection';
+import { CollectionField, Collection } from 'lib/common/interfaces/collection';
 import { ReactElement, ReactProps } from 'lib/common/interfaces/react';
 import { findFieldType, findDocumentById } from 'lib/common/helpers';
 import {
@@ -20,7 +20,7 @@ type FieldOptionsEnum = 'required' | 'isArray' | 'renderMethod';
 interface IProps extends ReactProps {
   collection: Partial<Collection>;
   collections: Collection[];
-  handleChange(index: number, updates?: Partial<Field> | null): void;
+  handleChange(index: number, updates?: Partial<CollectionField> | null): void;
 }
 
 interface IState {
@@ -32,7 +32,7 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
   public static defaultProps: Partial<IProps> = {
     collection: new Collection({
       _id: null,
-      fields: [new Field()]
+      fields: [new CollectionField()]
     }),
     collections: []
   };
@@ -107,43 +107,45 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
         </FlexRow>
 
         <div className="fields">
-          {collection.fields.map((field: Field, index: number): ReactElement => (
-            <FlexColumn key={index} className="field">
-              <FlexRow className="field-main">
-                <FieldNameInput
-                  name={field.name}
-                  onChange={this.getUpdateHandler(index, 'name')}
-                />
-                <TypeSelectPopover
-                  collections={collections}
-                  onChange={this.getUpdateHandler(index)}
-                  selectedType={
-                    findFieldType(field.type) ||
-                    findDocumentById(collections, field._collection)
-                  }
-                />
-                <div className="option-button">
-                  {editingFields ? (
-                    <RemoveFieldButton
-                      disabled={collection.fields.length === 1}
-                      onClick={this.getRemoveFieldHandler(index)}
-                    />
-                  ) : (
-                    <DetailsButton onClick={this.getToggleOptionsHandler(index)} />
-                  )}
-                </div>
-              </FlexRow>
-
-              {!editingFields &&
-                showFieldOptions[index] && (
-                  <FieldOptions
-                    index={index}
-                    field={field}
-                    onChange={this.getUpdateHandler(index)}
+          {collection.fields.map(
+            (field: CollectionField, index: number): ReactElement => (
+              <FlexColumn key={index} className="field">
+                <FlexRow className="field-main">
+                  <FieldNameInput
+                    name={field.name}
+                    onChange={this.getUpdateHandler(index, 'name')}
                   />
-                )}
-            </FlexColumn>
-          ))}
+                  <TypeSelectPopover
+                    collections={collections}
+                    onChange={this.getUpdateHandler(index)}
+                    selectedType={
+                      findFieldType(field.type) ||
+                      findDocumentById(collections, field._collection)
+                    }
+                  />
+                  <div className="option-button">
+                    {editingFields ? (
+                      <RemoveFieldButton
+                        disabled={collection.fields.length === 1}
+                        onClick={this.getRemoveFieldHandler(index)}
+                      />
+                    ) : (
+                      <DetailsButton onClick={this.getToggleOptionsHandler(index)} />
+                    )}
+                  </div>
+                </FlexRow>
+
+                {!editingFields &&
+                  showFieldOptions[index] && (
+                    <FieldOptions
+                      index={index}
+                      field={field}
+                      onChange={this.getUpdateHandler(index)}
+                    />
+                  )}
+              </FlexColumn>
+            )
+          )}
         </div>
 
         {!editingFields && <AddFieldButton onClick={this.addField} />}

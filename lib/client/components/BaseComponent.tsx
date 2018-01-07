@@ -12,10 +12,18 @@ export default class BaseComponent<P = {}, S = {}> extends Component<P, S> {
     return _.mapValues(module, (item: any) => item.bind(this));
   }
 
-  public setStateByPath(path, value) {
-    const state = _.cloneDeep(this.state);
-    _.set(state, path, value);
-    this.setState(state);
+  public setStateByPath<T = any>(path: string, value: T) {
+    const stateKey = _(path)
+      .split(/\.|\[/)
+      .first();
+
+    const newState = _(this.state)
+      .pick(stateKey)
+      .cloneDeep();
+
+    _.set(newState, path, value);
+
+    this.setState(newState);
   }
 
   public _toggle(...keys) {
