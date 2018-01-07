@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import { Connection } from 'mongoose';
 import * as async from 'async';
 import * as _ from 'lodash';
+import { promisify } from 'util';
 import { appMongoURI, collectionsMongoURI } from './config';
 
 _.assign(mongoose, { Promise });
@@ -30,5 +31,3 @@ const allConnectionsOpen = () =>
 
 export const waitForConnection = () =>
   new Promise(resolve => async.until(allConnectionsOpen, setImmediate, resolve));
-
-export const closeConnection = cb => mongoose.disconnect(cb);
