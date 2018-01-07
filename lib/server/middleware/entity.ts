@@ -22,7 +22,7 @@ export const createEntity: RequestHandler = (req, res, next) => {
       }
   };
 
-  EntityEvent.create({
+  return EntityEvent.create({
     type: EntityEventType.Created,
     creator: req.user._id,
     payload
