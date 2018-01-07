@@ -40,7 +40,7 @@ async function createMockInstances(mockInstances, modelName) {
   );
 }
 
-export async function setup({ mocks = {} }) {
+export async function createTestDocs(mocks = {}) {
   if (systemDbName !== 'test') return done('Not running in test mode');
 
   await waitForConnection();
@@ -48,7 +48,7 @@ export async function setup({ mocks = {} }) {
   return await Promise.all(_.flatMap(mocks, createMockInstances)).catch(Promise.reject);
 }
 
-export async function cleanup() {
+export async function removeTestDocs() {
   if (systemDbName !== 'test') throw new Error('Not running in test mode');
 
   // REVIEW: why is setImmediate necessary?
