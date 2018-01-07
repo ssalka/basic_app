@@ -28,8 +28,7 @@ _.forEach(connections, (conn: Connection, name: string) => {
 const allConnectionsOpen = () =>
   _.size(openConnections) === _.size(connections) && _.every(openConnections);
 
-export const waitForConnection = new Promise(resolve =>
-  async.until(allConnectionsOpen, setImmediate, resolve)
-);
+export const waitForConnection = () =>
+  new Promise(resolve => async.until(allConnectionsOpen, setImmediate, resolve));
 
 export const closeConnection = cb => mongoose.disconnect(cb);

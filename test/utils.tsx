@@ -1,4 +1,4 @@
-import * as async from 'async';
+import * as asyncLib from 'async';
 import { CommonWrapper, mount } from 'enzyme';
 import * as _ from 'lodash';
 import * as React from 'react';
@@ -8,7 +8,7 @@ import configureStore from 'redux-mock-store';
 import { browserHistory } from 'lib/client/api/store';
 import { systemDbName, waitForConnection, closeConnection } from 'lib/server/db';
 import * as models from 'lib/server/models';
-import * as mocks from 'lib/server/models/mocks';
+import * as mockModels from 'lib/server/models/mocks';
 
 const middleware = [];
 const mockStore = configureStore(middleware);
@@ -23,46 +23,29 @@ export function mountWithStore<P = {}, S = {}>(
   );
 }
 
-const setupOptions = {
-  mocks: {}
-};
+async function createMockInstances(mockInstances, modelName) {
+  const ActualModel = models[modelName];
+  if (!ActualModel) throw new Error(`Model ${modelName} not found`);
 
-export function setup(options, done) {
-  if (systemDbName !== 'test') return done('Not running in test mode');
-  _.defaults(options, setupOptions);
-  const results = {};
-  async.series(
-    [
-      callback => waitForConnection.then(() => callback(), callback),
-      callback =>
-        async.eachOf(
-          options.mocks,
-          (mockInstances, modelName, cb) => {
-            const ActualModel = models[modelName];
-            if (!ActualModel) return cb(`Model ${modelName} not found`);
+  const MatchedModel = mockModels[`Mock${modelName}`];
+  // prettier-ignore
+  if (!MatchedModel) console.warn(`No mock class found for model ${modelName} - using unmodified input object(s)`);
 
-            const MatchedModel = mocks[`Mock${modelName}`];
-            // prettier-ignore
-            if (!MatchedModel) console.warn(`No mock class found for model ${modelName} - using unmodified input object(s)`);
+  const MockModel = MatchedModel || ActualModel;
 
-            const MockModel = MatchedModel || ActualModel;
-
-            results[modelName] = [];
-            async.each(
-              mockInstances,
-              (mockInstance, _cb) => {
-                const mock = MatchedModel ? new MatchedModel(mockInstance) : mockInstance;
-                results[modelName].push(mock);
-                ActualModel.create(mock, _cb);
-              },
-              cb
-            );
-          },
-          callback
-        )
-    ],
-    _.partial(done, _, results)
+  return Promise.all(
+    mockInstances
+      .map(mock => (MatchedModel ? new MatchedModel(mock) : mock))
+      .map(async mock => ActualModel.create(mock).catch(Promise.reject))
   );
+}
+
+export async function setup({ mocks = {} }) {
+  if (systemDbName !== 'test') return done('Not running in test mode');
+
+  await waitForConnection();
+
+  return await Promise.all(_.flatMap(mocks, createMockInstances)).catch(Promise.reject);
 }
 
 const cleanupOptions = {
@@ -73,10 +56,10 @@ export function cleanup(done, options = {}) {
   if (systemDbName !== 'test') return done('Not running in test mode');
   _.defaults(options, cleanupOptions);
   setImmediate(() =>
-    async.series(
+    asyncLib.series(
       [
         cb =>
-          async.eachOf(
+          asyncLib.eachOf(
             models,
             (Model, name, _cb) => {
               if (name === 'default') return _cb();

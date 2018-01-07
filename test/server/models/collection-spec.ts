@@ -16,22 +16,17 @@ describe('Collection', () => {
     name: 'Test Collection'
   });
 
-  beforeAll(done =>
-    setup(
-      {
-        mocks: {
-          Collection: [testCollection]
-        }
-      },
-      (err, results) => {
-        if (err) {
-          return done(err);
-        }
-        collections = results.Collection;
-        done();
+  beforeAll(async done => {
+    const results = await setup({
+      mocks: {
+        Collection: [testCollection]
       }
-    )
-  );
+    }).catch(done.fail);
+
+    collections = results.Collection;
+
+    done();
+  });
 
   afterAll(cleanup);
 
