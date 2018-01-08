@@ -13,6 +13,10 @@ import * as mockModels from 'lib/server/models/mocks';
 const middleware = [];
 const mockStore = configureStore(middleware);
 
+function throwError(err): never {
+  throw new Error(err);
+}
+
 export function mountWithStore<P = {}, S = {}>(
   element: JSX.Element
 ): CommonWrapper<P, S> {
@@ -25,7 +29,7 @@ export function mountWithStore<P = {}, S = {}>(
 
 async function createMockInstances(mockInstances, modelName) {
   const ActualModel = models[modelName];
-  if (!ActualModel) throw new Error(`Model ${modelName} not found`);
+  if (!ActualModel) throwError(`Model ${modelName} not found`);
 
   const MatchedModel = mockModels[`Mock${modelName}`];
   // prettier-ignore
@@ -36,20 +40,28 @@ async function createMockInstances(mockInstances, modelName) {
   return Promise.all(
     mockInstances
       .map(mock => (MatchedModel ? new MatchedModel(mock) : mock))
-      .map(async mock => ActualModel.create(mock).catch(Promise.reject))
+      .map(mock => ActualModel.create(mock).catch(throwError))
   );
 }
 
 export async function createTestDocs(mocks = {}) {
-  if (systemDbName !== 'test') return done('Not running in test mode');
+  if (systemDbName !== 'test') throwError('Not running in test mode');
 
   await waitForConnection();
 
-  return await Promise.all(_.flatMap(mocks, createMockInstances)).catch(Promise.reject);
+  const results = await Promise.all(_.flatMap(mocks, createMockInstances)).catch(
+    throwError
+  );
+
+  // TODO: figure out how to get rid of [0], _.flatten
+  return _(results)
+    .groupBy('[0].constructor.modelName')
+    .mapValues(_.flatten)
+    .value();
 }
 
 export async function removeTestDocs() {
-  if (systemDbName !== 'test') throw new Error('Not running in test mode');
+  if (systemDbName !== 'test') throwError('Not running in test mode');
 
   // REVIEW: why is setImmediate necessary?
   setImmediate(async () => {
