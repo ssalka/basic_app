@@ -45,15 +45,15 @@ describe('EntityEvent', () => {
     afterEach(done => EntityEvent.remove({}, done));
 
     it('Creates documents with the intended structure', async () => {
-      const { createdAt, type, _model, payload } = await EntityEvent.create(testEvent);
+      const now = Date.now();
+      const { createdAt, _model, type, payload } = await EntityEvent.create(testEvent);
 
+      expect(createdAt).toBeInstanceOf(Date);
       expect(_model).toBe(MongoCollection.EntityEvent);
       expect(type).toBe(testEvent.type);
 
-      const resolution = 10000;
-      expect(createdAt.valueOf() / resolution).toBeCloseTo(
-        new Date().valueOf() / resolution
-      );
+      const resolution = 100000;
+      expect(createdAt.valueOf() / resolution).toBeCloseTo(now / resolution);
 
       const missingEntityKeys = _.differenceBy(
         new Entity().toObject(),
