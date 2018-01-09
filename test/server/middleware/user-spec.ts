@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import * as middleware from 'lib/server/middleware';
+import { user as userMiddleware } from 'lib/server/middleware';
 import * as models from 'lib/server/models';
 import { MockCollection, MockUser } from 'lib/server/models/mocks';
 import { generateToken } from 'lib/server/utils';
@@ -48,7 +48,7 @@ describe('User Middleware', () => {
         exec: cb => cb(null, populatedUser)
       }));
 
-      middleware.user.findUserByToken(req, res);
+      userMiddleware.findUserByToken(req, res);
 
       expect(res.status).not.toHaveBeenCalled();
       expect(res.json).toHaveBeenCalledWith({
@@ -62,7 +62,7 @@ describe('User Middleware', () => {
         exec: cb => cb(null, null)
       }));
 
-      middleware.user.findUserByToken(req, res);
+      userMiddleware.findUserByToken(req, res);
 
       expect(res.status).toHaveBeenCalledWith(404);
       expect(res.send).toHaveBeenCalledWith(err);
@@ -72,7 +72,7 @@ describe('User Middleware', () => {
       const err = 'No session token was provided';
       delete req.session.token;
 
-      middleware.user.findUserByToken(req, res);
+      userMiddleware.findUserByToken(req, res);
 
       expect(res.status).toHaveBeenCalledWith(403);
       expect(res.send).toHaveBeenCalledWith(err);
@@ -84,7 +84,7 @@ describe('User Middleware', () => {
         exec: cb => cb(err)
       }));
 
-      middleware.user.findUserByToken(req, res);
+      userMiddleware.findUserByToken(req, res);
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.send).toHaveBeenCalledWith(err);
@@ -108,7 +108,7 @@ describe('User Middleware', () => {
     it('registers a new user and calls next', () => {
       User.register = jest.fn((username, password, cb) => cb(null));
 
-      middleware.user.registerUser(req, res, next);
+      userMiddleware.registerUser(req, res, next);
 
       expect(next).toHaveBeenCalled();
     });
@@ -117,7 +117,7 @@ describe('User Middleware', () => {
       const err = 'you cant do that';
       User.register = jest.fn(() => res.json({ err }));
 
-      middleware.user.registerUser(req, res, next);
+      userMiddleware.registerUser(req, res, next);
 
       expect(res.json).toHaveBeenCalledWith({ err });
     });
@@ -142,14 +142,14 @@ describe('User Middleware', () => {
     });
 
     it('inserts a new session into the database', () => {
-      middleware.user.startSession(req, res, next);
+      userMiddleware.startSession(req, res, next);
 
       expect(next).toHaveBeenCalled();
       expect(next.mock.calls[0]).toEqual([]);
     });
 
     it('sets the user and session token on req.session', () => {
-      middleware.user.startSession(req, res, next);
+      userMiddleware.startSession(req, res, next);
 
       expect(req.session).toEqual(session);
     });
@@ -182,7 +182,7 @@ describe('User Middleware', () => {
         then: cb => (cb(populatedUser), { catch: _.noop })
       }));
 
-      middleware.user.loginSuccess(req, res);
+      userMiddleware.loginSuccess(req, res);
 
       expect(res.json).toHaveBeenCalled();
       expect(res.json.mock.calls[0][0]).toEqual({
@@ -218,7 +218,7 @@ describe('User Middleware', () => {
         catch: jest.fn()
       }));
 
-      middleware.user.closeSession(req, res, next);
+      userMiddleware.closeSession(req, res, next);
 
       expect(session.remove).toHaveBeenCalled();
       expect(req.session.destroy).toHaveBeenCalled();
@@ -236,7 +236,7 @@ describe('User Middleware', () => {
         catch: jest.fn()
       }));
 
-      middleware.user.closeSession(req, res, next);
+      userMiddleware.closeSession(req, res, next);
 
       expect(next).toHaveBeenCalledWith('Session not found');
     });
@@ -255,7 +255,7 @@ describe('User Middleware', () => {
         json: jest.fn()
       });
 
-      middleware.user.closeSession(req, res, next);
+      userMiddleware.closeSession(req, res, next);
 
       expect(res.status).toHaveBeenCalledWith(500);
       expect(res.json).toHaveBeenCalledWith({ err });
@@ -275,7 +275,7 @@ describe('User Middleware', () => {
     });
 
     it('logs the user out', () => {
-      middleware.user.logout(req, res);
+      userMiddleware.logout(req, res);
 
       expect(req.user).toBeUndefined();
     });
@@ -283,7 +283,7 @@ describe('User Middleware', () => {
     it('sends the username back to the client', () => {
       const { username } = req.user;
 
-      middleware.user.logout(req, res);
+      userMiddleware.logout(req, res);
 
       expect(res.json.mock.calls[0][0]).toEqual({ username });
     });

@@ -1,6 +1,6 @@
 import * as assert from 'assert';
 import * as _ from 'lodash';
-import { setup, cleanup } from 'test/utils';
+import { createTestDocs, removeTestDocs } from 'test/utils';
 import { Collection } from 'lib/server/models';
 import { MockCollection } from 'lib/server/models/mocks';
 import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
@@ -16,24 +16,17 @@ describe('Collection', () => {
     name: 'Test Collection'
   });
 
-  beforeAll(done =>
-    setup(
-      {
-        mocks: {
-          Collection: [testCollection]
-        }
-      },
-      (err, results) => {
-        if (err) {
-          return done(err);
-        }
-        collections = results.Collection;
-        done();
-      }
-    )
-  );
+  beforeAll(async done => {
+    const results = await createTestDocs({
+      Collection: [testCollection]
+    }).catch(done.fail);
 
-  afterAll(cleanup);
+    collections = results.Collection;
+
+    done();
+  });
+
+  afterAll(removeTestDocs);
 
   it('finds a test collection', done => {
     Collection.findOne((err, collection) => {

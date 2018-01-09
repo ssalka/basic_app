@@ -1,7 +1,9 @@
 export const enum MongoCollection {
   Collection = 'Collection',
   Entity = 'Entity',
-  Uncategorized = 'Uncategorized'
+  EntityEvent = 'EntityEvent',
+  Uncategorized = 'Uncategorized',
+  User = 'User'
 }
 
 export const FIELD_TYPES = {
