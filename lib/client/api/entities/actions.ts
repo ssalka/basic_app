@@ -4,10 +4,12 @@ import {
   EntityEventType,
   ID,
   IEntity,
-  IPopulatedEntity
+  IPopulatedEntity,
+  IEvent2
 } from 'lib/common/interfaces';
 
-export interface ICreateEntityPayload {
+export interface ICreateEntityPayload
+  extends Pick<IEvent2, 'entity' | 'timestamp' | 'version'> {
   entity: IEntity | IPopulatedEntity;
 }
 
@@ -15,7 +17,9 @@ export const createEntity = (
   entity: IEntity | IPopulatedEntity
 ): Action<ICreateEntityPayload> => ({
   type: EntityEventType.Created,
-  entity
+  entity,
+  timestamp: new Date(),
+  version: 0
 });
 
 export const getEntities = (): Action => ({

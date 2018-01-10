@@ -8,11 +8,11 @@ import { Action } from 'lib/common/interfaces/redux';
 import { updateLibrary } from '../user/actions';
 import { ICreateEntityPayload, IRenameEntityPayload } from './actions';
 
-export function* createEntity({ entity }: Action<ICreateEntityPayload>) {
+export function* createEntity({ type, ...payload }: Action<ICreateEntityPayload>) {
   try {
-    const createdEntity: EntityDocument = yield saga.post<ICreateEntityPayload['entity']>(
+    const createdEntity: EntityDocument = yield saga.post<ICreateEntityPayload>(
       'entities',
-      entity
+      payload
     );
 
     yield saga.success(EntityEventType.Created, { entity: createdEntity });

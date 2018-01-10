@@ -9,24 +9,22 @@ export default ModelGen.extendModel(Event, {
     async project(query = {}) {
       const events = await this.find(query).catch(console.error);
 
-      return events.reduce((entities, { type, payload }) => {
+      return events.reduce((entities, { type, entity, entityId, newName }) => {
         switch (type) {
           case EntityEventType.Created: {
-            entities.push(payload.entity);
+            entities.push(entity);
 
             return entities;
           }
 
           case EntityEventType.Renamed: {
             // REVIEW: better way to find by ObjectId?
-            const matchedEntity = entities.find(
-              ({ _id }) => payload.entityId === _id.toString()
-            );
+            const matchedEntity = entities.find(({ _id }) => entityId === _id.toString());
 
             if (matchedEntity) {
-              matchedEntity.name = payload.newName;
+              matchedEntity.name = newName;
             } else {
-              console.error('Unable to find entity to update. Received payload', payload);
+              console.error('Found no entities with _id', entityId);
             }
 
             return entities;

@@ -6,28 +6,24 @@ import { IEntity, EntityEventType } from 'lib/common/interfaces/entity';
 import { Entity, EntityEvent } from 'lib/server/models';
 
 export const createEntity: RequestHandler = (req, res, next) => {
-  const entity = new Entity(req.body).toObject();
+  const { entity, timestamp, version } = req.body;
+  const validatedEntity = new Entity(entity).toObject();
 
-  const payload = {
-    // prettier-ignore
-    entity: _.isEmpty(req.body.references)
-      ? entity
-      : {
-        ...entity,
-        // TODO: see if this mapping can be avoided - currently seems necessary to get populated subdocuments
-        references: req.body.references.map(({ model, value }) => ({
-          model,
-          value: new Entity(value).toObject()
-        }))
-      }
-  };
+  if (!_.isEmpty(entity.references)) {
+    validatedEntity.references = entity.references.map(({ model, value }) => ({
+      model,
+      value: new Entity(value).toObject()
+    }));
+  }
 
   return EntityEvent.create({
     type: EntityEventType.Created,
-    creator: req.user._id,
-    payload
+    user: req.user._id,
+    entity: validatedEntity,
+    timestamp,
+    version
   })
-    .then(entityEvent => res.json(entityEvent.payload.entity))
+    .then(entityEvent => res.json(entityEvent.entity))
     .catch(next);
 };
 
