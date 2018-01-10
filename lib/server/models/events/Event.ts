@@ -1,16 +1,22 @@
 import { ModelGen, types } from 'lib/server/utils';
-const { Mixed, ref } = types;
+const { ref } = types;
 
 const EventSchema = {
-  creator: ref('User', true),
+  entity: ref('Entity', true),
+  user: ref('User'),
+  // TODO: command ref (need to store commands separately first)
   type: {
+    // TODO: use mongoose discriminators to create subclasses instead
     type: String,
     required: true
   },
-  payload: {
-    type: Mixed,
-    required: true,
-    default: {}
+  timestamp: {
+    type: Date,
+    required: true
+  },
+  version: {
+    type: Number,
+    required: true
   }
 };
 
