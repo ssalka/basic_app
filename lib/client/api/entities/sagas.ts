@@ -33,12 +33,13 @@ export function* getEntities() {
   }
 }
 
-export function* renameEntity({ entityId, updates }: Action<IRenameEntityPayload>) {
+export function* renameEntity({ entityId, newName }: Action<IRenameEntityPayload>) {
   try {
-    const entity: EntityDocument = yield saga.post<IRenameEntityPayload['updates']>(
-      `entities/${entityId}`,
-      updates
-    );
+    const entity: EntityDocument = yield saga.post<
+      Partial<IRenameEntityPayload>
+    >(`entities/${entityId}`, {
+      newName
+    });
 
     yield saga.success(EntityEventType.Renamed, { entity });
   } catch (error) {

@@ -24,7 +24,7 @@ export default ModelGen.extendModel(Event, {
             );
 
             if (matchedEntity) {
-              _.assign(matchedEntity, payload.updates);
+              matchedEntity.name = payload.newName;
             } else {
               console.error('Unable to find entity to update. Received payload', payload);
             }

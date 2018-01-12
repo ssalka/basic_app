@@ -38,7 +38,7 @@ export const renameEntity: RequestHandler = (req, res, next) => {
     creator: req.user._id,
     payload: {
       entityId: req.params.entityId,
-      updates: req.body
+      newName: req.body.newName
     }
   })
     .then(entityEvent => res.json(entityEvent))
