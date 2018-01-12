@@ -17,7 +17,7 @@ export default ModelGen.extendModel(Event, {
             return entities;
           }
 
-          case EntityEventType.Updated: {
+          case EntityEventType.Renamed: {
             // REVIEW: better way to find by ObjectId?
             const matchedEntity = entities.find(
               ({ _id }) => payload.entityId === _id.toString()

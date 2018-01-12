@@ -31,10 +31,10 @@ export const createEntity: RequestHandler = (req, res, next) => {
     .catch(next);
 };
 
-export const updateEntity: RequestHandler = (req, res, next) =>
+export const renameEntity: RequestHandler = (req, res, next) => {
   // TODO: add versioning to events, identify concurrent updates
   EntityEvent.create({
-    type: EntityEventType.Updated,
+    type: EntityEventType.Renamed,
     creator: req.user._id,
     payload: {
       entityId: req.params.entityId,
@@ -43,6 +43,7 @@ export const updateEntity: RequestHandler = (req, res, next) =>
   })
     .then(entityEvent => res.json(entityEvent))
     .catch(next);
+};
 
 export const getEntities: RequestHandler = (req, res, next) => {
   EntityEvent.project({ creator: req.user._id.toString() })

@@ -41,7 +41,7 @@ describe('Entity Middleware', () => {
     });
   });
 
-  describe('#updateEntity', () => {
+  describe('#renameEntity', () => {
     beforeEach(() => {
       req.params = { entityId: 'entityId' };
     });
@@ -53,7 +53,7 @@ describe('Entity Middleware', () => {
         })
       );
 
-      await entityMiddleware.updateEntity(req, res, next);
+      await entityMiddleware.renameEntity(req, res, next);
 
       expect(res.json).toHaveBeenCalled();
       expect(next).not.toHaveBeenCalled();

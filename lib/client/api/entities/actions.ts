@@ -22,16 +22,16 @@ export const getEntities = (): Action => ({
   type: EntityEventType.Requested
 });
 
-export interface IUpdateEntityPayload {
+export interface IRenameEntityPayload {
   entityId: ID;
   updates: Partial<IEntity>;
 }
 
-export const updateEntity = (
+export const renameEntity = (
   entityId: ID,
   updates: Partial<IEntity>
-): Action<IUpdateEntityPayload> => ({
-  type: EntityEventType.Updated,
+): Action<IRenameEntityPayload> => ({
+  type: EntityEventType.Renamed,
   entityId,
   updates
 });
@@ -39,5 +39,5 @@ export const updateEntity = (
 export default {
   createEntity,
   getEntities,
-  updateEntity
+  renameEntity
 };
