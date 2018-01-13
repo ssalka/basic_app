@@ -8,8 +8,11 @@ import {
   Reducer,
   EntityDocument,
   EventType,
-  RequestStatus
+  RequestStatus,
+  Recorded,
+  IEvent2
 } from 'lib/common/interfaces';
+import { IRenameEntityPayload } from './actions';
 
 interface IEntityState {
   entities: EntityDocument[];
@@ -32,12 +35,16 @@ const addEntity: AddEntityReducer = (state, { entity, entities }) => ({
   entities: state.entities.concat(entities || (entity as EntityDocument))
 });
 
-type RenameEntityReducer = Reducer<IEntityState, { entity: EntityDocument }>;
+type RenameEntityReducer = Reducer<
+  IEntityState,
+  { event: IEvent2 & Recorded<IRenameEntityPayload> }
+>;
 
-const renameEntity: RenameEntityReducer = (state, { entity }) => {
-  const entityIndex = _.findIndex(state.entities, _.pick(entity, '_id'));
+const renameEntity: RenameEntityReducer = (state, { event }) => {
+  const entityIndex = _.findIndex(state.entities, { _id: event.entity });
   const entities = _.cloneDeep(state.entities);
-  entities[entityIndex] = entity;
+  entities[entityIndex].name = event.newName;
+  entities[entityIndex].version = event.version;
 
   return {
     ...state,
