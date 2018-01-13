@@ -19,6 +19,7 @@ export const createEntity: RequestHandler = (req, res, next) => {
 
   return EntityCreated.create({
     user: req.user._id,
+    entity: validatedEntity,
     newEntity: validatedEntity,
     timestamp,
     version
@@ -33,9 +34,7 @@ export const renameEntity: RequestHandler = (req, res, next) => {
   // TODO: identify concurrent updates
   EntityRenamed.create({
     user: req.user._id,
-    // REVIEW: necessary to require `entity` field? Merge `entityId` into?
     entity: req.params.entityId,
-    entityId: req.params.entityId,
     newName,
     timestamp,
     version
