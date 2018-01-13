@@ -7,11 +7,6 @@ const EventSchema = {
   entity: ref('Entity', true),
   user: ref('User'),
   // TODO: command ref (need to store commands separately first)
-  type: {
-    // TODO: use mongoose discriminators to create subclasses instead
-    type: String,
-    required: true
-  },
   timestamp: {
     type: Date,
     required: true
@@ -26,10 +21,10 @@ const statics = {
   async project(query = {}) {
     const events = await this.find(query).catch(console.error);
 
-    return events.reduce((entities, { type, entity, entityId, newName }) => {
+    return events.reduce((entities, { type, entity, entityId, newName, newEntity }) => {
       switch (type) {
         case EventType.EntityCreated: {
-          entities.push(entity);
+          entities.push(newEntity);
 
           return entities;
         }
@@ -58,5 +53,8 @@ const statics = {
 };
 
 export default ModelGen.generateModel('Event', EventSchema, {
-  props: { statics }
+  props: { statics },
+  options: {
+    discriminatorKey: 'type'
+  }
 });
