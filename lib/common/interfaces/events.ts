@@ -14,6 +14,12 @@ export interface IEvent2 {
   user?: string | IUser;
 }
 
+export const enum CommandType {
+  CreateEntity = 'CREATE_ENTITY',
+  RenameEntity = 'RENAME_ENTITY',
+  GetEntities = 'GET_ENTITIES'
+}
+
 export const enum EventType {
   EntityCreated = 'ENTITY_CREATED',
   EntityRenamed = 'ENTITY_RENAMED',
