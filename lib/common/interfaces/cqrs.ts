@@ -16,8 +16,11 @@ export interface IEvent2 {
 
 export const enum CommandType {
   CreateEntity = 'CREATE_ENTITY',
-  RenameEntity = 'RENAME_ENTITY',
-  GetEntities = 'GET_ENTITIES'
+  RenameEntity = 'RENAME_ENTITY'
+}
+
+export const enum QueryType {
+  FetchEntitiesByUser = 'FETCH_ENTITIES_BY_USER'
 }
 
 export const enum EventType {

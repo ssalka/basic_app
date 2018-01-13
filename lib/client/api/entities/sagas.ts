@@ -4,7 +4,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { action, saga, success, fail } from 'lib/client/services/utils';
 import { IEntity, EntityDocument } from 'lib/common/interfaces/entity';
-import { CommandType, IEvent2 } from 'lib/common/interfaces/events';
+import { CommandType, QueryType, IEvent2 } from 'lib/common/interfaces/cqrs';
 import { Recorded } from 'lib/common/interfaces/mongo';
 import { Action } from 'lib/common/interfaces/redux';
 import { updateLibrary } from '../user/actions';
@@ -27,11 +27,11 @@ export function* getEntities() {
   try {
     const entities: EntityDocument[] = yield saga.get('entities');
 
-    yield saga.success<{ entities: EntityDocument[] }>(CommandType.GetEntities, {
+    yield saga.success<{ entities: EntityDocument[] }>(QueryType.FetchEntitiesByUser, {
       entities
     });
   } catch (error) {
-    yield saga.fail(CommandType.GetEntities, { error });
+    yield saga.fail(QueryType.FetchEntitiesByUser, { error });
   }
 }
 
@@ -54,7 +54,7 @@ export function* renameEntity({ entity, newName }: Action<IRenameEntityPayload>)
 export default function* entitiesSaga() {
   yield [
     takeLatest(CommandType.CreateEntity, createEntity),
-    takeLatest(CommandType.GetEntities, getEntities), // TODO: refactor to FetchEntitiesByUser
+    takeLatest(QueryType.FetchEntitiesByUser, getEntities), // TODO: refactor to FetchEntitiesByUser
     takeLatest(CommandType.RenameEntity, renameEntity)
   ];
 }

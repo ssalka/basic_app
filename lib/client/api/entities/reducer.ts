@@ -8,6 +8,7 @@ import {
   Reducer,
   EntityDocument,
   CommandType,
+  QueryType,
   RequestStatus,
   Recorded,
   IEvent2
@@ -57,7 +58,7 @@ export default function entityReducer(
   { type, error, ...action }: Action<IErrorPayload | any> // TODO: interfaces for success/fail action payloads
 ): IEntityState {
   switch (type) {
-    case success(CommandType.GetEntities):
+    case success(QueryType.FetchEntitiesByUser):
       return addEntity(state, action);
 
     case success(CommandType.CreateEntity):

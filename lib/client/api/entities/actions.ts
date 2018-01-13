@@ -5,7 +5,8 @@ import {
   ID,
   IEntity,
   IPopulatedEntity,
-  IEvent2
+  IEvent2,
+  QueryType
 } from 'lib/common/interfaces';
 
 export interface ICreateEntityPayload
@@ -22,8 +23,8 @@ export const createEntity = (
   version: 0
 });
 
-export const getEntities = (): Action => ({
-  type: CommandType.GetEntities
+export const fetchEntitiesByUser = (): Action => ({
+  type: QueryType.FetchEntitiesByUser
 });
 
 export interface IRenameEntityPayload {
@@ -42,6 +43,6 @@ export const renameEntity = (
 
 export default {
   createEntity,
-  getEntities,
+  fetchEntitiesByUser,
   renameEntity
 };

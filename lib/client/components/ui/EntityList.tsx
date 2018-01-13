@@ -4,7 +4,7 @@ import { Flex } from 'grid-styled';
 import * as React from 'react';
 import Link from 'react-router-redux-dom-link';
 import { EditableText, NonIdealState } from '@blueprintjs/core';
-import { getEntities, renameEntity } from 'lib/client/api/entities/actions';
+import { fetchEntitiesByUser, renameEntity } from 'lib/client/api/entities/actions';
 import { BaseComponent, Button, Icon, TagList } from 'lib/client/components';
 import { connect } from 'lib/client/services/utils';
 import { EntityDocument } from 'lib/common/interfaces';
@@ -13,7 +13,7 @@ import 'lib/client/styles/EntityList.less';
 interface IEntityListProps {
   entities: EntityDocument[];
   // REVIEW: is this the best way to represent action creators? could also do `typeof entityActions`
-  getEntities: typeof getEntities;
+  fetchEntitiesByUser: typeof fetchEntitiesByUser;
   renameEntity: typeof renameEntity;
 }
 
@@ -33,7 +33,7 @@ class EntityList extends BaseComponent<
 
   componentDidMount() {
     if (_.isEmpty(this.props.entities)) {
-      this.props.getEntities();
+      this.props.fetchEntitiesByUser();
     }
   }
 
@@ -158,7 +158,7 @@ class EntityList extends BaseComponent<
 export default connect({
   store: 'entity',
   actions: {
-    getEntities,
+    fetchEntitiesByUser,
     renameEntity
   }
 })(EntityList);
