@@ -1,16 +1,18 @@
 import * as _ from 'lodash';
+import * as uuid from 'uuid/v4';
 import { createTestDocs, removeTestDocs } from 'test/utils';
-import { Entity, EntityEvent, User } from 'lib/server/models';
+import { Entity, EntityCreated, Event, User } from 'lib/server/models';
 import { MockUser } from 'lib/server/models/mocks';
 import { MongoCollection } from 'lib/common/constants';
 import {
   EntityDocument,
   EventType,
   IEvent,
-  ICreateEntityPayload
+  ICreateEntityPayload,
+  IEvent2
 } from 'lib/common/interfaces';
 
-describe('EntityEvent', () => {
+describe('Entity Events', () => {
   const testUser = new MockUser();
 
   beforeAll(async done => {
@@ -24,73 +26,63 @@ describe('EntityEvent', () => {
   });
 
   const testEntity = new Entity({
-    name: 'Test Entity',
-    references: [
-      {
-        model: MongoCollection.User,
-        value: testUser
-      }
-    ]
-  });
+    _id: uuid(),
+    name: 'Test Entity'
+  }).toObject();
 
-  const testEvent: IEvent<ICreateEntityPayload> = {
-    type: EventType.Created,
-    creator: testUser._id,
-    payload: {
-      entity: testEntity.toObject()
-    }
+  const testEvent: IEvent2 & ICreateEntityPayload = {
+    user: testUser._id,
+    entity: testEntity._id,
+    newEntity: testEntity,
+    timestamp: new Date(),
+    version: 0
   };
 
   describe('#create', () => {
-    afterEach(done => EntityEvent.remove({}, done));
+    afterEach(done => EntityCreated.remove({}, done));
 
     it('Creates documents with the intended structure', async () => {
       const now = Date.now();
-      const { createdAt, _model, type, payload } = await EntityEvent.create(testEvent);
+      const { createdAt, type, newEntity } = await EntityCreated.create(testEvent);
 
       expect(createdAt).toBeInstanceOf(Date);
-      expect(_model).toBe(MongoCollection.EntityEvent);
-      expect(type).toBe(testEvent.type);
+      expect(type).toBe(EventType.EntityCreated);
 
       const resolution = 100000;
       expect(createdAt.valueOf() / resolution).toBeCloseTo(now / resolution);
 
       const missingEntityKeys = _.differenceBy(
         new Entity().toObject(),
-        payload.entity,
+        newEntity,
         _.keys
       );
       expect(missingEntityKeys).toHaveLength(0);
 
       // BUG: subdocs are not populated
-      // expect(payload.entity).toEqual(testEntity);
 
-      expect(payload.entity.references).toHaveLength(1);
-
-      const [{ model, value }] = payload.entity.references;
-      expect(model).toBe(MongoCollection.User);
-      expect(value).toEqual(testUser._id);
+      expect(_.pick(newEntity.toObject(), _.keys(testEntity))).toEqual(testEntity);
     });
   });
 
   describe('#project', () => {
-    let entityEvents: EntityDocument[];
+    let events: IEvent2[];
     const testEntities = [1, 2, 3].map(i => ({
-      type: EventType.Created,
-      creator: testUser._id,
-      payload: {
-        entity: {
-          name: `Entity ${i}`
-        }
-      }
+      user: testUser._id,
+      entity: testEntity._id,
+      newEntity: {
+        ...testEntity,
+        name: `Entity ${i}`
+      },
+      timestamp: new Date(),
+      version: 0
     }));
 
     beforeAll(async done => {
       const results = await createTestDocs({
-        EntityEvent: testEntities
+        EntityCreated: testEntities
       }).catch(done.fail);
 
-      entityEvents = results.EntityEvent;
+      events = results.EntityCreated;
 
       done();
     });
@@ -98,8 +90,8 @@ describe('EntityEvent', () => {
     afterAll(removeTestDocs);
 
     it("creates a projection of the user's entities", async done => {
-      const entities: EntityDocument[] = await EntityEvent.project({
-        creator: testUser._id.toString()
+      const entities: EntityDocument[] = await Event.project({
+        user: testUser._id.toString()
       }).catch(done.fail);
 
       expect(entities.map(e => e.name)).toEqual(['Entity 1', 'Entity 2', 'Entity 3']);

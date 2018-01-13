@@ -1,16 +1,15 @@
 import { entity as entityMiddleware } from 'lib/server/middleware';
-import { EntityEvent as EntityEventModel } from 'lib/server/models';
+import { Entity, EntityCreated, EntityRenamed } from 'lib/server/models';
 import { MockUser } from 'lib/server/models/mocks';
 
 describe('Entity Middleware', () => {
   let req: Record<string, any>;
   let res: Record<string, any>;
   let next: (err?) => void;
-  let EntityEvent;
 
-  const testEntity = {
+  const testEntity = new Entity({
     name: 'Test Entity'
-  };
+  }).toObject();
 
   beforeEach(() => {
     req = {
@@ -20,17 +19,20 @@ describe('Entity Middleware', () => {
   });
 
   beforeEach(() => {
-    EntityEvent = EntityEventModel;
-    req.body = testEntity;
+    req.body = { entity: testEntity };
     res.json = jest.fn();
     next = jest.fn();
   });
 
   describe('#createEntity', () => {
-    it('creates an EntityEvent detailing the entity created', async () => {
-      EntityEvent.create = jest.fn(() =>
+    let EntityCreatedMock = EntityCreated;
+
+    afterEach(() => (EntityCreatedMock = EntityCreated));
+
+    it('creates an EntityCreated event', async () => {
+      EntityCreatedMock.create = jest.fn(() =>
         Promise.resolve({
-          payload: { entity: testEntity }
+          entity: testEntity
         })
       );
 
@@ -42,14 +44,18 @@ describe('Entity Middleware', () => {
   });
 
   describe('#renameEntity', () => {
+    let EntityRenamedMock = EntityRenamed;
+
     beforeEach(() => {
       req.params = { entityId: 'entityId' };
     });
 
-    it('creates an EntityEvent detailing the entity updated', async () => {
-      EntityEvent.create = jest.fn(() =>
+    afterEach(() => (EntityRenamedMock = EntityRenamed));
+
+    it('creates an EntityRenamed event', async () => {
+      EntityRenamedMock.create = jest.fn(() =>
         Promise.resolve({
-          payload: { entity: testEntity }
+          entity: testEntity
         })
       );
 

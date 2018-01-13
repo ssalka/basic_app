@@ -2,7 +2,7 @@ import { RequestHandler } from 'express';
 import * as _ from 'lodash';
 import { ObjectId } from 'mongoose/lib/types';
 import * as uuid from 'uuid/v4';
-import { IEvent, EventType } from 'lib/common/interfaces/events';
+import { IEvent, EventType } from 'lib/common/interfaces/cqrs';
 import { IEntity } from 'lib/common/interfaces/entity';
 import { Entity, Event, EntityCreated, EntityRenamed } from 'lib/server/models';
 
