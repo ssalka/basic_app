@@ -1,5 +1,5 @@
 import * as _ from 'lodash';
-import { EventType } from 'lib/common/interfaces/entity';
+import { EventType } from 'lib/common/interfaces/events';
 import { ModelGen, types } from 'lib/server/utils';
 const { ref } = types;
 

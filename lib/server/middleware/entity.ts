@@ -2,8 +2,8 @@ import { RequestHandler } from 'express';
 import * as _ from 'lodash';
 import { ObjectId } from 'mongoose/lib/types';
 import * as uuid from 'uuid/v4';
-import { IEvent } from 'lib/common/interfaces/events';
-import { IEntity, EventType } from 'lib/common/interfaces/entity';
+import { IEvent, EventType } from 'lib/common/interfaces/events';
+import { IEntity } from 'lib/common/interfaces/entity';
 import { Entity, Event, EntityCreated, EntityRenamed } from 'lib/server/models';
 
 export const createEntity: RequestHandler = (req, res, next) => {

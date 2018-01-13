@@ -23,9 +23,3 @@ export interface IPopulatedEntity<T = {}> {
 export type EntityDocument = Versioned<IEntity & IDocument<'Entity'>>;
 
 export type PopulatedEntityDocument<T = {}> = IPopulatedEntity<T> & IDocument<'Entity'>;
-
-export const enum EventType {
-  EntityCreated = 'ENTITY_CREATED',
-  EntityRenamed = 'ENTITY_RENAMED',
-  EntitiesRequested = 'ENTITIES_REQUESTED'
-}

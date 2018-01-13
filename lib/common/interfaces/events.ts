@@ -13,3 +13,9 @@ export interface IEvent2 {
   version: number;
   user?: string | IUser;
 }
+
+export const enum EventType {
+  EntityCreated = 'ENTITY_CREATED',
+  EntityRenamed = 'ENTITY_RENAMED',
+  EntitiesRequested = 'ENTITIES_REQUESTED'
+}

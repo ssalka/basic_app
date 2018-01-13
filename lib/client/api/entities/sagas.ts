@@ -3,8 +3,8 @@ import { push } from 'react-router-redux';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { action, saga, success, fail } from 'lib/client/services/utils';
-import { IEntity, EntityDocument, EventType } from 'lib/common/interfaces/entity';
-import { IEvent2 } from 'lib/common/interfaces/events';
+import { IEntity, EntityDocument } from 'lib/common/interfaces/entity';
+import { EventType, IEvent2 } from 'lib/common/interfaces/events';
 import { Recorded } from 'lib/common/interfaces/mongo';
 import { Action } from 'lib/common/interfaces/redux';
 import { updateLibrary } from '../user/actions';
