@@ -6,7 +6,7 @@ import { action, saga, success, fail } from 'lib/client/services/utils';
 import { IEntity, EntityDocument, EntityEventType } from 'lib/common/interfaces/entity';
 import { Action } from 'lib/common/interfaces/redux';
 import { updateLibrary } from '../user/actions';
-import { ICreateEntityPayload, IUpdateEntityPayload } from './actions';
+import { ICreateEntityPayload, IRenameEntityPayload } from './actions';
 
 export function* createEntity({ entity }: Action<ICreateEntityPayload>) {
   try {
@@ -33,16 +33,17 @@ export function* getEntities() {
   }
 }
 
-export function* updateEntity({ entityId, updates }: Action<IUpdateEntityPayload>) {
+export function* renameEntity({ entityId, newName }: Action<IRenameEntityPayload>) {
   try {
-    const entity: EntityDocument = yield saga.post<IUpdateEntityPayload['updates']>(
-      `entities/${entityId}`,
-      updates
-    );
+    const entity: EntityDocument = yield saga.post<
+      Partial<IRenameEntityPayload>
+    >(`entities/${entityId}`, {
+      newName
+    });
 
-    yield saga.success(EntityEventType.Updated, { entity });
+    yield saga.success(EntityEventType.Renamed, { entity });
   } catch (error) {
-    yield saga.fail(EntityEventType.Updated, { error });
+    yield saga.fail(EntityEventType.Renamed, { error });
   }
 }
 
@@ -50,6 +51,6 @@ export default function* entitiesSaga() {
   yield [
     takeLatest(EntityEventType.Created, createEntity),
     takeLatest(EntityEventType.Requested, getEntities),
-    takeLatest(EntityEventType.Updated, updateEntity)
+    takeLatest(EntityEventType.Renamed, renameEntity)
   ];
 }

@@ -15,4 +15,4 @@ export default express
   )
   .get('/entities', middleware.entity.getEntities)
   .post('/entities', middleware.entity.createEntity)
-  .post('/entities/:entityId', middleware.entity.updateEntity);
+  .post('/entities/:entityId', middleware.entity.renameEntity);

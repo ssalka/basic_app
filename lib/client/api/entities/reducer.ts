@@ -32,9 +32,9 @@ const addEntity: AddEntityReducer = (state, { entity, entities }) => ({
   entities: state.entities.concat(entities || (entity as EntityDocument))
 });
 
-type UpdateEntityReducer = Reducer<IEntityState, { entity: EntityDocument }>;
+type RenameEntityReducer = Reducer<IEntityState, { entity: EntityDocument }>;
 
-const updateEntity: UpdateEntityReducer = (state, { entity }) => {
+const renameEntity: RenameEntityReducer = (state, { entity }) => {
   const entityIndex = _.findIndex(state.entities, _.pick(entity, '_id'));
   const entities = _.cloneDeep(state.entities);
   entities[entityIndex] = entity;
@@ -56,8 +56,8 @@ export default function entityReducer(
     case success(EntityEventType.Created):
       return addEntity(state, action);
 
-    case success(EntityEventType.Updated):
-      return updateEntity(state, action);
+    case success(EntityEventType.Renamed):
+      return renameEntity(state, action);
 
     default:
       return type.includes(RequestStatus.Fail) ? { ...state, error } : state;
