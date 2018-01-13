@@ -1,9 +1,9 @@
 import * as _ from 'lodash';
-import { EntityEventType } from 'lib/common/interfaces/entity';
+import { EventType } from 'lib/common/interfaces/entity';
 import { ModelGen, types } from 'lib/server/utils';
 const { ref } = types;
 
-const EntityEventSchema = {
+const EventSchema = {
   entity: ref('Entity', true),
   user: ref('User'),
   // TODO: command ref (need to store commands separately first)
@@ -28,13 +28,13 @@ const statics = {
 
     return events.reduce((entities, { type, entity, entityId, newName }) => {
       switch (type) {
-        case EntityEventType.Created: {
+        case EventType.EntityCreated: {
           entities.push(entity);
 
           return entities;
         }
 
-        case EntityEventType.Renamed: {
+        case EventType.EntityRenamed: {
           // REVIEW: better way to find by ObjectId?
           const matchedEntity = entities.find(({ _id }) => entityId === _id.toString());
 
@@ -57,6 +57,6 @@ const statics = {
   }
 };
 
-export default ModelGen.generateModel('EntityEvent', EntityEventSchema, {
+export default ModelGen.generateModel('Event', EventSchema, {
   props: { statics }
 });

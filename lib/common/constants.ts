@@ -1,7 +1,7 @@
 export const enum MongoCollection {
   Collection = 'Collection',
   Entity = 'Entity',
-  EntityEvent = 'EntityEvent',
+  Event = 'Event',
   Uncategorized = 'Uncategorized',
   User = 'User'
 }

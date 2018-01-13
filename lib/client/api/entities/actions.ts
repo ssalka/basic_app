@@ -1,7 +1,7 @@
 import {
   Action,
   EntityDocument,
-  EntityEventType,
+  EventType,
   ID,
   IEntity,
   IPopulatedEntity,
@@ -16,14 +16,14 @@ export interface ICreateEntityPayload
 export const createEntity = (
   entity: IEntity | IPopulatedEntity
 ): Action<ICreateEntityPayload> => ({
-  type: EntityEventType.Created,
+  type: EventType.EntityCreated,
   entity,
   timestamp: new Date(),
   version: 0
 });
 
 export const getEntities = (): Action => ({
-  type: EntityEventType.Requested
+  type: EventType.EntitiesRequested
 });
 
 export interface IRenameEntityPayload {
@@ -35,7 +35,7 @@ export const renameEntity = (
   entityId: ID,
   newName: string
 ): Action<IRenameEntityPayload> => ({
-  type: EntityEventType.Renamed,
+  type: EventType.EntityRenamed,
   entityId,
   newName
 });

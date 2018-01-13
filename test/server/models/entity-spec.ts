@@ -5,7 +5,7 @@ import { MockUser } from 'lib/server/models/mocks';
 import { MongoCollection } from 'lib/common/constants';
 import {
   EntityDocument,
-  EntityEventType,
+  EventType,
   IEvent,
   ICreateEntityPayload
 } from 'lib/common/interfaces';
@@ -34,7 +34,7 @@ describe('EntityEvent', () => {
   });
 
   const testEvent: IEvent<ICreateEntityPayload> = {
-    type: EntityEventType.Created,
+    type: EventType.Created,
     creator: testUser._id,
     payload: {
       entity: testEntity.toObject()
@@ -76,7 +76,7 @@ describe('EntityEvent', () => {
   describe('#project', () => {
     let entityEvents: EntityDocument[];
     const testEntities = [1, 2, 3].map(i => ({
-      type: EntityEventType.Created,
+      type: EventType.Created,
       creator: testUser._id,
       payload: {
         entity: {

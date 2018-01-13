@@ -3,7 +3,7 @@ import { push } from 'react-router-redux';
 import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { action, saga, success, fail } from 'lib/client/services/utils';
-import { IEntity, EntityDocument, EntityEventType } from 'lib/common/interfaces/entity';
+import { IEntity, EntityDocument, EventType } from 'lib/common/interfaces/entity';
 import { Action } from 'lib/common/interfaces/redux';
 import { updateLibrary } from '../user/actions';
 import { ICreateEntityPayload, IRenameEntityPayload } from './actions';
@@ -15,9 +15,9 @@ export function* createEntity({ type, ...payload }: Action<ICreateEntityPayload>
       payload
     );
 
-    yield saga.success(EntityEventType.Created, { entity: createdEntity });
+    yield saga.success(EventType.EntityCreated, { entity: createdEntity });
   } catch (error) {
-    yield saga.fail(EntityEventType.Created, { error });
+    yield saga.fail(EventType.EntityCreated, { error });
   }
 }
 
@@ -25,11 +25,11 @@ export function* getEntities() {
   try {
     const entities: EntityDocument[] = yield saga.get('entities');
 
-    yield saga.success<{ entities: EntityDocument[] }>(EntityEventType.Requested, {
+    yield saga.success<{ entities: EntityDocument[] }>(EventType.EntitiesRequested, {
       entities
     });
   } catch (error) {
-    yield saga.fail(EntityEventType.Requested, { error });
+    yield saga.fail(EventType.EntitiesRequested, { error });
   }
 }
 
@@ -41,16 +41,16 @@ export function* renameEntity({ entityId, newName }: Action<IRenameEntityPayload
       newName
     });
 
-    yield saga.success(EntityEventType.Renamed, { entity });
+    yield saga.success(EventType.EntityRenamed, { entity });
   } catch (error) {
-    yield saga.fail(EntityEventType.Renamed, { error });
+    yield saga.fail(EventType.EntityRenamed, { error });
   }
 }
 
 export default function* entitiesSaga() {
   yield [
-    takeLatest(EntityEventType.Created, createEntity),
-    takeLatest(EntityEventType.Requested, getEntities),
-    takeLatest(EntityEventType.Renamed, renameEntity)
+    takeLatest(EventType.EntityCreated, createEntity),
+    takeLatest(EventType.EntitiesRequested, getEntities),
+    takeLatest(EventType.EntityRenamed, renameEntity)
   ];
 }

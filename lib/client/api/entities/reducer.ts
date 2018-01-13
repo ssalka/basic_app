@@ -7,7 +7,7 @@ import {
   IErrorPayload,
   Reducer,
   EntityDocument,
-  EntityEventType,
+  EventType,
   RequestStatus
 } from 'lib/common/interfaces';
 
@@ -50,13 +50,13 @@ export default function entityReducer(
   { type, error, ...action }: Action<IErrorPayload | any> // TODO: interfaces for success/fail action payloads
 ): IEntityState {
   switch (type) {
-    case success(EntityEventType.Requested):
+    case success(EventType.EntitiesRequested):
       return addEntity(state, action);
 
-    case success(EntityEventType.Created):
+    case success(EventType.EntityCreated):
       return addEntity(state, action);
 
-    case success(EntityEventType.Renamed):
+    case success(EventType.EntityRenamed):
       return renameEntity(state, action);
 
     default:

@@ -24,8 +24,8 @@ export type EntityDocument = IEntity & IDocument<'Entity'>;
 
 export type PopulatedEntityDocument<T = {}> = IPopulatedEntity<T> & IDocument<'Entity'>;
 
-export const enum EntityEventType {
-  Created = 'ENTITY_CREATED',
-  Renamed = 'ENTITY_RENAMED',
-  Requested = 'ENTITIES_REQUESTED'
+export const enum EventType {
+  EntityCreated = 'ENTITY_CREATED',
+  EntityRenamed = 'ENTITY_RENAMED',
+  EntitiesRequested = 'ENTITIES_REQUESTED'
 }
