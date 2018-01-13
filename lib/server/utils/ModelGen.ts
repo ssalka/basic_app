@@ -8,18 +8,20 @@ import { Mixed, ref } from './types';
 
 const _: any = lodash.mixin(inflection);
 
+const defaultOptions = {
+  discriminatorKey: '_model',
+  timestamps: true,
+  toObject: {
+    getters: true,
+    virtuals: true
+  }
+};
+
 const _defaults = {
   // Consumed by mongoose
   extensions: {
     props: {},
-    options: {
-      discriminatorKey: '_model',
-      timestamps: true,
-      toObject: {
-        getters: true,
-        virtuals: true
-      }
-    }
+    options: defaultOptions
   },
   // ModelGen configuration
   settings: {
@@ -148,7 +150,10 @@ class ModelGen {
   }
 
   extendModel(Base, { name, schema = {}, statics = {}, methods = {}, options = {} }) {
-    const ModelSchema = new Schema(schema, options);
+    const ModelSchema = new Schema(schema, {
+      ...defaultOptions,
+      ...options
+    });
 
     // TODO: make this a pure function
     this.setValidatedSchemaProps(ModelSchema, { statics, methods });

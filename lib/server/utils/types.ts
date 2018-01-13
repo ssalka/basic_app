@@ -9,7 +9,7 @@ export const ref = (collection, required = false) => ({
 });
 
 export const dynamicRef = (collection, required = false) => ({
-  type: Schema.Types.ObjectId,
+  type: String,
   refPath: collection,
   required
 });

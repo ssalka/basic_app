@@ -1,3 +1,4 @@
 import EntityCreated from './EntityCreated';
+import EntityRenamed from './EntityRenamed';
 
-export { EntityCreated };
+export { EntityCreated, EntityRenamed };

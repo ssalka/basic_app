@@ -4,6 +4,7 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 
 import { action, saga, success, fail } from 'lib/client/services/utils';
 import { IEntity, EntityDocument, EventType } from 'lib/common/interfaces/entity';
+import { Recorded } from 'lib/common/interfaces/mongo';
 import { Action } from 'lib/common/interfaces/redux';
 import { updateLibrary } from '../user/actions';
 import { ICreateEntityPayload, IRenameEntityPayload } from './actions';
@@ -33,15 +34,17 @@ export function* getEntities() {
   }
 }
 
-export function* renameEntity({ entityId, newName }: Action<IRenameEntityPayload>) {
+export function* renameEntity({ entity, newName }: Action<IRenameEntityPayload>) {
   try {
-    const entity: EntityDocument = yield saga.post<
-      Partial<IRenameEntityPayload>
-    >(`entities/${entityId}`, {
-      newName
+    const renamedEntity: EntityDocument = yield saga.post<
+      Partial<Recorded<IRenameEntityPayload>>
+    >(`entities/${entity._id}`, {
+      newName,
+      timestamp: new Date(),
+      version: entity.version + 1
     });
 
-    yield saga.success(EventType.EntityRenamed, { entity });
+    yield saga.success(EventType.EntityRenamed, { entity: renamedEntity });
   } catch (error) {
     yield saga.fail(EventType.EntityRenamed, { error });
   }

@@ -1,11 +1,18 @@
 import { EventType } from 'lib/common/interfaces';
 import { ModelGen } from 'lib/server/utils';
 import { Event } from '../';
-import Entity from '../Entity';
 
 export default ModelGen.extendModel(Event, {
-  name: EventType.EntityCreated,
+  name: EventType.EntityRenamed,
   schema: {
-    newEntity: Entity.schema
+    entityId: {
+      ref: 'Entity',
+      type: String,
+      required: true
+    },
+    newName: {
+      type: String,
+      required: true
+    }
   }
 });

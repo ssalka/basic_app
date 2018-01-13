@@ -1,4 +1,4 @@
-import { ID, IDocument } from './mongo';
+import { ID, IDocument, Versioned } from './mongo';
 
 export interface IReference {
   model: string;
@@ -20,7 +20,7 @@ export interface IPopulatedEntity<T = {}> {
   references: IPopulatedReference<T>[];
 }
 
-export type EntityDocument = IEntity & IDocument<'Entity'>;
+export type EntityDocument = Versioned<IEntity & IDocument<'Entity'>>;
 
 export type PopulatedEntityDocument<T = {}> = IPopulatedEntity<T> & IDocument<'Entity'>;
 

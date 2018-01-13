@@ -38,7 +38,7 @@ class EntityList extends BaseComponent<
   }
 
   getUpdateHandler(entity: EntityDocument) {
-    return (newName: string) => this.props.renameEntity(entity._id, newName);
+    return (newName: string) => this.props.renameEntity(entity, newName);
   }
 
   toggleCombineEntities = () => this._toggle('combineEntities');
