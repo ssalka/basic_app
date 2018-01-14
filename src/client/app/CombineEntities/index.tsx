@@ -1,4 +1,5 @@
 import * as classNames from 'classnames';
+import produce from 'immer';
 import * as _ from 'lodash';
 import * as React from 'react';
 import { Flex } from 'grid-styled';
@@ -52,17 +53,15 @@ class CombineEntities extends BaseComponent<IProps, IState> {
 
       if (isNewField && !value) return;
 
-      const aggregate = _.cloneDeep(this.state.aggregate);
+      const aggregate = produce(this.state.aggregate, ({ fields }) => {
+        if (isNewField) {
+          fields.push(new Field());
+        }
 
-      const fieldValue: EntityDocument = _.isString(value)
-        ? _.find(aggregate.fields, { name: value })
-        : value;
-
-      if (isNewField) {
-        aggregate.fields.push(new Field({ [fieldKey]: fieldValue }));
-      } else {
-        aggregate.fields[index][fieldKey] = fieldValue;
-      }
+        fields[index][fieldKey] = _.isString(value)
+          ? _.find(fields, { name: value })
+          : value;
+      });
 
       this.setState({ aggregate });
     }

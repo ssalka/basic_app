@@ -1,43 +1,48 @@
 import {
   Action,
+  CommandType,
   EntityDocument,
-  EntityEventType,
   ID,
   IEntity,
-  IPopulatedEntity
+  IPopulatedEntity,
+  IEvent2,
+  QueryType
 } from 'lib/common/interfaces';
 
-export interface ICreateEntityPayload {
+export interface ICreateEntityPayload
+  extends Pick<IEvent2, 'entity' | 'timestamp' | 'version'> {
   entity: IEntity | IPopulatedEntity;
 }
 
 export const createEntity = (
   entity: IEntity | IPopulatedEntity
 ): Action<ICreateEntityPayload> => ({
-  type: EntityEventType.Created,
-  entity
+  type: CommandType.CreateEntity,
+  entity,
+  timestamp: new Date(),
+  version: 0
 });
 
-export const getEntities = (): Action => ({
-  type: EntityEventType.Requested
+export const fetchEntitiesByUser = (): Action => ({
+  type: QueryType.FetchEntitiesByUser
 });
 
 export interface IRenameEntityPayload {
-  entityId: ID;
+  entity: EntityDocument;
   newName: string;
 }
 
 export const renameEntity = (
-  entityId: ID,
+  entity: EntityDocument,
   newName: string
 ): Action<IRenameEntityPayload> => ({
-  type: EntityEventType.Renamed,
-  entityId,
+  type: CommandType.RenameEntity,
+  entity,
   newName
 });
 
 export default {
   createEntity,
-  getEntities,
+  fetchEntitiesByUser,
   renameEntity
 };

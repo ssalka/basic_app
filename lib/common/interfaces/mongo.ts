@@ -6,3 +6,13 @@ export interface IDocument<ModelName = string> {
   updatedAt: string;
   createdAt: string;
 }
+
+export type Timestamped<T> = T & {
+  timestamp: Date;
+};
+
+export type Versioned<T> = T & {
+  version: number;
+};
+
+export type Recorded<T> = Timestamped<T> & Versioned<T>;

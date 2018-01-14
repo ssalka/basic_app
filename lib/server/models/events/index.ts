@@ -1,4 +1,4 @@
-import Event from './Event';
-import EntityEvent from './EntityEvent';
+import EntityCreated from './EntityCreated';
+import EntityRenamed from './EntityRenamed';
 
-export { Event, EntityEvent };
+export { EntityCreated, EntityRenamed };

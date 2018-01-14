@@ -1,8 +1,13 @@
+import { Schema } from 'mongoose';
 import { MongoCollection } from 'lib/common/constants';
 import { ModelGen, types } from '../utils';
 const { dynamicRef, Mixed } = types;
 
-export default ModelGen.generateModel(MongoCollection.Entity, {
+export const EntitySchema = {
+  _id: {
+    type: String,
+    required: true
+  },
   name: String,
   fields: {
     type: [
@@ -27,4 +32,6 @@ export default ModelGen.generateModel(MongoCollection.Entity, {
     ],
     default: []
   }
-});
+};
+
+export default ModelGen.generateModel(MongoCollection.Entity, EntitySchema);
