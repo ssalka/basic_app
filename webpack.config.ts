@@ -29,6 +29,7 @@ const config = {
         include: clientDirectories,
         loader: 'ts-loader',
         options: {
+          configFile: path.resolve('./config/tsconfig.client.json'),
           transpileOnly: true
         }
       },
