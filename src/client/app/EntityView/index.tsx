@@ -20,13 +20,13 @@ export default class EntityView extends ViewComponent<IProps> {
     }
   }
 
-  renderField = (field: Field): JSX.Element => (
+  renderField: React.SFC<Field> = field => (
     <p key={field.key}>
       {field.key && <strong className="field-key">{getName(field.key)}</strong>}
 
       {field.value && getName(field.value)}
     </p>
-  );
+  )
 
   render() {
     const { model, value } = this.props.entity.references[0];

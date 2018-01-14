@@ -119,15 +119,15 @@ export default class SmartInput extends ViewComponent<
       focusedEntityIndex:
         (matchedEntities.length + focusedEntityIndex + (keyCode - 39)) %
         matchedEntities.length
-    });
+    })
 
   matchAgainst = _.curry(
-    (value: string, entity: IPopulatedEntity): boolean =>
-      !!value &&
+    (value: string, entity: IPopulatedEntity): boolean => !!value && (
       _(entity.references)
         .map('name')
         .concat(entity.name)
         .some(entitiesMatch(value))
+    )
   );
 
   handleSubmit() {

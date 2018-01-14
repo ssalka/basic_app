@@ -27,7 +27,7 @@ interface IState {
 }
 
 export default class CollectionFormSchema extends ViewComponent<IProps, IState> {
-  public static defaultProps: Partial<IProps> = {
+  static defaultProps: Partial<IProps> = {
     collection: new Collection({
       _id: null,
       fields: [new CollectionField()]
@@ -71,7 +71,7 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
   getUpdateHandler = (index, key?) => value => {
     const update = key ? { [key]: value } : value;
     this.props.handleChange(index, update);
-  };
+  }
 
   addField() {
     const { fields } = this.props.collection;
@@ -88,7 +88,7 @@ export default class CollectionFormSchema extends ViewComponent<IProps, IState> 
     }
   }
 
-  public render() {
+  render() {
     const {
       props: { collection, collections },
       state: { editingFields, showFieldOptions }

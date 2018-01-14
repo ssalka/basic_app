@@ -10,9 +10,7 @@ import {
   Collection,
   CollectionField,
   IDocument,
-  ReactElement,
-  ReactProps,
-  SFC
+  ReactProps
 } from 'lib/common/interfaces';
 import './styles.less';
 
@@ -34,12 +32,12 @@ export default class DocumentView extends ViewComponent<IProps, any> {
     console.info(_.singularize(collection.name), _document._id, _.omit(_document, '_id'));
   }
 
-  renderField: SFC = (field: CollectionField): ReactElement => (
+  renderField: React.SFC<CollectionField> = field => (
     <p key={field.name}>
       <strong className="field-name">{field.name}</strong>
       {RenderingService.renderCollectionField(this.props.document, field)}
     </p>
-  );
+  )
 
   render() {
     const { collection, document: _document } = this.props;

@@ -26,8 +26,11 @@ export default class App extends ReduxComponent<RouteComponentProps<any>, IState
     navLinks: [{ name: 'Home', path: '/home', icon: 'home' }]
   };
 
-  getCollections = (): Collection[] =>
-    _.get(this.props.store.user.user, 'library.collections', []);
+  getCollections = (): Collection[] => _.get(
+    this.props.store.user.user,
+    'library.collections',
+    []
+  )
 
   getCollectionBySlug(slug: string) {
     const collections = this.getCollections();

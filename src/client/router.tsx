@@ -19,16 +19,19 @@ class AppRouter extends BaseComponent<Partial<IReduxProps>> {
     }
   }
 
-  renderIfAuthenticated = props =>
-    this.props.store.user.user ? this.renderWithStore(App, props) : <div />;
+  renderIfAuthenticated = props => (
+    this.props.store.user.user
+      ? this.renderWithStore(App, props)
+      : <div />
+  )
 
-  logout = () => {
+  logout() {
     const { token } = localStorage;
 
     if (token) this.props.actions.userLogout(token);
 
     return <Redirect to="/" />;
-  };
+  }
 
   renderWithStore = _.curry(
     (Component: React.ComponentType, props: RouteComponentProps<any>) => (
