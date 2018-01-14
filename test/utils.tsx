@@ -32,7 +32,6 @@ async function createMockInstances(mockInstances, modelName) {
   if (!ActualModel) throwError(`Model ${modelName} not found`);
 
   const MatchedModel = mockModels[`Mock${modelName}`];
-  // prettier-ignore
   if (!MatchedModel) console.info(`No mock class found for model ${modelName} - using unmodified input object(s)`);
 
   const MockModel = MatchedModel || ActualModel;
