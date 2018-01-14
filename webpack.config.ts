@@ -2,6 +2,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import * as webpack from 'webpack';
 import * as CopyWebpackPlugin from 'copy-webpack-plugin';
+import * as ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin';
 
 const clientDirectories = [
   path.resolve('./lib/client'),
@@ -26,21 +27,14 @@ const config = {
       {
         test: /\.tsx?$/,
         include: clientDirectories,
-        enforce: 'pre',
-        loader: 'tslint-loader',
+        loader: 'ts-loader',
         options: {
-          formatter: 'stylish',
-          configFile: 'config/tslint.json'
+          transpileOnly: true
         }
       },
       {
-        test: /\.tsx?$/,
-        include: clientDirectories,
-        use: 'ts-loader?configFileName=config/tsconfig.client.json'
-      },
-      {
         test: /\.(less|css)$/,
-        use: ['style-loader', 'css-loader', 'less-loader']
+        loaders: ['style-loader', 'css-loader', 'less-loader']
       }
     ]
   },
@@ -79,6 +73,10 @@ if (process.env.NODE_ENV === 'production') {
   config.plugins.push(
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(),
+    new ForkTsCheckerWebpackPlugin({
+      tsconfig: './config/tsconfig.client.json',
+      tslint: './config/tslint.json'
+    }),
     new webpack.DefinePlugin({
       loginCredentials: _.mapValues(
         {
