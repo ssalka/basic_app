@@ -4,14 +4,12 @@ import * as React from 'react';
 const _: any = lodash.mixin(inflection);
 
 import { ViewComponent } from 'lib/client/components';
-import { RENDER_METHODS } from 'lib/common/constants';
 import Link from 'react-router-redux-dom-link';
 import { RenderingService } from 'lib/client/services';
 import {
   Collection,
   CollectionField,
   IDocument,
-  IRenderMethod,
   ReactElement,
   ReactProps,
   SFC

@@ -1,12 +1,10 @@
 import * as lodash from 'lodash';
 import * as inflection from 'lodash-inflection';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
 import { NonIdealState, IconName } from '@blueprintjs/core';
 import { Icon, FlexRow, Button } from 'lib/client/components';
 import { Collection, IDocument, IComponentModule } from 'lib/common/interfaces';
-import { IState } from './';
 const _: any = lodash.mixin(inflection);
 
 export default function getComponents(

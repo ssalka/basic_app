@@ -3,7 +3,6 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { AnyAction, ActionCreator } from 'redux';
 import { Flex } from 'grid-styled';
-import { EditableText } from '@blueprintjs/core';
 import styled from 'styled-components';
 import { ViewComponent } from 'lib/client/components';
 import { Collection, IDocument, IEntity, IPopulatedEntity } from 'lib/common/interfaces';

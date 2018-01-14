@@ -6,7 +6,6 @@ import {
   IDocument,
   CollectionField,
   IComponentModule,
-  ReactElement,
   ReactProps,
   SFC
 } from 'lib/common/interfaces';

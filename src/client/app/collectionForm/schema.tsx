@@ -15,8 +15,6 @@ import {
   AddFieldButton
 } from './components';
 
-type FieldOptionsEnum = 'required' | 'isArray' | 'renderMethod';
-
 interface IProps extends ReactProps {
   collection: Partial<Collection>;
   collections: Collection[];

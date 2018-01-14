@@ -1,10 +1,8 @@
-import axios from 'axios';
 import * as _ from 'lodash';
 import produce from 'immer';
-import { success, fail } from 'lib/client/services/utils';
+import { success } from 'lib/client/services/utils';
 import {
   Action,
-  IEntity,
   IErrorPayload,
   Reducer,
   EntityDocument,

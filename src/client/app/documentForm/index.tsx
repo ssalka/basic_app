@@ -110,7 +110,7 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
   }
 
   submitForm(event: React.FormEvent<any>) {
-    const { collection, history }: Partial<IProps> = this.props;
+    const { collection }: Partial<IProps> = this.props;
     const { document: doc } = this.state;
     event.preventDefault();
     this.props.actions.upsertDocument(collection._id, doc);

@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as _ from 'lodash';
 import { Collection } from 'lib/common/interfaces';
 import { ICollectionAction, CollectionAction } from './actions';

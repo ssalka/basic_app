@@ -2,7 +2,6 @@ import {
   Action,
   CommandType,
   EntityDocument,
-  ID,
   IEntity,
   IPopulatedEntity,
   IEvent2,

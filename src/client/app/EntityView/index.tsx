@@ -1,7 +1,6 @@
 import * as lodash from 'lodash';
 import * as inflection from 'lodash-inflection';
 import * as React from 'react';
-import Link from 'react-router-redux-dom-link';
 const _: any = lodash.mixin(inflection);
 
 import { ViewComponent } from 'lib/client/components';
