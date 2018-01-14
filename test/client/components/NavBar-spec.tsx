@@ -14,7 +14,7 @@ describe('NavBar', () => {
 
     it('shows the sign-in button', () => {
       const navbar: string = getNavBar();
-      const button = navbar.find('button');
+      const button = navbar.find('button').last();
       expect(button.text()).toBe('Sign In');
     });
   });
@@ -26,12 +26,6 @@ describe('NavBar', () => {
       const navbar = getNavBar();
       const button = navbar.find('button').last();
       expect(button.text()).toBe('');
-    });
-
-    it('shows a search input', () => {
-      const navbar = getNavBar();
-      const search = navbar.find('input');
-      expect(search.prop('placeholder')).toBe('Search');
     });
   });
 });

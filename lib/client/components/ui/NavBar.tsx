@@ -1,6 +1,5 @@
 import * as React from 'react';
 import Link from 'react-router-redux-dom-link';
-import { InputGroup } from '@blueprintjs/core';
 import { IUser } from 'lib/common/interfaces';
 import { Button } from '../';
 import '../../styles/Navbar.less';
@@ -18,14 +17,12 @@ export default ({ title, user }: INavBarProps) => (
       </Link>
     </div>
     <div className="pt-navbar-group pt-align-right">
-      {user && (
-        <InputGroup
-          placeholder="Search"
-          className="pt-inputs pt-round"
-          leftIconName="search"
-          rightElement={<Button minimal={true} icon="cross" />}
-        />
+      {__DEV__ && (
+        <a href="https://github.com/ssalka/basic_app" target="_blank">
+          <Button icon="git-repo" minimal={true} rounded={true} />
+        </a>
       )}
+
       <Link to={user ? '/logout' : '/login'}>
         <Button text={!user && 'Sign In'} icon="user" minimal={true} rounded={true} />
       </Link>

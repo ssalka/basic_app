@@ -1,4 +1,7 @@
 {
+  "globals": {
+    "__DEV__": true
+  },
   "rootDir": "../",
   "moduleFileExtensions": [
     "js",
