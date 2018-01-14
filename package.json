@@ -42,6 +42,7 @@
     "express-session": "1.14.2",
     "funfix": "3.6.0",
     "grid-styled": "2.0.0-4",
+    "immer": "^0.7.0",
     "lodash": "4.17.2",
     "lodash-inflection": "1.5.0",
     "mongoose": "^4.12.3",
