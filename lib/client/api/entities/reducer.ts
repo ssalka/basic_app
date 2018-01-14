@@ -1,5 +1,6 @@
 import axios from 'axios';
 import * as _ from 'lodash';
+import produce from 'immer';
 import { success, fail } from 'lib/client/services/utils';
 import {
   Action,
@@ -41,17 +42,15 @@ type RenameEntityReducer = Reducer<
   { event: IEvent2 & Recorded<IRenameEntityPayload> }
 >;
 
-const renameEntity: RenameEntityReducer = (state, { event }) => {
-  const entityIndex = _.findIndex(state.entities, { _id: event.entity });
-  const entities = _.cloneDeep(state.entities);
-  entities[entityIndex].name = event.newName;
-  entities[entityIndex].version = event.version;
+const renameEntity: RenameEntityReducer = (state, { event }) =>
+  produce(state, ({ entities }) => {
+    const entityIndex = _.findIndex(entities, { _id: event.entity });
 
-  return {
-    ...state,
-    entities
-  };
-};
+    _.assign(entities[entityIndex], {
+      name: event.newName,
+      version: event.version
+    });
+  });
 
 export default function entityReducer(
   state: IEntityState = { entities: [] },
