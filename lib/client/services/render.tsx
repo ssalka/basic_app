@@ -28,7 +28,7 @@ class RenderingService {
     )
   };
 
-  isNonemptyField(val: any): boolean {
+  isNonemptyField = (val: any): boolean => {
     let evaluator: (val: any) => boolean;
 
     if (_.isArray(val)) {
