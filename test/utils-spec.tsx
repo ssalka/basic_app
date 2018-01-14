@@ -15,11 +15,11 @@ describe('Test Utils', () => {
 
       const createdDocs = await createTestDocs(testDocs).catch(done.fail);
       expect(_.keys(createdDocs)).toEqual(_.keys(testDocs));
-      expect(createdDocs.Collection.length).toBe(testDocs.Collection.length);
+      expect(_.compact(createdDocs.Collection).length).toBe(testDocs.Collection.length);
 
-      const collection = await Collection.findById(createdDocs.Collection[0]._id).catch(
-        done.fail
-      );
+      const collection = await Collection
+        .findById(createdDocs.Collection[0]._id)
+        .catch(done.fail);
 
       expect(collection._id).toEqual(createdDocs.Collection[0]._id);
 
