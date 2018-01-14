@@ -13,7 +13,7 @@ import {
 } from 'lib/common/interfaces';
 
 class RenderingService {
-  private componentMap: IComponentModule = {
+  componentMap: IComponentModule = {
     PLAIN_TEXT: (props: ReactProps) => <span {...props} />,
     RATING: (props: ReactProps) => (
       // TODO: make half-star ratings on 0-5 scale work
@@ -28,7 +28,7 @@ class RenderingService {
     )
   };
 
-  public isNonemptyField = (val: any): boolean => {
+  isNonemptyField = (val: any): boolean => {
     let evaluator: (val: any) => boolean;
 
     if (_.isArray(val)) {
@@ -41,9 +41,9 @@ class RenderingService {
     }
 
     return evaluator(val);
-  };
+  }
 
-  private getProps(document: IDocument, field: CollectionField): ReactProps {
+  getProps(document: IDocument, field: CollectionField): ReactProps {
     const { targetProp }: IRenderMethod = _.find(RENDER_METHODS, {
       key: field.renderMethod || 'PLAIN_TEXT'
     });
@@ -57,7 +57,7 @@ class RenderingService {
     return { [targetProp]: displayValue };
   }
 
-  public renderCollectionField(
+  renderCollectionField(
     document: any,
     field: CollectionField,
     props: ReactProps = {}

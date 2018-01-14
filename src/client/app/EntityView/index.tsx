@@ -1,7 +1,6 @@
 import * as lodash from 'lodash';
 import * as inflection from 'lodash-inflection';
 import * as React from 'react';
-import Link from 'react-router-redux-dom-link';
 const _: any = lodash.mixin(inflection);
 
 import { ViewComponent } from 'lib/client/components';
@@ -21,13 +20,13 @@ export default class EntityView extends ViewComponent<IProps> {
     }
   }
 
-  renderField = (field: Field): JSX.Element => (
+  renderField: React.SFC<Field> = field => (
     <p key={field.key}>
       {field.key && <strong className="field-key">{getName(field.key)}</strong>}
 
       {field.value && getName(field.value)}
     </p>
-  );
+  )
 
   render() {
     const { model, value } = this.props.entity.references[0];

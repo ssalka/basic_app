@@ -18,7 +18,7 @@ import {
   ReactElement,
   SFC
 } from 'lib/common/interfaces';
-import { FIELD_TYPES, RENDER_METHODS } from 'lib/common/constants';
+import { RENDER_METHODS } from 'lib/common/constants';
 
 export const CollectionNameInput: SFC = ({ name, handleChange }) => (
   <h3>
@@ -98,8 +98,6 @@ export const FieldOptions: SFC = ({ field, onChange, onTogglePopover }: any) => 
   const handleCheckIsArray = () => onChange({ isArray: !field.isArray });
   const handleSelectView = (newRenderMethod: IRenderMethod) =>
     onChange({ renderMethod: newRenderMethod.key });
-  const renderMethod: IRenderMethod =
-    _.find(RENDER_METHODS, { key: field.renderMethod }) || RENDER_METHODS[0];
 
   return (
     <FlexColumn className="field-options drawer bg-light">

@@ -5,7 +5,6 @@ import { connect } from 'lib/client/api/store';
 import {
   Collection,
   CollectionField,
-  ReactElement,
   IDocument
 } from 'lib/common/interfaces';
 import {
@@ -42,9 +41,8 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
     };
   }
 
-  clearField = (field: CollectionField) => () => {
-    this.setStateByPath(`document.${_.camelCase(field.name)}`, undefined);
-  };
+  clearField = (field: CollectionField) => () =>
+    this.setStateByPath(`document.${_.camelCase(field.name)}`, undefined)
 
   updateField = _.curry(
     (field: CollectionField, value: string | React.FormEvent<any>) => {
@@ -110,13 +108,13 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
   }
 
   submitForm(event: React.FormEvent<any>) {
-    const { collection, history }: Partial<IProps> = this.props;
+    const { collection }: Partial<IProps> = this.props;
     const { document: doc } = this.state;
     event.preventDefault();
     this.props.actions.upsertDocument(collection._id, doc);
   }
 
-  getInput = (field: CollectionField): ReactElement => {
+  renderInput(field: CollectionField): JSX.Element {
     const documentValue: any = this.state.document[_.camelCase(field.name)];
     const inputValue: any = field.isArray
       ? (documentValue || []).join('; ')
@@ -156,7 +154,7 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
           />
         );
     }
-  };
+  }
 
   render() {
     const { collection } = this.props;
@@ -177,7 +175,7 @@ export class DocumentForm extends ReduxComponent<IProps, IState> {
                     <label className="pt-label pt-inline">
                       <strong className="field-name">{field.name}</strong>
 
-                      {this.getInput(field)}
+                      {this.renderInput(field)}
 
                       {field.type === 'NUMBER' && (
                         <Button

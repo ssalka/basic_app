@@ -2,13 +2,7 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { RouteComponentProps, Switch, Route } from 'react-router';
 
-import {
-  ReduxComponent,
-  FlexRow,
-  NavBar,
-  SideBar,
-  NotFound
-} from 'lib/client/components';
+import { ReduxComponent, FlexRow, SideBar, NotFound } from 'lib/client/components';
 import { ILink, Collection, IUser } from 'lib/common/interfaces';
 
 import Home from './home';
@@ -32,8 +26,11 @@ export default class App extends ReduxComponent<RouteComponentProps<any>, IState
     navLinks: [{ name: 'Home', path: '/home', icon: 'home' }]
   };
 
-  getCollections = (): Collection[] =>
-    _.get(this.props.store.user.user, 'library.collections', []);
+  getCollections = (): Collection[] => _.get(
+    this.props.store.user.user,
+    'library.collections',
+    []
+  )
 
   getCollectionBySlug(slug: string) {
     const collections = this.getCollections();

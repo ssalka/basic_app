@@ -14,8 +14,6 @@ import { getName } from 'lib/common/helpers';
 import {
   EntityDocument,
   IAggregate,
-  IDocument,
-  IEntity,
   IPopulatedEntity,
   Field
 } from 'lib/common/interfaces';

@@ -16,20 +16,10 @@
   "scripts": {
     "actual": "NODE_ENV=actual npm run dev",
     "dev": "NODE_PATH=. nodemon --config config/nodemon.json",
-    "format": "prettier --config config/prettier.json --write",
-    "format:all": "npm run format -- 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}'",
     "lint": "tslint -c config/tslint.json -t stylish",
     "lint:all": "npm run lint -- 'lib/**/*.ts{,x}' 'src/**/*.ts{,x}' 'test/**/*.ts{,x}'",
-    "precommit": "lint-staged",
     "start": "NODE_PATH=. ts-node -F -P config/tsconfig.server.json index",
     "test": "NODE_ENV=test NODE_PATH=. jest --config config/jest.json --noStackTrace"
-  },
-  "lint-staged": {
-    "*.ts{,x}": [
-      "lint",
-      "format",
-      "git add"
-    ]
   },
   "dependencies": {
     "@blueprintjs/core": "^1.32.0",
@@ -88,23 +78,20 @@
     "css-loader": "^0.28.7",
     "enzyme": "^3.2.0",
     "enzyme-adapter-react-16": "^1.1.0",
-    "husky": "^0.14.3",
+    "fork-ts-checker-webpack-plugin": "^0.3.0",
     "jest": "^21.2.1",
     "jest-cli": "^21.2.1",
     "jest-css-modules": "^1.1.0",
     "json-loader": "0.5.4",
     "less": "2.7.1",
     "less-loader": "^4.0.5",
-    "lint-staged": "^4.2.3",
     "nodemon": "^1.12.5",
-    "prettier": "^1.7.4",
     "redux-mock-store": "^1.3.0",
     "source-map-loader": "0.1.6",
     "style-loader": "^0.19.1",
     "ts-jest": "^21.2.4",
-    "ts-loader": "1.3.3",
+    "ts-loader": "^3.2.0",
     "tslint": "^5.7.0",
-    "tslint-config-prettier": "^1.5.0",
     "tslint-eslint-rules": "^4.1.1",
     "tslint-loader": "^3.5.3",
     "tslint-react": "^3.2.0",

@@ -32,15 +32,7 @@ export default Tag;
 
 const tagSource = {
   isDragging: (props, monitor) => monitor.getItem().id === props.id,
-
-  beginDrag: props => props.children,
-
-  endDrag(props, monitor, component) {
-    if (!monitor.didDrop()) return;
-
-    const item = monitor.getItem();
-    const dropResult = monitor.getDropResult();
-  }
+  beginDrag: props => props.children
 };
 
 const DraggableTag = DragSource('DraggableTag', tagSource, (connect, monitor) => ({

@@ -32,7 +32,6 @@ async function createMockInstances(mockInstances, modelName) {
   if (!ActualModel) throwError(`Model ${modelName} not found`);
 
   const MatchedModel = mockModels[`Mock${modelName}`];
-  // prettier-ignore
   if (!MatchedModel) console.info(`No mock class found for model ${modelName} - using unmodified input object(s)`);
 
   const MockModel = MatchedModel || ActualModel;
@@ -60,13 +59,12 @@ export async function createTestDocs(mocks = {}) {
     .value();
 }
 
-export async function removeTestDocs() {
+export async function removeTestDocs(done) {
   if (systemDbName !== 'test') throwError('Not running in test mode');
 
-  // REVIEW: why is setImmediate necessary?
-  setImmediate(async () => {
-    await Promise.all(_.map(models, async Model => Model.remove({})));
+  await Promise.all(_.map(models, async Model => Model.remove({})));
 
-    return mongoose.disconnect();
-  });
+  await mongoose.disconnect();
+
+  done();
 }

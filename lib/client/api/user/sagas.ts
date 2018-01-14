@@ -4,7 +4,7 @@ import { push } from 'react-router-redux';
 import { call, put, takeLatest } from 'redux-saga/effects';
 import { action } from 'lib/client/services/utils';
 import { IUserAction, UserAction } from './actions';
-import { addCollection, CollectionAction } from '../collections/actions';
+import { CollectionAction } from '../collections/actions';
 
 export function* userLogin({ loginArgs: [path, payload] }: IUserAction) {
   try {

@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { IReduxProps } from 'lib/common/interfaces';
 import ViewComponent from './ViewComponent';
 

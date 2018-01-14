@@ -2,8 +2,7 @@
   "extends": [
     "tslint:recommended",
     "tslint-eslint-rules",
-    "tslint-react",
-    "tslint-config-prettier"
+    "tslint-react"
   ],
   "rules": {
     "array-type": [true, "array"],
@@ -27,6 +26,7 @@
     "no-duplicate-case": true,
     "no-sparse-arrays": true,
     "no-unused-expression": true,
+    "no-unused-variable": true,
     "object-curly-spacing": [
       true,
       "always"

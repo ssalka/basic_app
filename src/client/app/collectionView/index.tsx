@@ -3,10 +3,9 @@ import * as React from 'react';
 
 import { Flex } from 'grid-styled';
 import { RouteComponentProps } from 'react-router';
-import { NonIdealState } from '@blueprintjs/core';
 import { connect } from 'lib/client/api/store';
 import { ReduxComponent, Table, FlexColumn } from 'lib/client/components';
-import { Collection, IComponentModule } from 'lib/common/interfaces';
+import { Collection } from 'lib/common/interfaces';
 import getComponents from './components';
 import './styles.less';
 

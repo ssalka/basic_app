@@ -1,9 +1,8 @@
 import * as _ from 'lodash';
 import * as React from 'react';
-import { Menu, MenuItem, MenuDivider } from '@blueprintjs/core';
+import { Menu, MenuItem } from '@blueprintjs/core';
 import { ViewComponent } from 'lib/client/components';
 import { IRenderMethod } from 'lib/common/interfaces';
-import { FIELD_TYPES } from 'lib/common/constants';
 
 interface IProps {
   renderMethods: IRenderMethod[];

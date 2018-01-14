@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { goBack } from 'react-router-redux';
 import { call, put, takeLatest } from 'redux-saga/effects';
-import { action } from 'lib/client/services/utils';
 import {
   IDocumentAction,
   DocumentAction,

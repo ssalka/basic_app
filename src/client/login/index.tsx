@@ -2,7 +2,6 @@ import * as _ from 'lodash';
 import * as React from 'react';
 import { InputGroup, IInputGroupProps } from '@blueprintjs/core';
 import { RouteComponentProps } from 'react-router';
-import Link from 'react-router-redux-dom-link';
 import { ReduxComponent, Button } from 'lib/client/components';
 import './styles.less';
 

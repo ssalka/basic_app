@@ -4,7 +4,7 @@ import { Flex } from 'grid-styled';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router';
 import Link from 'react-router-redux-dom-link';
-import { EditableText, NonIdealState } from '@blueprintjs/core';
+import { NonIdealState } from '@blueprintjs/core';
 import {
   ReduxComponent,
   FlexRow,
@@ -12,7 +12,7 @@ import {
   ListView,
   EntityList
 } from 'lib/client/components';
-import { Collection, ReactElement } from 'lib/common/interfaces';
+import { Collection } from 'lib/common/interfaces';
 import SmartInput from 'lib/client/components/ui/SmartInput';
 import './styles.less';
 

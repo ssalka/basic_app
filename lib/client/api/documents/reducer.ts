@@ -1,4 +1,3 @@
-import axios from 'axios';
 import * as _ from 'lodash';
 import { IDocument } from 'lib/common/interfaces';
 import { IDocumentAction, DocumentAction } from './actions';

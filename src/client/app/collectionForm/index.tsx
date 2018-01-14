@@ -1,7 +1,6 @@
 import * as _ from 'lodash';
 import { Box } from 'grid-styled';
 import * as React from 'react';
-import axios from 'axios';
 import { RouteComponentProps } from 'react-router';
 
 import { connect } from 'lib/client/api/store';
