@@ -1,6 +1,6 @@
 import * as _ from 'lodash';
 
-interface IKeyValueField<K = any, V = any> {
+export interface IKeyValueField<K = any, V = any> {
   key: K;
   value: V;
 }

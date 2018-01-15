@@ -6,12 +6,14 @@ import { Flex } from 'grid-styled';
 import { DropTarget } from 'react-dnd';
 import { RouteComponentProps } from 'react-router';
 import { EditableText } from '@blueprintjs/core';
-import { createEntity } from 'lib/client/api/entities/actions';
+import { createEntity, updateEntityField } from 'lib/client/api/entities/actions';
 import { BaseComponent, Button, TagList } from 'lib/client/components';
 import { connect } from 'lib/client/services/utils';
 import { MongoCollection } from 'lib/common/constants';
+import { IKeyValueField } from 'lib/common/interfaces/field';
 import { getName } from 'lib/common/helpers';
 import {
+  CommandType,
   EntityDocument,
   IAggregate,
   IPopulatedEntity,
@@ -28,6 +30,7 @@ interface IProps extends RouteComponentProps<any> {
     state?: ILocationState;
   };
   createEntity: typeof createEntity;
+  updateEntityField: typeof updateEntityField;
 }
 
 interface IState {
@@ -45,20 +48,45 @@ class CombineEntities extends BaseComponent<IProps, IState> {
     entities: _.get(this.props.location.state, 'selectedEntities', [])
   };
 
+  // TODO: separate handlers for keys, values
   handleUpdateField = _.curry(
-    (fieldKey: 'key' | 'value', index: number, value: string | EntityDocument) => {
-      const isNewField = index === this.state.aggregate.fields.length;
+    (keyName: keyof IKeyValueField, index: number, value: string | EntityDocument) => {
+      const existingField = this.state.aggregate.fields[index];
 
-      if (isNewField && !value) return;
+      if (!existingField && !value) return;
 
+      // TODO: derive updated state from redux actions
       const aggregate = produce(this.state.aggregate, ({ fields }) => {
-        if (isNewField) {
+        const newValue = _.isString(value) ? _.find(fields, { name: value }) : value;
+        const updateField = (type: CommandType) =>
+          this.props.updateEntityField(index, newValue, type);
+
+        if (!existingField) {
           fields.push(new Field());
+
+          updateField(
+            keyName === 'key'
+              ? CommandType.AddFieldKey
+              : CommandType.AddFieldValue
+          );
+        }
+        else if (existingField[keyName] && !newValue) {
+          // TODO: offer as choice in UI
+          updateField(
+            keyName === 'key'
+              ? CommandType.RemoveFieldKey
+              : CommandType.RemoveFieldValue
+          );
+        }
+        else {
+          updateField(
+            keyName === 'key'
+              ? CommandType.ReplaceFieldKey
+              : CommandType.ReplaceFieldValue
+          );
         }
 
-        fields[index][fieldKey] = _.isString(value)
-          ? _.find(fields, { name: value })
-          : value;
+        fields[index][keyName] = newValue;
       });
 
       this.setState({ aggregate });
@@ -176,6 +204,7 @@ const EntityDropTarget = DropTarget(
 export default connect({
   store: 'entity',
   actions: {
-    createEntity
+    createEntity,
+    updateEntityField
   }
 })(CombineEntities);
