@@ -51,7 +51,7 @@ export function* renameEntity({ entity, newName }: Action<IRenameEntityPayload>)
 export default function* entitiesSaga() {
   yield [
     takeLatest(CommandType.CreateEntity, createEntity),
-    takeLatest(QueryType.FetchEntitiesByUser, getEntities), // TODO: refactor to FetchEntitiesByUser
+    takeLatest(QueryType.FetchEntitiesByUser, getEntities),
     takeLatest(CommandType.RenameEntity, renameEntity)
   ];
 }
