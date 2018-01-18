@@ -1,3 +1,4 @@
+import { Field } from './field';
 import { ID, IDocument, Versioned } from './mongo';
 
 export interface IReference {
@@ -13,6 +14,7 @@ export interface IPopulatedReference<T> {
 export interface IEntity {
   name: string;
   references: IReference[];
+  fields: (string | Field)[];
 }
 
 export interface IPopulatedEntity<T = {}> {

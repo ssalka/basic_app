@@ -1,19 +1,18 @@
 import * as classNames from 'classnames';
-import produce from 'immer';
 import * as _ from 'lodash';
 import * as React from 'react';
 import { Flex } from 'grid-styled';
 import { DropTarget } from 'react-dnd';
 import { RouteComponentProps } from 'react-router';
+import * as uuid from 'uuid/v4';
 import { EditableText } from '@blueprintjs/core';
-import { createEntity, updateEntityField } from 'lib/client/api/entities/actions';
+import { createEntity, updateEntityField, addField, addFieldKey, replaceFieldKey, addFieldValue, replaceFieldValue } from 'lib/client/api/entities/actions';
 import { BaseComponent, Button, TagList } from 'lib/client/components';
 import { connect } from 'lib/client/services/utils';
 import { MongoCollection } from 'lib/common/constants';
 import { IKeyValueField } from 'lib/common/interfaces/field';
 import { getName } from 'lib/common/helpers';
 import {
-  CommandType,
   EntityDocument,
   IAggregate,
   IPopulatedEntity,
@@ -31,6 +30,11 @@ interface IProps extends RouteComponentProps<any> {
   };
   createEntity: typeof createEntity;
   updateEntityField: typeof updateEntityField;
+  addField: typeof addField;
+  addFieldKey: typeof addFieldKey;
+  replaceFieldKey: typeof replaceFieldKey;
+  addFieldValue: typeof addFieldValue;
+  replaceFieldValue: typeof replaceFieldValue;
 }
 
 interface IState {
@@ -48,48 +52,40 @@ class CombineEntities extends BaseComponent<IProps, IState> {
     entities: _.get(this.props.location.state, 'selectedEntities', [])
   };
 
-  // TODO: separate handlers for keys, values
+  // TODO: support typed entities in addition to drag-drop
   handleUpdateField = _.curry(
-    (keyName: keyof IKeyValueField, index: number, value: string | EntityDocument) => {
+    (keyName: keyof IKeyValueField, index: number, value: EntityDocument) => {
       const existingField = this.state.aggregate.fields[index];
 
       if (!existingField && !value) return;
 
-      // TODO: derive updated state from redux actions
-      const aggregate = produce(this.state.aggregate, ({ fields }) => {
-        const newValue = _.isString(value) ? _.find(fields, { name: value }) : value;
-        const updateField = (type: CommandType) =>
-          this.props.updateEntityField(index, newValue, type);
+      if (existingField[keyName] && !value) {
+        // TODO: implement remove value
+      }
+      else {
+        const newField = !existingField && uuid();
 
-        if (!existingField) {
-          fields.push(new Field());
-
-          updateField(
-            keyName === 'key'
-              ? CommandType.AddFieldKey
-              : CommandType.AddFieldValue
-          );
+        if (newField) {
+          this.props.addField(newField);
         }
-        else if (existingField[keyName] && !newValue) {
-          // TODO: offer as choice in UI
-          updateField(
-            keyName === 'key'
-              ? CommandType.RemoveFieldKey
-              : CommandType.RemoveFieldValue
-          );
+        // add or replace value
+        if (keyName === 'key') {
+          if (existingField.key) {
+            this.props.replaceFieldKey(existingField._id, value._id);
+          }
+          else {
+            this.props.addFieldKey(newField, value._id);
+          }
         }
         else {
-          updateField(
-            keyName === 'key'
-              ? CommandType.ReplaceFieldKey
-              : CommandType.ReplaceFieldValue
-          );
+          if (existingField.value) {
+            this.props.replaceFieldValue(existingField._id, value._id);
+          }
+          else {
+            this.props.addFieldValue(newField, value._id);
+          }
         }
-
-        fields[index][keyName] = newValue;
-      });
-
-      this.setState({ aggregate });
+      }
     }
   );
 
@@ -205,6 +201,11 @@ export default connect({
   store: 'entity',
   actions: {
     createEntity,
-    updateEntityField
+    updateEntityField,
+    addField,
+    addFieldKey,
+    replaceFieldKey,
+    addFieldValue,
+    replaceFieldValue
   }
 })(CombineEntities);

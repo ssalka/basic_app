@@ -9,6 +9,7 @@ import {
   QueryType
 } from 'lib/common/interfaces';
 import { action } from 'lib/client/services/utils';
+import * as uuid from 'uuid/v4';
 
 export interface ICreateEntityPayload extends Pick<IEvent2, 'entity' | 'timestamp' | 'version'> {
   entity: IEntity | IPopulatedEntity;
@@ -34,15 +35,15 @@ export const renameEntity = (entity: EntityDocument, newName: string): Action<IR
     newName
   });
 
-interface IFieldPayload {
+export interface IFieldPayload {
   field: ID;
 }
 
-interface IFieldKeyPayload extends IFieldPayload {
+export interface IFieldKeyPayload extends IFieldPayload {
   key: ID;
 }
 
-interface IFieldValuePayload extends IFieldPayload {
+export interface IFieldValuePayload extends IFieldPayload {
   value: ID;
 }
 
@@ -52,7 +53,9 @@ export const updateEntityField = (index: number, value: EntityDocument, type: Co
   action(type, { index, value })
 );
 
-export const addField = (field: ID) => action(CommandType.AddField, { field });
+export const addField = (field?: ID) => action(CommandType.AddField, { field: field || uuid() });
+
+export const removeField = (field: ID) => action(CommandType.RemoveField, { field });
 
 export const addFieldKey = (field: ID, key: ID): Action<IFieldKeyPayload> => (
   action(CommandType.AddFieldKey, { field, key })
@@ -64,8 +67,8 @@ export const replaceFieldKey = (field: ID, key: ID): Action<IFieldKeyPayload> =>
   action(CommandType.ReplaceFieldKey, { field, key })
 );
 
-export const removeFieldKey = (field: ID, key: ID): Action<IFieldKeyPayload> => (
-  action(CommandType.RemoveFieldKey, { field, key })
+export const removeFieldKey = (field: ID): Action<IFieldPayload> => (
+  action(CommandType.RemoveFieldKey, { field })
 );
 
 export const addFieldValue = (field: ID, value: ID): Action<IFieldValuePayload> => (
@@ -76,8 +79,8 @@ export const replaceFieldValue = (field: ID, value: ID): Action<IFieldValuePaylo
   action(CommandType.ReplaceFieldValue, { field, value })
 );
 
-export const removeFieldValue = (field: ID, value: ID): Action<IFieldValuePayload> => (
-  action(CommandType.RemoveFieldValue, { field, value })
+export const removeFieldValue = (field: ID): Action<IFieldPayload> => (
+  action(CommandType.RemoveFieldValue, { field })
 );
 
 export default {
@@ -86,6 +89,7 @@ export default {
   renameEntity,
   updateEntityField,
   addField,
+  removeField,
   addFieldKey,
   replaceFieldKey,
   removeFieldKey,
