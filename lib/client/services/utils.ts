@@ -1,15 +1,24 @@
 import axios, { AxiosResponse } from 'axios';
+import produce from 'immer';
 import * as _ from 'lodash';
 import { connect as reduxConnect } from 'react-redux';
 import { ActionCreator, AnyAction, bindActionCreators } from 'redux';
 import { call, CallEffect, put, PutEffect } from 'redux-saga/effects';
 
-import { Action, IErrorPayload } from 'lib/common/interfaces/redux';
+import { Action, IErrorPayload, Reducer } from 'lib/common/interfaces/redux';
 import { RequestStatus } from 'lib/common/interfaces/request';
 
 // usage of `any` should be fixed after typescript PR#13288 is merged
 export function action<P = {}>(type: string, payload?: P): Action<P> {
   return { type, ...(payload as any) };
+}
+
+type Recipe<S, A> = (state: S, action: A) => void;
+
+export function reducer<S = {}, A = AnyAction>(reduxReducer: Recipe<S, A>): Reducer<S, A> {
+  return (state: S, _action: A) => produce<S>(state, nextState => (
+    reduxReducer(nextState, _action)
+  ));
 }
 
 export function success(eventType: string): string {

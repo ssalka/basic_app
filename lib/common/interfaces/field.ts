@@ -1,6 +1,8 @@
 import * as _ from 'lodash';
+import * as uuid from 'uuid/v4';
+import { ID, Identifiable } from './mongo';
 
-interface IKeyValueField<K = any, V = any> {
+export interface IKeyValueField<K = any, V = any> {
   key: K;
   value: V;
 }
@@ -13,7 +15,8 @@ interface IKeyValueField<K = any, V = any> {
  */
 
 export class Field<KV extends Partial<IKeyValueField> = {}>
-  implements Partial<IKeyValueField> {
+  implements Partial<Identifiable<IKeyValueField>> {
+  _id?: ID;
   key?: KV['key'];
   value?: KV['value'];
 
@@ -24,5 +27,7 @@ export class Field<KV extends Partial<IKeyValueField> = {}>
     if (!_.isUndefined(value)) {
       this.value = value;
     }
+
+    this._id = uuid();
   }
 }

@@ -1,20 +1,21 @@
 import * as classNames from 'classnames';
-import produce from 'immer';
 import * as _ from 'lodash';
 import * as React from 'react';
 import { Flex } from 'grid-styled';
 import { DropTarget } from 'react-dnd';
 import { RouteComponentProps } from 'react-router';
+// import * as uuid from 'uuid/v4';
 import { EditableText } from '@blueprintjs/core';
-import { createEntity } from 'lib/client/api/entities/actions';
+// import { createEntity, updateEntityField, addField, addFieldKey, replaceFieldKey, addFieldValue, replaceFieldValue } from 'lib/client/api/entities/actions';
 import { BaseComponent, Button, TagList } from 'lib/client/components';
 import { connect } from 'lib/client/services/utils';
-import { MongoCollection } from 'lib/common/constants';
+// import { MongoCollection } from 'lib/common/constants';
+import { IKeyValueField } from 'lib/common/interfaces/field';
 import { getName } from 'lib/common/helpers';
 import {
   EntityDocument,
   IAggregate,
-  IPopulatedEntity,
+  // IPopulatedEntity,
   Field
 } from 'lib/common/interfaces';
 import './styles.less';
@@ -27,7 +28,13 @@ interface IProps extends RouteComponentProps<any> {
   location: RouteComponentProps<any>['location'] & {
     state?: ILocationState;
   };
-  createEntity: typeof createEntity;
+  // createEntity: typeof createEntity;
+  // updateEntityField: typeof updateEntityField;
+  // addField: typeof addField;
+  // addFieldKey: typeof addFieldKey;
+  // replaceFieldKey: typeof replaceFieldKey;
+  // addFieldValue: typeof addFieldValue;
+  // replaceFieldValue: typeof replaceFieldValue;
 }
 
 interface IState {
@@ -45,23 +52,43 @@ class CombineEntities extends BaseComponent<IProps, IState> {
     entities: _.get(this.props.location.state, 'selectedEntities', [])
   };
 
+  // TODO: support typed entities in addition to drag-drop
   handleUpdateField = _.curry(
-    (fieldKey: 'key' | 'value', index: number, value: string | EntityDocument) => {
-      const isNewField = index === this.state.aggregate.fields.length;
+    (keyName: keyof IKeyValueField, index: number, value: EntityDocument) => {
+      // CHANGED: Planned refactor of entity model and event sourcing API.
+      // Starting with SmartInput due to simplicity, so commenting out usage of current redux entity store
 
-      if (isNewField && !value) return;
-
-      const aggregate = produce(this.state.aggregate, ({ fields }) => {
-        if (isNewField) {
-          fields.push(new Field());
-        }
-
-        fields[index][fieldKey] = _.isString(value)
-          ? _.find(fields, { name: value })
-          : value;
-      });
-
-      this.setState({ aggregate });
+      // const existingField = this.state.aggregate.fields[index];
+      //
+      // if (!existingField && !value) return;
+      //
+      // if (existingField[keyName] && !value) {
+      //   // TODO: implement remove value
+      // }
+      // else {
+      //   const newField = !existingField && uuid();
+      //
+      //   if (newField) {
+      //     this.props.addField(newField);
+      //   }
+      //   // add or replace value
+      //   if (keyName === 'key') {
+      //     if (existingField.key) {
+      //       this.props.replaceFieldKey(existingField._id, value._id);
+      //     }
+      //     else {
+      //       this.props.addFieldKey(newField, value._id);
+      //     }
+      //   }
+      //   else {
+      //     if (existingField.value) {
+      //       this.props.replaceFieldValue(existingField._id, value._id);
+      //     }
+      //     else {
+      //       this.props.addFieldValue(newField, value._id);
+      //     }
+      //   }
+      // }
     }
   );
 
@@ -73,21 +100,21 @@ class CombineEntities extends BaseComponent<IProps, IState> {
      *    - eg: existing entity "Cabinet" to refer to kitchen cabinets, but new aggregate is
      *      the executive/governmental type - should it be included? What about filing cabinets?
      */
-    const { aggregate } = this.state;
-    const [primaryField] = aggregate.fields;
+    // const { aggregate } = this.state;
+    // const [primaryField] = aggregate.fields;
 
-    const entity: IPopulatedEntity<IAggregate> = {
-      name: getName(primaryField.value),
-      references: [
-        {
-          model: MongoCollection.Entity,
-          value: aggregate
-        }
-      ]
-    };
+    // const entity: IPopulatedEntity<IAggregate> = {
+    //   name: getName(primaryField.value),
+    //   references: [
+    //     {
+    //       model: MongoCollection.Entity,
+    //       value: aggregate
+    //     }
+    //   ]
+    // };
 
     // TODO: update existing entity if option selected
-    this.props.createEntity(entity);
+    // this.props.createEntity(entity);
   }
 
   render() {
@@ -176,6 +203,12 @@ const EntityDropTarget = DropTarget(
 export default connect({
   store: 'entity',
   actions: {
-    createEntity
+    // createEntity,
+    // updateEntityField,
+    // addField,
+    // addFieldKey,
+    // replaceFieldKey,
+    // addFieldValue,
+    // replaceFieldValue
   }
 })(CombineEntities);

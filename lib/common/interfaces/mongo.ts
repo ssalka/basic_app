@@ -7,6 +7,10 @@ export interface IDocument<ModelName = string> {
   createdAt: string;
 }
 
+export type Identifiable<T> = T & {
+  _id: ID;
+};
+
 export type Timestamped<T> = T & {
   timestamp: Date;
 };
